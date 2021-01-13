@@ -1,0 +1,9 @@
+*.aux
+*.blg
+*.bak
+*.bbl
+*.gitattributes
+*.log
+*.docx
+*.out
+*.gz
