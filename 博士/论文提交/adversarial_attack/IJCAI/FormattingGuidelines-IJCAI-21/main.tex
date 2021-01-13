@@ -163,18 +163,9 @@ There are some papers try to find the universal perturbations. In \cite{moosavi2
 
 \subsection{Adversarial Attack in Object Tracking}
 
-Recently, there are several explorations of the adversarial attacks on the visual object tracking task. For example, 
-\cite{TemporallyTransferablePerturbations} \textcolor{black}{propose a framework to generate a single temporally transferable adversarial perturbation from the object template image only. This perturbation can then be added to every search image to adversarially attack the subsequent video frames.}
-\cite{efficient} \textcolor{black}{present an end-to-end network FAN (Fast Attack Network) that uses a novel drift loss combined with the embedded feature loss to attack the Siamese network based trackers.}
-\cite{guo2020spark} \textcolor{black}{propose the spatial-aware online incremental attack (a.k.a. SPARK) that performs spatial-temporal sparse incremental perturbations online and makes the adversarial attack less perceptible.}The good point is they only need to find perturbations at the template image, so do not need to run GAN on every search image. But they have to pre-compute some perturbations. Different from them, our trajectory is controlled by our patch. So we do not need to pre-compute anything. And we are universal, they are not.
-In \cite{guo2020spark}, they do the \textbf{targeted} attack. But they need to perform every frame.
-
-Some papers \cite{TemporallyTransferablePerturbations} try to use the template image to generate perturbations, so they can perform the one shot attack. However, they need to run once for every video.
-Although there are some papers to attack the tracking system, but they have some disadvantages. We first introduce some papers, and point out their disadvantages.
-
+Recently, there are several explorations of the adversarial attacks on the visual object tracking task. For example, PAT generated physical adversarial textures visa white-box attack to let the tracker lock on the texture when a tracked object moves in front of it. However, PAT validates its method by attacking a light deep regression tracker, i.e., GOTURN that has low tracking accuracy on modern benchmarks. In this paper, we aim to attack the state-of-the-art trackers based on the Siamese networks.
 RTAA \cite{RTAA} takes temporal motion into consideration when generating lightweight perturbations over the estimated tracking results frame-by-frame. However, RTAA only performs the untargeted attack for tarckers, which causes the adversarial trajectory to deviate from the original trajectory of an object. In this paper, we focus on the more challenging targeted attack for object tracking.
-
-PAT generated physical adversarial textures visa white-box attack to let the tracker lock on the texture when a tracked object moves in front of it. However, PAT validates its method by attacking a light deep regression tracker, i.e., GOTURN that has low tracking accuracy on modern benchmarks. In this paper, we aim to attack the state-of-the-art trackers based on the Siamese networks.
+SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attack against Siamese trackers. However, SPARK needs to generate the adversarial example for every search image in a video, which is time-consuming and ill-suited to attack an online visual tracking system in real time. In this paper, we propose universal perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
 
 \begin{figure*}[t]
 \centering
