@@ -1,0 +1,14 @@
+研究经历
+1. End-To-End Temporal Feature Aggregation For Siamese Trackers 发表于 ICIP2020，第一作者。
+2. Globally Spatial-Temporal Perception: A Long-Term Tracking System 发表于 ICIP2020，第一作者。
+[1] Zhenbang Li, Qiang Wang, Jin Gao, Bing Li and Weiming Hu. End-To-End Temporal Feature Aggregation For Siamese Trackers. IEEE International Conference on Image Processing, 2020.
+[2] Zhenbang Li, Qiang Wang, Jin Gao, Bing Li and Weiming Hu. Globally Spatial-Temporal Perception: A Long-Term Tracking System. IEEE International Conference on Image Processing, 2020.
+
+项目经历
+2018.9~2018.12 内容智能播控平台：该平台旨在实现在复杂多变的互联网环境下快速发现文本、图片、视频的各类风险，播控互联网的信息内容安全。本人主要负责利用深度学习技术，设计视频危险信息分类识别模块，对互联网平台的视频（含短视频和直播室）内容，进行涉黄、政、暴、恐、垃圾信息进行智能检测和识别。
+
+专业技能
+研究兴趣：包括计算机视觉和模式识别，重点是视频目标跟踪、图像目标检测等。
+编程能力：熟练掌握编程语言 python 及深度学习框架 pytorch，可快速掌握基于深度学习的网络模型。
+科研能力：具有顶级学术论文发表经验；紧跟研究热点，并能及时阅读相关领域最新文献，掌握前沿算法。
+英文水平：通过 CET-6，能够顺畅地读写英文论文和文档。

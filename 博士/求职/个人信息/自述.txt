@@ -1,0 +1,48 @@
+在思想方面，我热爱祖国，拥护党的领导，于2013年12月23日加入中国共产党；
+在工作态度方面，具有较强的事业心、责任感和适应性、相融性；
+在个人能力方面，我曾获得优秀团员、优秀学生、优秀学生标兵、北京市优秀毕业生等荣誉称号；
+在专业学习方面，博士期间在计算机视觉国际会议 IEEE International Conference on Image Processing (ICIP) 上发表过两篇视频目标跟踪领域文章，具有较强的文献阅读、写作能力，并能紧跟研究动态，快速掌握新的研究热点。
+在其他方面，我身体健康，性格开朗，爱好户外运动与集体活动，具有良好的沟通交往与协调能力。
+
+研究经历
+[1] Zhenbang Li, Qiang Wang, Jin Gao, Bing Li, Weiming Hu. Globally Spatial-Temporal Perception: A Long-Term Tracking System. IEEE International Conference on Image Processing, 2020, Accepted. (EI, CCF=C)
+[2] Zhenbang Li, Qiang Wang, Jin Gao, Bing Li, Weiming Hu. End-To-End Temporal Feature Aggregation For Siamese Trackers. IEEE International Conference on Image Processing, 2020, Accepted. (EI, CCF=C)
+[3] Zhenbang Li , Bing Li , Jin Gao , Liang Li, Weiming Hu. Manipulating Template Pixels for Model Adaptation of Siamese Visual Tracking. IEEE Signal Processing Letters, 2020, Accepted. (SCI, JCR Q2)
+[4] Zhenbang Li, Qiang Wang, Jin Gao, Bing Li, Weiming Hu, Stephen J. Maybank. Visual Object Tracking Using Instance Guided Correlation Filter. Pattern Recognition, 2020, Under Review. (SCI, JCR Q2)
+
+项目经历
+2018.9~2018.12 内容智能播控平台 - 央广视讯(上海)：该平台旨在实现在复杂多变的互联网环境下快速发现文本、图片、视频的各类风险，播控互联网的信息内容安全。本人主要负责利用深度学习技术，设计视频危险信息分类识别模块，对互联网平台的视频（含短视频和直播室）内容，进行涉黄、政、暴、恐、垃圾信息进行智能检测和识别。
+2020.7~2020.8 视频会议背景虚化的帧间一致性 - 阿里巴巴(杭州)：基于图像分割算法的视频会议背景虚化任务中，往往出现相邻帧分割结果不一致的现象。通过为图像分割网络引入额外的输入，即上一帧的分割结果，作为当前帧分割的先验和约束，从而使得视频分割帧间一致性得到提高。
+
+专业技能
+研究兴趣：包括计算机视觉和模式识别，重点是视频目标跟踪、图像目标检测等。
+编程能力：熟练掌握编程语言 python 及深度学习框架 pytorch，可快速掌握基于深度学习的网络模型。
+科研能力：具有顶级学术论文发表经验；紧跟研究热点，并能及时阅读相关领域最新文献，掌握前沿算法。
+英文水平：通过 CET-6，能够顺畅地读写英文论文和文档。
+
+简历
+2000.09——2006.06 山东省新泰市第一实验小学学习；
+2006.09——2009.06 山东省新泰市金斗中学学习；
+2009.09——2012.06 山东省新泰市第一中学学习；
+2012.09——2016.06 北京理工大学计算机学院计算机科学与技术专业学习；
+2016.09至今 中国科学院大学自动化研究所模式识别与智能系统专业学习。
+
+学生干部经历
+本科阶段
+13.09——14.06 北京理工大学信息二部团总支书记处书记助理；
+14.09——15.06 北京理工大学计算机学院学生会副主席。
+研究生阶段
+16.09——17.06 中国科学院大学学生会社团中心干事。
+
+获奖
+2014.12 北京理工大学获优秀学生标兵（校级荣誉）
+2016.06 北京理工大学获北京市优秀毕业生（市级荣誉）
+
+家庭成员
+李丙海 55岁 群众 山东省新泰市西张庄镇东韩庄村5组 农民
+毕玉菊 57岁 群众 山东省新泰市西张庄镇东韩庄村5组 农民
+
+家庭住址
+山东省新泰市西城明珠小区7号楼三单元401室
+
+学习课程：模式识别与机器学习，人工智能理论与实践，图像处理与分析，计算机视觉，视频处理与分析。
