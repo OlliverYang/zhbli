@@ -1,0 +1,48 @@
+Hello everyone. The title of this presentation is: GLOBALLY SPATIAL-TEMPORAL PERCEPTION: A LONG-TERM TRACKING SYSTEM. My name is Li zhen bang.
+
+The popular siamese trackers are typically based on the local search mechanism: searching the target within a small neighborhood centered on the target position of the previous frame to determine its current position. This mechanism works well if the target only has a small displacement between two adjacent frames. It also brings benefits in another aspect, which is to avoid interference from the distractors in the background.
+However, the local search mechanism bears some shortcomings. First, it could cause irreversible cumulative errors if the predictions of the target positions in the previous frames drift away due to challenging illumination change, motion blur, etc., because the search area generated in the current frame may not cover the target leading to a complete failure in subsequent frames. Second, it is difficult for the local mechanism-based trackers to meet the needs of long-term tracking. Under the long-term scenario, the target frequently re-enters and re-exits the screen. Since the tracker cannot set the correct search area when the target leaves and re-enters the screen, it often fails to retrieve the target due to the wrong search area without the target covered. 
+
+Inspired by faster RCNN’s two stage detection paradigm, we propose a siamese tracker based on the global perception mechanism. During the tracking process, our tracker is always able to perceive the target over the entire image. Therefore, even if the tracker makes a mistake due to the challenging target appearance variations, the target can still be retrieved in time once its appearance returns to normal. Especially under the long-term out-of-view disappearance scenario, where the tracker cannot find the target in the full image when the target leaves the screen, our tracker can continue to work when the target re-enters the screen from any position.
+
+Besides the above globally spatial perception mechanism, we also propose a temporal motion model to mitigate the interference of distractors. It is known that the siamese based tracking framework is sometimes plagued by distractors because it is difficult for the end-to-end trained siamese matching network to distinguish well between objects that look very similar. Different from the simply designed handcrafted strategies, our proposed CNN-based motion model is end-to-end trained and can predict the target current position distribution using its historical trajectory information and current target appearance information. Specifically, the motion patterns are automatically learned from the trajectory dataset in the training phase instead of the hand-crafted features or rules. In the testing phase, we can use the position information of any number of historical frames instead of just the previous frame for prediction.
+
+Specifically, we propose the Globally Spatial-Temporal Perception tracking system, which means:
+We use an entire image instead of a small image patch as the input to the tracker to provide the global spatial information for it.
+In order to better perceive the global spatial information, we propose a two-stage tracking component, which is able to detect candidate targets that are visually similar to the ground truth target.
+To perceive the temporal information, we propose a motion model, which is able to exclude the distractors by predicting the location distribution to obtain the final tracking result. 
+
+For the task of object tracking, there are two inputs to the feature extractor: the template image z and the search image x. According to the design of the siamese architecture, the two inputs share the same network parameters to extract features. After generating the template feature f z and search feature f x, we crop the object  by the ROI Align operation from the template features according to the ground truth of the target.
+Next, the search feature and the object feature are merged via the depth-wise cross-correlation.
+At the second stage, the ROI Align operation is performed on the fusion feature.
+We select top K ranked ROI as the candidate targets, which will be post-processed in the motion model.
+
+After detecting object regions that are visually similar to the given first-frame template object with our tracking component, we use a motion model to eliminate distractors and obtain the final tracking result.
+Inspired by the pose estimation task, we present the position of the target as a two-dimensional heatmap with a 2D Gaussian centered on the target position.
+The generated k heatmaps are concatenated according to the time order to obtain the trajectory tensor.
+Our motion model not only utilizes the historical trajectory information for prediction, but also considers the appearance information of the current frame. To achieve this, the RGB image of the current frame and the trajectory tensor are concatenated to obtain the enhanced trajectory tensor.
+The output of the motion model is a 2D heatmap reflecting the position distribution of the target in the frame t.
+
+We evaluate out method on GOT-10K testing set and the UAV20L dataset.
+From the first and second row, we see that the AO performance increases by 11.1% by adding the RoI head. The RPN stage rapidly filters out most background samples, and the ROI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
+From the second and third row, we see that with the motion model, the AO, the SR0.50 and the SR0.75 increases by 3.9%, 5.0% and 1.7%, respectively. This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors.
+
+We compare our proposed method with 8 trackers including state-of-the-arts, on GOT-10k testing set. Compared to the listed approaches, our approach achieves a superior AO of 0.560. Compared with SiamMask, our two stage tracker is designed based on the global perception mechanism to reducing cumulative inaccuracies. The motion model suppresses distractors and improves the tracking robustness. As a result, our tracker outperforms SiamMask by relative 22.00% in terms of AO, which highlights the importance of the proposed tracker and the motion model.
+
+Every video in GOT-10k training/validation dataset is annotated with multiple attributes including: visible ratios, motion speed, video length and cut by image. To analyze the performance of trackers in various scenarios, we compare our tracker with two state-of-the-art on GOT-10k validation set.
+We collect four subset from the validation set according to the attribute annotations: FM (fast motion) subset, OC (occlusion) subset, CU (cut by image) subset, and LO (long video) subset.
+The FM subset includes videos in which the target motion speed is fast.
+The OC subset include videos in which the target is occluded frequently.
+The CU subset include videos in which the target is cut by the image boundary frequently.
+The LO subset includes the longest 40 videos in the validation set.
+Table 3 shows the different performance characteristics of the tracking algorithms.
+On the FM subset, our method outperforms SiamMask with a relative gain of 21.48% in terms of AO.
+In terms of AO, our algorithm outperforms SiamMask by relative 18.42% and 24.03% on OC and CU subset, respectively.
+On the LO subset, the relative improvement of the AO score is 12.13% compared with SiamMask.
+This result shows that the global perception mechanism allows our tracker to reduce the cumulative error when tracking the long videos.
+
+UAV20L is an aerial video dataset captured from a low altitude aerial perspective. Designed for long-term tracking, the UAV20L database has 20 videos with an average length of 2934 frames. Following the evaluation method of OTB50, we use precision and success to evaluate the performance of trackers on the UAV20L dataset. Precision refers to the distance from the center point of the predicted bounding box to the center point of the ground truth bounding box. Success refers to the intersection over union of the predicted bounding box and the ground truth bounding box. In figure 2, the performance comparison of different trackers is visualized by precision plot and success plot. The proposed method is compared against 13 recent trackers. Figure 2 clearly shows that our algorithm outperforms all other trackers in terms of success and precision scores.
+Specifically, in the success plot, our tracker obtains a AUC score of 0.557. Compared with the state-of-art method PTAV and SiamRPN, the proposed tracker outperforms these trackers by relative 31.7% and 22.7%.
+In the precision plot, the proposed algorithm obtains a score of 0.776.
+Compared with SiamRPN and PTAV, the proposed tracker outperforms these trackers by relative 25.8% and 24.4%.
+Thanks for your attention.

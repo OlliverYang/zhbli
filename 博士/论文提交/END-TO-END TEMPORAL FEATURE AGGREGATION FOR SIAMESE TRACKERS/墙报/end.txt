@@ -1,0 +1,26 @@
+Hello everyone. The title of this presentation is: end to end TEMPORAL FEATURE AGGREGATION FOR SIAMESE TRACKERS. My name is Li zhen bang.
+
+In this paper, we aim to take full advantage of temporal information in siamese trackers. We introduce a novel siamese tracking architecture equipped with a temporal aggregation module, which improves the per frame features by aggregating features from adjacent frames. This temporal fusion strategy enables the siamese tracker to handle poor object appearance like motion blur, occlusion, etc. To achieve this, we shift the channels along the temporal dimension in the backbone of the siamese network. Note that features of the same object are usually not spatially aligned across frames due to video motion, so the temporal shift is only performed on the residual layers to preserve the spatial feature learning capability of the siamese tracker. Different from other temporal fusion methods, the proposed method is able to be trained end-to-end on larger-scale datasets. Additionally, our temporal fusion method is easy to implement, without changing the siamese tracking architecture or using optical flow. To improve the robustness of target features, we further incorporate an adversarial dropout module in the siamese tracking network. Specifically, we first predict adversarial dropout masks based on divergence maximum. Then, we aim to minimize the divergence between the randomly dropped features and the adversarially dropped features. This module has both the advantages of dropout and adversarial training: the dropout makes our siamese network randomly disconnects neural units during training to prevent the co-adaptation of target features and the adversarial training enforces our tracker to learn difficult cases.
+
+Inspired by the success of the two stage detection paradigm, our siamese tracker is also a two stage method. The first stage aims to generate proposals that are visually similar to the given template target. The second stage aims to identify the target from candidate proposals.
+The proposal generation stage consists of 3 components: 1. feature extractor, 2. temporal aggregation module, 3. feature modulation module.
+
+To deal with the scale change of the target, we use Res50 FPN as our feature extractor. Feature Pyramid Network exploits the inherent multiscale, pyramidal hierarchy of deep convolutional networks to construct feature pyramids with marginal extra cost. Our siamese FPN takes a template image and a search image as input. For the search image, the FPN outputs proportionally sized feature maps at multiple levels, in a fully convolutional fashion. For the template image, we use the last stage of the FPN output as the template feature with a spatial size of 7 × 7.
+
+To model temporal information, the images in one batch are several adjacent frames in the same video and are sorted by time, so we can regard the batch dimension as the time dimension.
+we first split feature f t into 3 parts along the channel dimension, then we shifts the channels along the temporal dimension.
+Note that the aggregated feature has the same shape with f t , so we can insert this module into the backbone directly, without the need to change other part of the network.
+
+After the feature fusion, we use adversarial dropout to increase the discriminative ability. We first predict the adversarial dropout mask based on divergence maximum.
+Then, we aim to minimize the divergence between the randomly dropped features and the adversarially dropped features.
+Finally, for each ROI, the classification layer produces softmax probability estimates over two classes and the regression layer outputs four real valued numbers for the foreground class.
+
+We evaluate out method on GOT-10K testing set and the UAV20L dataset.
+From the first and second row, we see that the AO performance increases by 3.1% by adding the temporal aggregation module. This is because the temporal aggregation module improves the per-frame features by aggregating temporal information from adjacent frames.
+From the second and third row, we see that with the adversarial dropout module, the AO increases by 2.9%. This is because the adversarial dropout module improves the discrimination power of our siamese tracking network.
+
+We compare our proposed method with 8 trackers including state-of-the-arts, on GOT-10k testing set. Compared to the listed approaches, our approach achieves a superior AO of 0.577. Compared with SiamMask, our tracker aims to make full use of the temporal information. As a result, our tracker outperforms SiamMask by 11.8% in terms of AO, which highlights the importance of the proposed temporal aggregation module.
+
+
+UAV20L is an aerial video dataset captured from a low altitude aerial perspective. In figure 3, we can find that the proposed algorithm achieves better tracking performance compared with some representative trackers. In the success plot, our tracker obtains an AUC score of 0.606. In the precision plot, the proposed algorithm obtains a score of 0.804. It shows that our tracker surpass other state-of-the-art algorithms. This demonstrates the effectiveness of our tracker in long-term tracking scenario. 
+Thanks for attention.
