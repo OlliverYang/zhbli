@@ -1,0 +1,25 @@
+Long-term Object Tracking with Instance Specific Proposals
+Improved Correlation Filter Tracking with Hard Negative Mining
+A Rigorous Solution for Closed-form Correlation Filter Tracking
+Joint Identification-Verification Model for Visual Tracking
+Object-Adaptive LSTM Network for Visual Tracking
+Hybrid Sparse Subspace Clustering for Visual Tracking
+Appearance Variation Insensitive State Regression for Visual Tracking
+Convolutional Features-Based CRF Graph Matching for Tracking of Densely Packed Cells
+SPCNet: Scale Position Correlation Network for End-to-End Visual Tracking
+Online Multi-Target Tracking with Tensor-Based High-Order Graph Matching
+Online Learning of Spatial-Temporal Convolution Response for Robust Real-Time Tracking
+Non-negative Subspace Representation Learning Scheme for Correlation Filter Based Tracking
+Visual Tracking by Combining the Structure-Aware Network and Spatial-Temporal Regression
+A Selective Tracking and Detection Framework with Target Enhanced Feature
+Segmentation-Guided Tracking with Prior Map Decision
+A Benchmark for Full Rotation Head Tracking
+OWP: Objectness Weighted Patch Descriptor for Visual Tracking
+Real-time Vehicle Localization and Tracking Using Monocular Panomorph Panoramic Vision
+Large Margin Structured Convolution Operator for Thermal Infrared Object Tracking
+Multi-layer CNN Features Aggregation for Real-time Visual Tracking
+Multiple Mice Tracking: Occlusions Disentanglement using a Gaussian Mixture Model
+Visual Tracking with Breeding Fireflies using Brightness from Background-Foreground Information
+UAV Target Tracking with A Boundary-Decision Network
+Learning Collaborative Model for Visual Tracking
+Applying hand gesture recognition and joint tracking to a TV controller using CNN and Convolutional Pose Machine
