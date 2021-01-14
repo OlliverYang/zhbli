@@ -114,6 +114,12 @@ Recently, the robustness of Siamese trackers have recently attracted a lot of at
 \cite{efficient} \textcolor{black}{present an end-to-end network FAN (Fast Attack Network) that uses a novel drift loss combined with the embedded feature loss to attack the Siamese network based trackers.}
 \cite{SPARK} \textcolor{black}{propose the spatial-aware online incremental attack (a.k.a. SPARK) that performs spatial-temporal sparse incremental perturbations online and makes the adversarial attack less perceptible.}
 
+All the above methods can fool object trackers successfully. However, these attack methods are not suitable for the real-world online-tracking phase where we can not get access to the limited computational resources.
+The reason is, visual object tracking is a computationally intensive task which usually needs to be run in real time, but the computational source of small platforms (e.g., mobile, robotic, self-driving car) used to deploy the trackers is often limited.
+Therefore, the attack approaches for object tracking should occupy as little computing resources as possible.
+But the reality is that most attack algorithms either perform iterative optimisation to calculate adversarial examples, or generate perturbations through Generative Adversarial Networks which occupy the GPU memory.
+
+
 All the above methods can fool object trackers successfully. However, these attack methods craft the perturbations for each video independently, which comes at a non-negligible cost.
 \textcolor{black}{Can we find the universal perturbations that fool a state-of-the-art deep Siamese trackers on all natural videos? We show in this paper the existence of such universal perturbations that cause the tracker to track object along any specified trajectory.}
 Specifically, we aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target.
