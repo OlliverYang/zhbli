@@ -119,11 +119,16 @@ The reason is, visual object tracking is a computationally intensive task which 
 Therefore, the attack approaches for object tracking should occupy as little computing resources as possible.
 But the reality is that most attack algorithms either perform iterative optimisation to calculate adversarial examples, or generate perturbations through Generative Adversarial Networks which occupy the GPU memory.
 
-Universal adversarial perturbations (UAPs) 
+Universal adversarial perturbation (UAP) \cite{UAP} is an image-agnostic perturbation which can fool most images from a data distribution. Being universal, UAPs can be conveniently exploited to perturb unseen datapoints on-the-fly without extra computation. Therefore, UAPs are particularly useful when attacking real-time applications deployed on platforms with limited computing resources.
+However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is difficult to apply existing UAPs in Siamese trackers directly. The reasons come from two aspects.
+\begin{itemize}
+\item Different input. Most UAPs are designed for typical neural networks, which usually accept one image as input; while Siamese-based tracking networks accept two inputs: the template image and the search image.
+\item Different goals. The goal of existing UAP methods is to disturb unary and binary model outputs for single instance; while we need to use universal perturbations to mislead Siamese trackers along with a specified trajectory.
+\end{itemize}
 
-All the above methods can fool object trackers successfully. However, these attack methods craft the perturbations for each video independently, which comes at a non-negligible cost.
-\textcolor{black}{Can we find the universal perturbations that fool a state-of-the-art deep Siamese trackers on all natural videos? We show in this paper the existence of such universal perturbations that cause the tracker to track object along any specified trajectory.}
+In this paper, we make the first attempt in finding the universal perturbations that fool a state-of-the-art deep Siamese trackers on all natural videos. We show in this paper the existence of such universal perturbations that cause the tracker to track object along any specified trajectory.
 Specifically, we aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target.
+
 \textcolor{black}{Different from the existing attack methods which are intrinsic dependent on videos, we generate the perturbations that can fool the network on most natural videos. Perturbing a new target then only involves the mere addition/paste operation of the universal perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.}
 Overall, our contributions can be summarized as follows:
 \begin{itemize}
