@@ -109,13 +109,13 @@ In this paper, we show the existence of video-agnostic perturbations that can en
 
 Object tracking refers to the task of sequentially locating a specified moving object in a video, given only its initial state. Recently, Siamese networks \cite{ATOM} \cite{SiamFC} have demonstrated a significant improvement in object tracking performances. Siamese trackers formulate the visual object tracking problem as learning cross-correlation similarities between a target template and a search region. Tracking is then performed by finding the target object from the search image region by computing the highest visual similarity.
 
-Recently, the robustness of Siamese trackers have recently attracted a lot of attention \cite{TemporallyTransferablePerturbations} \cite{efficient} \cite{SPARK}. Despite the impressive performance of Siamese architectures on challenging visual object tracking task, these trackers were shown to be highly vulnerable to perturbations.
-\cite{TemporallyTransferablePerturbations} \textcolor{black}{propose a framework to generate a single temporally transferable adversarial perturbation from the object template image only. This perturbation can then be added to every search image to adversarially attack the subsequent video frames.}
-\cite{efficient} \textcolor{black}{present an end-to-end network FAN (Fast Attack Network) that uses a novel drift loss combined with the embedded feature loss to attack the Siamese network based trackers.}
-\cite{SPARK} \textcolor{black}{propose the spatial-aware online incremental attack (a.k.a. SPARK) that performs spatial-temporal sparse incremental perturbations online and makes the adversarial attack less perceptible.}
+Recently, the robustness of Siamese trackers have recently attracted a lot of attention \cite{TemporallyTransferablePerturbations,efficient,SPARK}. Despite the impressive performance of Siamese architectures on challenging visual object tracking task, these trackers were shown to be highly vulnerable to perturbations.
+\cite{TemporallyTransferablePerturbations} propose a framework to generate a single temporally transferable adversarial perturbation from the object template image only. This perturbation can then be added to every search image to adversarially attack the subsequent video frames.
+\cite{efficient} present an end-to-end network FAN (Fast Attack Network) that uses a novel drift loss combined with the embedded feature loss to attack the Siamese network based trackers.
+\cite{SPARK} propose the spatial-aware online incremental attack (a.k.a. SPARK) that performs spatial-temporal sparse incremental perturbations online and makes the adversarial attack less perceptible.
 
 All the above methods can fool object trackers successfully. However, these attack methods are not suitable for the real-world online-tracking phase where we can not get access to the limited computational resources.
-The reason is, visual object tracking is a computationally intensive task which usually needs to be run in real time, but the computational source of small platforms (e.g., mobile, robotic, self-driving car) used to deploy the trackers is often limited.
+The reason is, visual object tracking is a computationally intensive task which usually needs to be run in real time, but the computational resources of small platforms (e.g., mobile, robotic, self-driving car) used to deploy the trackers are often limited.
 Therefore, the attack approaches for object tracking should occupy as little computing resources as possible.
 But the reality is that most attack algorithms either perform iterative optimisation to calculate adversarial examples, or generate perturbations through Generative Adversarial Networks which occupy the GPU memory.
 
@@ -129,7 +129,7 @@ However, no existing work has touched the topic of attacking the Siamese tracker
 In this paper, we make the first attempt in finding the universal perturbations that fool a state-of-the-art deep Siamese trackers on all natural videos. We show in this paper the existence of such universal perturbations that cause the tracker to track object along any specified trajectory.
 Specifically, we aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target.
 
-\textcolor{black}{Different from the existing attack methods which are intrinsic dependent on videos, we generate the perturbations that can fool the network on most natural videos. Perturbing a new target then only involves the mere addition/paste operation of the universal perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.}
+Different from the existing attack methods which are intrinsic dependent on videos, we generate the perturbations that can fool the network on most natural videos. Perturbing a new target then only involves the mere addition/paste operation of the universal perturbations to the template/search image -- and does not require solving an optimisation problem or network inference.
 Overall, our contributions can be summarized as follows:
 \begin{itemize}
 \item We show the existence of universal video-agnostic perturbations for state-of-the-art deep Siamese trackers. To the best of our knowledge, this is the first work to perform universal targeted attack against the visual object tracking task.
