@@ -119,6 +119,7 @@ The reason is, visual object tracking is a computationally intensive task which 
 Therefore, the attack approaches for object tracking should occupy as little computing resources as possible.
 But the reality is that most attack algorithms either perform iterative optimisation to calculate adversarial examples, or generate perturbations through Generative Adversarial Networks which occupy the GPU memory.
 
+Universal adversarial perturbations (UAPs) 
 
 All the above methods can fool object trackers successfully. However, these attack methods craft the perturbations for each video independently, which comes at a non-negligible cost.
 \textcolor{black}{Can we find the universal perturbations that fool a state-of-the-art deep Siamese trackers on all natural videos? We show in this paper the existence of such universal perturbations that cause the tracker to track object along any specified trajectory.}
@@ -134,44 +135,34 @@ Overall, our contributions can be summarized as follows:
 
 \section{Related Work}
 
-\subsection{Visual Object Tracking}
+\subsection{Siamese Visual Tracking}
 
-Visual object tracking is a fundamental problem in computer vision, estimating the position of a template cropped from the first frame of a video in each of the subsequent video frames.
-The state-of-the-art trackers can be roughly summarized to three categories, including correlation filter-based, classification \& updating-based and Siamese network-based trackers.
-Recently, Siamese networks \cite{SiamRPN} \cite{SiamRPN++} have demonstrated a significant improvement in object tracking performances. Siamese trackers formulate the visual object tracking problem as learning cross-correlation similarities between a target template and a search region. Tracking is then performed by finding the target object from the search image region by computing the highest visual similarity.
-In particular, SiamRPN \cite{SiamRPN} consists of Siamese subnetwork for feature extraction and region proposal subnetwork including the classification branch and regression branch. In the inference phase, the proposed framework is formulated as a local one-shot detection task.
-SiamRPN++ \cite{SiamRPN++} breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully train a ResNet-driven Siamese tracker with significant performance gain.
-SiamFC++ \cite{SiamFC++} is designed by introducing both classification and target state estimation branch, classification score without ambiguity, tracking without prior knowledge, and estimation quality score.
-In our experiments, we will focus on the SiamFC++ tracker due to its popularity in real-world applications. Nevertheless, we will study the transferability of our generated adversarial attacks to other trackers.
+Siamese visual tracking is a fundamental research direction in template matching-based tracking besides the correlation filter-based methods. Both of them are aimed to estimate the positions of a template cropped from the initial video frame ``causally" in the subsequent frames. Siamese trackers formulate visual tracking as learning cross-correlation similarities between a target template and the candidates in search region in a convolution fashion. Tracking is then performed by locating the object in the search image region based on the highest visual similarity. This paradigm is  formulated as a local one-shot detection task.
 
-\subsection{Adversarial Attack}
+Recently, some Siamese trackers~\cite{SiamRPN,SiamRPN++,SiamFC++} have demonstrated a significant performance improvement in visual tracking. 
+In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution knowledge-free and estimation quality assessment guidelines .
+In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas the transferability of our generated adversarial attacks to the previous anchor-based trackers is also studied.
 
-Adversarial attacks were first investigated in \cite{intriguing} to identify the vulnerability of modern deep networks to imperceptible perturbations in the context of image classification.
-Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks, e.g., natural language processing \cite{generating}, speech recognition \cite{imperceptible} and object detection \cite{wei2019transferable}.
+\subsection{Adversarial Attacks}
+
+Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks, \eg, natural language processing \cite{generating}, speech recognition \cite{imperceptible} and object detection \cite{wei2019transferable}.
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
 
-\subsubsection{Imperceptible Perturbation v.s. Adversarial Patch}
+\textit{Imperceptible Perturbations v.s. Adversarial Patch.} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing}, Fast Gradient Sign Method (FGSM) \cite{FGSM}, and PGD \cite{PGD}.
+Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
+To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbations and adversarial patch together, which are jointly trained in an end-to-end manner.
+Note that our adversarial patch works in the network domain instead of the image domain. In the network-domain case, the noise is allowed to take any value and is not restricted to the dynamic range of images as in the image-domain case \cite{karmon2018lavan}.
 
-The imperceptible perturbations most commonly modify each pixel by on a small amount and can be found using a number of optimisation strategies such as L-BFGS \cite{intriguing}, Fast Gradient Sign Method (FGSM) \cite{FGSM}, and PGD \cite{PGD}.
-Different from the imperceptible perturbation, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image, and causes the network to misbehave.
-To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
-Note that our adversarial patch works in the network domain instead of the image domain. In the network-domain case, the noise is allowed to take any value and is not restricted to the dynamic range of images, while in the image domain case the noise is kept to the dynamic-range of images.
+\textit{Non-targeted Attacks v.s. Targeted Attacks.} In the case of non-targeted attacks, the adversary's goal is to cause the network to predict any incorrect label and the specific incorrect label does not matter, \eg, pushing the object position estimation just outside the true search region in visual tracking.
+Targeted attacks, however, aim to change the network's prediction to some specific target label. In visual tracking, the targeted attacks aim to intentionally drive trackers to output specified object positions following a pre-defined trajectory.
 
-\subsubsection{Non-Targeted Attack v.s. Targeted Attack}
+\subsection{Adversarial Attacks in Visual Tracking}
 
-In the case of non-targeted attack, the adversary's goal is to cause the network to predict any incorrect label and the specific incorrect label does not matter.
-In the case of targeted attack, the adversary aims to change the network's prediction to some specific target label. For the video object tracking task, the targeted attack aims to intentionally drive trackers to output desired object positions specified by the targeted trajectory.
+Recently, there are several explorations of the adversarial attacks to the visual tracking task. For example, PAT \cite{PAT} generates physical adversarial textures via white-box attacks to steer the tracker to lock on the texture when a tracked object moves in front of it. However, PAT validates its method by attacking a light deep regression tracker GOTURN \cite{GOTURN}, which has low tracking accuracy on modern benchmarks. In this paper, we aim to attack the state-of-the-art Siamese trackers.
+RTAA \cite{RTAA} takes temporal motion into consideration when generating lightweight perturbations over the estimated tracking results frame-by-frame. However, RTAA only performs the non-targeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
 
-\subsubsection{Non-Universal Attack v.s. Universal Attack}
-
-In the case of non-universal attack, the perturbations are specifically crafted of each data point independently, while the universal attack seeks a single perturbation that fools the network on most data points.
-In this paper, we perform the universal attack for Siamese tracker.
-
-\subsection{Adversarial Attack in Object Tracking}
-
-Recently, there are several explorations of the adversarial attacks on the visual object tracking task. For example, PAT \cite{PAT} generates physical adversarial textures visa white-box attack to let the tracker lock on the texture when a tracked object moves in front of it. However, PAT validates its method by attacking a light deep regression tracker, i.e., GOTURN \cite{GOTURN} that has low tracking accuracy on modern benchmarks. In this paper, we aim to attack the state-of-the-art trackers based on the Siamese networks.
-RTAA \cite{RTAA} takes temporal motion into consideration when generating lightweight perturbations over the estimated tracking results frame-by-frame. However, RTAA only performs the untargeted attack for tarckers, which causes the adversarial trajectory to deviate from the original trajectory of an object. In this paper, we focus on the more challenging targeted attack for object tracking.
-SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attack against Siamese trackers. However, SPARK needs to generate the adversarial example for every search image in a video, which is time-consuming and ill-suited to attack an online visual tracking system in real time. In this paper, we propose universal perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
+Targeted attacks to follow an erroneous path which looks realistic are crucial to deceive the tracking system without raising any suspicion in the real-world applications.
+SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers. However, SPARK needs to generate distinct adversarial example for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time. The recent real-time attacker in \cite{TemporallyTransferablePerturbations} exclusively uses the template image to generate temporally-transferable perturbations in a one-shot manner, and then adds them to every search image. However, this method still needs to generate perturbations for each individual video, and its targeted attack setting requires diverse perturbations from several runs of network inference. It is ill-suited to attack a real-world online-tracking system when we can not get access to the limited computational resources. In this paper, however, we propose video-agnostic perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
 
 \begin{figure*}[t]
 \centering
