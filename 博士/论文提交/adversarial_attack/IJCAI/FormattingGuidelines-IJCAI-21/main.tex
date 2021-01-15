@@ -238,7 +238,7 @@ The loss function is calculated as follows:
 L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_{x, y}, \textbf{C}_{x, y}^{*}\right) \\
 &+\frac{\beta}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{quality}}\left(\textbf{Q}_{x, y}, \textbf{Q}_{x, y}^{*}\right) \\
 &+\frac{\gamma}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{reg}}\left(\textbf{R}_{x, y}, \textbf{R}_{x, y}^{*}\right) \\
-&+\eta \cdot ||\textbf z||_2^2 +  \sigma \cdot ||\textbf x||^2_2
+&+\eta \cdot ||\delta||_2^2 +  \sigma \cdot ||p||^2_2
 \end{aligned}
 \end{array}
 \end{equation}
