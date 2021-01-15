@@ -386,21 +386,23 @@ As shown in table \ref{tab:iter}, after approximately 30000 training iterations,
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table. ?. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196, which suggests that our perturbation can still work. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
-% Please add the following required packages to your document preamble:
-% \usepackage{graphicx}
-\begin{table}[h]
+\begin{table}[ht]
 \centering
-\resizebox{0.4\textwidth}{!}{%
-\begin{tabular}{c|ccc}
+\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{cc|ccc}
 \toprule
-backbone & googlenet & alexnet & ShuffleNetV2x1.0 \\ \midrule
-FGT-AO   & 0.818     & 0.572   & 0.135\\
-FGT-SR-50& 0.890     & 0.640   & 0.134\\ \midrule
-GT-AO    & 0.035     & 0.196   & 0.554\\
-GT-SR-50 & 0.023     & 0.227   & 0.656\\ \midrule
-ROI-AO   & 0.760     & 0.720   & 0.766\\  
-ROI-SR-50& 0.897     & 0.850   & 0.888\\ \bottomrule
-\end{tabular}%
+\multicolumn{2}{c|}{Backbone}                                                     & GoogLeNet & AlexNet & ShuffleNet    \\
+\midrule
+\multirow{4}{*}{\begin{tabular}[c]{@{}c@{}}Perturbed\\Videos \end{tabular}} & AO (FGT)& 0.818     & 0.572   & 0.135 \\
+                                                                            & SR (FGT)& 0.890     & 0.640   & 0.134 \\
+\cmidrule{2-5}
+                                                                            & AO (GT) & 0.035     & 0.196   & 0.554\\
+                                                                            & SR (GT) & 0.023     & 0.227   & 0.656\\
+\midrule
+\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Clean\\Videos \end{tabular}}     & AO (GT) & 0.760     & 0.720   & 0.766         \\
+                                                                            & SR (GT) & 0.897     & 0.850   & 0.888         \\
+\bottomrule
+\end{tabular}
 }
 \caption{Different backbone}
 \end{table}
