@@ -98,16 +98,17 @@ In this paper, we show the existence of video-agnostic perturbations that can en
 
 \end{abstract}
 
-\begin{figure}
-\centering
-\subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
-\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
-\caption{Left: search patch. Right: template disturb.}
-\end{figure}
-
 \section{Introduction}
 
 Given an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the testing phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{SiamFC,SiamRPN,DaSiamRPN,SiamRPN++,SiamMask,SiamFC++}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
+
+\begin{figure}[htbp]
+\centering
+%\subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
+%\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
+\includegraphics[width=0.4\textwidth]{images/1_v3.pdf}
+\caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner. Our approach allows perturbing a new video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference.}
+\end{figure}
 
 Recently, the robustness of Siamese trackers have attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TemporallyTransferablePerturbations,efficient,SPARK}. Despite their success, these attack methods are not suitable for attacking the real-world online-tracking systems built upon the small edge platforms with limited computational resources. The reason is that they still need to craft the perturbations for each video independently based on either iterative optimisation or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
 
@@ -148,8 +149,8 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.8\textwidth]{images/network.pdf}
-\caption{network structure}
+\includegraphics[width=1.0\textwidth]{images/network_v2.pdf}
+\caption{The pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.}
 \end{figure*}
 
 \section{Method}
@@ -242,11 +243,6 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \STATE $\delta = \delta - \epsilon_1\cdot\text{sign}(\nabla_{\delta}L(y, \hat y))$
 \STATE $\sigma = \sigma - \epsilon_2 \cdot \text{sign}(\nabla_{\sigma}L(y, \hat y))$
 \STATE $i = i + 1$
-\IF {conditional}
-\STATE Perform task A.
-\ELSE
-\STATE Perform task B.
-\ENDIF
 \ENDWHILE
 \STATE \textbf{return} solution
 \end{algorithmic}
@@ -363,15 +359,19 @@ To summarize, while all loss terms are beneficial, the classification term is mo
 
 \begin{table}[h]
 \centering
-\resizebox{0.4\textwidth}{!}{%
-\begin{tabular}{ccc|cccc}
+\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{ccc|cc|cc} 
 \toprule
-$L_{cls}$ & $L_{quality}$ & $L_{reg}$ & FGT AO & FGT SR50 & GT AO & GT SR50 \\ \midrule
+\multirow{2}{*}{$L_{cls}$}     & \multirow{2}{*}{$L_{quality}$} & \multirow{2}{*}{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
+\cmidrule{4-7}
+                       &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
+\midrule
 \checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
    & \checkmark   &    & 0.044  & 0.044    & 0.703 & 0.842   \\
    &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
 \checkmark   & \checkmark   & \checkmark   & 0.781  & 0.855    & 0.071 & 0.066   \\ \bottomrule
-\end{tabular}}
+\end{tabular}
+}
 \caption{Different loss weight.}
 \end{table}
 
@@ -413,15 +413,19 @@ The experimental results are shown in Table. ?. On SiamRPN, the success score re
 
 %\textbf{Definition:} Transferability can judge the perturbation generated from one can still work at another network, although the network structure is very different. As we can see, we can successfully transfer from anchor free method SiamFC++ to anchor-based tracker SiamRPN \cite{SiamRPN} with backbone alexnet and SiamRPN++ \cite{SiamRPN++} with backbone resnet 50, shows the power of our attack.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
-\resizebox{0.45\textwidth}{!}{%
-\begin{tabular}{c|cc|cc}
+\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{c|cc|cc} 
 \toprule
-Trackers     & Succ-ORI & Prec-ORI & Succ-ATTACK & Precision-ATTACK \\ \midrule
-siamRPN++    & 0.676   & 0.879     & 0.518       & 0.691 \\
-SiamRPN      & 0.666   & 0.876     & 0.379       & 0.506 \\ \bottomrule
-\end{tabular}%
+\multirow{2}{*}{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
+\cmidrule{2-5}
+                          & Success & Precision              & Success & Precision                   \\
+\midrule
+SiamRPN++                 & 0.676   & 0.879                  & 0.518   & 0.691                       \\
+SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506                       \\
+\bottomrule
+\end{tabular}
 }
 \caption{Transferability of different architecture on OTB2015}
 \end{table}
