@@ -361,6 +361,36 @@ With a large number of video sequences, LaSOT (Largescale Single Object Tracking
 Following onepass evaluation, different trackers are compared based on three criteria including precision, normalized precision and success.
 The precision score relative to $B^{gt}$ on the clean videos is 0.514. The precision score relative to $B^{gt}$ on the adversarial videos is 0.013. The precision score relative to $B^{fake}$ on the adversarial videos is 0.820.
 
+\subsubsection{Compared with Other Methods}
+
+\begin{table}[ht]
+\centering
+\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+Method & Tracker & Backbone & Before & After & Drop Rate \\ \midrule
+CSA & SiamRPN & AlexNet & 0.851 & 0.458 & 0.46 \\
+Efficient & SiamFC & AlexNet & 0.72 & 0.18 & 0.75 \\
+Temeorally & SiamRPN++ & ResNet-50 & 0.91 & 0.08 & 0.91 \\
+Ours & SiamFC++ & GoogLeNet & 0.861 & 0.048 & 0.94 \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{@{}cccc@{}}
+\toprule
+Method & Tracker & Backbone & Precision \\ \midrule
+Efficient & SiamFC & AlexNet & 42.0 \\
+Tempoarlly & SiamRPN++ & ResNet-50 & 69.2 \\
+Ours & SiamFC++ & GoogLeNet & 92.8 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
 \subsection{Ablation Studies}
 
 \subsubsection{Influence of Training Loss}
