@@ -173,11 +173,11 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{c|ccccccccccccccccc}
 \toprule
-iter num &  0    &  1    &  2    &  4    & 8   & 16  & 32  & 64  & 128 & 256  & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768 \\ \midrule
-FGT-AO   & 0.004 & 0.002 &0.002 & 0.002 &0.002&0.002&0.003&0.007&0.042& 0.299& 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818 \\
-FGT-SR-50& 0.000 & 0.000 &0.000 & 0.000 &0.000&0.000&0.001&0.005&0.044& 0.335& 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890 \\ \midrule
-GT-AO    &  0.760& 0.757 &0.756 & 0.757 &0.757&0.758&0.759&0.753&0.720& 0.474& 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035 \\
-GT-SR-50 &  0.897& 0.894 &0.891 & 0.893 &0.891&0.893&0.896&0.888&0.852& 0.559& 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023 \\ \midrule
+Iterations &  0    &  1    &  2    &  4    & 8   & 16  & 32  & 64  & 128 & 256  & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768 \\ \midrule
+AO (FGT)   & 0.004 & 0.002 &0.002 & 0.002 &0.002&0.002&0.003&0.007&0.042& 0.299& 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818 \\
+SR (FGT) & 0.000 & 0.000 &0.000 & 0.000 &0.000&0.000&0.001&0.005&0.044& 0.335& 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890 \\ \midrule
+AO (GT)    &  0.760& 0.757 &0.756 & 0.757 &0.757&0.758&0.759&0.753&0.720& 0.474& 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035 \\
+SR (GT) &  0.897& 0.894 &0.891 & 0.893 &0.891&0.893&0.896&0.888&0.852& 0.559& 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023 \\ \midrule
 SSIM     &  1.00 & 1.00  & 1.00 & 1.00  &1.00 &0.99 & 0.99& 0.97& 0.93& 0.86 & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88  \\
 MSE      &  0.00 & 0.51  & 0.26 & 0.32  & 0.37& 0.48& 0.84& 2.03& 5.65&15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87 \\ \bottomrule
 \end{tabular}%
@@ -248,7 +248,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{optimisation}
+\subsubsection{Optimisation}
 
 \begin{figure*}[t]
 \centering
@@ -323,6 +323,14 @@ In equ. ?, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=1e-5$.
 %Note that the negative pairs are not involved as part of training samples, because we always paste the fake target into the search image.
 %The size of the template is 127 * 127. The size of the search image is 303 * 303 during both training and inference phase.
 %we initialize our template perturbation as 0, and patch as 128. To avoid the bad influence of the rescale, which can cause the information loss, we always use the big patch. When paste onto the search image, we rescale the patch (mostly down-sample) and then paste.
+
+\subsection{Generating the Fake Trajectory}
+
+We need to set a specific trajectories $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textbf{Fake Trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textbf{Real Trajectory}.
+Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
+Specifically, the fake trajectory follows the real trajectory and the boundary between $b^{fake}_i$ and $b^{gt}_i$ is 16 pixels apart.
+%The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
+The bounding box size of the fake trajectory gradually changes from the size of $S^{gt}_0$ to $64\times 64$.
 
 \subsection{Result on Several Benchmarks}
 
