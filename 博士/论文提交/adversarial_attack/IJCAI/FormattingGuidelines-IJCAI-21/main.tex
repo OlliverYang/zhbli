@@ -174,7 +174,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \begin{tabular}{c|ccccccccccccccccc}
 \toprule
 Iterations &  0    &  1    &  2    &  4    & 8   & 16  & 32  & 64  & 128 & 256  & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768 \\ \midrule
-AO (FGT)   & 0.004 & 0.002 &0.002 & 0.002 &0.002&0.002&0.003&0.007&0.042& 0.299& 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818 \\
+AO (Fake Trajectory)   & 0.004 & 0.002 &0.002 & 0.002 &0.002&0.002&0.003&0.007&0.042& 0.299& 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818 \\
 SR (FGT) & 0.000 & 0.000 &0.000 & 0.000 &0.000&0.000&0.001&0.005&0.044& 0.335& 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890 \\ \midrule
 AO (GT)    &  0.760& 0.757 &0.756 & 0.757 &0.757&0.758&0.759&0.753&0.720& 0.474& 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035 \\
 SR (GT) &  0.897& 0.894 &0.891 & 0.893 &0.891&0.893&0.896&0.888&0.852& 0.559& 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023 \\ \midrule
@@ -307,7 +307,9 @@ The tracker then takes $\tilde{\textbf z}=\textbf z+\delta$ and $\tilde{ \textbf
 
 \section{Experiments}
 
-\subsection{Datasets and Implementation Details}
+\subsection{Setting}
+
+\subsubsection{Implementation Details}
 
 We use SiamFC++ as our base tracker, and the backbone Siamese network adopts GoogLeNet.
 We implement our our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
@@ -317,14 +319,16 @@ The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and t
 We generate training samples following the strategy in SiamFC++.
 During the training and the testing phase, the size of the template image is set to $127\times 127\times 3$, and the size of the search image is set to $303\times 303\times 3$.
 In equ. ?, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=1e-5$.
-\textbf{Datasets} We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
+
+\subsubsection{Datasets}
+We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
 
 %Although we do not need to control the weight of $x$, but in experiment we find that it will influence the stability of the training phase.
 %Note that the negative pairs are not involved as part of training samples, because we always paste the fake target into the search image.
 %The size of the template is 127 * 127. The size of the search image is 303 * 303 during both training and inference phase.
 %we initialize our template perturbation as 0, and patch as 128. To avoid the bad influence of the rescale, which can cause the information loss, we always use the big patch. When paste onto the search image, we rescale the patch (mostly down-sample) and then paste.
 
-\subsection{Generating the Fake Trajectory}
+\subsubsection{Generating the Fake Trajectory}
 
 We need to set a specific trajectories $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textbf{Fake Trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textbf{Real Trajectory}.
 Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
@@ -396,23 +400,20 @@ The experimental results are shown in Table. ?. On SiamFC++-AlexNet, the AO rela
 
 \begin{table}[ht]
 \centering
-\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{cc|ccc}
+\caption{Different backbone}
+\begin{tabular}{c|cc|cc|cc} 
 \toprule
-\multicolumn{2}{c|}{Backbone}                                                     & GoogLeNet & AlexNet & ShuffleNet    \\
+\multirow{3}{*}{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
+\cmidrule{2-7}
+                          & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c}{Fake Trajectory}  \\ 
+\cmidrule{2-7}
+                          & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
 \midrule
-\multirow{4}{*}{\begin{tabular}[c]{@{}c@{}}Perturbed\\Videos \end{tabular}} & AO (FGT)& 0.818     & 0.572   & 0.135 \\
-                                                                            & SR (FGT)& 0.890     & 0.640   & 0.134 \\
-\cmidrule{2-5}
-                                                                            & AO (GT) & 0.035     & 0.196   & 0.554\\
-                                                                            & SR (GT) & 0.023     & 0.227   & 0.656\\
-\midrule
-\multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Clean\\Videos \end{tabular}}     & AO (GT) & 0.760     & 0.720   & 0.766         \\
-                                                                            & SR (GT) & 0.897     & 0.850   & 0.888         \\
+GoogLeNet                 & 0.760 & 0.897                        & 0.035 & 0.023                        & 0.818 & 0.890                        \\
+AlexNet                   & 0.720 & 0.850                        & 0.196 & 0.227                        & 0.572 & 0.640                        \\
+ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656                        & 0.135 & 0.134                        \\
 \bottomrule
 \end{tabular}
-}
-\caption{Different backbone}
 \end{table}
 
 \subsubsection{Transferability of different architecture}
@@ -550,7 +551,18 @@ What we do is the targeted attack, which means the tracker follows a new traject
 
 We perform a good solution, use unseen small perturbations on the search image and small patch on the search image to attack. / We propose an algorithm for finding such perturbations. The algorithm seeks a universal perturbation for a ...
 
-\subsection{Generating Fake Trajectories}
+\subsection{Experiments}
+
+\subsubsection{Targeted Attack Evaluation}
+
+Two kinds of videos: the clean videos and the perturbed videos.
+Two kinds of trajectories: the real trajectory and the fake trajectory.
+So 4 combine: the clean videos + the real trajectory: the original result.
+the perturbed video + the real trajectory: bad is good.
+The perturbed video + the fake trajectory: high is good.
+We hope that the attacked videos will have higher indicators on false trajectories and lower indicators on real trajectories.
+
+\subsubsection{Generating Fake Trajectories}
 
 We need to set specific trajectory for the video frames in the dataset to achieve targeted attack.
 For targeted attacks, we need to generate a fake trajectory: The definition of the fake ground truth: ... We can set the fake ground truth as what we want.
