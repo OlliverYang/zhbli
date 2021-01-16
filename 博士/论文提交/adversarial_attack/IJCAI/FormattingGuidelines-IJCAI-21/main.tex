@@ -169,31 +169,6 @@ At each time-step, the template image $\textbf z$ and the search image $\textbf 
 Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.
 Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
 
-\begin{table*}
-\centering
-\scriptsize
-\tabcolsep=4.0pt
-%\resizebox{\textwidth}{!}{%
-\label{tab:iter}
-\begin{tabular}{cc|cccccccccccccccc} 
-\toprule
-\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
-\midrule
-\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
-                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
-\midrule
-\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
-                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
-\midrule
-\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
-\bottomrule
-\end{tabular}
-%}
-\caption{Influence of the number of training iterations on GOT-10k\_Val.}
-\label{tab:iter}
-\end{table*}
-
 \subsection{Generating Universal Perturbations}
 
 In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers.
@@ -273,6 +248,52 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
 During training, we only optimize the values of perturbations $(\delta, p)$, and the parameters of the Siamese network remain intact.
 
+\subsection{Attacking the Tracker at Inference Time}
+
+Once the the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
+Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
+During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (relative to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ relative to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
+\begin{equation}
+\tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
+\end{equation}
+The tracker then takes $\tilde{\textbf z}=\textbf z+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Experiments}
+
+\subsection{Setting}
+
+\subsubsection{Implementation Details}
+
+We use SiamFC++ \cite{SiamFC++} as our base tracker, and the backbone Siamese network adopts GoogLeNet \cite{GoogLeNet}.
+We implement our our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
+We adopt GOT-10k \cite{GOT-10k}, COCO \cite{COCO}, ILSVRC-VID \cite{VID} and LaSOT \cite{LaSOT} and our training set.
+We train the perturbations for 32768 iterations with a minibatch of 96 images (32 images per GPU).
+The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and the learning rate of the adversarial patch is $\epsilon_2 = 0.5$.
+We generate training samples following the strategy in SiamFC++.
+During the training and the testing phase, the size of the template image is set to $127\times 127\times 3$, and the size of the search image is set to $303\times 303\times 3$.
+In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=10^{-5}$.
+
+\subsubsection{Datasets}
+We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
+The detailed information and evaluation metric of each dataset are described in the following subsections.
+
+\subsubsection{Generating the Fake Trajectory}
+
+We need to set a specific trajectories $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textit{fake trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textit{real trajectory}.
+Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
+Specifically, the fake trajectory follows the real trajectory and the boundary between $b^{fake}_i$ and $b^{gt}_i$ is 16 pixels apart.
+%The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
+The bounding box size of the fake trajectory gradually changes from the size of $b^{gt}_1$ to $64\times 64$.
+
+\subsubsection{Image Quality Assessment} We use structural similarity (SSIM) to evaluate the quality of the template perturbation $\delta$. The generated adversarial perturbation is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
+
+\subsection{Result on Several Benchmarks}
+
+We test the performance of our attack method on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
+%Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
+
 \begin{table}[hbtp]
 \centering
 \scriptsize
@@ -306,56 +327,12 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \label{tab:benchmark results}
 \end{table}
 
-\subsection{Attacking the Tracker at Inference Time}
-
-Once the the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
-Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (relative to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ relative to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
-\begin{equation}
-\tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
-\end{equation}
-The tracker then takes $\tilde{\textbf z}=\textbf z+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
-
-\section{Experiments}
-
-\subsection{Setting}
-
-\subsubsection{Implementation Details}
-
-We use SiamFC++ as our base tracker, and the backbone Siamese network adopts GoogLeNet.
-We implement our our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
-We adopt GOT-10k \cite{GOT-10k}, COCO \cite{COCO}, ILSVRC-VID \cite{VID} and LaSOT \cite{LaSOT} and our training set.
-We train the perturbations for 32768 iterations with a minibatch of 96 images (32 images per GPU).
-The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and the learning rate of the adversarial patch is $\epsilon_2 = 0.5$.
-We generate training samples following the strategy in SiamFC++.
-During the training and the testing phase, the size of the template image is set to $127\times 127\times 3$, and the size of the search image is set to $303\times 303\times 3$.
-In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=10^{-5}$.
-
-\subsubsection{Datasets}
-We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
-The detailed information and evaluation metric of each dataset are described in the following subsections.
-
-\subsubsection{Generating the Fake Trajectory}
-
-We need to set a specific trajectories $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textbf{Fake Trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textbf{Real Trajectory}.
-Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
-Specifically, the fake trajectory follows the real trajectory and the boundary between $b^{fake}_i$ and $b^{gt}_i$ is 16 pixels apart.
-%The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-The bounding box size of the fake trajectory gradually changes from the size of $S^{gt}_0$ to $64\times 64$.
-
-\subsubsection{Image Quality Assessment}: We use structural similarity (SSIM) to evaluate the quality of the template perturbation $\delta$. The generated adversarial perturbation is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
-
-\subsection{Result on Several Benchmarks}
-
-We test our tracker on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
-Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
-
 \subsubsection{Evaluation on OTB2015 Benchmark}
 
 As one of the most classical benchmarks for the object tracking task, the OTB benchmark provides a fair test for trackers. We conduct experiments on OTB2015 \cite{OTB} which contains 100 videos for tracker performance evaluation.
 We use success precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
 The precision encodes the proportion of frames for which the center of the tracking window is within 20 pixels of the ground-truth center. The success corresponds to the proportion of frames for which the overlap between the predicted and ground truth tracking window is greater than a given threshold.
-After applying the universal perturbations to videos, the success score relative to $B^{gt}$ drops from 0.642 to 0.035, indicating that our method can fool the state-of-the-art SiamFC++ tracker effectively.
+After applying the universal perturbations to videos, the success score relative to $B^{gt}$ drops from 0.642 to 0.035, indicating that our method can fool the state-of-the-art SiamFC++ tracker on OTB2015 effectively.
 %The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
 
 \subsubsection{Evaluation on GOT-10k Benchmark}
@@ -369,7 +346,7 @@ The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstr
 
 \subsubsection{Evaluation on LaSOT Benchmark}
 
-With a large number of video sequences, LaSOT (Largescale Single Object Tracking) benchmark makes it impossible for trackers to overfit the benchmark, which achieves the purpose of testing the real performance of object tracking.
+With a large number of video sequences, LaSOT (Largescale Single Object Tracking) benchmark \cite{LaSOT} makes it impossible for trackers to overfit the benchmark, which achieves the purpose of testing the real performance of object tracking.
 Following onepass evaluation, we use three criteria including precision, normalized precision and success for evaluation.
 The precision score relative to $B^{gt}$ on the clean videos is 0.514. The precision score relative to $B^{gt}$ on the adversarial videos is 0.013. The precision score relative to $B^{fake}$ on the adversarial videos is 0.820, indicating that our attack method is effective. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
 
@@ -454,12 +431,37 @@ To summarize, while all loss terms are beneficial, the classification term is mo
 
 As shown in table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notices that at the start of training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
 
+\begin{table*}
+\centering
+\scriptsize
+\tabcolsep=4.0pt
+%\resizebox{\textwidth}{!}{%
+\label{tab:iter}
+\begin{tabular}{cc|cccccccccccccccc} 
+\toprule
+\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
+\midrule
+\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
+\midrule
+\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
+\midrule
+\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
+\bottomrule
+\end{tabular}
+%}
+\caption{Influence of the number of training iterations on GOT-10k\_Val.}
+\label{tab:iter}
+\end{table*}
+
 \subsection{Transferability}
 
 \subsubsection{Transferability of Different Backbones}
 
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
-The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196, which suggests that our perturbation can still work. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
+The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
 \begin{table}[ht]
 \begin{center}
