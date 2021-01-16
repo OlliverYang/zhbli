@@ -170,7 +170,9 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 
 \begin{table*}
 \centering
-\resizebox{\textwidth}{!}{%
+\scriptsize
+\tabcolsep=4.0pt
+%\resizebox{\textwidth}{!}{%
 \label{tab:iter}
 \begin{tabular}{cc|ccccccccccccccccc} 
 \toprule
@@ -186,7 +188,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \multicolumn{2}{c|}{MSE}                       & 0.00  & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
 \bottomrule
 \end{tabular}
-}
+%}
 \caption{Influence of the number of training iterations on GOT-10k\_Val.}
 \end{table*}
 
@@ -223,6 +225,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 &+\eta \cdot ||\delta||_2^2 +  \sigma \cdot ||p||^2_2
 \end{aligned}
 \end{array}
+\label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
 {where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denote the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denote the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denote the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
@@ -270,7 +273,9 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 
 \begin{table}[hbtp]
 \centering
-\resizebox{0.48\textwidth}{!}{%
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c c | c | c | c}
 \toprule
 \multirow{2}{*}[-2pt]{Trackers} & \multirow{2}{*}[-2pt]{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
@@ -278,8 +283,8 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
                           &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
 \midrule
 \multirow{2}{*}{OTB-15} 
-& Success   & 64.2 & 3.5 & 84.2\\
-& Precision & 86.1 & 4.8 & 92.8\\
+& Success   & 0.642 & 0.035 & 0.842\\
+& Precision & 0.861 & 0.048 & 0.928\\
 \midrule
 \multirow{3}{*}{GOT-Val} 
 & SR\textsubscript{.50} & 0.897 & 0.023 & 0.890\\
@@ -294,7 +299,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
 \bottomrule
 \end{tabular}
-}
+%}
 \caption{Attack results on several benchmarks.}
 \label{tab:benchmark results}
 \end{table}
@@ -372,34 +377,38 @@ Our method significantly outperforms other methods in terms of the precision sco
 
 \begin{table}[ht]
 \centering
-\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{@{}ccccccc@{}}
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}ccc|cccc@{}}
 \toprule
-Method & Tracker & Backbone & Attack Cost (ms) & Clean Videos & Perturbed Videos & Drop Rate \\ \midrule
+Method & Tracker & Backbone & \begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Perturbed\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Drop\\ Rate\end{tabular} \\ \midrule
 CSA & SiamRPN & AlexNet & 4720 & 0.851 & 0.458 & 0.46 \\
-FAN & SiamFC & AlexNet & 10 & 0.72 & 0.18 & 0.75 \\
-TTP & SiamRPN++ & ResNet-50 & 8 & 0.91 & 0.08 & 0.91 \\
+FAN & SiamFC & AlexNet & 10 & 0.720 & 0.180 & 0.75 \\
+TTP & SiamRPN++ & ResNet-50 & 8 & 0.910 & 0.080 & 0.91 \\
 \midrule
 Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 0.94 \\ \bottomrule
 \end{tabular}%
-}
+%}
 \caption{Precision score relative to the real trajectory on OTB2015.}
 \label{tab:untargeted}
 \end{table}
 
 \begin{table}[ht]
 \centering
-\resizebox{0.48\textwidth}{!}{%
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{@{}cccc@{}}
 \toprule
-Method & Tracker & Backbone & Precision on Perturbed Videos \\ \midrule
-FAN & SiamFC & AlexNet & 42.0 \\
-TTP & SiamRPN++ & ResNet-50 & 69.2 \\
+Method & Tracker & Backbone & \begin{tabular}[c]{@{}c@{}}Precision on\\ Perturbed Videos\end{tabular}  \\ \midrule
+FAN & SiamFC & AlexNet & 0.420 \\
+TTP & SiamRPN++ & ResNet-50 & 0.692 \\
 \midrule
-Ours & SiamFC++ & GoogLeNet & 92.8 \\
+Ours & SiamFC++ & GoogLeNet & 0.928 \\
 \bottomrule
 \end{tabular}%
-}
+%}
 \caption{Precision score relative to the fake trajectory on OTB2015.}
 \label{tab:targeted}
 \end{table}
@@ -409,13 +418,15 @@ Ours & SiamFC++ & GoogLeNet & 92.8 \\
 \subsubsection{Influence of Training Loss}
 
 We implement a series of experiments to analyse and evaluate the contribution of each loss component.
-In Table. ?, we report our results on GOT-10k val set with different combination of loss terms, where $L_{cls}, L_{quality}, L_{reg}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. ?, respectively.
+In Table \ref{tab:loss}, we report our results on GOT-10k val set with different combination of loss terms, where $L_{cls}, L_{quality}, L_{reg}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
 To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
 %We find use three loss to train together can achieve better performance. In line one, we only train the classification branch. After adding all three losses, our attack achieve better performance. We can see that the classification loss contributes most. And the center loss contributes less.
 
 \begin{table}[h]
 \centering
-\resizebox{0.48\textwidth}{!}{%
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{ccc|cc|cc} 
 \toprule
 \multirow{2}{*}[-2pt]{$L_{cls}$}     & \multirow{2}{*}[-2pt]{$L_{quality}$} & \multirow{2}{*}[-2pt]{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
@@ -427,8 +438,9 @@ To summarize, while all loss terms are beneficial, the classification term is mo
    &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
 \checkmark   & \checkmark   & \checkmark   & 0.781  & 0.855    & 0.071 & 0.066   \\ \bottomrule
 \end{tabular}
-}
+%}
 \caption{Contribution of each loss on GOT-10k\_Val.}
+\label{tab:loss}
 \end{table}
 
 \subsubsection{Influence of Training Iterations}
@@ -444,7 +456,9 @@ The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-Alex
 
 \begin{table}[ht]
 \begin{center}
-\resizebox{0.48\textwidth}{!}{%
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc|cc} 
 \toprule
 \multirow{3}{*}[-6pt]{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
@@ -458,7 +472,7 @@ AlexNet                   & 0.720 & 0.850                        & 0.196 & 0.227
 ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656                        & 0.135 & 0.134                        \\
 \bottomrule
 \end{tabular}
-}
+%}
 \end{center}
 \caption{Transferability of different backbones on GOT-10k\_Val.}
 \label{tab:backbone}
@@ -474,7 +488,9 @@ The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the succ
 
 \begin{table}[ht]
 \centering
-\resizebox{0.48\textwidth}{!}{%
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc} 
 \toprule
 \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
@@ -485,7 +501,7 @@ SiamRPN++                 & 0.676   & 0.879                  & 0.518   & 0.691  
 SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506                       \\
 \bottomrule
 \end{tabular}
-}
+%}
 \caption{Transferability of different tracking architectures on OTB2015.}
 \label{tab:arch}
 \end{table}
