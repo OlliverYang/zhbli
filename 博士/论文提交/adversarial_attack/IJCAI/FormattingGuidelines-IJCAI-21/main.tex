@@ -363,18 +363,28 @@ The precision score relative to $B^{gt}$ on the clean videos is 0.514. The preci
 
 \subsubsection{Compared with Other Methods}
 
+In table \ref{tab:untargeted}, we compare the untargeted attack performance of our method with CSA \cite{CSA}, FAN \cite{FAN} and TTP \cite{TTP}.
+We report the precision score relative to the real trajectory on OTB2015.
+Our method significantly outperforms other methods in terms of the drop rate of the precision score.
+
+In table \ref{tab:targeted}, we compare the the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
+Our method significantly outperforms other methods in terms of the precision score relative to the fake trajectory on OTB2015.
+
 \begin{table}[ht]
 \centering
 \resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{@{}cccccc@{}}
+\begin{tabular}{@{}ccccccc@{}}
 \toprule
-Method & Tracker & Backbone & Before & After & Drop Rate \\ \midrule
-CSA & SiamRPN & AlexNet & 0.851 & 0.458 & 0.46 \\
-Efficient & SiamFC & AlexNet & 0.72 & 0.18 & 0.75 \\
-Temeorally & SiamRPN++ & ResNet-50 & 0.91 & 0.08 & 0.91 \\
-Ours & SiamFC++ & GoogLeNet & 0.861 & 0.048 & 0.94 \\ \bottomrule
+Method & Tracker & Backbone & Attack Cost (ms) & Clean Videos & Perturbed Videos & Drop Rate \\ \midrule
+CSA & SiamRPN & AlexNet & 4720 & 0.851 & 0.458 & 0.46 \\
+FAN & SiamFC & AlexNet & 10 & 0.72 & 0.18 & 0.75 \\
+TTP & SiamRPN++ & ResNet-50 & 8 & 0.91 & 0.08 & 0.91 \\
+\midrule
+Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 0.94 \\ \bottomrule
 \end{tabular}%
 }
+\caption{Precision score relative to the real trajectory on OTB2015.}
+\label{tab:untargeted}
 \end{table}
 
 \begin{table}[ht]
@@ -382,13 +392,16 @@ Ours & SiamFC++ & GoogLeNet & 0.861 & 0.048 & 0.94 \\ \bottomrule
 \resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{@{}cccc@{}}
 \toprule
-Method & Tracker & Backbone & Precision \\ \midrule
-Efficient & SiamFC & AlexNet & 42.0 \\
-Tempoarlly & SiamRPN++ & ResNet-50 & 69.2 \\
+Method & Tracker & Backbone & Precision on Perturbed Videos \\ \midrule
+FAN & SiamFC & AlexNet & 42.0 \\
+TTP & SiamRPN++ & ResNet-50 & 69.2 \\
+\midrule
 Ours & SiamFC++ & GoogLeNet & 92.8 \\
 \bottomrule
 \end{tabular}%
 }
+\caption{Precision score relative to the fake trajectory on OTB2015.}
+\label{tab:targeted}
 \end{table}
 
 \subsection{Ablation Studies}
