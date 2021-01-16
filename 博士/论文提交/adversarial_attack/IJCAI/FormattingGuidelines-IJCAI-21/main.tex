@@ -187,7 +187,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \bottomrule
 \end{tabular}
 }
-\caption{Influence of Training Iterations}
+\caption{Influence of the number of training iterations on GOT-10k\_Val.}
 \end{table*}
 
 \subsection{Generating Universal Perturbations}
@@ -295,7 +295,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \bottomrule
 \end{tabular}
 }
-\caption{Ablation study results on several benchmarks.}
+\caption{Attack results on several benchmarks.}
 \label{tab:benchmark results}
 \end{table}
 
@@ -428,7 +428,7 @@ To summarize, while all loss terms are beneficial, the classification term is mo
 \checkmark   & \checkmark   & \checkmark   & 0.781  & 0.855    & 0.071 & 0.066   \\ \bottomrule
 \end{tabular}
 }
-\caption{Different loss weight.}
+\caption{Contribution of each loss on GOT-10k\_Val.}
 \end{table}
 
 \subsubsection{Influence of Training Iterations}
@@ -437,10 +437,10 @@ As shown in table \ref{tab:iter}, after approximately 30000 training iterations,
 
 \subsection{Transferability}
 
-\subsubsection{Transferability of different backbone}
+\subsubsection{Transferability of Different Backbones}
 
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
-The experimental results are shown in Table. ?. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196, which suggests that our perturbation can still work. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
+The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196, which suggests that our perturbation can still work. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
 \begin{table}[ht]
 \begin{center}
@@ -460,14 +460,15 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \end{tabular}
 }
 \end{center}
-\caption{Different backbone}
+\caption{Transferability of different backbones on GOT-10k\_Val.}
+\label{tab:backbone}
 \end{table}
 
-\subsubsection{Transferability of different architecture}
+\subsubsection{Transferability of Different Tracking Architectures}
 
 We use AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} as black-box attack models to verify the transferability of our perturbations on different tracking architectures.
 SiamRPN uses an RPN network to perform location regression and classification on the response map. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy. Both SiamRPN and SiamRPN++ are anchor-based methods while SiamFC++ is an anchor-free method.
-The experimental results are shown in Table. ?. On SiamRPN, the success score relative to $B^{gt}$ drops from 0.666 to 0.379. On SiamRPN++, the success score relative to $B^{gt}$ drops from 0.676 to 0.518. The results show that our method can still show good transferability for different tracking architectures.
+The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the success score relative to $B^{gt}$ drops from 0.666 to 0.379. On SiamRPN++, the success score relative to $B^{gt}$ drops from 0.676 to 0.518. The results show that our method can still show good transferability for different tracking architectures.
 
 %\textbf{Definition:} Transferability can judge the perturbation generated from one can still work at another network, although the network structure is very different. As we can see, we can successfully transfer from anchor free method SiamFC++ to anchor-based tracker SiamRPN \cite{SiamRPN} with backbone alexnet and SiamRPN++ \cite{SiamRPN++} with backbone resnet 50, shows the power of our attack.
 
@@ -485,7 +486,8 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \bottomrule
 \end{tabular}
 }
-\caption{Transferability of different architecture on OTB2015}
+\caption{Transferability of different tracking architectures on OTB2015.}
+\label{tab:arch}
 \end{table}
 
 \section{Conclusion}
