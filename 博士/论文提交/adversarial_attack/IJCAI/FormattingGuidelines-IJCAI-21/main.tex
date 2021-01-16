@@ -174,22 +174,23 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \tabcolsep=4.0pt
 %\resizebox{\textwidth}{!}{%
 \label{tab:iter}
-\begin{tabular}{cc|ccccccccccccccccc} 
+\begin{tabular}{cc|cccccccccccccccc} 
 \toprule
-\multicolumn{2}{c|}{Iterations}  & 0     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
+\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
 \midrule
-\multirow{2}{*}{Fake Trajectory} & AO   & 0.004 & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
-                                 & SR   & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
+\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
 \midrule
-\multirow{2}{*}{Real Trajectory} & AO   & 0.760 & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
-                                 & SR   & 0.897 & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
+\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
 \midrule
-\multicolumn{2}{c|}{SSIM}                      & 1.00  & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-\multicolumn{2}{c|}{MSE}                       & 0.00  & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
+\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
 \bottomrule
 \end{tabular}
 %}
 \caption{Influence of the number of training iterations on GOT-10k\_Val.}
+\label{tab:iter}
 \end{table*}
 
 \subsection{Generating Universal Perturbations}
@@ -327,7 +328,7 @@ We train the perturbations for 32768 iterations with a minibatch of 96 images (3
 The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and the learning rate of the adversarial patch is $\epsilon_2 = 0.5$.
 We generate training samples following the strategy in SiamFC++.
 During the training and the testing phase, the size of the template image is set to $127\times 127\times 3$, and the size of the search image is set to $303\times 303\times 3$.
-In equ. ?, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=1e-5$.
+In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=10^{-5}$.
 
 \subsubsection{Datasets}
 We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
@@ -341,30 +342,35 @@ Specifically, the fake trajectory follows the real trajectory and the boundary b
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
 The bounding box size of the fake trajectory gradually changes from the size of $S^{gt}_0$ to $64\times 64$.
 
+\subsubsection{Image Quality Assessment}: We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the template perturbation $\delta$. The generated adversarial perturbation is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
+
 \subsection{Result on Several Benchmarks}
 
 We test our tracker on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
-Note that, in the original siamfc++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
+Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
 
 \subsubsection{Evaluation on OTB2015 Benchmark}
 
 As one of the most classical benchmarks for the object tracking task, the OTB benchmark provides a fair test for trackers. We conduct experiments on OTB2015 \cite{OTB} which contains 100 videos for tracker performance evaluation.
 We use success precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
 The precision encodes the proportion of frames for which the center of the tracking window is within 20 pixels of the ground-truth center. The success corresponds to the proportion of frames for which the overlap between the predicted and ground truth tracking window is greater than a given threshold.
-The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
+After applying the universal perturbations to videos, the success score relative to $B^{gt}$ drops from 0.642 to 0.035, indicating that our method can fool the state-of-the-art SiamFC++ tracker effectively.
+%The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
 
 \subsubsection{Evaluation on GOT-10k Benchmark}
 
 GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is no overlap in object classes between the train/val/test splits, promoting the importance of generalization to unseen object classes.
 %Because we need to use the real ground truth to generate the fake ground truth, and the fake ground truth is not available on test set, so we use the val set.
 %The evaluation metric is AO and Success rate, which means ...
-On GOT-10k Val set, the AO relative to $B^{gt}$ on the clean videos is 0.760. The AO relative to $B^{gt}$ on the adversarial videos is 0.023. The AO relative to $B^{fake}$ on the adversarial videos is 0.818.
+We use average overlap (AO) for evaluation.
+The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory.
+%On GOT-10k Val set, the AO relative to $B^{gt}$ on the clean videos is 0.760. The AO relative to $B^{gt}$ on the adversarial videos is 0.023. 
 
 \subsubsection{Evaluation on LaSOT Benchmark}
 
 With a large number of video sequences, LaSOT (Largescale Single Object Tracking) benchmark makes it impossible for trackers to overfit the benchmark, which achieves the purpose of testing the real performance of object tracking.
-Following onepass evaluation, different trackers are compared based on three criteria including precision, normalized precision and success.
-The precision score relative to $B^{gt}$ on the clean videos is 0.514. The precision score relative to $B^{gt}$ on the adversarial videos is 0.013. The precision score relative to $B^{fake}$ on the adversarial videos is 0.820.
+Following onepass evaluation, we use three criteria including precision, normalized precision and success for evaluation.
+The precision score relative to $B^{gt}$ on the clean videos is 0.514. The precision score relative to $B^{gt}$ on the adversarial videos is 0.013. The precision score relative to $B^{fake}$ on the adversarial videos is 0.820, indicating that our attack method is effective. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
 
 \subsubsection{Compared with Other Methods}
 
