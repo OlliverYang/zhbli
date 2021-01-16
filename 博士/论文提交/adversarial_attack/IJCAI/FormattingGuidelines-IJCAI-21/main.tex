@@ -149,7 +149,7 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=1.0\textwidth]{images/network_v2.pdf}
+\includegraphics[width=1.0\textwidth]{images/network_v3.pdf}
 \caption{The pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.}
 \end{figure*}
 
@@ -326,11 +326,7 @@ In equ. ?, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=1e-5$.
 
 \subsubsection{Datasets}
 We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
-
-%Although we do not need to control the weight of $x$, but in experiment we find that it will influence the stability of the training phase.
-%Note that the negative pairs are not involved as part of training samples, because we always paste the fake target into the search image.
-%The size of the template is 127 * 127. The size of the search image is 303 * 303 during both training and inference phase.
-%we initialize our template perturbation as 0, and patch as 128. To avoid the bad influence of the rescale, which can cause the information loss, we always use the big patch. When paste onto the search image, we rescale the patch (mostly down-sample) and then paste.
+The detailed information and evaluation metric of each dataset are described in the following subsections.
 
 \subsubsection{Generating the Fake Trajectory}
 
@@ -348,7 +344,8 @@ Note that, in the original siamfc++ paper, they test different dataset using dif
 \subsubsection{Evaluation on OTB2015 Benchmark}
 
 As one of the most classical benchmarks for the object tracking task, the OTB benchmark provides a fair test for trackers. We conduct experiments on OTB2015 \cite{OTB} which contains 100 videos for tracker performance evaluation.
-We use success rate to evaluate the performance of trackers on the OTB2015 dataset. Success rate relies on the intersection over union (IOU) of the predicted bounding box and the ground truth bounding box.
+We use success precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
+The precision encodes the proportion of frames for which the center of the tracking window is within 20 pixels of the ground-truth center. The success corresponds to the proportion of frames for which the overlap between the predicted and ground truth tracking window is greater than a given threshold.
 The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
 
 \subsubsection{Evaluation on GOT-10k Benchmark}
