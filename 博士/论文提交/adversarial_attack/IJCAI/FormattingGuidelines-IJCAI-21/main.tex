@@ -267,12 +267,11 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \begin{table}[hbtp]
 \centering
 \resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{c c|c c c}
+\begin{tabular}{c c | c | c | c}
 \toprule
-\multicolumn{2}{c|}{Trackers} & 
-\begin{tabular}{c} \textbf{SiamFC++\_} \\ \textbf{GoogLeNet} \end{tabular} &
-\begin{tabular}{c} \textbf{SiamFC++\_} \\ \textbf{GT} \end{tabular} &
-\begin{tabular}{c} \textbf{Ours} \\ \textbf{FGT} \end{tabular} \\
+\multirow{2}{*}{Trackers} & \multirow{2}{*}{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+\cmidrule{3-5}
+                          &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
 \midrule
 \multirow{2}{*}{OTB-15} 
 & Success   & 64.2 & 3.5 & 84.2\\
@@ -290,7 +289,8 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \midrule
 \multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
 \bottomrule
-\end{tabular}}
+\end{tabular}
+}
 \caption{Ablation study results on several benchmarks.}
 \label{tab:benchmark results}
 \end{table}
