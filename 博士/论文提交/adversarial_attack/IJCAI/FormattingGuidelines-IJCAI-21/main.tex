@@ -186,6 +186,32 @@ MSE      &  0.00 & 0.51  & 0.26 & 0.32  & 0.37& 0.48& 0.84& 2.03& 5.65&15.10 & 2
 \label{tab:iter}
 \end{table*}
 
+% \usepackage{multirow}
+% \usepackage{booktabs}
+
+
+\begin{table*}
+\centering
+\resizebox{\textwidth}{!}{%
+\label{tab:iter}
+\begin{tabular}{c|c|ccccccccccccccccc} 
+\toprule
+\multicolumn{2}{c|}{Iterations}  & 0     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
+\midrule
+\multirow{2}{*}{Fake Trajectory} & AO   & 0.004 & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+                                 & SR   & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
+\midrule
+\multirow{2}{*}{Real Trajectory} & AO   & 0.760 & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+                                 & SR   & 0.897 & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
+\midrule
+\multicolumn{2}{c|}{SSIM}                      & 1.00  & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+\multicolumn{2}{c|}{MSE}                       & 0.00  & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
+\bottomrule
+\end{tabular}
+}
+\caption{Influence of Training Iterations}
+\end{table*}
+
 \subsection{Generating Universal Perturbations}
 
 In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers.
@@ -269,7 +295,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 \resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c c | c | c | c}
 \toprule
-\multirow{2}{*}{Trackers} & \multirow{2}{*}{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+\multirow{2}{*}[-2pt]{Trackers} & \multirow{2}{*}[-2pt]{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
 \cmidrule{3-5}
                           &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
 \midrule
@@ -374,7 +400,7 @@ To summarize, while all loss terms are beneficial, the classification term is mo
 \resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{ccc|cc|cc} 
 \toprule
-\multirow{2}{*}{$L_{cls}$}     & \multirow{2}{*}{$L_{quality}$} & \multirow{2}{*}{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
+\multirow{2}{*}[-2pt]{$L_{cls}$}     & \multirow{2}{*}[-2pt]{$L_{quality}$} & \multirow{2}{*}[-2pt]{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
 \cmidrule{4-7}
                        &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
 \midrule
@@ -399,11 +425,11 @@ We evaluate the transferability of our attacks on different backbones of SiamFC+
 The experimental results are shown in Table. ?. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196, which suggests that our perturbation can still work. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
 \begin{table}[ht]
-\centering
-\caption{Different backbone}
+\begin{center}
+\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc|cc} 
 \toprule
-\multirow{3}{*}{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
+\multirow{3}{*}[-6pt]{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
 \cmidrule{2-7}
                           & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c}{Fake Trajectory}  \\ 
 \cmidrule{2-7}
@@ -414,6 +440,9 @@ AlexNet                   & 0.720 & 0.850                        & 0.196 & 0.227
 ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656                        & 0.135 & 0.134                        \\
 \bottomrule
 \end{tabular}
+}
+\end{center}
+\caption{Different backbone}
 \end{table}
 
 \subsubsection{Transferability of different architecture}
@@ -429,7 +458,7 @@ The experimental results are shown in Table. ?. On SiamRPN, the success score re
 \resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc} 
 \toprule
-\multirow{2}{*}{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
+\multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
 \cmidrule{2-5}
                           & Success & Precision              & Success & Precision                   \\
 \midrule
