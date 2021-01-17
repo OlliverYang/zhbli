@@ -205,7 +205,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \subsection{Generating Universal Perturbations}
 
 In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers.
-During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly select from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick two frames $I_t, I_s$ from $V$.
+During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick two frames $I_t, I_s$ from $V$.
 The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_i.
@@ -310,7 +310,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 
 \subsection{Attacking the Tracker at Inference Time}
 
-Once the the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
+Once the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
 During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (relative to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ relative to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
 \begin{equation}
@@ -327,7 +327,7 @@ The tracker then takes $\tilde{\textbf z}=\textbf z+\delta$ and $\tilde{ \textbf
 \subsubsection{Implementation Details}
 
 We use SiamFC++ \cite{SiamFC++} as our base tracker, and the backbone Siamese network adopts GoogLeNet \cite{GoogLeNet}.
-We implement our our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
+We implement our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
 We adopt GOT-10k \cite{GOT-10k}, COCO \cite{COCO}, ILSVRC-VID \cite{VID} and LaSOT \cite{LaSOT} and our training set.
 We train the perturbations for 32768 iterations with a minibatch of 96 images (32 images per GPU).
 The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and the learning rate of the adversarial patch is $\epsilon_2 = 0.5$.
@@ -404,7 +404,7 @@ In table \ref{tab:untargeted}, we compare the untargeted attack performance of o
 We report the precision score relative to the real trajectory on OTB2015.
 Our method significantly outperforms other methods in terms of the drop rate of the precision score.
 
-In table \ref{tab:targeted}, we compare the the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
+In table \ref{tab:targeted}, we compare the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
 Our method significantly outperforms other methods in terms of the precision score relative to the fake trajectory on OTB2015.
 
 \begin{table}[t]
