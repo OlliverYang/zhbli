@@ -170,27 +170,28 @@ Formally, we aim to train an imperceptible perturbation $\delta$ for the templat
 Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
 
 \begin{algorithm}[tb]
-\caption{Example algorithm}
+\caption{Training Process}
 \label{alg:algorithm}
-\textbf{Input}: Videos $V$, Siamese tracker $T$, max iteration $N$\\
-\textbf{Parameter}: Universal perturbation $\delta$ and universal patch $\sigma$.\\
-\textbf{Output}: Universal perturbation $\delta$ and universal patch $\sigma$.
+\textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $T$, max iteration $N$\\
+\textbf{Output}: Universal perturbation $\delta$ and universal patch $p$.
 \begin{algorithmic}[1] %[1] enables line numbers
-\STATE Let $\delta=0, \sigma=0, i = 0$.
+\STATE Let $i = 0$.
 \WHILE{$i < N$}
-\STATE random pick a video $v\in V$.
-\STATE random pick two frames $I_i, I_j$ from $v$.
-\STATE generate template image $z = f(I_i)$.
-\STATE generate search image $x = f(I_j)$.
-\STATE generate perturbed template image $\tilde z = z + \delta$
-\STATE generate perturbed search image $\tilde x = A(x, \sigma)$
-\STATE generate prediction $y = F(\tilde x, \tilde z)$
-\STATE generate fake ground truth $\hat y = B(A)$
-\STATE $\delta = \delta - \epsilon_1\cdot\text{sign}(\nabla_{\delta}L(y, \hat y))$
-\STATE $\sigma = \sigma - \epsilon_2 \cdot \text{sign}(\nabla_{\sigma}L(y, \hat y))$
+\STATE Random pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_i$.
+\STATE Random pick two frames $I_t, I_s$ from $v$.
+\STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
+\STATE $\tilde z = z + \delta$
+\STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
+\STATE Calculate the fake target position $\{l^x, l^y, w, h\}$ relative to the search image.
+\STATE $\tilde{\textbf x} = A(\textbf x, p_i, (l^x, l^y), (w, h)).$
+\STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
+\STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
+\STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
+\STATE $delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)$
+\STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)$
 \STATE $i = i + 1$
 \ENDWHILE
-\STATE \textbf{return} solution
+\STATE \textbf{return} $\delta_N, p_N.$
 \end{algorithmic}
 \end{algorithm}
 
@@ -215,11 +216,11 @@ The perturbed search image is generated as follows:
 \begin{equation}
 \tilde{\textbf x} = A(\textbf x, p_i, (l^x, l^y), (w, h)),
 \end{equation}
-where $(l_x, l_y)$ and $(w, h)$ represents the position and size of the fake target relative to the search image, respectively. $A$ is patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then applies the resized patch $\hat{p}_k$ to the search image $\textbf x$ at location $(l_x,l_y)$.
+where $(l^x, l^y)$ and $(w, h)$ represents the position and size of the fake target relative to the search image, respectively. $A$ is patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then applies the resized patch $\hat{p}_k$ to the search image $\textbf x$ at location $(l^x,l^y)$.
 
 Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and $\tilde{\textbf  z}$ as input and makes predictions as follows:
 \begin{equation}
-\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf  z}),
+\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}),
 \end{equation}
 
 \subsubsection{Training Objective}
