@@ -236,7 +236,8 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=1\textwidth]{images/vis_2.pdf}
+\includegraphics{images/vis_v2.pdf}
+\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
 
@@ -406,7 +407,7 @@ In Table \ref{tab:loss}, we report our results on GOT-10k val set with different
 To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
 %We find use three loss to train together can achieve better performance. In line one, we only train the classification branch. After adding all three losses, our attack achieve better performance. We can see that the classification loss contributes most. And the center loss contributes less.
 
-\begin{table}[h]
+\begin{table}[htpb]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
@@ -463,7 +464,7 @@ As shown in table \ref{tab:iter}, after approximately 30000 training iterations,
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
-\begin{table}[ht]
+\begin{table}[htpb]
 \begin{center}
 \scriptsize
 \tabcolsep=2.0pt
@@ -495,7 +496,7 @@ The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the succ
 
 %\textbf{Definition:} Transferability can judge the perturbation generated from one can still work at another network, although the network structure is very different. As we can see, we can successfully transfer from anchor free method SiamFC++ to anchor-based tracker SiamRPN \cite{SiamRPN} with backbone alexnet and SiamRPN++ \cite{SiamRPN++} with backbone resnet 50, shows the power of our attack.
 
-\begin{table}[ht]
+\begin{table}[htpb]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
