@@ -337,7 +337,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=1
 
 \subsubsection{Datasets}
 We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
-The detailed information and evaluation metric of each dataset are described in the following subsections.
+The detailed information and evaluation metrics of each dataset are described in the following subsections.
 
 \subsubsection{Generating the Fake Trajectory}
 
@@ -400,11 +400,11 @@ The precision score relative to $B^{gt}$ on the clean videos is 0.514. The preci
 
 \subsubsection{Compared with Other Methods}
 
-In table \ref{tab:untargeted}, we compare the untargeted attack performance of our method with CSA \cite{CSA}, FAN \cite{FAN} and TTP \cite{TTP}.
+In Table \ref{tab:untargeted}, we compare the untargeted attack performance of our method with CSA \cite{CSA}, FAN \cite{FAN} and TTP \cite{TTP}.
 We report the precision score relative to the real trajectory on OTB2015.
 Our method significantly outperforms other methods in terms of the drop rate of the precision score.
 
-In table \ref{tab:targeted}, we compare the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
+In Table \ref{tab:targeted}, we compare the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
 Our method significantly outperforms other methods in terms of the precision score relative to the fake trajectory on OTB2015.
 
 \begin{table}[t]
@@ -452,18 +452,17 @@ Ours & SiamFC++ & GoogLeNet & 0.928 \\
 We implement a series of experiments to analyse and evaluate the contribution of each loss component.
 In Table \ref{tab:loss}, we report our results on GOT-10k val set with different combination of loss terms, where $L_{cls}, L_{quality}, L_{reg}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
 To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
-%We find use three loss to train together can achieve better performance. In line one, we only train the classification branch. After adding all three losses, our attack achieve better performance. We can see that the classification loss contributes most. And the center loss contributes less.
 
 \subsubsection{Influence of Training Iterations}
 
-As shown in table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notices that at the start of training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
+As shown in Table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notice that at the start of the training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is the largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
 
 \subsection{Transferability}
 
 \subsubsection{Transferability of Different Backbones}
 
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
-The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
+The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations do not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between GoogLeNet and ShuffleNet.
 
 \begin{table}[t]
 \begin{center}
@@ -495,8 +494,6 @@ We use AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{Sia
 SiamRPN uses an RPN network to perform location regression and classification on the response map. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy. Both SiamRPN and SiamRPN++ are anchor-based methods while SiamFC++ is an anchor-free method.
 The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the success score relative to $B^{gt}$ drops from 0.666 to 0.379. On SiamRPN++, the success score relative to $B^{gt}$ drops from 0.676 to 0.518. The results show that our method can still show good transferability for different tracking architectures.
 
-%\textbf{Definition:} Transferability can judge the perturbation generated from one can still work at another network, although the network structure is very different. As we can see, we can successfully transfer from anchor free method SiamFC++ to anchor-based tracker SiamRPN \cite{SiamRPN} with backbone alexnet and SiamRPN++ \cite{SiamRPN++} with backbone resnet 50, shows the power of our attack.
-
 \begin{table}[t]
 \centering
 \scriptsize
@@ -520,8 +517,8 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \section{Conclusion}
 
 In this paper, we propose a universal targeted attack method for Siamese trackers. 
-We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target. An end-to-end pipeline are proposed to train the perturbations efficiently.
-Experiments on several popular datasets shows that our method can effectively fool the Siamese trackers in a targeted attack manner.
+We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target. An end-to-end pipeline is proposed to train the perturbations efficiently.
+Experiments on several popular datasets show that our method can effectively fool the Siamese trackers in a targeted attack manner.
 
 \clearpage
 \bibliographystyle{named}
@@ -671,7 +668,7 @@ defination of SSIM: ... we near 0.88
 
 \subsection{Qualitative Evaluation}
 
-\textit{Fig. \ref{fig:vis} shows examples of adversarial attacks against different videos. We can see that the template perturbation is so subtle that it is difficult to be observed by the human eye. (One-shot Adversarial Attacks on Visual Tracking with Dual Attention)} The \textbf{classification map} can show the patch position very good. The \textbf{center map} may show both the real target and the patch position. They multiplied finally.
+\textit{Figure \ref{fig:vis} shows examples of adversarial attacks against different videos. We can see that the template perturbation is so subtle that it is difficult to be observed by the human eye. (One-shot Adversarial Attacks on Visual Tracking with Dual Attention)} The \textbf{classification map} can show the patch position very good. The \textbf{center map} may show both the real target and the patch position. They multiplied finally.
 
 \begin{figure}[ht]
 \centering
