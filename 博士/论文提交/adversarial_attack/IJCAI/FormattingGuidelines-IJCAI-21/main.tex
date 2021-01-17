@@ -169,6 +169,38 @@ At each time-step, the template image $\textbf z$ and the search image $\textbf 
 Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.
 Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
 
+\begin{algorithm}[tb]
+\caption{Example algorithm}
+\label{alg:algorithm}
+\textbf{Input}: Videos $V$, Siamese tracker $T$, max iteration $N$\\
+\textbf{Parameter}: Universal perturbation $\delta$ and universal patch $\sigma$.\\
+\textbf{Output}: Universal perturbation $\delta$ and universal patch $\sigma$.
+\begin{algorithmic}[1] %[1] enables line numbers
+\STATE Let $\delta=0, \sigma=0, i = 0$.
+\WHILE{$i < N$}
+\STATE random pick a video $v\in V$.
+\STATE random pick two frames $I_i, I_j$ from $v$.
+\STATE generate template image $z = f(I_i)$.
+\STATE generate search image $x = f(I_j)$.
+\STATE generate perturbed template image $\tilde z = z + \delta$
+\STATE generate perturbed search image $\tilde x = A(x, \sigma)$
+\STATE generate prediction $y = F(\tilde x, \tilde z)$
+\STATE generate fake ground truth $\hat y = B(A)$
+\STATE $\delta = \delta - \epsilon_1\cdot\text{sign}(\nabla_{\delta}L(y, \hat y))$
+\STATE $\sigma = \sigma - \epsilon_2 \cdot \text{sign}(\nabla_{\sigma}L(y, \hat y))$
+\STATE $i = i + 1$
+\ENDWHILE
+\STATE \textbf{return} solution
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure*}[t]
+\centering
+\includegraphics{images/vis_v2.pdf}
+\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that targeted attack is successful.}
+\label{fig:vis}
+\end{figure*}
+
 \subsection{Generating Universal Perturbations}
 
 In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers.
@@ -205,41 +237,34 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
-{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denote the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denote the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denote the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
+{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denote the focal loss for classification result, $L_{\mathrm{quality}}$ denote the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denote the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
 
-\begin{algorithm}[tb]
-\caption{Example algorithm}
-\label{alg:algorithm}
-\textbf{Input}: Videos $V$, Siamese tracker $T$, max iteration $N$\\
-\textbf{Parameter}: Universal perturbation $\delta$ and universal patch $\sigma$.\\
-\textbf{Output}: Universal perturbation $\delta$ and universal patch $\sigma$.
-\begin{algorithmic}[1] %[1] enables line numbers
-\STATE Let $\delta=0, \sigma=0, i = 0$.
-\WHILE{$i < N$}
-\STATE random pick a video $v\in V$.
-\STATE random pick two frames $I_i, I_j$ from $v$.
-\STATE generate template image $z = f(I_i)$.
-\STATE generate search image $x = f(I_j)$.
-\STATE generate perturbed template image $\tilde z = z + \delta$
-\STATE generate perturbed search image $\tilde x = A(x, \sigma)$
-\STATE generate prediction $y = F(\tilde x, \tilde z)$
-\STATE generate fake ground truth $\hat y = B(A)$
-\STATE $\delta = \delta - \epsilon_1\cdot\text{sign}(\nabla_{\delta}L(y, \hat y))$
-\STATE $\sigma = \sigma - \epsilon_2 \cdot \text{sign}(\nabla_{\sigma}L(y, \hat y))$
-\STATE $i = i + 1$
-\ENDWHILE
-\STATE \textbf{return} solution
-\end{algorithmic}
-\end{algorithm}
+\begin{table*}
+\centering
+\scriptsize
+\tabcolsep=4.0pt
+%\resizebox{\textwidth}{!}{%
+\label{tab:iter}
+\begin{tabular}{cc|cccccccccccccccc} 
+\toprule
+\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
+\midrule
+\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
+\midrule
+\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
+\midrule
+\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
+\bottomrule
+\end{tabular}
+%}
+\caption{Influence of the number of training iterations on GOT-10k\_Val.}
+\label{tab:iter}
+\end{table*}
 
 \subsubsection{Optimisation}
-
-\begin{figure*}[t]
-\centering
-\includegraphics{images/vis_v2.pdf}
-\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that targeted attack is successful.}
-\label{fig:vis}
-\end{figure*}
 
 At each training step, the perturbations are updated as follows:
 \begin{gather}
@@ -295,7 +320,7 @@ The bounding box size of the fake trajectory gradually changes from the size of 
 We test the performance of our attack method on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
 %Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
 
-\begin{table}[hbtp]
+\begin{table}[thbp]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
@@ -326,6 +351,27 @@ We test the performance of our attack method on several benchmarks and results a
 %}
 \caption{Attack results on several benchmarks.}
 \label{tab:benchmark results}
+\end{table}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{ccc|cc|cc} 
+\toprule
+\multirow{2}{*}[-2pt]{$L_{cls}$}     & \multirow{2}{*}[-2pt]{$L_{quality}$} & \multirow{2}{*}[-2pt]{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
+\cmidrule{4-7}
+                       &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
+\midrule
+\checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
+   & \checkmark   &    & 0.044  & 0.044    & 0.703 & 0.842   \\
+   &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
+\checkmark   & \checkmark   & \checkmark   & 0.781  & 0.855    & 0.071 & 0.066   \\ \bottomrule
+\end{tabular}
+%}
+\caption{Contribution of each loss on GOT-10k\_Val.}
+\label{tab:loss}
 \end{table}
 
 \subsubsection{Evaluation on OTB2015 Benchmark}
@@ -360,7 +406,7 @@ Our method significantly outperforms other methods in terms of the drop rate of 
 In table \ref{tab:targeted}, we compare the the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
 Our method significantly outperforms other methods in terms of the precision score relative to the fake trajectory on OTB2015.
 
-\begin{table}[ht]
+\begin{table}[t]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
@@ -379,7 +425,7 @@ Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 0.94 \\ \bottomrule
 \label{tab:untargeted}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[t]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
@@ -407,55 +453,9 @@ In Table \ref{tab:loss}, we report our results on GOT-10k val set with different
 To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
 %We find use three loss to train together can achieve better performance. In line one, we only train the classification branch. After adding all three losses, our attack achieve better performance. We can see that the classification loss contributes most. And the center loss contributes less.
 
-\begin{table}[htpb]
-\centering
-\scriptsize
-\tabcolsep=2.0pt
-%\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{ccc|cc|cc} 
-\toprule
-\multirow{2}{*}[-2pt]{$L_{cls}$}     & \multirow{2}{*}[-2pt]{$L_{quality}$} & \multirow{2}{*}[-2pt]{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
-\cmidrule{4-7}
-                       &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
-\midrule
-\checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
-   & \checkmark   &    & 0.044  & 0.044    & 0.703 & 0.842   \\
-   &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
-\checkmark   & \checkmark   & \checkmark   & 0.781  & 0.855    & 0.071 & 0.066   \\ \bottomrule
-\end{tabular}
-%}
-\caption{Contribution of each loss on GOT-10k\_Val.}
-\label{tab:loss}
-\end{table}
-
 \subsubsection{Influence of Training Iterations}
 
 As shown in table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notices that at the start of training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
-
-\begin{table*}
-\centering
-\scriptsize
-\tabcolsep=4.0pt
-%\resizebox{\textwidth}{!}{%
-\label{tab:iter}
-\begin{tabular}{cc|cccccccccccccccc} 
-\toprule
-\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
-\midrule
-\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
-                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
-\midrule
-\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
-                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
-\midrule
-\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
-\bottomrule
-\end{tabular}
-%}
-\caption{Influence of the number of training iterations on GOT-10k\_Val.}
-\label{tab:iter}
-\end{table*}
 
 \subsection{Transferability}
 
@@ -464,7 +464,7 @@ As shown in table \ref{tab:iter}, after approximately 30000 training iterations,
 We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations does not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between googLeNet and ShuffleNet.
 
-\begin{table}[htpb]
+\begin{table}[t]
 \begin{center}
 \scriptsize
 \tabcolsep=2.0pt
@@ -496,7 +496,7 @@ The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the succ
 
 %\textbf{Definition:} Transferability can judge the perturbation generated from one can still work at another network, although the network structure is very different. As we can see, we can successfully transfer from anchor free method SiamFC++ to anchor-based tracker SiamRPN \cite{SiamRPN} with backbone alexnet and SiamRPN++ \cite{SiamRPN++} with backbone resnet 50, shows the power of our attack.
 
-\begin{table}[htpb]
+\begin{table}[t]
 \centering
 \scriptsize
 \tabcolsep=2.0pt
