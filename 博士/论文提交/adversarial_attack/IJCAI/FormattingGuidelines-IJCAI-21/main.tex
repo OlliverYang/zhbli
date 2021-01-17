@@ -108,13 +108,14 @@ Given an arbitrary detected or annotated object of interest in the initial video
 %\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
 \includegraphics[width=0.48\textwidth]{images/1_v4.pdf}
 \caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner. Our approach allows perturbing a new video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference.}
+\label{fig:1}
 \end{figure}
 
 Recently, the robustness of Siamese trackers have attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK}. Despite their success, these attack methods are not suitable for attacking the real-world online-tracking systems built upon the small edge platforms with limited computational resources. The reason is that they still need to craft the perturbations for each video independently based on either iterative optimisation or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
 
 Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. Therefore, UAPs are particularly useful when attacking real-time applications deployed on platforms with limited computational resources. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary and binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
 
-In this paper, we make the first attempt in finding the video-agnostic perturbations that fool state-of-the-art Siamese trackers in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory, so that tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k} and LaSOT \cite{GOT-10k} datasets demonstrate the effectiveness and efficiency of our approach.
+In this paper, we make the first attempt in finding the video-agnostic perturbations that fool state-of-the-art Siamese trackers in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory, so that tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k} and LaSOT \cite{GOT-10k} datasets demonstrate the effectiveness and efficiency of our approach (see Figure \ref{fig:1}).
 
 \section{Related Work}
 
@@ -152,6 +153,7 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 \centering
 \includegraphics[width=0.48\textwidth]{images/network_v4.png}
 \caption{The pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.}
+\label{fig:net}
 \end{figure}
 
 \section{Method}
@@ -166,7 +168,7 @@ The visual object tracking will predict the position $B^{pred}=\{b^{pred}_i\}_1^
 In SiamFC++ \cite{SiamFC++}, the tracker first transforms the reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z$, and transforms the candidate frame $I_i$ to get the search image $\textbf x_i$ centered at the position obtained in the previous frame.
 At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network, and the resulting features are processed by some non-shared layers and fused by depth-wise separable correlation. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box position of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
 
-Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.
+Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target (see Figure \ref{fig:net}).
 Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
 
 \begin{algorithm}[tb]
@@ -389,7 +391,7 @@ GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is 
 %Because we need to use the real ground truth to generate the fake ground truth, and the fake ground truth is not available on test set, so we use the val set.
 %The evaluation metric is AO and Success rate, which means ...
 We use average overlap (AO) for evaluation.
-The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory.
+The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory (see Figure \ref{fig:vis}).
 %On GOT-10k Val set, the AO relative to $B^{gt}$ on the clean videos is 0.760. The AO relative to $B^{gt}$ on the adversarial videos is 0.023. 
 
 \subsubsection{Evaluation on LaSOT Benchmark}
