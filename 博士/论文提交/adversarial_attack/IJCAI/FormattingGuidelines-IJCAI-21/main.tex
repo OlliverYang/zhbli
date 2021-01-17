@@ -197,7 +197,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 
 \begin{figure*}[t]
 \centering
-\includegraphics{images/vis_v2.pdf}
+\includegraphics[width=0.93\textwidth]{images/vis_v3.pdf}
 \caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
@@ -275,6 +275,39 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
 During training, we only optimize the values of perturbations $(\delta, p)$, and the parameters of the Siamese network remain intact.
 
+\begin{table}[thbp]
+\centering
+\scriptsize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{c c | c | c | c}
+\toprule
+\multirow{2}{*}[-2pt]{Trackers} & \multirow{2}{*}[-2pt]{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+\cmidrule{3-5}
+                          &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
+\midrule
+\multirow{2}{*}{OTB-15} 
+& Success   & 0.642 & 0.035 & 0.842\\
+& Precision & 0.861 & 0.048 & 0.928\\
+\midrule
+\multirow{3}{*}{GOT-Val} 
+& SR\textsubscript{.50} & 0.897 & 0.023 & 0.890\\
+& AO 				   & 0.760 & 0.035 & 0.818 \\
+\midrule
+\multirow{4}{*}{LaSOT} 
+& Prec.       & 0.514 & 0.013 & 0.820\\
+& Norm. Prec. & 0.551 & 0.015 & 0.788\\
+& Succ. score & 0.525 & 0.022 & 0.767\\
+& Succ. rate  & 0.626 & 0.016 & 0.834\\
+\midrule
+\multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
+\bottomrule
+\end{tabular}
+%}
+\caption{Attack results on several benchmarks.}
+\label{tab:benchmark results}
+\end{table}
+
 \subsection{Attacking the Tracker at Inference Time}
 
 Once the the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
@@ -320,39 +353,6 @@ The bounding box size of the fake trajectory gradually changes from the size of 
 
 We test the performance of our attack method on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
 %Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
-
-\begin{table}[thbp]
-\centering
-\scriptsize
-\tabcolsep=2.0pt
-%\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{c c | c | c | c}
-\toprule
-\multirow{2}{*}[-2pt]{Trackers} & \multirow{2}{*}[-2pt]{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
-\cmidrule{3-5}
-                          &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
-\midrule
-\multirow{2}{*}{OTB-15} 
-& Success   & 0.642 & 0.035 & 0.842\\
-& Precision & 0.861 & 0.048 & 0.928\\
-\midrule
-\multirow{3}{*}{GOT-Val} 
-& SR\textsubscript{.50} & 0.897 & 0.023 & 0.890\\
-& AO 				   & 0.760 & 0.035 & 0.818 \\
-\midrule
-\multirow{4}{*}{LaSOT} 
-& Prec.       & 0.514 & 0.013 & 0.820\\
-& Norm. Prec. & 0.551 & 0.015 & 0.788\\
-& Succ. score & 0.525 & 0.022 & 0.767\\
-& Succ. rate  & 0.626 & 0.016 & 0.834\\
-\midrule
-\multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
-\bottomrule
-\end{tabular}
-%}
-\caption{Attack results on several benchmarks.}
-\label{tab:benchmark results}
-\end{table}
 
 \begin{table}[t]
 \centering
