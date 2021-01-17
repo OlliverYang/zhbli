@@ -124,7 +124,7 @@ In this paper, we make the first attempt in finding the video-agnostic perturbat
 Siamese visual tracking is a fundamental research direction in template matching-based tracking besides the correlation filter-based methods. Both of them are aimed to estimate the positions of a template cropped from the initial video frame ``causally" in the subsequent frames. Siamese trackers formulate visual tracking as learning cross-correlation similarities between a target template and the candidates in search region in a convolution fashion. Tracking is then performed by locating the object in the search image region based on the highest visual similarity. This paradigm is formulated as a local one-shot detection task.
 
 Recently, some Siamese trackers~\cite{SiamRPN,SiamRPN++,SiamFC++} have demonstrated a significant performance improvement in visual tracking. 
-In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution knowledge-free and estimation quality assessment guidelines .
+In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in the decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution knowledge-free and estimation quality assessment guidelines.
 In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas the transferability of our generated adversarial attacks to the previous anchor-based trackers is also studied.
 
 \subsection{Adversarial Attacks}
@@ -135,7 +135,7 @@ Scenarios of possible adversarial attacks can be categorized along different dim
 
 \textit{Imperceptible Perturbations v.s. Adversarial Patch.} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
 Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
-To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbations and adversarial patch together, which are jointly trained in an end-to-end manner.
+To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
 Note that our adversarial patch works in the network domain instead of the image domain. In the network-domain case, the noise is allowed to take any value and is not restricted to the dynamic range of images as in the image-domain case \cite{karmon2018lavan}.
 
 \textit{Non-targeted Attacks v.s. Targeted Attacks.} In the case of non-targeted attacks, the adversary's goal is to cause the network to predict any incorrect label and the specific incorrect label does not matter, \eg, pushing the object position estimation just outside the true search region in visual tracking.
@@ -200,7 +200,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.93\textwidth]{images/vis_v3.pdf}
-\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that targeted attack is successful.}
+\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that the targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
 
@@ -390,7 +390,7 @@ After applying the universal perturbations to videos, the success score relative
 GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is no overlap in object classes between the train/val/test splits, promoting the importance of generalization to unseen object classes.
 %Because we need to use the real ground truth to generate the fake ground truth, and the fake ground truth is not available on test set, so we use the val set.
 %The evaluation metric is AO and Success rate, which means ...
-We use average overlap (AO) for evaluation.
+We use the average overlap (AO) for evaluation.
 The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory (see Figure \ref{fig:vis}).
 %On GOT-10k Val set, the AO relative to $B^{gt}$ on the clean videos is 0.760. The AO relative to $B^{gt}$ on the adversarial videos is 0.023. 
 
