@@ -148,11 +148,11 @@ RTAA \cite{RTAA} takes temporal motion into consideration when generating lightw
 Targeted attacks to follow an erroneous path which looks realistic are crucial to deceive the tracking system without raising any suspicion in the real-world applications.
 SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers. However, SPARK needs to generate distinct adversarial example for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time. The recent real-time attacker in \cite{TTP} exclusively uses the template image to generate temporally-transferable perturbations in a one-shot manner, and then adds them to every search image. However, this method still needs to generate perturbations for each individual video, and its targeted attack setting requires diverse perturbations from several runs of network inference. It is ill-suited to attack a real-world online-tracking system when we can not get access to the limited computational resources. In this paper, however, we propose video-agnostic perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
 
-\begin{figure*}[t]
+\begin{figure}[t]
 \centering
-\includegraphics[width=1.0\textwidth]{images/network_v3.pdf}
+\includegraphics[width=0.48\textwidth]{images/network_v4.png}
 \caption{The pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target.}
-\end{figure*}
+\end{figure}
 
 \section{Method}
 
