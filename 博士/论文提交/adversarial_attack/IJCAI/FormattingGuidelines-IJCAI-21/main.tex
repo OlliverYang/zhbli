@@ -391,7 +391,7 @@ After applying the universal perturbations to videos, the success score relative
 GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is no overlap in object classes between the train/val/test splits, promoting the importance of generalization to unseen object classes.
 %Because we need to use the real ground truth to generate the fake ground truth, and the fake ground truth is not available on test set, so we use the val set.
 %The evaluation metric is AO and Success rate, which means ...
-We use the average overlap (AO) for evaluation.
+We use the average overlap (AO) to evaluate the performance of our attack method on GOT-10k\_Val.
 The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory (see Figure \ref{fig:vis}).
 
 \subsubsection{Evaluation on LaSOT Benchmark}
