@@ -107,7 +107,7 @@ Given an arbitrary detected or annotated object of interest in the initial video
 %\subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
 \includegraphics[width=0.48\textwidth]{images/1_v4.pdf}
-\caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner. Our approach allows perturbing a new video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference.}
+\caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.}
 \label{fig:1}
 \end{figure}
 
@@ -519,7 +519,7 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \section{Conclusion}
 
 In this paper, we propose a universal targeted attack method for Siamese trackers. 
-We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location and size of the fake target instead of the real target. An end-to-end pipeline is proposed to train the perturbations efficiently.
+We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location and size of the fake target instead of the real target. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
 Experiments on several popular datasets show that our method can effectively fool the Siamese trackers in a targeted attack manner.
 
 \clearpage
