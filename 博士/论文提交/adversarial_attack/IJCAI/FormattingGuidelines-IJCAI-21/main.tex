@@ -206,7 +206,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 
 \subsection{Generating Universal Perturbations}
 
-In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers.
+In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers (see Algorithm 1).
 During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick two frames $I_t, I_s$ from $V$.
 The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
