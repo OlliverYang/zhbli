@@ -417,11 +417,11 @@ Our method significantly outperforms other methods in terms of the precision sco
 \begin{tabular}{@{}ccc|cccc@{}}
 \toprule
 Method & Tracker & Backbone & \begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Perturbed\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Drop\\ Rate\end{tabular} \\ \midrule
-CSA & SiamRPN & AlexNet & 4720 & 0.851 & 0.458 & 0.46 \\
-FAN & SiamFC & AlexNet & 10 & 0.720 & 0.180 & 0.75 \\
-TTP & SiamRPN++ & ResNet-50 & 8 & 0.910 & 0.080 & 0.91 \\
+CSA & SiamRPN & AlexNet & 4720 & 0.851 & 0.458 & 46\% \\
+FAN & SiamFC & AlexNet & 10 & 0.720 & 0.180 & 75\% \\
+TTP & SiamRPN++ & ResNet-50 & 8 & 0.910 & 0.080 & 91\% \\
 \midrule
-Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 0.94 \\ \bottomrule
+Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 94\% \\ \bottomrule
 \end{tabular}%
 %}
 \caption{Precision score relative to the real trajectory on OTB2015.}
