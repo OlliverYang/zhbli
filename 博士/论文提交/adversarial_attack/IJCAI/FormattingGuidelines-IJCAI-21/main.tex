@@ -199,7 +199,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.93\textwidth]{images/vis_v3.pdf}
+\includegraphics[width=0.80\textwidth]{images/vis_v3.pdf}
 \caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that the targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
@@ -523,7 +523,7 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \section{Conclusion}
 
 In this paper, we propose a universal targeted attack method for Siamese trackers. 
-We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location/size of the fake target instead of the real target. An end-to-end pipeline is proposed to train the perturbations efficiently.
+We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small adversarial patch into the search image adhering to the predefined trajectory, so that tracker outputs the location and size of the fake target instead of the real target. An end-to-end pipeline is proposed to train the perturbations efficiently.
 Experiments on several popular datasets show that our method can effectively fool the Siamese trackers in a targeted attack manner.
 
 \clearpage
