@@ -174,18 +174,18 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \begin{algorithm}[tb]
 \caption{Training Process}
 \label{alg:algorithm}
-\textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $T$, max iteration $N$\\
-\textbf{Output}: Universal perturbation $\delta$ and universal patch $p$.
+\textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $\phi$, and max iteration number $N$.\\
+\textbf{Output}: Universal perturbation $\delta$, and universal patch $p$.
 \begin{algorithmic}[1] %[1] enables line numbers
-\STATE Let $i = 0$.
-\WHILE{$i < N$}
-\STATE Random pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_i$.
-\STATE Random pick two frames $I_t, I_s$ from $v$.
+\STATE Let $k = 0$.
+\WHILE{$k < N$}
+\STATE Random pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+\STATE Random pick two frames $I_t, I_s$ from $V$.
 \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-\STATE $\tilde z = z + \delta$
+\STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k$
 \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
 \STATE Calculate the fake target position $\{l^x, l^y, w, h\}$ relative to the search image.
-\STATE $\tilde{\textbf x} = A(\textbf x, p_i, (l^x, l^y), (w, h)).$
+\STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
 \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
 \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
 \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
@@ -297,14 +297,14 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 & Precision & 0.861 & 0.048 & 0.928\\
 \midrule
 \multirow{3}{*}{GOT-Val} 
-& SR\textsubscript{.50} & 0.897 & 0.023 & 0.890\\
+& SR & 0.897 & 0.023 & 0.890\\
 & AO 				   & 0.760 & 0.035 & 0.818 \\
 \midrule
 \multirow{4}{*}{LaSOT} 
 & Prec.       & 0.514 & 0.013 & 0.820\\
 & Norm. Prec. & 0.551 & 0.015 & 0.788\\
-& Succ. score & 0.525 & 0.022 & 0.767\\
-& Succ. rate  & 0.626 & 0.016 & 0.834\\
+& Succ. Score & 0.525 & 0.022 & 0.767\\
+& Succ. Rate  & 0.626 & 0.016 & 0.834\\
 \midrule
 \multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
 \bottomrule
@@ -367,7 +367,7 @@ We test the performance of our attack method on several benchmarks and results a
 %\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{ccc|cc|cc} 
 \toprule
-\multirow{2}{*}[-2pt]{$L_{cls}$}     & \multirow{2}{*}[-2pt]{$L_{quality}$} & \multirow{2}{*}[-2pt]{$L_{reg}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
+\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
 \cmidrule{4-7}
                        &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
 \midrule
