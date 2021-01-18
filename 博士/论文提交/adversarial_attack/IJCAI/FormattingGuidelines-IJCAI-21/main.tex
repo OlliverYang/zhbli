@@ -344,7 +344,7 @@ The detailed information and evaluation metrics of each dataset are described in
 
 \subsubsection{Generating the Fake Trajectory}
 
-We need to set a specific trajectories $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textit{fake trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textit{real trajectory}.
+We need to set a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textit{fake trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textit{real trajectory}.
 Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
 Specifically, the fake trajectory follows the real trajectory and the boundary between $b^{fake}_i$ and $b^{gt}_i$ is 16 pixels apart.
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
