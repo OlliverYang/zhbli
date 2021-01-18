@@ -169,7 +169,7 @@ In SiamFC++ \cite{SiamFC++}, the tracker first transforms the reference frame $I
 At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network, and the resulting features are processed by some non-shared layers and fused by depth-wise separable correlation. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box position of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
 
 Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location of the adversarial patch instead of the real target (see Figure \ref{fig:net}).
-Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require solving an optimisation problem/gradient computation.
+Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require gradient optimisation or network inference.
 
 \begin{algorithm}[tb]
 \caption{Training Process}
@@ -189,7 +189,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
 \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
 \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-\STATE $delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)$
+\STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)$
 \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)$
 \STATE $i = i + 1$
 \ENDWHILE
