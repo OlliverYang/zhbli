@@ -179,19 +179,19 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \begin{algorithmic}[1] %[1] enables line numbers
 \STATE Let $k = 0$.
 \WHILE{$k < N$}
-\STATE Random pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
-\STATE Random pick two frames $I_t, I_s$ from $V$.
+\STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+\STATE Randomly pick two frames $I_t, I_s$ from $V$.
 \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-\STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k$
+\STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
 \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
 \STATE Calculate the fake target position $\{l^x, l^y, w, h\}$ relative to the search image.
 \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
 \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
 \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
 \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-\STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)$
-\STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)$
-\STATE $i = i + 1$
+\STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
+\STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
+\STATE $i = i + 1.$
 \ENDWHILE
 \STATE \textbf{return} $\delta_N, p_N.$
 \end{algorithmic}
@@ -238,7 +238,7 @@ The loss function is calculated as follows:
 L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_{x, y}, \textbf{C}_{x, y}^{*}\right) \\
 &+\frac{\beta}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{quality}}\left(\textbf{Q}_{x, y}, \textbf{Q}_{x, y}^{*}\right) \\
 &+\frac{\gamma}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{reg}}\left(\textbf{R}_{x, y}, \textbf{R}_{x, y}^{*}\right) \\
-&+\eta \cdot ||\delta_k||_2^2 +  \sigma \cdot ||p_k||^2_2
+&+\eta \cdot ||\delta_k||_2^2 +  \sigma \cdot ||p_k||^2_2,
 \end{aligned}
 \end{array}
 \label{eq:loss}
@@ -276,7 +276,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 At each training step, the perturbations are updated as follows:
 \begin{gather}
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
-p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L)
+p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
 During training, we only optimize the values of perturbations $(\delta, p)$, and the parameters of the Siamese network remain intact.
