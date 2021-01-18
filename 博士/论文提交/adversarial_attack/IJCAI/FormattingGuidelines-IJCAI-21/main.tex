@@ -381,7 +381,7 @@ We test the performance of our attack method on several benchmarks and results a
 \subsubsection{Evaluation on OTB2015 Benchmark}
 
 As one of the most classical benchmarks for the object tracking task, the OTB benchmark provides a fair test for trackers. We conduct experiments on OTB2015 \cite{OTB} which contains 100 videos for tracker performance evaluation.
-We use success precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
+We use precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
 The precision encodes the proportion of frames for which the center of the tracking window is within 20 pixels of the ground-truth center. The success corresponds to the proportion of frames for which the overlap between the predicted and ground truth tracking window is greater than a given threshold.
 After applying the universal perturbations to videos, the success score relative to $B^{gt}$ drops from 0.642 to 0.035, indicating that our method can fool the state-of-the-art SiamFC++ tracker on OTB2015 effectively.
 %The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
