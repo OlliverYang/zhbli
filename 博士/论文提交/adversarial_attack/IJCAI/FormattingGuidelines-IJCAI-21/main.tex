@@ -339,7 +339,7 @@ During the training and the testing phase, the size of the template image is set
 In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=10^{-5}$.
 
 \subsubsection{Datasets}
-We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
+We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k\_Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
 The detailed information and evaluation metrics of each dataset are described in the following subsections.
 
 \subsubsection{Generating the Fake Trajectory}
@@ -393,7 +393,6 @@ GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is 
 %The evaluation metric is AO and Success rate, which means ...
 We use the average overlap (AO) for evaluation.
 The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory (see Figure \ref{fig:vis}).
-%On GOT-10k Val set, the AO relative to $B^{gt}$ on the clean videos is 0.760. The AO relative to $B^{gt}$ on the adversarial videos is 0.023. 
 
 \subsubsection{Evaluation on LaSOT Benchmark}
 
@@ -453,12 +452,12 @@ Ours & SiamFC++ & GoogLeNet & 0.928 \\
 \subsubsection{Influence of Training Loss}
 
 We implement a series of experiments to analyse and evaluate the contribution of each loss component.
-In Table \ref{tab:loss}, we report our results on GOT-10k val set with different combination of loss terms, where $L_{cls}, L_{quality}, L_{reg}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
+In Table \ref{tab:loss}, we report our results on GOT-10k val set with different combination of loss terms, where $L_{\text{cls}}, L_{\text{quality}}, L_{\text{reg}}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
 To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
 
 \subsubsection{Influence of Training Iterations}
 
-As shown in Table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notice that at the start of the training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is the largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
+As shown in Table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k\_Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notice that at the start of the training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is the largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
 
 \subsection{Transferability}
 
