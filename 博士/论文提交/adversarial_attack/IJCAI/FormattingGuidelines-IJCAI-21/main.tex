@@ -191,7 +191,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
 \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
 \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
-\STATE $i = i + 1.$
+\STATE $k = k + 1.$
 \ENDWHILE
 \STATE \textbf{return} $\delta_N, p_N.$
 \end{algorithmic}
