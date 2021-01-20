@@ -130,7 +130,7 @@ In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas 
 \subsection{Adversarial Attacks}
 
 Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. 
-Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
+%Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
 
 \textit{Imperceptible Perturbations v.s. Adversarial Patch.} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
@@ -195,18 +195,19 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \ENDWHILE
 \STATE \textbf{return} $\delta_N, p_N.$
 \end{algorithmic}
+\label{alg}
 \end{algorithm}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.65\textwidth]{images/vis_v3.pdf}
+\includegraphics[width=0.95\textwidth]{images/vis_v4.pdf}
 \caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the specific bounding box, and green represents the predicted bounding box by trackers. The yellow and green boxes are basically the same in time series, which indicates that the targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
 
 \subsection{Generating Universal Perturbations}
 
-In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers (see Algorithm 1).
+In this subsection, we show how to train the universal perturbations $(\delta, p)$ for Siamese trackers (see Algorithm \ref{alg}).
 During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick two frames $I_t, I_s$ from $V$.
 The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
@@ -241,32 +242,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
-{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denote the focal loss for classification result, $L_{\mathrm{quality}}$ denote the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denote the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
-
-\begin{table*}
-\centering
-\scriptsize
-\tabcolsep=4.0pt
-%\resizebox{\textwidth}{!}{%
-\label{tab:iter}
-\begin{tabular}{cc|cccccccccccccccc} 
-\toprule
-\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
-\midrule
-\multirow{2}{*}{Fake Trajectory} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
-                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
-\midrule
-\multirow{2}{*}{Real Trajectory} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
-                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
-\midrule
-\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
-\bottomrule
-\end{tabular}
-%}
-\caption{Influence of the number of training iterations on GOT-10k\_Val.}
-\label{tab:iter}
-\end{table*}
+{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denote the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denote the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denote the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
 
 \subsubsection{Optimisation}
 
@@ -278,39 +254,6 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
 During training, we only optimize the values of perturbations $(\delta, p)$, and the parameters of the Siamese network remain intact.
 
-\begin{table}[thbp]
-\centering
-\scriptsize
-\tabcolsep=2.0pt
-%\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{c c | c | c | c}
-\toprule
-\multirow{2}{*}[-2pt]{Trackers} & \multirow{2}{*}[-2pt]{Metric} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
-\cmidrule{3-5}
-                          &                         & Real Trajectory & Real Trajectory & Fake Trajectory     \\ 
-\midrule
-\multirow{2}{*}{OTB-15} 
-& Success   & 0.642 & 0.035 & 0.842\\
-& Precision & 0.861 & 0.048 & 0.928\\
-\midrule
-\multirow{2}{*}{GOT-10k\_Val} 
-& SR & 0.897 & 0.023 & 0.890\\
-& AO 				   & 0.760 & 0.035 & 0.818 \\
-\midrule
-\multirow{4}{*}{LaSOT} 
-& Prec.       & 0.514 & 0.013 & 0.820\\
-& Norm. Prec. & 0.551 & 0.015 & 0.788\\
-& Succ. Score & 0.525 & 0.022 & 0.767\\
-& Succ. Rate  & 0.626 & 0.016 & 0.834\\
-\midrule
-\multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
-\bottomrule
-\end{tabular}
-%}
-\caption{Attack results on several benchmarks.}
-\label{tab:benchmark results}
-\end{table}
-
 \subsection{Attacking the Tracker at Inference Time}
 
 Once the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require gradient optimisation or network inference.
@@ -321,50 +264,75 @@ During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transf
 \end{equation}
 The tracker then takes $\tilde{\textbf z}_i=\textbf z_i+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}
+\centering
+%\scriptsize
+\footnotesize
+\tabcolsep=2.0pt
+%\resizebox{0.48\textwidth}{!}{%
+\begin{tabular}{c c | c | c | c}
+\toprule
+\multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+\cmidrule{3-5}
+                          &                         & Real Traj. & Real Traj. & Fake Traj.     \\ 
+\midrule
+\multirow{2}{*}{OTB-15} 
+& AO   & 0.642 & 0.035 & 0.842\\
+& Precision & 0.861 & 0.048 & 0.928\\
+\midrule
+\multirow{2}{*}{GOT-Val} 
+& SR & 0.897 & 0.023 & 0.890\\
+& AO 				   & 0.760 & 0.035 & 0.818 \\
+\midrule
+\multirow{3}{*}{LaSOT} 
+& Precision       & 0.514 & 0.013 & 0.820\\
+& Norm. Prec. & 0.551 & 0.015 & 0.788\\
+& AO & 0.525 & 0.022 & 0.767\\
+%& Succ. rate  & 0.626 & 0.016 & 0.834\\
+\midrule
+\multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
+\bottomrule
+\end{tabular}
+%}
+\caption{Overall attack results on the evaluation benchmarks.}
+\label{tab:benchmark results}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experiments}
 
-\subsection{Setting}
+\subsection{Experimental Setup}
 
-\subsubsection{Implementation Details}
+\textit{Evaluation Benchmarks} We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, \ie, OTB2015 \cite{OTB}, GOT-10k\cite{GOT-10k}, and LaSOT \cite{LaSOT}. Generally speaking, OTB2015 is a typical tracking benchmark which is widely used for evaluation for several years, GOT-10k has the advantage of magnitudes wider coverage of object classes, and LaSOT has much longer video sequences with average duration of 84 seconds. They all follow the One-Pass Evaluation (OPE) protocol and their evaluation methodologies are similar as the measurement is mostly based on the success and precision of the trackers over the test videos. For instance, they all measure the success based on the fraction of frames in a sequence where the intersection-over-union (IoU) overlap of the predicted and ground truth rectangles exceeds a given threshold, and then the trackers are ranked using the area-under-the-curve (AUC) criterion. Since the average of IoU overlaps (AO) over all the test video frames is recently proved to be equivalent to the AUC criterion, we thus denote the success measurement as AO in the following. Besides AO, a success rate (SR) metric is also directly used to measure the percentage of successfully tracked frames given a threshold as in GOT-10k. As for the precision, it encodes the proportion of frames for which the center of the predicted rectangle is within 20 pixels of the ground truth center. Since the precision metric is sensitive to the resolution of the images and the size of the bounding boxes, a metric of normalized precision over the size of the ground truth bounding box is proposed and the trackers are then ranked using the AUC for normalized precision between 0 and 0.5.
 
-We use SiamFC++ \cite{SiamFC++} as our base tracker, and the backbone Siamese network adopts GoogLeNet \cite{GoogLeNet}.
-We implement our approach in Pytorch and train our perturbations using 3 GTX 1080Ti GPUs.
-We adopt GOT-10k \cite{GOT-10k}, COCO \cite{COCO}, ILSVRC-VID \cite{VID} and LaSOT \cite{LaSOT} and our training set.
-We train the perturbations for 32768 iterations with a minibatch of 96 images (32 images per GPU).
-The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and the learning rate of the adversarial patch is $\epsilon_2 = 0.5$.
-We generate training samples following the strategy in SiamFC++.
-During the training and the testing phase, the size of the template image is set to $127\times 127\times 3$, and the size of the search image is set to $303\times 303\times 3$.
-In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005, \sigma=10^{-5}$.
-
-\subsubsection{Datasets}
-We evaluate our universal perturbations on several tracking datasets: OTB2015 \cite{OTB}, GOT-10k\_Val \cite{GOT-10k}, and LaSOT \cite{LaSOT}.
-The detailed information and evaluation metrics of each dataset are described in the following subsections.
-
-\subsubsection{Generating the Fake Trajectory}
-
-We need to set a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video in the dataset to achieve targeted attack, which we call the \textit{fake trajectory}. We call the bounding box ground truth $B^{gt}=\{b^{gt}_i\}_1^T$ the \textit{real trajectory}.
-Manually labelling $B^{fake}$ for each video will be time-consuming, so we generate $B^{fake}$ based on $B^{gt}$.
-Specifically, the fake trajectory follows the real trajectory and the boundary between $b^{fake}_i$ and $b^{gt}_i$ is 16 pixels apart.
+\textit{Generating the Fake Trajectory} We need to pre-define a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video to achieve targeted attack in the online-tracking phase, which we call the \textit{fake trajectory}. We denote the \textit{real trajectory} as $B^{gt}=\{b^{gt}_i\}_1^T$ with the bounding box ground truth.
+It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 16 pixels apart.
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-The bounding box size of the fake trajectory gradually changes from the size of $b^{gt}_1$ to $64\times 64$.
+The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$. Note that the annotations of GOT-10k's test data are kept private, so we only use its validation set for our evaluation and denote it as GOT-Val.
 
-\subsubsection{Image Quality Assessment} We use structural similarity (SSIM) to evaluate the quality of the template perturbation $\delta$. The generated adversarial perturbation is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
+\textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the template perturbation $\delta$. The generated adversarial perturbation is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
 
-\subsection{Result on Several Benchmarks}
+\subsection{Implementation Details}
 
-We test the performance of our attack method on several benchmarks and results are gathered in Table \ref{tab:benchmark results}.
-%Note that, in the original SiamFC++ paper, they test different dataset using different trained model. But we test them using one single model. So on some datasets will drop slightly.
+In our evaluation, the backbone Siamese network of our base tracker SiamFC++ \cite{SiamFC++} adopts GoogLeNet \cite{GoogLeNet}.
+We implement our approach in Pytorch and train our perturbations using three GTX 1080Ti GPUs.
+We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.
+We train the perturbations for 32768 iterations with a mini-batch of 96 images (32 images per GPU).
+The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and for the adversarial patch it is $\epsilon_2 = 0.5$.
+We generate training samples following the practice in SiamFC++.
+During both the training and online-tracking phase, the off-the-shelf SiamFC++ tracking network model\footnote{It is exclusively trained on the training split of GOT-10k by the authors of SiamFC++ and can be downloaded from \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view}} is fixed and used for the whole evaluation, the spatial size of the template image is set to $127\times 127$, and the search image is $303\times 303$.
+In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\sigma=10^{-5}$.
 
-\begin{table}[t]
+\begin{table}
 \centering
-\scriptsize
-\tabcolsep=2.0pt
+%\scriptsize
+\footnotesize
+\tabcolsep=2.5pt
 %\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{ccc|cc|cc} 
 \toprule
-\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c|}{Fake Trajectory}          & \multicolumn{2}{c}{Real Trajectory}           \\ 
+\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c|}{Fake Traj.}          & \multicolumn{2}{c}{Real Traj.}           \\ 
 \cmidrule{4-7}
                        &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
 \midrule
@@ -374,108 +342,51 @@ We test the performance of our attack method on several benchmarks and results a
 \checkmark   & \checkmark   & \checkmark   & 0.818  & 0.890    & 0.035 & 0.023   \\ \bottomrule
 \end{tabular}
 %}
-\caption{Contribution of each loss on GOT-10k\_Val.}
+\caption{Contribution of each loss on GOT-Val.}
 \label{tab:loss}
 \end{table}
 
-\subsubsection{Evaluation on OTB2015 Benchmark}
+\subsection{Attack Results on the Evaluation Benchmarks}
 
-As one of the most classical benchmarks for the object tracking task, the OTB benchmark provides a fair test for trackers. We conduct experiments on OTB2015 \cite{OTB} which contains 100 videos for tracker performance evaluation.
-We use precision and success scores to evaluate the performance of trackers on the OTB2015 dataset.
-The precision encodes the proportion of frames for which the center of the tracking window is within 20 pixels of the ground-truth center. The success corresponds to the proportion of frames for which the overlap between the predicted and ground truth tracking window is greater than a given threshold.
-After applying the universal perturbations to videos, the success score relative to $B^{gt}$ drops from 0.642 to 0.035, indicating that our method can fool the state-of-the-art SiamFC++ tracker on OTB2015 effectively.
-%The success score relative to $B^{gt}$ on the clean videos is 0.642. The success score relative to $B^{gt}$ on the adversarial videos is 0.035. The success score relative to $B^{fake}$ on the adversarial videos is 0.842.
+\textit{Overall Attack Results} We test the performance of our targeted attack method on the evaluation benchmarks and gather the overall results in Table \ref{tab:benchmark results}. It is shown that the base tracker SiamFC++ can achieve state-of-the-art performance on all the evaluation benchmarks and run in real time (at about 58 fps on an GTX 1080Ti GPU). However this real-time performance requires the computationally intensive tracking system to occupy most of the computational resources, and thus it is appealing to develop a virtually costless attack method to fool the tracking system without scrambling for the resources. As shown in Table \ref{tab:benchmark results}, our attack method can satisfy this appealing demand and fool the SiamFC++ tracker effectively by misleading the tracker to follow a pre-defined \textit{fake trajectory}. Moreover, the high AO and Precision performance with respect to the \textit{fake trajectory} indicates a more effective attack without raising any suspicion.
 
-\subsubsection{Evaluation on GOT-10k Benchmark}
-
-GOT-10k \cite{GOT-10k} is a recent large-scale high-diversity dataset. There is no overlap in object classes between the train/val/test splits, promoting the importance of generalization to unseen object classes.
-%Because we need to use the real ground truth to generate the fake ground truth, and the fake ground truth is not available on test set, so we use the val set.
-%The evaluation metric is AO and Success rate, which means ...
-We use the average overlap (AO) to evaluate the performance of our attack method on GOT-10k\_Val.
-The AO relative to $B^{fake}$ on the adversarial videos is 0.818, which demonstrates that the generated universal perturbations can mislead the track to follow a specified trajectory (see Figure \ref{fig:vis}).
-
-\subsubsection{Evaluation on LaSOT Benchmark}
-
-With a large number of video sequences, LaSOT (Largescale Single Object Tracking) benchmark \cite{LaSOT} makes it impossible for trackers to overfit the benchmark, which achieves the purpose of testing the real performance of object tracking.
-Following onepass evaluation, we use three criteria including precision, normalized precision and success for evaluation.
-The precision score relative to $B^{gt}$ on the clean videos is 0.514. The precision score relative to $B^{gt}$ on the adversarial videos is 0.013. The precision score relative to $B^{fake}$ on the adversarial videos is 0.820, indicating that our attack method is effective. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
-
-\subsubsection{Compared with Other Methods}
-
-In Table \ref{tab:untargeted}, we compare the untargeted attack performance of our method with CSA \cite{CSA}, FAN \cite{FAN} and TTP \cite{TTP}.
-We report the precision score relative to the real trajectory on OTB2015.
-Our method significantly outperforms other methods in terms of the drop rate of the precision score.
-
-In Table \ref{tab:targeted}, we compare the targeted attck performance of our method with FAN \cite{FAN} and TTP \cite{TTP}.
-Our method significantly outperforms other methods in terms of the precision score relative to the fake trajectory on OTB2015.
-
-\begin{table}[t]
+\begin{table*}
 \centering
-\scriptsize
-\tabcolsep=2.0pt
+%\scriptsize
+\footnotesize
+\tabcolsep=3.0pt
 %\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}ccc|cccc@{}}
+\label{tab:iter}
+\begin{tabular}{cc|cccccccccccccccc} 
 \toprule
-Method & Tracker & Backbone & \begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular} & \begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Perturbed\\ Videos\end{tabular} & \begin{tabular}[c]{@{}c@{}}Drop\\ Rate\end{tabular} \\ \midrule
-CSA & SiamRPN & AlexNet & 4720 & 0.851 & 0.458 & 46\% \\
-FAN & SiamFC & AlexNet & 10 & 0.720 & 0.180 & 75\% \\
-TTP & SiamRPN++ & ResNet-50 & 8 & 0.910 & 0.080 & 91\% \\
+\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
 \midrule
-Ours & SiamFC++ & GoogLeNet & 0 & 0.861 & 0.048 & 94\% \\ \bottomrule
-\end{tabular}%
-%}
-\caption{Precision score relative to the real trajectory on OTB2015.}
-\label{tab:untargeted}
-\end{table}
-
-\begin{table}[t]
-\centering
-\scriptsize
-\tabcolsep=2.0pt
-%\resizebox{0.48\textwidth}{!}{%
-\begin{tabular}{@{}cccc@{}}
-\toprule
-Method & Tracker & Backbone & \begin{tabular}[c]{@{}c@{}}Precision on\\ Perturbed Videos\end{tabular}  \\ \midrule
-FAN & SiamFC & AlexNet & 0.420 \\
-TTP & SiamRPN++ & ResNet-50 & 0.692 \\
+\multirow{2}{*}{Fake Traj.} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
 \midrule
-Ours & SiamFC++ & GoogLeNet & 0.928 \\
+\multirow{2}{*}{Real Traj.} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
+\midrule
+\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
 \bottomrule
-\end{tabular}%
+\end{tabular}
 %}
-\caption{Precision score relative to the fake trajectory on OTB2015.}
-\label{tab:targeted}
-\end{table}
+\caption{Influence of the training iteration number on GOT-Val.}
+\label{tab:iter}
+\end{table*}
 
-\subsection{Ablation Studies}
-
-\subsubsection{Influence of Training Loss}
-
-We implement a series of experiments to analyse and evaluate the contribution of each loss component.
-In Table \ref{tab:loss}, we report our results on GOT-10k val set with different combination of loss terms, where $L_{\text{cls}}, L_{\text{quality}}, L_{\text{reg}}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
-To summarize, while all loss terms are beneficial, the classification term is more efficient than the quality assessment term. 
-
-\subsubsection{Influence of Training Iterations}
-
-As shown in Table \ref{tab:iter}, after approximately 30000 training iterations, the generated perturbations could fool most targets in GOT-10k\_Val. The AO relative to $B^{gt}$ falls down from 0.760 to 0.035. We notice that at the start of the training period (when training iteration is less than 2048), the falling speed of AO relative to $B^{gt}$ is the largest. This demonstrates the efficiency of our end-to-end training pipeline used to generate the adversarial perturbations.
-
-\subsection{Transferability}
-
-\subsubsection{Transferability of Different Backbones}
-
-We evaluate the transferability of our attacks on different backbones of SiamFC++: ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
-The experimental results are shown in Table \ref{tab:backbone}. On SiamFC++-AlexNet, the AO relative to $B^{gt}$ drops from 0.72 to 0.196. However, our perturbations do not generalize well on SiamFC++-ShuffleNet, which we conjecture to be due to the significant difference of the network structure between GoogLeNet and ShuffleNet.
-
-\begin{table}[t]
+\begin{table}
 \begin{center}
-\scriptsize
+%\scriptsize
+\footnotesize
 \tabcolsep=2.0pt
 %\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc|cc} 
 \toprule
 \multirow{3}{*}[-6pt]{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
 \cmidrule{2-7}
-                          & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c|}{Real Trajectory} & \multicolumn{2}{c}{Fake Trajectory}  \\ 
+                          & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c}{Fake Traj.}  \\ 
 \cmidrule{2-7}
                           & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
 \midrule
@@ -486,34 +397,67 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \end{tabular}
 %}
 \end{center}
-\caption{Transferability of different backbones on GOT-10k\_Val.}
+\caption{Transferability to different backbones on GOT-Val.}
 \label{tab:backbone}
 \end{table}
 
-\subsubsection{Transferability of Different Tracking Architectures}
-
-We use AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} as black-box attack models to verify the transferability of our perturbations on different tracking architectures.
-SiamRPN uses an RPN network to perform location regression and classification on the response map. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy. Both SiamRPN and SiamRPN++ are anchor-based methods while SiamFC++ is an anchor-free method.
-The experimental results are shown in Table \ref{tab:arch}. On SiamRPN, the success score relative to $B^{gt}$ drops from 0.666 to 0.379. On SiamRPN++, the success score relative to $B^{gt}$ drops from 0.676 to 0.518. The results show that our method can still show good transferability for different tracking architectures.
-
-\begin{table}[t]
+\begin{table}
 \centering
-\scriptsize
+%\scriptsize
+\footnotesize
 \tabcolsep=2.0pt
 %\resizebox{0.48\textwidth}{!}{%
 \begin{tabular}{c|cc|cc} 
 \toprule
 \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
 \cmidrule{2-5}
-                          & Success & Precision              & Success & Precision                   \\
+                          & AO & Precision              & AO & Precision                   \\
 \midrule
 SiamRPN++                 & 0.676   & 0.879                  & 0.518   & 0.691                       \\
 SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506                       \\
 \bottomrule
 \end{tabular}
 %}
-\caption{Transferability of different tracking architectures on OTB2015.}
+\caption{Transferability to different tracking architectures on OTB2015.}
 \label{tab:arch}
+\end{table}
+
+\textit{Ablation Study: Influence of Training Loss} We implement a series of experiments to analyse and evaluate the contribution of each loss component.
+In Table \ref{tab:loss}, we report our results on GOT-Val with respect to different perturbations trained with different combinations of loss terms, where $L_{\text{cls}}, L_{\text{quality}}, L_{\text{reg}}$ represent the classification loss, the quality assessment loss and the regression loss in Equ. \ref{eq:loss}, respectively.
+To summarize, all the loss terms are beneficial whereas the classification term is more effective than the quality assessment term.
+
+\textit{Ablation Study: Influence of Training Iterations} As shown in Table \ref{tab:iter}, after around 30000 training iterations, the generated perturbations can fool most targets in GOT-Val. The AO with respect to the \textit{real trajectory} falls down from 0.760 to 0.035. We notice that at the start of training period (when training iteration number is less than 2048), the decreasing of AO is significantly faster than in the later period. This demonstrates the fast convergence ability of our end-to-end training pipeline while generating the adversarial perturbations.
+
+\subsection{Transferability Analysis}
+
+\textit{Transferability to Different Backbones} We evaluate the transferability of our attacks when applying the perturbations to different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
+The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.196. However, our perturbations do not generalize well to SiamFC++-ShuffleNet, which we conjecture to be due to the particular group convolution and channel shuffle operations in ShuffleNet.
+
+\textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} to verify the transferability to different tracking architectures.
+SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.379 while the performance of SiamRPN++ is decreased from 0.676 to 0.518. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
+
+\subsection{Comparison with Other Methods}
+
+In Table \ref{tab:untargeted}, we compare the attack performance of our method with the recent promising attack approaches, \ie, the untargeted attack method CSA \cite{CSA} based on AlexNet and two other targeted attack methods FAN \cite{FAN} based on AlexNet and TTP \cite{TTP} based on ResNet-50.
+We report the precision score with respect to the \textit{real trajectory} on OTB2015.
+Our method significantly outperforms other methods at no additional cost except the mere addition and pasting operations -- and does not require gradient optimization or network inference.
+
+\begin{table}[]
+\centering
+\footnotesize
+\tabcolsep=2.0pt
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\multirow{2}{*}[-2pt]{Method} & \multirow{2}{*}[-2pt]{Tracker} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular}} & \multicolumn{2}{c}{Perturbed Videos} \\ \cmidrule(l){5-6} 
+ &  &  &  & Real Traj. & Fake Traj. \\ \midrule
+CSA & SiamRPN & 4720 & 0.851 & 0.458 & - \\
+FAN & SiamFC & 10 & 0.720 & 0.180&0.420 \\
+TTP & SiamRPN++ & 8 & 0.910 & 0.080&0.692 \\
+\midrule
+Ours & SiamFC++ & 0 & 0.861 & 0.048&0.928 \\ \bottomrule
+\end{tabular}%
+\caption{Precision score with respect to the \textit{real / fake trajectory} on OTB2015.}
+\label{tab:untargeted}
 \end{table}
 
 \section{Conclusion}
@@ -525,172 +469,5 @@ Experiments on several popular datasets show that our method can effectively foo
 \clearpage
 \bibliographystyle{named}
 \bibliography{ijcai21}
-
-\iffalse
-\section{Useless Sentences}
-
-\subsection{How we set identify the fake path ?}
-
-There are several methods to control the box direction. One is to generate several pre-trained perturbations, one represents a specific direction. During testing, a best direction is selected according to the fake GT position. However, there are some disadvantages of this method:
-\begin{itemize}
-\item They need several pre-trained perturbations. If they want more accurate, they need more pre-train.
-\item They generate the approximate trajectory.
-\item They have to generate  new perturbations of A new video.
-\end{itemize}
-To overcome these disadvantages, we use a small patch to control the prediction. So we can make the network to predict any shape/position as what we want. And we are universal.
-
-our loss function is:
-\begin{equation}
-L = \alpha \cdot L_{cls} + \beta \cdot L_{ctr} +  \gamma \cdot L_{reg} + \eta \cdot ||z||_2^2 +  \sigma \cdot ||x||^2_2
-\end{equation}
-
-We will generate the fake ground truth $GT^{\text{fake}}=\{B^{fake}_i\}_1^T$.
-We will predict: $\{B^{pred}_i\}_1^T$.
-The tracker is $\phi$, we get the prediction $B_i^{pred}=\phi(z, x_i)$.
-
-$z = \tau (I_1, b^{gt}_1)\in \mathcal{R}^{127\times 127\times 3}$
-
-$x = \tau(I_i, b_{i-1}^{pred})\in \mathcal{R}^{303\times 303 \times 3}$
-
-at each spatial location, the classification map encodes the probability of each position to contain the target, the regression map produces a corresponding offset, and the quality assessment map give the quality. 
-
-which predicts a classification map $\textbf{C}\in \mathbb{R}^{H\times W\times 1}$, a bounding box regression map $\textbf{R}\in \mathbb{R}^{H\times W\times 4}$, and a quality assessment map $\textbf{Q}\in \mathbb{R}^{H\times W\times 1}$.
-
-We want them universal so that no extra time is needed.
-For targeted attack, suppose a fake trajectory $GT^{\text{fake}}=\{B^{fake}_i\}_1^T$ is what we hope the tracker to output, we want to drive trackers to output desired object positions specified by the targeted trajectory. This is achieved by the patch position: We paste the patch to the specified position, and we hope the tracker prediction to the patch position (i.e., the FGT).
-
-Then we generate the perturbed template image and search image, then we generate the fake label, then we make prediction, calculate loss, and update perturbations for one iteration.
-
-$z = \tau (I_j, b^{gt}_j)\in \mathcal{R}^{127\times 127\times 3}$
-
-Note that we control the $\delta$ to be small. The shape of $\delta$ is $127 \times 127 \times 3$, and the shape of the $z$ is also $127 \times 127 \times 3$.
-
-First we generate the clean search image is cropped at the center of the target:$x = \tau(I_k, b_{k}^{gt})\in \mathcal{R}^{303\times 303 \times 3}$
-
-Then we set up the fake box in the search image. The center position of our patch is randomly put [-64, 64] near to the real target. The size of our patch is randomly from [-32, 128], to model the different size/position of the target. So we get the fake box $\hat b$. Note that $\hat b$ is relevant to the search image.
-
-\subsubsection{Generating the Fake Label}
-
-According to SiamFC++, there are three labels: classification label, regression label and quality assessment label.
-We generate fake ground truth $\hat y$ according to patch shape/position on the search image  used for calculate loss.
-We use the position of this fake GT to generate the $\hat y$.
-We need the network prediction close to the FGT.
-Calculate the FGT box position on the search image, according to the scale.
-We generate the fake label of the tracker according to the position of the fake target:
-\begin{equation}
-\mathcal{C^*, Q^*, T^*} = A(m),
-\end{equation}
-where classification GT $S_{cls} \in R^{19 \times 19 \times 1}$, where $S_{cls}(x,y)$ denotes the classification confidence score for the box at spatial position $(x,y)$. The center GT $S_{ctr} \in \mathbb{R}^{19 \times 19 \times 1}$, where $S_{ctr}(x,y)$ denotes the quality assessment score for box at $(x,y)$, and regression GT $S_{reg} \in \mathbb{R}^{19 \times 19 \times 4}$, where $S_{reg}(x,y) \in \mathbb R^{4}$ is the delta of $B^{fake}$.
-
-and the fake label $\tilde y$
-
-where $y$ includes three parts: classification map $CLS \in R^{19 \times 19 \times 1}$, regression map $REG \in \mathbb{R}^{19 \times 19 \times 1}$, and center map $CTR \in \mathbb{R}^{19 \times 19 \times 4}$.
-
-\subsubsection{Loss Function}
-
-We use the trained network of SiamFC++ \cite{SiamFC++}.
-It is an anchor free method for tracking. It contains three losses to train the tracker: classification loss, center loss and regression loss.
-
-\subsection{Abstract}
-
-In this paper, we propose a new method to attack the Siamese trackers. 
-We \textbf{first} propose the \textbf{universal} attack for Siamese trackers, we achieve it by use the small distribution on the template image and use the patch on the search image.
-We use a \textbf{fake target}, i.e., a small patch onto the search image, to guide the tracker to prediction badly.
-We not only to attack by the fake target, we also manipulate the template image to boost the performance.
-Different from the existing tracker attack method, we can not only control the trajectory of the target, but also the size of the target.
-Our code is public at https://github.com/lizhenbang56/Universal-Targeted-Attacks-for-Siamese-Visual-Tracking
-\textit{(D PATCH) Unlike the original adversarial patch that only manipulates image-level classifier, our patch simultaneously attacks the bounding box regression and object classification so as to disable their predictions.}
-We propose a systematic algorithm for computing universal perturbations, and show that state-of-the-art Siamese trackers are highly vulnerable to such perturbations.
-
-In SiamFC++, the tracker $\phi(\cdot)$ first transforms the reference frame $I_1$ and annotation $b_1$ to get an template image $z = \tau (I_1, b^{gt}_1)\in \mathcal{R}^{127\times 127\times 3}$, and searches a large area in the candidate frame $I_i$ to get the search image $x = \tau(I_i, b_{i-1}^{pred})\in \mathcal{R}^{303\times 303 \times 3}$ centered at the position obtained in the previous frame.
-Then, we add the template perturbation onto the template image:
-\begin{equation}
-\tilde z = z + \delta
-\end{equation}
-Then, we calculate the box $\hat b$ onto the search image according to FGT onto the original iamge $b^{fake}_i$, then we resize the patch using that box, then put the fake patch onto the search image according to FGT:
-\begin{equation}
-\tilde x = A(x, p_i, \hat b)
-\end{equation}
-Then, we run the tracker and get the prediction. According to SiamFC++, the result of classification map and the center map is multiplied, then add the cosine window to find the best position. Then the best box according to this position is selected as the final box.
-
-\textbf{What is attack?}
-
-Specifically, by adding such a quasi-imperceptible perturbation to template image and a small patch on the search image, the bounding box estimated by the Siamese trackers is changed from the real target to the fake patch. Such perturbations are dubbed universal, as they are image-agnostic.
-
-\textcolor{red}{(Adversarial patch) In this work we explore what is possible if an attack no longer restricts themselves to imperceptible changes. Instead, this attack generates an image-independent patch for the search image, and an image-independent small perturbations for the target image. The patch can then be placed anywhere within the filed view of the tracker, and causes the tracker to output a targeted position.}
-
-Specifically, we use two forms of perturbations together to achieve this goal: Unseen small perturbations on the search image and small patch on the search image. We regard the patch as a fake target, and we want our tracker to track this fake patch target. We train our perturbations as write-box attack using FSGM  method.
-
-The patch is powerful, it is used to point out the position and size need to track.
-
-What we do is the targeted attack, which means the tracker follows a new trajectory. Specifically, we patch a fake target.
-
-We perform a good solution, use unseen small perturbations on the search image and small patch on the search image to attack. / We propose an algorithm for finding such perturbations. The algorithm seeks a universal perturbation for a ...
-
-\subsection{Experiments}
-
-\subsubsection{Targeted Attack Evaluation}
-
-Two kinds of videos: the clean videos and the perturbed videos.
-Two kinds of trajectories: the real trajectory and the fake trajectory.
-So 4 combine: the clean videos + the real trajectory: the original result.
-the perturbed video + the real trajectory: bad is good.
-The perturbed video + the fake trajectory: high is good.
-We hope that the attacked videos will have higher indicators on false trajectories and lower indicators on real trajectories.
-
-\subsubsection{Generating Fake Trajectories}
-
-We need to set specific trajectory for the video frames in the dataset to achieve targeted attack.
-For targeted attacks, we need to generate a fake trajectory: The definition of the fake ground truth: ... We can set the fake ground truth as what we want.
-The goal of the fake ground truth: we hope the tracker predict results similar to the fake ground truth.
-During set the fake ground truth, we must guarantee the following:
-
-\begin{itemize}
-\item The fake ground truth at the first frame is close enough to the real ground truth, otherwise, we do not know where is the fake target.
-\item To model the size change of the \textbf{fake target} $\tilde T$, we let the fake target size change from the original real target $T$ to 64*64 in the original image.
-\item The fake target needs to near to the real target all the time, because there are chances to jump between each other.
-\item Never overlap between to box $B^f_i$ and $B^r_i$ to make sure the patch can not cover the real target appearance.
-\end{itemize}
-
-\textbf{Our solution to set the fake path} We let the fake target to run as same as the real target. To show that we can control the size of the fake target, we gradually set the patch size to 64 * 64.
-\textbf{Inference} 
-Initial position/size of the fake target: During tracking, the fake target ground truth box is always near the \textbf{real target} of 16 pixels (on the origin image).
-The initial size of the fake target is the same as the initial size of the real target.
-End size of the fake target: 64 * 64.
-\textbf {position of the FGT on the search image during testing}
-
-\subsection{Evaluation Metrics}
-
-We get the prediction boxes $B^{\text{pred}}$. So we can evaluation the overlap between the real ground truth boxes $B^{\text{GT}}$ and the fake ground truth boxes $B^{\text{FGT}}$. If we attack successful, the AO to real ground truth will drop significantly, while the AO to fake ground truth will be high. For a bad attack, the AO to real ground truth will not drop. 
-
-Then, we use SSIM and L2 norm to judge the perturbation on the target image is small or not. 
-defination of SSIM: ... we near 0.88
-
-\textit{Image Quality Assessment: We use Mean-SSIM to evaluate the quality of adversarial videos. Mean-SSIM calculates the average SSIM of frames in videos. The generated adversarial perturbations are difficult to be found when MeanSSIM is close to 1.(Efficient Adversarial Attacks for Visual Object Tracking)}
-
-\subsection{Qualitative Evaluation}
-
-\textit{Figure \ref{fig:vis} shows examples of adversarial attacks against different videos. We can see that the template perturbation is so subtle that it is difficult to be observed by the human eye. (One-shot Adversarial Attacks on Visual Tracking with Dual Attention)} The \textbf{classification map} can show the patch position very good. The \textbf{center map} may show both the real target and the patch position. They multiplied finally.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.4\textwidth]{images/iter.jpg}
-\caption{Inflence of Training Iterations}
-\end{figure}
-
-\subsection{Related Work}
-
-\subsubsection{Digital Attack v.s. Physical Attack}
-
-In the case of digital attack, the adversary has direct access to the actual data fed into the model. In the case of an attack in the physical world, the adversary does not have direct access to the digital representation of provided to the model. We perform the digital attack in this paper.
-
-In \cite{karmon2018lavan}, we can know, attack can be categorised as image domain attack and network domain attack. For image attack, the new image must at [0,255]. But for the network attack, the value can be any. We do the network domain attack, because we are more interested in investigating the blind-spots of the popular Siamese trackers.
-
-\subsubsection{White Box Attack v.s. Black Box Attack}
-
-In the white box scenario, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights.
-Traditional adversarial attack methods include FGSM \cite{FGSM} and so on. FGSM means In the black box scenario, the adversary only have limited or no information about the model.
-
-\fi
 
 \end{document}
