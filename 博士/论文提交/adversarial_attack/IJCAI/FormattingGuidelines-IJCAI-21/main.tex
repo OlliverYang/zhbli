@@ -184,7 +184,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
 \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
 \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-\STATE Calculate the fake target position $\{l^x, l^y, w, h\}$ relative to the search image.
+\STATE Calculate the fake target position $\{l^x, l^y, w, h\}$ with respect to the search image.
 \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
 \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
 \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
@@ -220,7 +220,7 @@ The perturbed search image is generated as follows:
 \begin{equation}
 \tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)),
 \end{equation}
-where $(l^x, l^y)$ and $(w, h)$ represents the position and size of the fake target relative to the search image, respectively. $A$ is \textit{patch application operator} \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then applies the resized patch $\hat{p}_k$ to the search image $\textbf x$ at location $(l^x,l^y)$.
+where $(l^x, l^y)$ and $(w, h)$ represents the position and size of the fake target with respect to the search image, respectively. $A$ is \textit{patch application operator} \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then applies the resized patch $\hat{p}_k$ to the search image $\textbf x$ at location $(l^x,l^y)$.
 
 Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and $\tilde{\textbf  z}$ as input and makes predictions as follows:
 \begin{equation}
@@ -258,7 +258,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$, and
 
 Once the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any natural video. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a new video only involves the mere addition/paste of the perturbations to the template/search image -- and does not require gradient optimisation or network inference.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (relative to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ relative to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
+During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ with respect to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
 \begin{equation}
 \tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
 \end{equation}
