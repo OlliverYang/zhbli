@@ -106,8 +106,11 @@ Given an arbitrary detected or annotated object of interest in the initial video
 \centering
 %\subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
-\includegraphics[width=0.48\textwidth]{images/1_v4.pdf}
-\caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.}
+\includegraphics[width=0.45\textwidth]{images/1_v7.pdf}
+\caption{Our approach generates the universal perturbations which can be used to attack the Siamese tracker on any video in a targeted manner.
+%Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations. 
+Red represents the ground-truth bounding box, and green represents the predicted bounding box by the tracker.
+The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
 \label{fig:1}
 \end{figure}
 
@@ -151,7 +154,7 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{images/network_v4.png}
+\includegraphics[width=0.48\textwidth]{images/network_v5.pdf}
 \caption{The pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ to $\textbf x$, the tracker outputs the location and size of the adversarial patch instead of the real target.}
 \label{fig:net}
 \end{figure}
@@ -201,7 +204,7 @@ Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbi
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.95\textwidth]{images/vis_v4.pdf}
-\caption{The results under targeted attacks. Red represents a ground-truth bounding box, yellow represents the targeted bounding box, and green represents the predicted bounding box by the tracker. The yellow and green boxes are basically the same in time series, which indicates that the targeted attack is successful.}
+\caption{The results under targeted attacks. Red represents the ground-truth bounding box, yellow represents the targeted bounding box, and green represents the predicted bounding box by the tracker. The yellow and green boxes are basically the same in time series, which indicates that the targeted attack is successful.}
 \label{fig:vis}
 \end{figure*}
 
@@ -242,7 +245,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
-{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denotes the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
+{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position/size of the fake target.$\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples on the search image, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment and $L_{\mathrm{reg}}$ denotes the IoU loss \cite{iou-loss} for bounding box result. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
 
 \subsubsection{Optimisation}
 
@@ -356,7 +359,6 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \footnotesize
 \tabcolsep=3.0pt
 %\resizebox{\textwidth}{!}{%
-\label{tab:iter}
 \begin{tabular}{cc|cccccccccccccccc} 
 \toprule
 \multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
