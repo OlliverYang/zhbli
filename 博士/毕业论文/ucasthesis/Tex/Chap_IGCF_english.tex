@@ -1,14 +1,14 @@
-\chapter{实例引导的相关滤波器}\label{chap:IGCF}
+\chapter{IGCF: Instance Guided Correlation Filter}\label{chap:IGCF}
 
-\section{摘要}
-基于传统相关过滤器（CF）的跟踪器通常仅依靠岭回归进行在线学习，而不会感知目标的实例级信息。 信息的缺乏可能导致跟踪漂移或跟踪器完全失效。 我们提出了实例导向相关滤波器（IGCF），以提高跟踪的鲁棒性。 具体来说，一个深层网络（即InstMask）旨在为目标生成实例掩码。 掩码用于约束相关滤波器的学习。 在实例级分割的基础上，我们进一步提出了一种自校正机制来缓解CF跟踪器的漂移问题。 在几个具有挑战性的基准测试上进行的广泛实验表明，与我们最新的跟踪器相比，我们的IGCF跟踪器在单个CPU内核上以5 FPS的速度运行时表现出色。
+\section{Abstract}
+Traditional correlation filter (CF) based trackers typically rely only on ridge regression for online learning without the perception of instance level information of targets. This lack of information may lead to tracking drift or complete failure of the tracker. We propose the Instance Guided Correlation Filter (IGCF) to improve tracking robustness. Specifically, a deep network, namely InstMask, is designed to generate instance masks for targets. The masks are used to constrain the learning of the correlation filters. Based on the instance-level segmentation, we further propose a self-correction mechanism to mitigate the drift problem of CF trackers. Extensive experiments on several challenging benchmarks demonstrate that our IGCF tracker performs favorably compared with state-of-the-art trackers while running at 5 FPS on a single CPU core.
 
-\section{引言}
-对象跟踪是计算机视觉中的基本主题。 给定视频起始帧中的初始化目标，跟踪的目的是估计后续帧中目标的状态。 尽管在这方面进行了长期的努力，例如 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL}，但在低成本平台上仍难以实现可接受的跟踪精度和速度。 遮挡，照明变化，外观变化和快速运动等使得在自动驾驶，机器人技术和增强现实等现实应用中难以进行跟踪。
+\section{Introduction}
+Object tracking is a fundamental topic in computer vision. Given the initialized target in the starting frame of a video, the aim of tracking is to estimate the states of the target in the subsequent frames. Despite long-standing efforts \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL} in this area, it is still difficult to achieve acceptable tracking accuracy and speed on a low cost platform. Occlusion, illumination change, appearance change and fast motion etc. make tracking difficult in real world applications such as autonomous driving, robotics and augmented reality.
 
-在过去的十年中，歧视性相关滤波器（DCF）跟踪器 \cite{bolme2010visual, Zhang2018VisualTU} 引起了人们的极大兴趣，该跟踪器通过利用离散傅立叶变换以有效的方式利用了跟踪样本的所有空间偏移。 但是，对于大多数DCF跟踪器，目标位置由一个矩形框描述。 因此，矩形物体区域，特别是用于不规则形状的物体或具有空心中心的物体，将被掺杂大量的背景信息，这可能导致跟踪漂移和故障。 此外，DCF跟踪器没有实例级语义信息。信息的缺乏限制了它们的潜力。
+In the past decade, there has been a surge of interest in discriminative correlation filter (DCF) trackers \cite{bolme2010visual, Zhang2018VisualTU} which utilize all the spatial shifts of the tracking samples in an efficient way by exploiting the discrete Fourier transform. However, for most of DCF trackers, the target position is described by a rectangular box. Thus the rectangular object regions, especially for the irregularly shaped objects or those with a hollow center, will be doped with much background information, which may lead to tracking drift and failure. In addition, the DCF trackers do not have instance-level semantic information. This lack of information limits their potential.
 
-基于DCF跟踪器的成功，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已证明目标上的空间约束可改善相关滤波器的学习。 但是，大多数空间约束都是手工设计的，仍然没有考虑有关目标的语义信息。 尽管实例级语义分割 \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}（旨在为图像中的每个像素分配语义标签）能够提取图像中的实例级语义信息，直接集成现有的实例分割方法以提供空间 相关滤波器学习的约束仍然很难在跟踪精度和速度之间取得平衡。
+Based on the success of DCF trackers, many studies \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} have demonstrated that spatial constraints on a target improve correlation filter learning. However, most spatial constraints are hand designed and still do not take account of semantic information about the target. Although instance-level semantic segmentation \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}, which aims to assign semantic labels to every pixel in an image, is capable of extracting instance-level semantic information in an image, directly integrating the existing instance segmentation methods to provide spatial constraint for the correlation filter learning remains hard to strike a balance between tracking accuracy and speed.
 
 \begin{figure}
 \centering
@@ -31,10 +31,10 @@
     \label{fig:InstMask}
 \end{figure}
 
-在这项工作中，我们提出了实例导向相关过滤器（IGCF）来解决上述限制。具体来说，一个深层网络（即InstMask）旨在生成目标的准确实例掩码。对InstMask进行了离线和端到端的培训，以从COCO2017 \cite{COCO} (参见图 \ref{fig:InstMask}). 。实例遮罩可以通过抑制背景杂波的干扰来显式限制相关滤波器的学习过程。
-与常见的对象分割任务不同，我们设计了一种新的网络结构和训练方法，使InstMask能够识别位于搜索补丁中心附近的任意类别的显着对象。 InstMask不限于识别训练集中出现的类别中的目标。此外，我们的网络由一个 $1 \times 1$ 卷积层构成，可以使全局接收场从目标附近获取上下文信息。这增加了分割的准确性。这种轻量级的网络在单个CPU核心平台上以5 FPS的速度运行时，可以在跟踪精度和速度之间取得平衡。
+In this work, we propose the Instance Guided Correlation Filter (IGCF) to address the aforementioned limitations. Specifically, a deep network, namely InstMask, is designed to generate accurate instance masks of targets. InstMask is trained off-line and end-to-end to learn semantic information from COCO2017\cite{COCO} (see Fig. \ref{fig:InstMask}). The instance mask can explicitly constrain the learning process of correlation filters by suppressing the interference of background clutter. 
+Unlike common object segmentation tasks, we have designed a new network structure and training method that enables InstMask to identify salient objects of arbitrary category located near the center of a search patch. InstMask is not restricted to identifying targets in categories that appear in the training set. Moreover, our network embodied with one $1 \times 1$ convolution layer allows a global receptive field to obtain contextual information from the neighbourhood of the target. This increases the accuracy of the segmentation. This lightweight network achieves a balance between tracking accuracy and speed while running at 5 FPS on a single CPU core platform. 
 
-此外，我们注意到，为满足跟踪自适应性要求而在线更新的相关滤波器与满足鲁棒性要求的静态InstMask模块是独立且互补的。 因此，两个组件的输出可以集成在一起，以进一步提高跟踪性能。 具体来说，基于实例级别的细分，我们进一步提出了一种自校正机制来缓解CF跟踪器的漂移问题。 分割掩模的几何中心用于校正相关滤波器的预测偏差。 配备了InstMask模块，提出的IGCF不仅可以精确地跟踪目标，还可以用于视频对象分割。 这证明了我们算法的广泛应用。 所建议的跟踪框架IGCF的体系结构如图 \ref{fig:IGCF} 所示。
+Besides, we notice that the correlation filters updated online for meeting the tracking adaptiveness requirement and the static InstMask module for satisfying the robustness demand are independent and complementary. So the outputs of the two components can be integrated together to further improve the tracking performance. Specifically, based on the instance-level segmentation, we further propose a self-correction mechanism to mitigate the drift problem of CF trackers. The geometric center of the segmentation mask is used to correct the prediction bias of the correlation filters. Equipped with the InstMask module, the proposed IGCF not only tracks targets accurately, but also can be used for video object segmentation. This demonstrates the wide range of applications of our algorithm. The architecture of the proposed tracking framework IGCF is shown in Fig. \ref{fig:IGCF}.
 
 \begin{figure*}
     \centering
@@ -43,34 +43,34 @@
     \label{fig:IGCF}
 \end{figure*}
 
-我们在三个跟踪基准上进行了全面的实验：VOT2015 \cite{Kristan2015TheVO}、VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。我们的IGCF跟踪器在跟踪精度方面取得了良好的平衡，同时与最新的跟踪器相比表现出色。最后，我们对视频对象分割数据集 DAVIS2016 \cite{Perazzi2016} 进行了定性实验，以展示我们算法强大的视频语义分割和跟踪功能。
+We perform comprehensive experiments on three tracking benchmarks: VOT2015 \cite{Kristan2015TheVO}, VOT2016 \cite{Kristan2016TheVO} and GOT-10k \cite{GOT-10k}. Our IGCF tracker performs favorably against state-of-the-art trackers while achieving a good balance between tracking accuracy. Finally, we performed qualitative experiments on the video object segmentation dataset DAVIS2016 \cite{Perazzi2016}, in order to show the powerful video semantic segmentation and tracking capabilities of our algorithm.
 
-\section{相关工作}
-几十年来，对象跟踪一直是热门话题。 对象跟踪的目的是在给定目标在第一帧中的位置的情况下，确定目标在视频帧中的位置。
+\section{Related works}
+Object tracking has been a popular topic for decades. The goal of object tracking is to establish the positions of a target in the frames of a video, given the position of the target in the first frame.
 
-\subsection{基于相关滤波器的跟踪器}
-许多基于DCF的跟踪器旨在考虑部分遮挡，照明变化，背景杂波，运动模糊，视点变化等问题。
+\subsection{DCF-based trackers}
+Many DCF based trackers are designed to take account of partial occlusion, illumination variation, background clutter, motion blur, viewpoint change, etc.
 
-Bolme等。提出基于平方误差最小输出和（MOSSE）过滤器的跟踪器 \cite{bolme2010visual} 。该跟踪器在每秒669帧的速度下运行时，可以抵抗光照，比例，姿势和非刚性变形的变化。
-CSK跟踪器 \cite{Henriques2012ExploitingTC} 通过采用图像子窗口的循环结构并使用快速傅里叶变换（FFT）快速合并来自所有子窗口的信息，对MOSSE跟踪器进行了改进。此外，在 \cite{Henriques2012ExploitingTC} 中显示，使用内核技巧可以像在原始图像空间中一样高效地完成非线性空间中的分类。
-Danelljan等 \cite{Danelljan2014AdaptiveCA} 通过学习有关多维颜色属性的多通道滤镜来改进CSK跟踪器。为了避免由于颜色属性的高维而导致的计算开销，提出了一种自适应维降技术 \cite{Danelljan2014AdaptiveCA} ，可以将原始的11维减少到只有2维。
-后来，Henriques等人 \cite{henriques2014high-speed} 为成千上万个已翻译补丁的数据集提出了一种分析模型。使用离散傅立叶变换将模型对角线化。此操作可以将存储和计算量减少几个数量级。
+Bolme et al. propose a tracker \cite{bolme2010visual} based on Minimum Output Sum of Squared Error (MOSSE) filters. The tracker is robust to variations in lighting, scale, pose, and non-rigid deformations while operating at 669 frames per second.
+The CSK tracker \cite{Henriques2012ExploitingTC} improves on the MOSSE tracker by adopting the circulant structure of subwindows of an image, and using the Fast Fourier Transform (FFT) to quickly incorporate information from all subwindows. Additionally, it is shown in \cite{Henriques2012ExploitingTC} that classification in non-linear spaces can be done as efficiently as in the original image space using the kernel trick.
+Danelljan et al. \cite{Danelljan2014AdaptiveCA} improve the CSK tracker by learning multi-channel filters on multi-dimensional color attributes. To avoid the computational overhead caused by the high dimensions of the color attributes, an adaptive dimension reduction technique is proposed \cite{Danelljan2014AdaptiveCA} to reduce the original eleven dimensions to only two.
+Later on, Henriques et al. \cite{henriques2014high-speed} propose an analytic model for datasets of thousands of translated patches. The model is diagonalized using the Discrete Fourier Transform. This operation can reduce both storage and computation by several orders of magnitude.
 
-最近，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已将空间约束引入到相关滤波器的学习中。在 \cite{Danelljan2015LearningSR} 中提出了一种称为“空间正则化差异相关滤波器（SRDCF）”的跟踪器。 SRDCF在学习中引入了空间正则化组件，以根据相关滤波器系数的空间位置对它们进行惩罚。
-此外， \cite{Lukezic2017DiscriminativeCF} 中描述的CSR-DCF滤波器将信道和空间可靠性组件引入了DCF跟踪，并为它们在滤波器更新和跟踪过程中的有效无缝集成提供了学习算法。空间可靠性组件将过滤器支撑调整到目标的合适部分。信道可靠性组件根据特征的位置生成特征加权系数。 CSR-DCF跟踪器具有较大的搜索区域，可以有效跟踪非矩形目标。空间可靠性组件与Staple（模板和Pixelwise学习器的总和） \cite{Bertinetto2016StapleC} 跟踪器中使用的颜色分布具有一些相似之处。该跟踪器结合了补充提示，以提高鲁棒性。它解决了关于基于CF的模板模型和逐像素颜色分布模型的两个独立的岭回归问题。
-为了处理目标的尺度变化， \cite{Li2014ASA} 中提出的方法以不同的尺度对目标进行采样，并将采样调整为固定大小，以与每个帧上的学习模型相匹配。此方法还采用了多特征集成方案，该方案使用原始像素，渐变直方图 \cite{Forsyth2014ObjectDW} 和颜色命名 \cite{Weijer2009LearningCN} 来进一步增强跟踪器。这些基于DCF的跟踪器的主要缺点是缺乏对目标的高级语义信息的感知。
+Recently, many studies \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} have introduced spatial constraints into the learning of correlation filters. A tracker called Spatially Regularized Discriminative Correlation Filters (SRDCF) is proposed in \cite{Danelljan2015LearningSR}. The SRDCF introduces a spatial regularization component in the learning to penalize correlation filter coefficients depending on their spatial location.
+Moreover, the CSR-DCF filter described in \cite{Lukezic2017DiscriminativeCF} introduces the channel and spatial reliability components to DCF tracking and provides a learning algorithm for their efficient and seamless integration in the filter update and tracking processes. The spatial reliability component adjusts the filter support to a suitable part of the target. The channel reliability component generates feature weighting coefficients, depending on the locations of the features. The CSR-DCF tracker has a large search region and tracks non-rectangular targets effectively. The spatial reliability component bears some similarities to the pixel-wise learner with color distribution used in the Staple (Sum of Template And Pixel-wise LEarners) \cite{Bertinetto2016StapleC} tracker. This tracker combines complementary cues to improve robustness. It solves two independent ridge-regression problems with respect to the CF-based template model and pixel-wise color distribution model.
+In order to handle the scale changes of a target, the method proposed in \cite{Li2014ASA} samples the target at different scales, and adjusts the samples into a fixed size for matching with the learnt model at each frame. This method also adopts a multiple feature integration scheme, which employs the raw pixel, Histogram of Gradients \cite{Forsyth2014ObjectDW} and color-naming \cite{Weijer2009LearningCN} to further enhance the tracker. The main drawback of these DCF-based trackers is the lack of perception of high-level semantic information of targets.
 
 \subsection{CNN-based trackers}
-在过去的几年中，深度学习 \cite{Goodfellow2015DeepL} 在许多研究领域都取得了显著成功，尤其是在计算机视觉 \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}，语音识别 \cite{Kim2016JointCB, Liu2019AttentionGD}和自然语言处理 \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR}。一些跟踪器已经证明了深度学习的性能优势。
+In the past few years, deep learning \cite{Goodfellow2015DeepL} has achieved remarkable success in many research fields, especially in computer vision \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}, speech recognition \cite{Kim2016JointCB, Liu2019AttentionGD} and natural language processing \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR}. Several trackers have demonstrated the performance advantages of deep learning. 
 
-大多数基于DCF的跟踪器仅限于单分辨率特征图，从而极大地限制了其潜力。为了解决此问题，CCOT跟踪器 \cite{CCOT} 学习连续卷积滤波器以融合以不同分辨率获得的特征图。这将为目标生成连续域置信度图。除了多分辨率融合之外，连续域学习公式还可以实现精确的亚像素定位。
-ECO跟踪器 \cite{Danelljan2017ECOEC} 在核心DCF公式中包括分解卷积算子，训练样本分布的紧凑生成模型和保守模型更新策略。由于使用了CNN功能，这减轻了计算开销。相反，CF2跟踪器 \cite{Ma2015HierarchicalCF} 自适应地学习每个卷积层上的相关滤波器，以对目标外观进行编码，并使用每一层的相关响应来推断目标位置。
+Most DCF-based trackers are restricted to single-resolution feature maps, significantly limiting their potential. To solve this problem, the CCOT tracker \cite{CCOT} learns continuous convolution filters to fuse the feature maps obtained at different resolutions. This produces a continuous-domain confidence map for the target. In addition to multi-resolution fusion, the continuous domain learning formulation enables accurate sub-pixel localization.
+The ECO tracker \cite{Danelljan2017ECOEC} includes in the core DCF formulation a factorized convolution operator, a compact generative model of the training sample distribution and a conservative model update strategy. This alleviates the computational overhead due to the use of CNN features. In contrast, the CF2 tracker \cite{Ma2015HierarchicalCF} adaptively learns correlation filters on each convolutional layer to encode the target appearance and infers the target location using the correlation response of each layer.
 
-举行等。 \cite{GOTURN} 提出了一种离线训练的神经网络来跟踪目标。他们使用简单的前馈网络，而无需在线培训。该网络了解对象运动与外观之间的一般关系，并可用于跟踪未出现在训练集中的新颖对象。
-最近，一系列跟踪器，例如SiamFC \cite{SiamFC}，SiamRPN \cite{SiamRPN}，DasiamRPN \cite{zhu2018distractor} 和SiamMask \cite{Wang2018SiamMask}，使用暹罗网络来学习搜索图像和示例图像之间的相似性。它们在跟踪速度和准确性之间取得了良好的平衡。 SiamMask是在一个端到端学习框架中同时执行跟踪和分段的首次尝试。
-尽管在准确性和鲁棒性方面都具有吸引人的性能，但是上述大多数跟踪器都具有很高的特征提取计算开销，因此不适合于低成本平台。例如，SiamMask算法在Intel E5-2620 CPU平台上仅以1 FPS运行。
+Held et al. \cite{GOTURN} propose an off-line trained neural network to track targets. They use a simple feed-forward network without online training. The network learns a generic relationship between object motion and appearance and can be used to track novel objects that do not appear in the training set. 
+Recently, a series of trackers such as SiamFC \cite{SiamFC}, SiamRPN \cite{SiamRPN}, DasiamRPN \cite{zhu2018distractor} and SiamMask \cite{Wang2018SiamMask}, use a siamese network to learn the similarity between search images and exemplar images. They obtain a good balance between tracking speed and accuracy. SiamMask is the first attempt to perform both tracking and segmentation simultaneously in one end-to-end learning framework.
+Despite attractive performance in both accuracy and robustness, most of the above trackers have a high computational overhead for feature extraction, and thus are not suitable for low-cost platforms. For example, the SiamMask algorithm runs only at 1 FPS on the Intel E5-2620 CPU platform.
 
-也有一些工作致力于使用自校正机制来减轻跟踪漂移，从而提高跟踪的鲁棒性。例如，在 \cite{fan2018parallel}中，跟踪框架由两个组件（跟踪器和验证器）组成，它们在两个单独的线程上并行工作。跟踪器提供实时跟踪推断，并有望在大多数情况下表现良好。相反，验证者检查跟踪结果并在需要时更正跟踪器。
+There are also some works dedicated to improving tracking robustness using a self-correction mechanism to mitigate the tracking drift. For instance in \cite{fan2018parallel}, the tracking framework consists of two components, a tracker and a verifier, working in parallel on two separate threads. The tracker provides real-time tracking inference and is expected to perform well most of the time. In contrast, the verifier checks the tracking results and corrects the tracker when needed.
 
 \section{The Proposed Method}
 
