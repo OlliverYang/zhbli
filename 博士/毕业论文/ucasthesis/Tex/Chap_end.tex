@@ -16,7 +16,7 @@ For example,
 %RASNet \cite{wang2018learning} explores diverse attention mechanisms to adapt the offline learned feature representations to a specific tracking target.
 SA-Siam \cite{he2018twofold} separately trains two branches to keep the heterogeneity of semantic/appearance features.
 In DaSiamRPN \cite{zhu2018distractor}, a novel distractor-aware incremental learning module is designed, which can effectively transfer the general embedding to the current video domain and incrementally catch the target appearance variations  during inference.
-SiamRPN++ \cite{li2019siamrpn++} introduces a simple yet effective sampling strategy to drive the siamese tracker with more powerful deep architectures.
+SiamRPN++ \cite{SiamRPN++} introduces a simple yet effective sampling strategy to drive the siamese tracker with more powerful deep architectures.
 These efforts have produced some impact and improved state-of-the-art accuracy.
 %These improvements are useful.
 %However, all these effort ignores a important problem: they ignore to merge the inter-frame feature during the training phase.
@@ -111,8 +111,8 @@ Our contributions are three folds:
 % 介绍输入
 %The input of the network is ... We use notations ... to denote ..., respectively. ... has a size of ...
 %SiamTFA is composed of ... and ...
-%Inspired by the great success of siamese trackers \cite{li2019siamrpn++, wang2019fast}, we also construct our SiamTFA based on the siamese architecture.
-In this section, we will introduce the proposed siamese architecture-based tracking method, namely SiamTFA (Fig. \ref{fig:SiamTFA}), which is inspired by the great success of siamese trackers \cite{li2019siamrpn++, wang2019fast}.
+%Inspired by the great success of siamese trackers \cite{SiamRPN++, Wang2018SiamMask}, we also construct our SiamTFA based on the siamese architecture.
+In this section, we will introduce the proposed siamese architecture-based tracking method, namely SiamTFA (Fig. \ref{fig:SiamTFA}), which is inspired by the great success of siamese trackers \cite{SiamRPN++, Wang2018SiamMask}.
 Specifically, SiamTFA takes an image pair as input, comprising a template image and a search image. The template image is the image patch cropped from the initial frame according to ground truth bounding box. The search image is one whole frame in the remaining of the video. Both inputs share the same feature extractor and parameters.
 Inspired by the success of the two stage detection paradigm \cite{ren2015faster}, our siamese tracker is also a two stage method. The first stage aims to generate proposals that are visually similar to the given template target. In this stage, we introduce a temporal aggregation module
 %(Fig. \ref{fig:TSM}) 
@@ -141,7 +141,7 @@ For the template image, we use the last stage of the FPN output as the template 
 
 \textbf{Temporal aggregation module}
 %Different from traditional trackers, we use the rich information about the same object instance by 
-Most popular siamese trackers \cite{li2019siamrpn++, wang2019fast} use the still image to make prediction. % However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
+Most popular siamese trackers \cite{SiamRPN++, Wang2018SiamMask} use the still image to make prediction. % However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
 This limits the ability of these siamese trackers.
 On one hand, tracking on single frame generates unstable results and fails when appearance is poor (Fig. \ref{fig:visulization}); on the other hand, 
 temporal adjacent frames can provide more information about the target.
@@ -179,7 +179,7 @@ The modulated feature pyramid $F_{mod} = \{f_{mod}^i\}_{i=1:5}$ is generated as 
 \begin{equation}
     f_{mod}^i = \mathcal{M}(f_{avg}, f^i_x),
 \end{equation}
-where $\mathcal M(\cdot)$ is the depth-wise correlation \cite{li2019siamrpn++}.
+where $\mathcal M(\cdot)$ is the depth-wise correlation \cite{SiamRPN++}.
 %So we get the modulated feature pyramid $F_{mod} = \{f_{mod}^i\}_{i=1:5}$. 
 %Then we predict proposals on $F_{mod}$.
 Each modulated feature map is fed into two sibling fully-connected layers---a box-regression layer with channel dimension 4$k$, and a box classification layer with channel dimension 2$k$, where $k$ is the number of maximum possible proposals for each location.
@@ -266,9 +266,9 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \section{Experiments}
 In this section, we first present the implementation details.
-Then we evaluate out method on GOT-10K \cite{Huang_2019} testing set and the UAV20L \cite{mueller2016benchmark} dataset.
+Then we evaluate out method on GOT-10K \cite{GOT-10k} testing set and the UAV20L \cite{mueller2016benchmark} dataset.
 \subsection{ Implementation details}
-The proposed network is trained on the training set of GOT-10k \cite{Huang_2019} and the backbone is pretrained on ImageNet.
+The proposed network is trained on the training set of GOT-10k \cite{GOT-10k} and the backbone is pretrained on ImageNet.
 We apply stochastic gradient descent with momentum of 0.9 and set the weight decay to 0.0005.
 The learning rate is decreased from $10^{-2}$ to $10^{-4}$.
 The batch size is set to 2 and the network is trained for 90000 iterations.
@@ -326,12 +326,12 @@ MDNet	 &  0.299&  0.303 &0.099 \\
 \end{tabular}
 \label{table:got}
 \end{table}
-In this subsection, we evaluate our method on GOT-10k \cite{Huang_2019} dataset.
+In this subsection, we evaluate our method on GOT-10k \cite{GOT-10k} dataset.
 % Say something about this dataset.
 GOT-10k is a recent large-scale high-diversity dataset consisting of over 10,000 video sequences with targets annotated by axis-aligned bounding boxes. 
 %Note that the classes between training and test sets are zero-overlapped. 
 %This one-shot protocol avoids the evaluation bias towards familiar objects. 
-The GOT-10k testing set includes 180 sequences with 84 different object classes and 32 motion patterns. As performance measure, we use the average overlap (AO) scores and success rate (SR) as proposed in \cite{Huang_2019}. The AO denotes the average of overlaps between all groundtruth and estimated bounding boxes, while the SR measures the percentage of successfully tracked frames where the overlaps exceed 0.5/0.75.
+The GOT-10k testing set includes 180 sequences with 84 different object classes and 32 motion patterns. As performance measure, we use the average overlap (AO) scores and success rate (SR) as proposed in \cite{GOT-10k}. The AO denotes the average of overlaps between all groundtruth and estimated bounding boxes, while the SR measures the percentage of successfully tracked frames where the overlaps exceed 0.5/0.75.
 
 \textbf{Ablation Studies}
 From Table \ref{tabel:ablation} (the $1^{st}$ and $2^{nd}$ row), we see that the AO performance increases by 1.9\% by adding the temporal aggregation module.
@@ -346,7 +346,7 @@ We compare our proposed method with 8 trackers, including state-of-the-arts.
 The performances of the evaluated trackers is shown in Table \ref{table:got}.
 Compared to other listed approaches, our approach achieves a superior AO of 0.577.
 %ECO \cite{danelljan2017eco} is a state-of-the-art DCF-based tracker, which introduces a factorized convolution operator that dramatically reduces the number of parameters in the DCF model. In contrast, our tracker is based on the powerful siamese architecture. As a result, our tracker significantly outperforms ECO with a gain of 26.1\% in terms of AO score, which suggests the effectiveness of the siamese architecture for the object tracking task.
-%SiamMask \cite{wang2019fast} is a recently proposed siamese tracker. It simultaneously trains a siamese network on three tasks, each corresponding to a different strategy to establish correspondences between the target object and candidate regions in the new frames.
+%SiamMask \cite{Wang2018SiamMask} is a recently proposed siamese tracker. It simultaneously trains a siamese network on three tasks, each corresponding to a different strategy to establish correspondences between the target object and candidate regions in the new frames.
 % However, it is based on the local search mechanism: searching the target within a small neighborhood centered on the target position of the previous frame. In the contrast, our SiamTFA use the the global search mechanism. It is always able to perceive the target over the entire image. As a result, our tracker outperforms SiamMask by relative * in terms of AO, which highlights ...
 Compared with SiamMask, our tracker aims to make full use of the temporal information. As a result, our tracker outperforms SiamMask by 11.8\% in terms of AO, which highlights the importance of the proposed temporal aggregation module.
 
@@ -378,7 +378,7 @@ In the success plot, our tracker obtains an AUC score of 0.606.
 % PTAV is ... Compared with it, our is higher. This demonstrates the effectiveness of our designed architecture.
 In the precision plot, the proposed algorithm obtains a score of 0.804.
 % MUSTER is ... Compared with it, our is higher.
-It shows that our tracker surpass other state-of-the-art algorithms, such as SiamRPN \cite{li2018high} and PTAV \cite{fan2017parallel}. This demonstrates the effectiveness of our tracker in long-term tracking scenario. 
+It shows that our tracker surpass other state-of-the-art algorithms, such as SiamRPN \cite{SiamRPN} and PTAV \cite{fan2018parallel}. This demonstrates the effectiveness of our tracker in long-term tracking scenario. 
 %designed architecture.
 %It shows that our tracker surpass another siamese tracker -- SiamRPN. This demonstrates the effectiveness of our designed architecture. Moreover, compared with other state-of-the-art algorithms, such as PTAV \cite{} and MUSTER \cite{}, our trackers are still superior in terms of precision.
 \section{Conclusion}

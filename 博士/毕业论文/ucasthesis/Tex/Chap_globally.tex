@@ -8,14 +8,14 @@ These two spatial and temporal modules exploit both the high-level appearance in
 \label{sec:intro}
 
 Object tracking \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL} is a challenging problem in the field of computer vision, which aims to establish the positional relationship of the object to be tracked in a continuous video sequence.
-The popular siamese trackers \cite{bertinetto2016fully, li2018high, Wang2018SiamMask} are typically based on the local search mechanism: \HL{searching the target} within a small neighborhood centered on the target position of the previous frame to determine \HL{its current position}.
+The popular siamese trackers \cite{SiamFC, SiamRPN, Wang2018SiamMask} are typically based on the local search mechanism: \HL{searching the target} within a small neighborhood centered on the target position of the previous frame to determine \HL{its current position}.
 This mechanism works \HL{well if} the target only has a small displacement between two adjacent frames.
 \HL{It also brings benefits in another aspect, which is} to avoid interference from the distractors in the background.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/globally/visulization.pdf}
-    \caption{A comparison of our method with the stage-of-the-art trackers SiamMask \cite{Wang2018SiamMask} and SiamFCv2 \cite{bertinetto2016fully} in challenging situations. The example frames are from the GOT-10k \cite{huang2018got} testing set.
+    \caption{A comparison of our method with the stage-of-the-art trackers SiamMask \cite{Wang2018SiamMask} and SiamFCv2 \cite{SiamFC} in challenging situations. The example frames are from the GOT-10k \cite{GOT-10k} testing set.
     % Our approach performs better compared to existing approaches.
     }
     \label{fig:visulization}
@@ -31,11 +31,11 @@ Inspired by faster RCNN's two stage detection paradigm \cite{ren2015faster}, we 
 During the tracking process, \HL{our tracker} is always able to perceive the target \HL{over} the entire image.
 Therefore, even if the tracker makes a mistake due to \HL{the challenging target appearance variations, the target can still be retrieved in time once its appearance returns to normal. Especially under the long-term out-of-view disappearance scenario, where the tracker cannot find the target in the full image when the target leaves the screen, our tracker can continue to work when the target re-enters the screen from any position.}
 
-\HL{Besides the above globally spatial perception mechanism, we also propose a temporal motion model to mitigate the interference of distractors. It is known that the siamese-based tracking framework is sometimes plagued by distractors because it is difficult for the end-to-end trained siamese matching network to distinguish well between objects that look very similar. Different from the simply designed hand-crafted strategies \cite{bertinetto2016fully, li2018high}, our proposed CNN-based motion model is end-to-end trained and can predict the target current position distribution using its historical trajectory information and current target appearance information.}
+\HL{Besides the above globally spatial perception mechanism, we also propose a temporal motion model to mitigate the interference of distractors. It is known that the siamese-based tracking framework is sometimes plagued by distractors because it is difficult for the end-to-end trained siamese matching network to distinguish well between objects that look very similar. Different from the simply designed hand-crafted strategies \cite{SiamFC, SiamRPN}, our proposed CNN-based motion model is end-to-end trained and can predict the target current position distribution using its historical trajectory information and current target appearance information.}
 \HL{Specifically,} the motion \HL{patterns} are automatically learned from the trajectory dataset \HL{in the training phase instead of} the hand-crafted features or rules \cite{iswanto2017visual}\HL{; in the testing phase,} we can use the position information of any number of historical frames instead of just the previous frame for prediction.
 
 \iffalse
-Another advantage of this globally spatial-temporal perception mechanism is that it use the RoI Align \cite{He2018MaskR} operation to enable the tracker to take advantage of deeper networks \HL{for feature learning, which is not acceptable for the popular local mechanism-based SiamFC \cite{bertinetto2016fully} and SiamRPN \cite{li2018high} trackers, because the padding in their network structures} will destroy the strict translation invariance \cite{bertinetto2016fully}. \HL{Specifically}, the entire template image and search image in our tracker are sent to the same backbone network to extract features,  \HL{and} then the object features are obtained \HL{using} the RoI Align operation from the template features according to the ground truth of the \HL{initial frame}. The object features and the search \HL{image} features are cross-correlated by channel to obtain \HL{a fusion feature map}, which \HL{is} sent to the subsequent tracking \HL{modules}. \HL{Since this new} solution has no restrictions on the \HL{translation invariance, we} can use the powerful ResNet \cite{he2016deep} as the backbone network \HL{to accurately model the discrimination between the foreground object and background clutters.}
+Another advantage of this globally spatial-temporal perception mechanism is that it use the RoI Align \cite{He2018MaskR} operation to enable the tracker to take advantage of deeper networks \HL{for feature learning, which is not acceptable for the popular local mechanism-based SiamFC \cite{SiamFC} and SiamRPN \cite{SiamRPN} trackers, because the padding in their network structures} will destroy the strict translation invariance \cite{SiamFC}. \HL{Specifically}, the entire template image and search image in our tracker are sent to the same backbone network to extract features,  \HL{and} then the object features are obtained \HL{using} the RoI Align operation from the template features according to the ground truth of the \HL{initial frame}. The object features and the search \HL{image} features are cross-correlated by channel to obtain \HL{a fusion feature map}, which \HL{is} sent to the subsequent tracking \HL{modules}. \HL{Since this new} solution has no restrictions on the \HL{translation invariance, we} can use the powerful ResNet \cite{he2016deep} as the backbone network \HL{to accurately model the discrimination between the foreground object and background clutters.}
 \fi
 
 \iffalse
@@ -45,7 +45,7 @@ To sum up, this paper makes following three main contributions.
 (3) We demonstrate the effectiveness of our proposed 
 Globally Spatial-Temporal Perception-based tracking system (GSTP)
 \HL{by showing} that the tracking performance \HL{performs favorably against}
-other state-of-the-art approaches on the \HL{GOT-10k \cite{huang2018got} and UAV20L \cite{mueller2016benchmark} Long-term Tracking datasets}.
+other state-of-the-art approaches on the \HL{GOT-10k \cite{GOT-10k} and UAV20L \cite{mueller2016benchmark} Long-term Tracking datasets}.
 \fi
 
 \section{THE PROPOSED ALGORITHM}
@@ -93,9 +93,9 @@ In addition, two steps of regressions achieve accurate localization even for obj
 
 \subsection{Tracking component}
 
-We build our tracking component based on the popular object detection architecture --- faster RCNN \cite{ren2015faster}. Although the use of object detection modules and siamese-based feature extractor for object tracking is not first proposed in this paper, our tracker has advantages over relevant tracking algorithms \cite{li2018high, Wang2018SiamMask, danelljan2019atom, voigtlaender2019siam}. Compared with SiamRPN \cite{li2018high}, whose input is always image patches with target located at the center, the input of our tracking component is the entire image, which means the target may appear at any spatial location. This prevents the network from learning bias to the center location, thereby breaking the spatial invariance restriction \cite{li2019siamrpn++} of the network architecture. As a result, the very deep networks such as ResNet50 \cite{he2016deep} can be used as the feature extractor of the tracking component. For detailed explain about spatial invariance restriction and center bias, please refer to \cite{li2019siamrpn++}.
-%because the input of the network is the entire image, instead of the image patch centered on the target, the target will appear in any poisition in the image, so we do not need the network has strict spatial invariance restriction \cite{li2019siamrpn++}, so we can use a deeper feature extractor, i.e., resnet50. 
-Compared with SiamRPN \cite{li2018high} and SiamMask \cite{Wang2018SiamMask}, we use a two stage architecture. The second stage (RoI head \cite{ren2015faster}) can distinguish the foreground and background more effectively.
+We build our tracking component based on the popular object detection architecture --- faster RCNN \cite{ren2015faster}. Although the use of object detection modules and siamese-based feature extractor for object tracking is not first proposed in this paper, our tracker has advantages over relevant tracking algorithms \cite{SiamRPN, Wang2018SiamMask, danelljan2019atom, voigtlaender2019siam}. Compared with SiamRPN \cite{SiamRPN}, whose input is always image patches with target located at the center, the input of our tracking component is the entire image, which means the target may appear at any spatial location. This prevents the network from learning bias to the center location, thereby breaking the spatial invariance restriction \cite{SiamRPN++} of the network architecture. As a result, the very deep networks such as ResNet50 \cite{he2016deep} can be used as the feature extractor of the tracking component. For detailed explain about spatial invariance restriction and center bias, please refer to \cite{SiamRPN++}.
+%because the input of the network is the entire image, instead of the image patch centered on the target, the target will appear in any poisition in the image, so we do not need the network has strict spatial invariance restriction \cite{SiamRPN++}, so we can use a deeper feature extractor, i.e., resnet50. 
+Compared with SiamRPN \cite{SiamRPN} and SiamMask \cite{Wang2018SiamMask}, we use a two stage architecture. The second stage (RoI head \cite{ren2015faster}) can distinguish the foreground and background more effectively.
 Compared with SiamMask \cite{Wang2018SiamMask} and ATOM \cite{danelljan2019atom}, our tracker can search for the target in the whole image, which allows the target to be retrieved in time spatially after the tracking module makes a mistake.
 Compared with Siam R-CNN \cite{voigtlaender2019siam}, whose backbone and RPN are frozen, our tracker generate the target-specific features before RPN, and the whole network can be trained end to end. In object tracking, a target may be foreground in one video and background in another. Therefore, the candidates generated by our RPN can better meet the requirements of general object tracking.
 %(The backbone and RPN are frozen and only the redetection head (after concatenation) is trained for tracking) they fixed the parameters in the backbone and the RPN. Only the second stage is used for target spercific tracking, which is not good for "generatic" object tracking: because some objects are foreground in some cases and background in others. Instead, our tracker use the correlation before RPN, the "target" which is good for general object tracking. The architecture of our tracking component is described as follows:
@@ -116,7 +116,7 @@ After generating the template feature $f_{z} = \phi_{1}(z)$ and search feature $
     f_{obj} = \mathcal{R}(b_{obj}, f_{z}),
 \end{equation}
 where $\mathcal{R}$ represents the RoI Align operator and $b_{obj}$ is the ground truth bounding box of the target.
-Next, the search feature and the object feature are merged via the depth-wise cross-correlation \cite{li2019siamrpn++}:
+Next, the search feature and the object feature are merged via the depth-wise cross-correlation \cite{SiamRPN++}:
 \begin{equation}
     f_{corr} = f_{obj} * f_{x},
 \end{equation}
@@ -211,13 +211,13 @@ A brief description is provided here. The first stage of HRNet is a high-resolut
 \fi
 
 \subsection{Implementation details}
-Our tracking component is trained on the GOT-10k \cite{huang2018got} training set. It contains more than 10000 video segments of real-world moving objects and over 1.5 million manually labeled bounding boxes, which covers 563 classes of real-world moving objects and 87 classes of motion patterns.
+Our tracking component is trained on the GOT-10k \cite{GOT-10k} training set. It contains more than 10000 video segments of real-world moving objects and over 1.5 million manually labeled bounding boxes, which covers 563 classes of real-world moving objects and 87 classes of motion patterns.
 We perform multi-scale training: the target size varies from $64 \times 64$ to $256 \times 256$. The image size remains the same during the tracking progress. The tracking component is trained with stochastic gradient descent (SGD). We use a weight decay of $10^{-4}$ and momentum of 0.9. We train the tracking component for 27k iterations. The learning rate is decreased from $10^{-2}$ to $10^{-4}$.
 
 The motion model is also trained on the GOT-10k training set. The Adam optimizer \cite{kingma2014adam} is adopted for training. The base learning rate is set as $10^{-3}$, and is dropped to $10^{-4}$ and $10^{-5}$ at the 170th and 200th epochs, respectively. The training process is terminated within 210 epochs.
 
 \subsection{Evaluation on GOT-10k Dataset}
-In this subsection, we evaluate our method on GOT-10k \cite{huang2018got} dataset.
+In this subsection, we evaluate our method on GOT-10k \cite{GOT-10k} dataset.
 The evaluation metric of GOT-10k includes average overlap (AO) and success rate (SR). The AO denotes the average of overlaps between all groundtruth and estimated bounding boxes, while the SR measures the percentage of successfully tracked frames where the overlaps exceed 0.5/0.75.
 
 \textbf{Ablation Studies}
@@ -291,7 +291,7 @@ LO & 0.557 & 0.655 & 0.643 & 0.779 & 0.721 & 0.807 \\
 \end{tabular}
 \label{table:attribute}
 \end{table}
-Every video in GOT-10k training/validation dataset is annotated with multiple attributes including: visible ratios, motion speed, video length and cut by image. To analyze the performance of trackers in various scenarios, we compare our tracker with two state-of-the-art trackers (\textit{i.e.}, SiamFC  \cite{bertinetto2016fully} and SiamMask \cite{Wang2018SiamMask}) on GOT-10k validation set. We collect four subset from the validation set according to the attribute annotations: FM (fast motion) subset, OC (occlusion) subset, CU (cut by image) subset, and LO (long video) subset. 
+Every video in GOT-10k training/validation dataset is annotated with multiple attributes including: visible ratios, motion speed, video length and cut by image. To analyze the performance of trackers in various scenarios, we compare our tracker with two state-of-the-art trackers (\textit{i.e.}, SiamFC  \cite{SiamFC} and SiamMask \cite{Wang2018SiamMask}) on GOT-10k validation set. We collect four subset from the validation set according to the attribute annotations: FM (fast motion) subset, OC (occlusion) subset, CU (cut by image) subset, and LO (long video) subset. 
 The FM subset includes videos in which the target motion speed is fast.
 The OC subset include videos in which the target is occluded frequently.
 The CU subset include videos in which the target is cut by the image boundary frequently.
@@ -394,9 +394,9 @@ On the LO subset, the relative improvement of the AO score is 12.13\% compared w
 \fi
 
 UAV20L \cite{mueller2016benchmark} is an aerial video dataset captured from a low-altitude aerial perspective. Designed for long-term tracking, the UAV20L database has 20 videos with an average length of 2934 frames. 
-Following the evaluation method of OTB50 \cite{wu2013online}, we use precision and success to evaluate the performance of  trackers on the UAV20L dataset. Precision refers to the distance from the center point of the predicted bounding box to the center point of the ground truth bounding box. Success refers to the intersection over union (IOU) of the predicted bounding box and the ground truth bounding box. In Fig. \ref{fig:uav20l}, the performance comparison of different trackers is visualized by precision plot and success plot.
+Following the evaluation method of OTB50 \cite{OTB}, we use precision and success to evaluate the performance of  trackers on the UAV20L dataset. Precision refers to the distance from the center point of the predicted bounding box to the center point of the ground truth bounding box. Success refers to the intersection over union (IOU) of the predicted bounding box and the ground truth bounding box. In Fig. \ref{fig:uav20l}, the performance comparison of different trackers is visualized by precision plot and success plot.
 
-The proposed method is compared against 13 recent trackers. Fig. \ref{fig:uav20l} clearly shows that our algorithm outperforms all other trackers in terms of success and precision scores. Specifically, in the success plot, our tracker obtains a AUC score of 0.557. Compared with the state-of-art method PTAV \cite{fan2018parallel} and SiamRPN \cite{li2018high}, the proposed tracker outperforms these trackers by relative 31.7\% and 22.7\%. In the precision plot, the proposed algorithm obtains a score of 0.776. Compared with SiamRPN \cite{li2018high} and PTAV \cite{fan2018parallel}, the proposed tracker outperforms these trackers by relative 25.8\% and 24.4\%. 
+The proposed method is compared against 13 recent trackers. Fig. \ref{fig:uav20l} clearly shows that our algorithm outperforms all other trackers in terms of success and precision scores. Specifically, in the success plot, our tracker obtains a AUC score of 0.557. Compared with the state-of-art method PTAV \cite{fan2018parallel} and SiamRPN \cite{SiamRPN}, the proposed tracker outperforms these trackers by relative 31.7\% and 22.7\%. In the precision plot, the proposed algorithm obtains a score of 0.776. Compared with SiamRPN \cite{SiamRPN} and PTAV \cite{fan2018parallel}, the proposed tracker outperforms these trackers by relative 25.8\% and 24.4\%. 
 
 \iffalse
 In order to perform a more in-depth and detailed analysis of the performance of the trackers, we also report the results on challenging attributes in UAV20L. Fig. \ref{fig:uav20l_attr} lists the success plots of 14 different methods on 12 attributes: ARC (Aspect Ratio Change), BC (Background Clutter), CM (Camera Motion), FM (Fast Motion), FOC (Full Occlusion), IV (Illumination Variation), LR (LR Low Resolution), OV (Out-of-View), POC (Partial Occlusion), SOB (Similar Object), SV (Scale Variation) and VC (Viewpoint Change). We can observe that the AUC of the proposed algorithm perform better than other methods on most challenging attributes, which means our method is more robust than other approaches on various difficult situations.
