@@ -27,7 +27,7 @@ However, all above siamese algorithms perform tracking based on features cropped
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.48\textwidth]{Img/end/visulization.pdf}
+    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
     \caption{A comparison of our method with SiamMask and SiamFCv2. The example frames are from the GOT-10k testing set. Our approach effectively handles poor object appearance compared to existing approaches.}
     \label{fig:visulization}
 \end{figure}
@@ -40,7 +40,7 @@ However, how to utilize the temporal information in siamese trackers has not bee
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=0.9\textwidth]{Img/end/net_v3.pdf}
+    \includegraphics[width=1.0\textwidth]{Img/end/net_v3.pdf}
     \caption{
     Overview of our two-stage SiamTFA.
     %At the first stage, a siamese FPN equipped with a temporal aggregation module provides features of the template image and the search image. Then the feature modulation module is used to merge the features and generate proposals.
@@ -351,14 +351,14 @@ Compared to other listed approaches, our approach achieves a superior AO of 0.57
 Compared with SiamMask, our tracker aims to make full use of the temporal information. As a result, our tracker outperforms SiamMask by 11.8\% in terms of AO, which highlights the importance of the proposed temporal aggregation module.
 
 \begin{figure}[t]
-\begin{minipage}[b]{.48\linewidth}
+\begin{minipage}[b]{0.5\textwidth}
   \centering
-  \centerline{\includegraphics[width=5.0cm]{Img/end/quality_plot_overlap_OPE_AUC.png}}
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_overlap_OPE_AUC.png}}
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.48\linewidth}
+\begin{minipage}[b]{0.5\textwidth}
   \centering
-  \centerline{\includegraphics[width=5.0cm]{Img/end/quality_plot_error_OPE_threshold.png}}
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
 %
 \caption{Success and precision plots on UAV20L dataset.}
