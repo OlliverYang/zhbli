@@ -1,5 +1,8 @@
 \chapter{END-TO-END TEMPORAL FEATURE AGGREGATION FOR SIAMESE TRACKERS}\label{chap:end}
 
+\section{Abstract}
+While siamese networks have demonstrated the significant improvement on object tracking performances, how to utilize the temporal information in siamese trackers has not been widely studied yet. In this paper, we introduce a novel siamese tracking architecture equipped with a temporal aggregation module, which improves the per-frame features by aggregating temporal information from adjacent frames. This temporal fusion strategy enables the siamese trackers to handle poor object appearance like motion blur, occlusion, \textit{etc}. Furthermore, we incorporate the adversarial dropout module in the siamese network for computing discriminative target features in an end-to-end-fashion. Comprehensive experiments demonstrate that the proposed tracker performs favorably against state-of-the-art trackers.
+
 \section{Introduction}
 \label{sec:intro}
 Visual object tracking is the task of estimating the state of an arbitrary target in each frame of a video sequence. 
