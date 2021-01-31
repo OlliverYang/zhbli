@@ -13,7 +13,7 @@ Given an arbitrary detected or annotated object of interest in the initial video
 \centering
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/z.jpg}}
-\includegraphics[width=0.45\textwidth]{Img/attack/1_v8.pdf}
+\includegraphics[width=1.0\textwidth]{Img/attack/1_v8.pdf}
 \caption{An illustration of our attacks to SiamFC++ on some example tracking sequences from GOT-10k benchmark. Our approach generates the video-agnostic perturbations which can force SiamFC++ to follow a complicated trajectory at virtually no cost. This is realized by off-line training the perturbations so that the tracker mistakenly believes the \textit{fake target} area contains the object to be tracked (see the left heatmap). Moreover, the quality assessment branch in SiamFC++ is also misled to confirm this result (see the right heatmap). The \textit{fake target} size is gradually decreased.} 
 %Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations. 
 %Red represents the ground-truth bounding box, and green represents the predicted bounding box by the tracker.
@@ -61,7 +61,7 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\textwidth]{Img/attack/network_v5.pdf}
+\includegraphics[width=1.0\textwidth]{Img/attack/network_v5.pdf}
 \caption{The training pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the \textit{fake target} $p$ into $\textbf x$, the tracker outputs the location and size of the \textit{fake target} instead of the real target.}
 \label{fig:net}
 \end{figure}
@@ -149,7 +149,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{Img/attack/vis_v4.pdf}
+\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
 \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
 \label{fig:vis}
 \end{figure*}
