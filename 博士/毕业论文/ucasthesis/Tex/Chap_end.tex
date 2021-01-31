@@ -28,9 +28,7 @@ However, all above siamese algorithms perform tracking based on features cropped
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.48\textwidth]{Img/end/visulization.pdf}
-    \vspace{-0.8cm}
     \caption{A comparison of our method with SiamMask and SiamFCv2. The example frames are from the GOT-10k testing set. Our approach effectively handles poor object appearance compared to existing approaches.}
-    \vspace{-0.5cm}
     \label{fig:visulization}
 \end{figure}
 
@@ -43,7 +41,6 @@ However, how to utilize the temporal information in siamese trackers has not bee
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.9\textwidth]{Img/end/net_v3.pdf}
-    \vspace{-0.5cm}
     \caption{
     Overview of our two-stage SiamTFA.
     %At the first stage, a siamese FPN equipped with a temporal aggregation module provides features of the template image and the search image. Then the feature modulation module is used to merge the features and generate proposals.
@@ -270,7 +267,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \section{Experiments}
 In this section, we first present the implementation details.
 Then we evaluate out method on GOT-10K \cite{Huang_2019} testing set and the UAV20L \cite{mueller2016benchmark} dataset.
-\vspace{-2mm}
 \subsection{ Implementation details}
 The proposed network is trained on the training set of GOT-10k \cite{Huang_2019} and the backbone is pretrained on ImageNet.
 We apply stochastic gradient descent with momentum of 0.9 and set the weight decay to 0.0005.
@@ -284,17 +280,14 @@ Our tracker is implemented in Python, using PyTorch.
 %For both training and testing, the size of a template image is 
 % 其实有些对不上。按论文上讲，第一阶段是找到若干候选框。第二阶段是得到唯一结果。实际上是，第一阶段得到若干候选框，第二阶段进一步筛选得到约10个候选框（这才是真正的相似目标），然后按IoU和得分来选择最终结果。
 % For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
-\vspace{-2mm}
 \subsection{Evaluation on GOT-10k dataset}
 
 \iffalse
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.45\textwidth]{images/success_plot.png}
-    \vspace{-5mm}
     \caption{Overall performance on GOT-10k, ranked by their average overlap (AO) scores.}
     \label{fig:got10k}
-     \vspace{-3mm}
 \end{figure}
 \fi
 \begin{table}
@@ -310,7 +303,6 @@ Our tracker is implemented in Python, using PyTorch.
 \bottomrule
 \label{tabel:ablation}
 \end{tabular}
-\vspace{-0.8cm}
 \end{table}
 \begin{table}
 \centering
@@ -368,14 +360,11 @@ Compared with SiamMask, our tracker aims to make full use of the temporal inform
   \centering
   \centerline{\includegraphics[width=5.0cm]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
-\vspace{-5mm}
 %
 \caption{Success and precision plots on UAV20L dataset.}
-\vspace{-3mm}
 \label{fig:uav20l}
 %
 \end{figure}
-\vspace{-2mm}
 \subsection{Evaluation on UAV20L dataset}
 In this subsection, we evaluate our tracker on the UAV20L \cite{mueller2016benchmark} long term tracking dataset.
 % say something about this dataset: length, 20段

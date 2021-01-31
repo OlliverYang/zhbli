@@ -9,10 +9,8 @@ Object tracking refers to the task of sequentially locating a specified moving o
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.48\textwidth]{Img/MTP/got10k/visulization2.pdf}
-    \vspace{-0.3cm}
     \caption{A comparison of our method with the state-of-the-art trackers ATOM \cite{danelljan2019atom} and SiamFCv2 \cite{bertinetto2016fully} in challenging situations. The example frames are from the GOT-10k \cite{huang2018got} testing set.}
     %\caption{A comparison of our method with ATOM \cite{danelljan2019atom} and SiamFCv2 \cite{bertinetto2016fully}. The example frames are from the GOT-10k \cite{huang2018got} testing set.}
-    \vspace{-0.3cm}
     \label{fig:vis}
 \end{figure}
 
@@ -20,28 +18,21 @@ In this work, we show that the challenging model adaptation task in visual objec
 
 \section{Proposed Algorithm}
 In this section, we present a new model adaptation approach for Siamese trackers via directly manipulating template pixels. We start by revisiting the tracking process of popular template matching-based trackers, which is closely related to the proposed approach. Following \cite{Danelljan_2020_CVPR}, we formulate object tracking as a confidence-based regression problem, which learns a function $s_\theta:\mathcal{Y\times X\rightarrow \mathbb R}$, and predicts a scalar confidence score $s_\theta(y,x)\in\mathbb R$ given an output-input pair $(y,x)$. The final estimate $f(x)=y^*$ is predicted as follows:
-\vspace{-0.1cm}
 \begin{equation}
-    %\vspace{-0.2cm}
     f(x) = \arg\max_{y\in \mathcal Y}s_\theta (y,x),
-    \vspace{-0.1cm}
 \end{equation}
 where $x$ is an input image. $y$ usually represents the center 2D image coordinate of the target object. Currently, there are two prevalent template matching-based paradigms: discriminative correlation filter (DCF) approaches and Siamese tracking methods.
 
 In DCF-based methods, a circular correlation filter $w_{\theta}$ is trained during tracking to predict a target confidence score:
-\vspace{-0.1cm}
 \begin{equation}
     s_\theta(y,x)=(w_\theta * \phi(x))(y),
-    \vspace{-0.1cm}
     \label{equ:dcf}
 \end{equation}
 where $\phi(x)$ is the features extracted from the search image $x$.
 
 In contrast to DCF, Siamese trackers exploit a two-stream architecture. One stream extracts the target’s features $\phi_\theta(z)$ based on the template image $z$ which is cropped from the first frame according to the ground truth bounding box. The other stream receives as input a large search image $x$ and outputs the search features $\phi_\theta(x)$. The two outputs are cross-correlated to predict a target confidence score:
-\vspace{-0.1cm}
 \begin{equation}
     s_\theta(y,x)=(\phi_\theta(z) * \phi_\theta(x))(y).
-    \vspace{-0.1cm}
     \label{equ:siamese}
 \end{equation}
 
@@ -58,39 +49,31 @@ Note that Equ. (\ref{equ:dcf}) and Equ. (\ref{equ:siamese}) bear some similariti
 At first glance, there may be a contradiction between the model adaptation task and the adversarial example generation task, because these two tasks have different purposes. An adversarial example \cite{kurakin2017adversarial} is a sample of input data which has been modified very slightly in a way that is intended to perform an attack on machine learning systems, which means to cause a machine learning model to make wrong predictions. However, the purpose of model adaptation in our work is to make full use of the annotation information in the first frame to improve the tracking performance for the current video. We will point out in the following that there are some similarities between these two tasks and we can utilize adversarial example generation methods to perform the model adaptation task.
 
 Before introducing the proposed method, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:
-\vspace{-0.1cm}
 \begin{equation}
     I^{adv} = I + \epsilon \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
-    \vspace{-0.1cm}
 \end{equation}
 where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size, and clipping pixel values of intermediate results after each step to ensure that they are in an $\epsilon$-neighbourhood of the original image.  This leads to the Basic Iterative Method (BIM) introduced in \cite{kurakin2017adversarial}: 
-\vspace{-0.1cm}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
         I_{N+1}^{adv} = Clip_{I,\epsilon}\{I_N^{adv}+\alpha \text{ sign}(\nabla_I L(I_N^{adv},y_{true}))\},
     \end{gathered}
-    \vspace{-0.1cm}
 \end{equation}
 where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.
 The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{kurakin2017adversarial}:
-\vspace{-0.1cm}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I,\\
         I_{N+1}^{adv} = Clip_{I,\epsilon}\{I_N^{adv}-\alpha \text{ sign}(\nabla_I L(I_N^{adv},y_{target}))\}.
     \end{gathered}
-    \vspace{-0.1cm}
     \label{equ:itcm}
 \end{equation}
 Equ. (\ref{equ:itcm}) shows that manipulating pixels of the input image in only a few gradient-descent iterations is able to change the network's prediction to the target class $y_{target}$. Note that our purpose is manipulating pixels of the template image in the first frame, so that the prediction is closer to the ground truth bounding box. So we can perform model adaptation for Siamese networks using Equ. (\ref{equ:itcm}) with some modifications:
-\vspace{-0.1cm}
 \begin{equation}
     \begin{gathered}
         z_0 = z,\\
         z_{N+1} = Clip_{z,\epsilon}\{z_N -\alpha \text{ sign}(\nabla_z L(z_N,y_{bb}))\},
     \end{gathered}
-    \vspace{-0.1cm}
     \label{equ:adaptaion}
 \end{equation}
 where $z$ is the template image in the first frame, and $y_{bb}$ is the label for Siamese trackers generated from the ground truth bounding box. In the next subsection, we will introduce the overall tracking process equipped with the proposed model adaptation module.
@@ -99,7 +82,6 @@ where $z$ is the template image in the first frame, and $y_{bb}$ is the label fo
 \begin{table}[t]
 \renewcommand\arraystretch{0.8}
 \caption{State-of-the-art comparison on the popular tracking benchmark OTB2015 with the running speed. FPS: frame per second. Our speed is tested on an NVIDIA RTX 2080Ti GPU.}
-\vspace{-0.3cm}
 \setlength{\tabcolsep}{3pt}
 \begin{center}
 \begin{tabular}{l | c c c c c c}
@@ -112,7 +94,6 @@ FPS     & 8    & 1     & 35        & 30       & 90         & 82  \\
 \end{tabular}
 \end{center}
 \label{table:otb}
-\vspace{-0.2cm}
 \end{table}
 %%%%%%%%%%%
 
@@ -121,7 +102,6 @@ FPS     & 8    & 1     & 35        & 30       & 90         & 82  \\
 \renewcommand\arraystretch{0.8}
 \centering
 \caption{state-of-the-art comparison on the TrackingNet test dataset in terms of precision, normalized precision and success.}
-\vspace{-0.2cm}
 \begin{tabular}{l c c c}
 \toprule
 Method   &  Prec.   &  Norm. Prec. & Succ.  \\
@@ -138,17 +118,14 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{tabular}
 \label{tabel:trackingnet}
 \end{table}
-\vspace{-0.2cm}
 %%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.4\textwidth]{Img/MTP/got10k/success_plot.png}
-    \vspace{-0.3cm}
     \caption{Comparing the results of our approach against other approaches over the GOT-10k test set. The trackers are ranked by their average overlap scores.}
     \label{fig:got10k}
-    \vspace{-5mm}
 \end{figure}
 %%%%%%%%%%%%
 
@@ -156,10 +133,8 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \subsection{Tracking Framework}
 The proposed model adaptation method is integrated with the SiamFC++ tracker \cite{SiamFC++} in a plug-and-play manner. SiamFC++ is based on SiamFC \cite{bertinetto2016fully} and progressively refined according to several guidelines proposed in \cite{SiamFC++}. The input of the original SiamFC++ network is composed of the template image $z_0$ cropped from the first frame and search image $x_i$ cropped from the $i$-th frame. However, we expect to perform template manipulating such that, after $N$ steps of pixel update on the input pair $(z_0, x_0)$ to obtain $z'$, the tracker performs well on $(z', x_i)$. To achieve this, we start by cropping the initial template image $z_0\in\mathbb R^{3\times128\times 128}$ and the initial search image $x_0\in\mathbb R^{3\times289\times 289}$ from the first frame using the ground truth bounding box.
 Then, $z_0$ and $x_0$ are sent to the SiamFC++ network to obtain the tracking prediction of the first frame. The tracking loss in SiamFC++ \cite{SiamFC++} is calculated as follows:
-\vspace{-0.1cm}
 \begin{equation}
     L = L_{\text{cls}} + L_{\text{quality}} + L_{\text{reg}},
-    \vspace{-0.1cm}
 \end{equation}
 where $L_{\text{cls}}$ is the focal loss \cite{lin2017focal}. $L_{\text{quality}}$ is the binary cross entropy (BCE) loss for quality assessment. $L_{reg}$ is the IoU loss \cite{yu2016unitbox} for bounding box regression. The gradient with respect to the template $z_0$ is used to generate $z_1$ according to Equ. (\ref{equ:adaptaion}). The updated template $z'$ is obtained by applying a very small number of iterations of Equ. (\ref{equ:adaptaion}). Note that the template image is only updated with the first frame of given sequences and is kept fixed during the whole tracking process to ensure stability.
 The subsequent tracking procedure remains the same as SiamFC++.
@@ -210,9 +185,7 @@ In this section, we first present the implementation details. Then we compare ou
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.48\textwidth]{Img/MTP/vot18/vot18_eao.png}
-    \vspace{-0.3cm}
     \caption{Expected average overlap graph with trackers ranked from right to left. The right-most tracker is the top-performing according to the VOT2018 expected average overlap values.}
-    \vspace{-0.3cm}
     \label{fig:eao}
 \end{figure}
 %%%%%%%%%%%%
@@ -223,7 +196,6 @@ We use SiamFC++ \cite{SiamFC++} as our base tracker, and the backbone Siamese ne
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{State-of-the-art Comparison}
-%\vspace{-0.5mm}
 \textbf{OTB2015} We use success rate to evaluate the performance of trackers on the OTB2015 dataset. Success rate relies on the intersection over union (IOU) of the predicted bounding box and the ground truth bounding box. We compare our method with various tracking algorithms, including ECO \cite{danelljan2017eco}, MDNet \cite{nam2016learning}, SiamRPN++ \cite{li2019siamrpn++}, ATOM \cite{danelljan2019atom} and SiamFC++\_GoogLeNet \cite{SiamFC++}. The iteration number for template update is set to 16. The results are shown in Table \ref{table:otb}. Our tracker outperforms the online tracker ATOM by 2.8\% in terms of the success score, which demonstrates the powerful model adaptation capability of our method.
 
 \textbf{VOT2018} We compare our method with RCO \cite{kristan2018sixth}, UPDT \cite{bhat2018unveiling}, SiamRPN \cite{li2018high}, MFT \cite{kristan2018sixth}, LADCF \cite{kristan2018sixth}, ATOM \cite{danelljan2019atom}, SiamRPN++ \cite{li2019siamrpn++}, SiamFC++\_AlexNet \cite{SiamFC++} and SiamFC++\_GoogLeNet \cite{SiamFC++} on VOT2018. The trackers are compared using the robustness and accuracy measures. Robustness indicates the number of tracking failures, while accuracy denotes the average overlap between tracker prediction and the ground-truth box. Both of the measures are combined into a single expected average overlap (EAO) score. The iteration number for template update is set to 2. As shown in Fig. \ref{fig:eao}, the performances of all the listed trackers are not as good as our algorithm.
@@ -240,7 +212,6 @@ We use SiamFC++ \cite{SiamFC++} as our base tracker, and the backbone Siamese ne
 \renewcommand\arraystretch{0.7}
 \centering
 \caption{Performance on OTB2015 using noisy initial frames.}
-\vspace{-0.1cm}
 \begin{tabular}{c c c | c c}
 \toprule
 \multicolumn{3}{c|}{Coefficients of Noise} & \multicolumn{2}{c}{Success Score} \\
@@ -262,7 +233,6 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 \bottomrule
 \end{tabular}
 \label{table:noise}
-\vspace{-0.1cm}
 \end{table}
 %%%%%%%%%%%
 
@@ -272,7 +242,6 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 \centering
 \setlength{\tabcolsep}{2pt}
 \caption{11 attributes comparison on OTB2015 in term of success score.}
-\vspace{-0.1cm}
 \begin{tabular}{r c c c c c c c c c c c}
 \toprule
             & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
@@ -282,9 +251,7 @@ Ours        & \textbf{66.5} & \textbf{66.8} & \textbf{68.7} & \textbf{71.3} & \t
 \bottomrule
 \end{tabular}
 \label{table:attr}
-\vspace{-0.35cm}
 \end{table}
-%\vspace{-0.1cm}
 %%%%%%%%%%%
 
 \iffalse
@@ -294,7 +261,6 @@ To verify the contribution of the proposed model adaptation method, we compare o
 \textbf{Robustness to Noisy Initial Frames} To study how robust the approach is if the first frame is noisy compared to the next frames in the sequence, we add three kinds of noise to the first frame by: changing the image brightness, applying Gaussian blur, and using non-accurate ground truth bounding box annotation. We denote $\gamma_1 \in [0.5, 1.5]$ as the coefficient of brightness variation, $\gamma_2 \in [0, 2]$ the blur radius, and $\gamma_3 \in [0.75, 1]$ the IoU between the non-accurate first frame bounding box annotation and the real bounding box annotation, respectively. We run both the baseline tracker and our tracker 10 times on OTB2015 with randomly sampled $\gamma_1, \gamma_2$ and $\gamma_3$ (see Table \ref{table:noise}). Compared with SiamFC++\_GoogLeNet \cite{SiamFC++}, our tracker always performs better under different noise levels, which shows the robustness of our tracker to noisy initial frames.%the first frame noise.
 
 \textbf{Attribute-based Analysis} For further analyses on the tracking performance, we also demonstrate the advantages of our algorithm through the attribute-based comparison on sequences of the OTB-2015 dataset (see Table \ref{table:attr}). In OTB2015, each sequence is annotated with 11 different attributes, namely: background clutters (BC), deformation (DEF), fast motion (FM), illumination variation (IV), in-plane rotation (IPR), low resolution (LR), motion blur (MB), occlusion (OCC), out-of-plane rotation (OPR), out-of-view (OV) and scale variation (SV). Compared with SiamFC++\_GoogLeNet \cite{SiamFC++}, our tracker achieves better performance on 10 out of 11 attributes, which demonstrates its robustness in challenging tracking scenarios such as illumination variation and motion blur.
-\vspace{-1mm}
 
 %%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
