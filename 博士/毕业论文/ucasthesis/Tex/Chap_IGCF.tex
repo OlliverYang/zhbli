@@ -10,7 +10,8 @@ In the past decade, there has been a surge of interest in discriminative correla
 
 Based on the success of DCF trackers, many studies \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} have demonstrated that spatial constraints on a target improve correlation filter learning. However, most spatial constraints are hand designed and still do not take account of semantic information about the target. Although instance-level semantic segmentation \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}, which aims to assign semantic labels to every pixel in an image, is capable of extracting instance-level semantic information in an image, directly integrating the existing instance segmentation methods to provide spatial constraint for the correlation filter learning remains hard to strike a balance between tracking accuracy and speed.
 
-\begin{figure} 
+\begin{figure}
+\centering
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/00893.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01107.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01108.jpg}}          \hspace{-0.6em}        
@@ -37,7 +38,7 @@ Besides, we notice that the correlation filters updated online for meeting the t
 
 \begin{figure*}
     \centering
-    \includegraphics[width=12cm]{Img/IGCF/instmask1.pdf}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/instmask1.pdf}
     \caption{Architecture of the tracking framework IGCF.}
     \label{fig:IGCF}
 \end{figure*}
@@ -168,7 +169,7 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
 
 \begin{figure*}
     \centering
-    \includegraphics[width=12cm]{Img/IGCF/net.pdf}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
     \caption{Architecture of our InstMask.}
     \label{fig:net}
 \end{figure*}
@@ -202,6 +203,7 @@ where $c_{dcf}$ is the position predicted by DCF, $\alpha$ is a hyper-parameter 
 Thanks to the robustness of the segmentation results, the tracker can correct itself when the DCF result shows an unstable drift. The effectiveness of the proposed instance guided self-correction component is shown in Fig. \ref{fig:IGSC}.
 
 \begin{figure} 
+\centering
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00003.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00005.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00007.jpg}}          \hspace{-0.6em}        
@@ -261,14 +263,14 @@ where $\eta$ is the learning rate used to control the speed of model update.
 
 \begin{figure}
     \centering
-    \includegraphics[width=12cm]{Img/IGCF/vot/eao_rank_vot2015.png}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2015.png}
     \caption{Expected average overlap (EAO) plot on VOT2015 \cite{Kristan2015TheVO}.}
     \label{fig:vot15}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=12cm]{Img/IGCF/vot/eao_rank_vot2016.png}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
     \caption{Expected average overlap (EAO) plot on VOT2016 \cite{Kristan2016TheVO}.}
     \label{fig:vot16}
 \end{figure}
@@ -279,7 +281,7 @@ We provide a comprehensive evaluation of the proposed tracker IGCF on three chal
 
 \begin{figure}
     \centering
-    \includegraphics[width=12cm]{Img/IGCF/got10k/success_plot.png}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/got10k/success_plot.png}
     \caption{Overall performance on GOT-10k \cite{Huang2018GOT10kAL}, ranked by their average overlap (AO) scores.}
     \label{fig:got10k}
 \end{figure}
@@ -308,7 +310,8 @@ The evaluation metric of GOT-10k is average overlap (AO), which denotes the aver
 
 We compare our algorithm, denoted as IGCF, with the following trackers: CFNetc2 \cite{Valmadre2017EndtoEndRL}, ECOhc \cite{Danelljan2017ECOEC}, CFNetc5 \cite{Valmadre2017EndtoEndRL}, CFNetc1 \cite{Valmadre2017EndtoEndRL}, BACF \cite{Galoogahi2017LearningBC}, MEEM \cite{Zhang2014MEEMRT}, DAT \cite{Possegger2015InDO}, DSST \cite{Danelljan2014AccurateSE}, SAMF \cite{Li2014ASA}, Staple \cite{Bertinetto2016StapleC}, SRDCFdecon \cite{Danelljan2016AdaptiveDO}, SRDCF \cite{Danelljan2015LearningSR}, fDSST \cite{Danelljan2017DiscriminativeSS}, CSK \cite{Henriques2012ExploitingTC}, KCF \cite{Henriques2015HighSpeedTW}, L1APG \cite{Bao2012RealTR}, LK \cite{Shi1994GoodFT} and IVT \cite{Ross2007IncrementalLF}. The success plot of the evaluated trackers is shown in Fig. \ref{fig:got10k}. It represents the percentage of frames for which the overlap measure exceeds a threshold, with respect to different thresholds. The AO score of our method is 0.299, which outperforms all other listed competitive tracking algorithms.
 
-\begin{figure} 
+\begin{figure}
+\centering
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00001.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00021.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00032.jpg}}          \hspace{-0.6em}        
