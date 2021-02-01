@@ -1,109 +1,107 @@
-\chapter{Video-Agnostic Perturbations: Efficient Targeted Attacks for Siamese Visual Tracking} \label{chap:attack}
+\chapter{与视频无关的干扰：有效的针对暹罗视觉跟踪的有针对性的攻击} \label{chap:attack}
 
-\section{Abstract}
-Siamese trackers are shown to be vulnerable to adversarial attacks recently. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. The question is what if we can not get access to the limited computational resources in the real-world online-tracking phase.
+\section{摘要}
+最近显示，暹罗追踪器容易受到对抗性攻击。但是，现有的攻击方法独立地为每个视频制作扰动，这在计算上是不可忽略的。问题是，如果我们在现实世界的在线跟踪阶段无法访问有限的计算资源，该怎么办？
 
-In this paper, we show the existence of video-agnostic perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be universal and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. We will make our code publicly available.
+在本文中，我们展示了与视频无关的扰动的存在，这些扰动可以使有针对性的攻击成为可能，例如，强制跟踪器遵循具有指定偏移量的地面真相轨迹，使其具有通用性并且不受网络中的推理影响。具体来说，我们通过向模板图像添加通用的不可感知的扰动并将 \textit{虚假目标}（即小的通用对抗补丁）粘贴到符合预定义轨迹的搜索图像中来攻击跟踪器，以便跟踪器输出 \textit{虚假目标} 的位置和大小，而不是实际目标。我们的方法允许仅通过添加和粘贴操作就可以干扰新颖的视频，而无需支付额外的费用，并且不需要进行梯度优化或网络推理。在多个数据集上的实验结果表明，我们的方法可以以有针对性的攻击方式有效地欺骗暹罗跟踪器。我们将使我们的代码公开可用。
 
-\section{Introduction}
+\section{简介}
 
-Given an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the online-tracking phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
+给定初始视频帧中的任意检测到或注释的关注对象，视觉对象跟踪的目标是识别并定位同一对象在后续帧中的其他实例。在线跟踪阶段中从单个初始样本跟踪视觉对象的这种范式最近被广泛地描述为基于暹罗网络的单发问题 \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}，称为暹罗视觉跟踪，并被认为对视觉跟踪非常有效。
 
 \begin{figure}[htbp]
 \centering
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/z.jpg}}
 \includegraphics[width=1.0\textwidth]{Img/attack/1_v8.pdf}
-\caption{An illustration of our attacks to SiamFC++ on some example tracking sequences from GOT-10k benchmark. Our approach generates the video-agnostic perturbations which can force SiamFC++ to follow a complicated trajectory at virtually no cost. This is realized by off-line training the perturbations so that the tracker mistakenly believes the \textit{fake target} area contains the object to be tracked (see the left heatmap). Moreover, the quality assessment branch in SiamFC++ is also misled to confirm this result (see the right heatmap). The \textit{fake target} size is gradually decreased.} 
+\caption{在GOT-10k基准测试的一些示例跟踪序列上说明了我们对SiamFC ++的攻击。我们的方法会产生视频不可知的扰动，这实际上可以迫使SiamFC ++遵循复杂的轨迹，而几乎不会产生任何费用。这是通过离线训练扰动来实现的，因此跟踪器错误地认为 \textit{虚假目标} 区域包含要跟踪的对象（请参见左侧的热图）。此外，还误导了SiamFC ++中的质量评估分支以确认此结果（请参见右侧的热图）。\textit{虚假目标} 的大小逐渐减小。} 
 %Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations. 
 %Red represents the ground-truth bounding box, and green represents the predicted bounding box by the tracker.
 %The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
 \label{fig:1}
 \end{figure}
 
-Recently, the robustness of Siamese trackers have attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK}. Despite their success, these attack methods are not suitable for attacking the real-world online-tracking systems built upon the small edge platforms with limited computational resources. The reason is that they still need to craft the perturbations for each video independently based on either iterative optimisation or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
+近来，暹罗跟踪器的鲁棒性在测试其对抗攻击的脆弱性方面引起了很多关注，并且重点已转向更有效，成本更低的攻击 \cite{TTP,FAN,SPARK}。尽管取得了成功，但这些攻击方法仍不适合以有限的计算资源来攻击基于小型边缘平台构建的现实世界在线跟踪系统。原因是他们仍然需要基于迭代优化或对抗性网络推论来独立地为每个视频制作扰动，为此，计算密集型跟踪系统可能无法确保计算资源的充足性。
 
-Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. Therefore, UAPs are particularly useful when attacking real-time applications deployed on platforms with limited computational resources. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
+\cite{UAP} 中提出的通用对抗性扰动（UAP）可以以与图像无关的方式从数据分布中欺骗大多数图像。UAP具有通用性，可以方便地利用它来即时扰乱看不见的数据，而无需进行额外的计算。因此，在攻击计算资源有限的平台上部署的实时应用程序时，UAP特别有用。但是，没有任何工作涉及使用UAP攻击暹罗跟踪器的主题，因为很难将现有的UAP应用于直接攻击暹罗跟踪器。主要原因在于：（a）大多数UAP是为典型的神经网络设计的，其中一个图像作为输入，而暹罗网络同时接受模板图像和搜索图像，并且（b）现有UAP方法的目标是干扰一元或单个实例的二进制模型输出，而我们需要使用通用扰动导致连体追踪器遵循指定的轨迹。
 
-In this paper, we make the first attempt in finding the video-agnostic perturbations that fool a state-of-the-art Siamese tracker, \ie, SiamFC++ \cite{SiamFC++}, in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory (as shown in Figure \ref{fig:1}), so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} benchmarks demonstrate the effectiveness and efficiency of our approach.
+在本文中，我们进行了首次尝试，以有针对性的攻击方式发现了与最新的暹罗跟踪器，即 SiamFC++ \cite{SiamFC++}无关的视频不可知的干扰。在线跟踪阶段的费用。具体来说，我们旨在通过向模板图像添加通用的不可感知的扰动并将 \textit{虚假目标} （即小的通用对抗补丁） 粘贴到符合预定轨迹的搜索图像中来攻击跟踪器（如图 \ref{fig:1}），以便跟踪器输出 \textit{虚假目标} 的位置和大小，而不是实际目标。我们产生的与视频无关的扰动使扰动一个新颖的视频无需付出额外的费用，仅需进行添加和粘贴操作即可，并且不需要梯度优化或网络推理。在 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 基准测试中的实验结果证明了我们方法的有效性和效率。
 
-\section{Related Work}
+\section{相关工作}
 
-\subsection{Siamese Visual Tracking}
+\subsection{暹罗视觉跟踪}
 
-Siamese visual tracking is a fundamental research direction in template matching-based tracking besides the correlation filter-based methods. Both of them are aimed to "causally" estimate the positions of a template cropped from the initial video frame in the subsequent frames. Siamese trackers formulate visual tracking as learning cross-correlation similarities between a target template and the candidates in search region in a convolution fashion. Tracking is then performed by locating the object in the search image region based on the highest visual similarity. This paradigm is formulated as a local one-shot detection task.
+除了基于相关过滤器的方法外，暹罗视觉跟踪是基于模板匹配的跟踪的基本研究方向。两者都旨在“因果”地估计从初始视频帧裁剪的模板在后续帧中的位置。暹罗跟踪器将视觉跟踪公式化为以卷积方式学习目标模板和搜索区域中候选对象之间的互相关相似性。然后，通过基于最高的视觉相似度将对象定位在搜索图像区域中来执​​行跟踪。此范例被表述为本地单发检测任务。
 
-Recently, some Siamese trackers~\cite{SiamRPN,SiamRPN++,SiamFC++} have demonstrated a significant performance improvement in visual tracking. 
-In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in the decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution knowledge-free and estimation quality assessment guidelines.
-In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas the transferability of our generated adversarial attacks to the previous anchor-based trackers is also studied.
+最近，一些暹罗跟踪器~\cite{SiamRPN,SiamRPN++,SiamFC++} 已证明在视觉跟踪方面有显着的性能改进。
+特别是，SiamRPN \cite{SiamRPN} 由一个用于特征提取的Siamese子网和一个分别包含分类和回归分支的区域建议子网组成。SiamRPN++ \cite{SiamRPN++} 基于其在分类和状态估计分解中的成功经验，通过一种简单而有效的空间感知采样策略进一步突破了严格的翻译不变性的限制，并成功地训练了ResNet驱动的暹罗跟踪器，从而显着提高了性能。除了这些基于锚的方法以外，还通过考虑无歧义评分，无目标目标规模/比率分布和估计质量评估准则​​，进一步设计了无锚跟踪器 SiamFC++ \cite{SiamFC++} 在我们的实验中，我们将重点放在无锚的SiamFC ++跟踪器上，而对我们生成的对抗攻击到以前基于锚的跟踪器的可移植性也进行了研究。
 
-\subsection{Adversarial Attacks}
+\subsection{对抗攻击}
 
-Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. 
+图像分类的对抗性攻击首先在 \cite{intriguing}中进行了研究，目的是确定现代深度网络对不可察觉的扰动的脆弱性。
 %Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
-Scenarios of possible adversarial attacks can be categorized along different dimensions.
+可能的对抗攻击的场景可以按照不同的维度进行分类。
 
-\textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
-Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
-To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
-Note that our adversarial patch works in the network domain instead of the image domain. In the network-domain case, the noise is allowed to take any value and is not restricted to the dynamic range of image value as in the image-domain case \cite{karmon2018lavan}.
+\textit{不可感知的扰动对抗性补丁} 难以察觉的扰动最常会使每个像素发生少量变化，并且可以使用多种优化策略来找到，例如有限内存 BFGS \cite{intriguing} 和 PGD \cite{PGD}。
+与不可察觉的扰动不同，对抗性补丁对神经网络非常重要。对抗补丁可以放置在输入图像中的任何位置，以引起网络行为异常，因此通常用于通用攻击 \cite{patch}
+据我们所知，我们是第一个同时利用不易察觉的扰动和对抗性补丁来攻击目标跟踪器的方法，它们以端到端的方式共同训练。
+请注意，我们的对抗性补丁程序在网络域而不是图像域中工作。在网络域的情况下，噪声可以取任何值，并且不限于图像值情况下的动态范围 \cite{karmon2018lavan}。
 
-\textit{Untargeted Attacks v.s. Targeted Attacks} In the case of untargeted attacks, the adversary's goal is to cause the network to predict any incorrect label and whatever the incorrect label is does not matter, \eg, pushing the object location estimation just outside the true search region in visual tracking.
-Targeted attacks, however, aim to change the network's prediction to some specific target label. In visual tracking, the targeted attacks aim to intentionally drive trackers to output specified object locations following a predefined trajectory.
+\textit{非针对性攻击有针对性的攻击} 在无目标攻击的情况下，对手的目标是使网络预测任何不正确的标签，而无论不正确的标签无关紧要，例如，在视觉跟踪中将对象位置估计推到真正的搜索区域之外。
+但是，有针对性的攻击旨在将网络的预测更改为某些特定的目标标签。在视觉跟踪中，有针对性的攻击旨在有意驱使跟踪器按照预定的轨迹输出指定的对象位置。
 
-\subsection{Adversarial Attacks in Visual Tracking}
+\subsection{目标跟踪中的对抗攻击}
 
-Recently, there are several explorations of the adversarial attacks to the visual tracking task. For example, PAT \cite{PAT} generates physical adversarial textures via white-box attacks to steer the tracker to lock on the texture when a tracked object moves in front of it. However, PAT validates its method by attacking a light deep regression tracker GOTURN \cite{GOTURN}, which has low tracking accuracy on modern benchmarks. In this paper, we aim to attack the state-of-the-art Siamese trackers.
-RTAA \cite{RTAA} takes temporal motion into consideration when generating lightweight perturbations over the estimated tracking results frame-by-frame. However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
+最近，对视觉跟踪任务的对抗攻击进行了多种探索。例如，PAT \cite{PAT} 通过白盒攻击生成物理对抗纹理，以引导跟踪器在被跟踪对象移到其前面时锁定该纹理。但是，PAT通过攻击轻型深度回归跟踪器 GOTURN \cite{GOTURN}来验证其方法，该跟踪器在现代基准上的跟踪精度较低。在本文中，我们旨在攻击最先进的暹罗跟踪器。
+在估计的跟踪结果中逐帧生成轻量级扰动时，RTAA \cite{RTAA} 考虑到了时间运动。但是，RTAA仅对跟踪器执行无目标攻击，这比本文中的有针对性的攻击更具挑战性，因为我们的目标是在测试时创建任意的复杂轨迹。
 
-Targeted attacks to follow an erroneous path which looks realistic are crucial to deceive the tracking system without raising any suspicion in the real-world applications.
-SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers. However, SPARK needs to generate distinct adversarial example for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time. The recent real-time attacker in \cite{TTP} exclusively uses the template image to generate temporally-transferable perturbation in a one-shot manner, and then adds it to every search image. However, this method still needs to generate perturbations for each individual video, and its targeted attack setting requires diverse perturbations from several runs of network inference. It is ill-suited to attack a real-world online-tracking system when we can not get access to the limited computational resources. In this paper, however, we propose video-agnostic perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
+遵循看起来真实的错误路径进行有针对性的攻击对于欺骗跟踪系统而不会引起现实应用程序的怀疑至关重要。
+SPARK \cite{SPARK} 通过使用过去帧中的信息对暹罗跟踪器进行有针对性的攻击来计算增量扰动。但是，SPARK需要通过繁琐的迭代方案为每个搜索图像生成独特的对抗示例，这对于实时攻击在线跟踪非常耗时。\cite{TTP} 中最近的实时攻击者仅使用模板图像以一次生成的方式生成时间可传递的扰动，然后将其添加到每个搜索图像中。但是，该方法仍然需要为每个视频生成扰动，并且其有针对性的攻击设置需要从网络推理的多次运行中获得不同的扰动。当我们无法访问有限的计算资源时，就不适合攻击现实世界的在线跟踪系统。但是，在本文中，我们提出了与视频无关的扰动，该扰动允许仅通过添加和粘贴操作即可对新颖的视频进行扰动，而无需支付额外的费用。
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/network_v5.pdf}
-\caption{The training pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the \textit{fake target} $p$ into $\textbf x$, the tracker outputs the location and size of the \textit{fake target} instead of the real target.}
+\caption{所提出方法的训练流程。我们旨在为模板图像 $\textbf z$ 训练难以察觉的扰动 $\delta$ ，为搜索图像 $\textbf x$ 训练对抗性补丁 $p$ 。在将 $\delta$ 添加到 $\textbf z$ 并将 \textit{虚假目标} $p$ 粘贴到 $\textbf x$之后，跟踪器将输出 \textit{虚假目标} 的位置和大小，而不是实际的目标。}
 \label{fig:net}
 \end{figure}
 
-\section{Method}
+\section{方法}
 
-\textcolor{black}{In this section, we introduce our video-agnostic targeted attack framework for Siamese trackers. We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., an adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Below, we formalize our targeted attacks to SiamFC++ \cite{SiamFC++}, and then introduce our perturbation strategy in detail.}
+\textcolor{black}{在本节中，我们介绍了针对暹罗跟踪器的视频不可知的定向攻击框架。我们旨在通过向模板图像添加不可察觉的扰动并将 \textit{虚假目标}（即对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器，以便跟踪器输出位置和大小 \textit{虚假目标} 而不是真实目标。下面，我们将对 \cite{SiamFC++} 的针对性攻击正式化，然后详细介绍我们的摄动策略。}
  
-\subsection{Problem Definition}
+\subsection{问题定义}
 
-Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$.
-$B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame.
-The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state.
-In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame.
-At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network, and the resulting features are processed by some non-shared layers and fused by depth-wise separable correlation. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$ in an anchor-free manner. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
+令 $V=\{I_i\}_1^T$ 表示长度为 $T$ 的视频序列的帧。
+$B^{gt}=\{b^{gt}_i\}_1^T$ 用于表示目标在每一帧中的真实位置。
+视觉对象跟踪旨在在给定其初始状态的情况下，在随后的帧中预测此目标的位置 $B^{pred}=\{b^{pred}_i\}_1^T$ 。
+在SiamFC ++中，跟踪器首先将配对的参考框架 $I_1$ 和注释 $b_1^{gt}$ 转换为模板图像 $\textbf z$，然后将搜索帧 $I_i$ 转换为搜索图像 $\textbf x_i$ 以上一帧中估计的位置为中心。
+在每个时间步，模板图像 $\textbf z$ 和搜索图像 $\textbf x_i$ 首先分别通过共享的骨干网络传递，然后，某些非共享层处理所得的特征，并按深度将其融合。明智的可分离相关性。然后，融合后的特征将用作头网络的输入，该头网络预测分类图 $\textbf{C}$，边界框回归图 $\textbf{R}$ 和质量评估图 $\textbf{Q}$ 以无锚的方式。简而言之，$\textbf C$ 编码每个空间位置包含目标的概率，$\textbf R$ 回归目标的边界框，而 $\textbf Q$ 预测目标状态估计质量。然后根据 $\textbf{C}$，$\textbf{R}$ 和 $\textbf{Q}$ 生成最终边界框。
 
-Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}).
-Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+形式上，我们的目标是为模板图像 $\textbf z$ 训练不易察觉的扰动 $\delta$，为搜索图像 $\textbf x_i$ 训练对抗性补丁 $p$ 。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x_i$ 之后，跟踪器将输出对抗性补丁的位置和大小，而不是实际目标（请参见图 \ref{fig:net}）。
+$\delta$ 和 $p$ 是通用的（即，与视频无关），这意味着扰动新颖的视频仅涉及将扰动添加和粘贴到模板和搜索图像上，而无需进行梯度优化或网络推断。
 
-\subsection{Generating Video-Agnostic Perturbations}
+\subsection{产生视频不可知的扰动}
 
-In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers.
-During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$.
-The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
+在本小节中，我们展示了如何为暹罗跟踪器训练与视频无关的扰动 $(\delta, p)$ 在训练的第 $k$ 次迭代中，从训练数据集数学 $V=\{I_i\}_1^T$ 中随机选择了视频 $\mathcal V$。假设第k次迭代的模板扰动是 $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$，而对抗性补丁是 $p_k \in \mathbb{R}^{128\times 128\times 3}$。我们首先从 $V$ 中随机选择配对的帧 $I_t, I_s$。
+干净的模板图像 $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ 是根据 $I_t$ 和 $b^{gt}_t$ 生成的，受干扰的模板图像为：
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_k.
 \end{equation}
-Similarly, the clean search image $\textbf x \in \mathbb{R}^{303\times 303 \times 3}$ is generated according to $I_s$ and $b^{gt}_s$.
-As mentioned before, the patch is regarded as a \textit{fake target} and pasted into the search images. We force the center position of the \textit{fake target} to near the center position of the real target within a shift range of 64 pixels, where shift is defined as the maximum range of translation generated from a uniform distribution.
-The width/height of the \textit{fake target} is randomly selected between 32 pixels and 128 pixels.
-The perturbed search image is generated as follows:
+类似地，干净的搜索图像 $\textbf x \in \mathbb{R}^{303\times 303 \times 3}$ 是根据 $I_s$ 和 $b^{gt}_s$生成的。
+如前所述，补丁被视为 \textit{虚假目标} 并粘贴到搜索图像中。我们将 \textit{虚假目标} 的中心位置逼近真实目标的中心位置（在64个像素的移动范围内），其中移动定义为由均匀分布生成的最大平移范围。
+\textit{虚假目标} 的宽度/高度在32像素和128像素之间随机选择。
+扰动的搜索图像生成如下：
 \begin{equation}
 \tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)),
 \end{equation}
-where $(l^x, l^y)$ and $(w, h)$ represent the position and size of the \textit{fake target} with respect to the search image, respectively. $A$ is a patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then pastes the resized patch $\hat{p}_k$ into the search image $\textbf x$ at location $(l^x,l^y)$.
+其中 $(l^x, l^y)$ 和 $(w, h)$ 分别表示 \textit{虚假目标} 相对于搜索图像的位置和大小。$A$ 是补丁应用程序运算符 \cite{patch}，它首先将补丁 $p_k \in \mathbb{R}^{128\times 128\times 3}$ 的大小调整为 $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$，然后将调整大小的补丁 $\hat{p}_k$ 粘贴到搜索图像 $\textbf x$ 的 $(l^x,l^y)$ 位置。
 
-Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and $\tilde{\textbf  z}$ as input and makes predictions as follows:
+随后，SiamFC ++跟踪器 $\phi(\cdot)$ 将 $\tilde {\textbf x}$ 和 $\tilde{\textbf  z}$ 作为输入，并进行如下预测：
 \begin{equation}
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
 
-\textit{Training Objective} The loss function is calculated as follows:
+\textit{训练目标} 损失函数的计算如下：
 \begin{equation}
 \begin{array}{l}
 \begin{aligned}
@@ -116,7 +114,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
-{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position and size of the \textit{fake target}. $\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples in the training phase, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment, and $L_{\mathrm{reg}}$ denotes the IoU loss \cite{iou-loss} for bounding box regression. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
+{其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据 \textit{虚假目标} 的位置和大小生成的伪造标签。$\textbf 1$ 是指标函数，如果订阅中的条件成立，则取1，否则将取0，$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类结果的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的IoU损耗 \cite{iou-loss}。在SiamFC ++之后，如果将 $(x, y)$ 视为正样本，则将1分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
 
 \iffalse
 \begin{algorithm}[tb]
@@ -132,7 +130,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
 \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
 \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-\STATE Calculate the \textit{fake target} position $\{l^x, l^y, w, h\}$ with respect to the search image.
+\STATE Calculate the \textit{虚假目标} position $\{l^x, l^y, w, h\}$ with respect to the search image.
 \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
 \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
 \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
@@ -150,44 +148,44 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \begin{figure*}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
-\caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
+\caption{我们的目标攻击结果遵循预定义的 \textit{虚假轨迹}（由黄色的目标边界框指示）。}
 \label{fig:vis}
 \end{figure*}
 
-\textit{Optimisation} At each training step, the perturbations are updated as follows:
+\textit{优化} 在每个训练步骤中，扰动更新如下：
 \begin{gather}
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
 p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
-where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
-During training, we only optimize the values of perturbations $(\delta, p)$ and the parameters of the Siamese network remain intact.
+其中 $\epsilon_1$ 用于确保感知不到添加到模板图像的扰动，而 $\epsilon_2$ 用于维护训练稳定性。
+在训练期间，我们仅优化扰动 $(\delta, p)$ 的值，而暹罗网络的参数保持不变。
 
-We outline this training procedure in Algorithm \ref{alg}.
+我们在算法 \ref{alg} 中概述了该训练过程。
 
-\subsection{Attacking the Tracker at Inference Time}
+\subsection{在推理时攻击跟踪器}
 
-Once the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
-Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ with respect to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
+一旦对扰动 $(\delta, p)$ 进行了训练，我们就可以使用它们来扰动模板图像并搜索任何新颖视频的图像进行攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对新颖的视频进行干扰仅涉及将干扰添加和粘贴到模板和搜索图像上，而无需进行梯度优化或网络推断。
+假设 $B^{fake}=\{b^{fake}_i\}_1^{T}$ 是我们希望跟踪器输出的轨迹。
+在跟踪视频 $V=\{I_i\}_1^T$ 的第 $i$ 帧期间，我们需要变换边界框 $b^{fake}_i$（相对于原始帧 $I_i$）放入相对于搜索图像 $\textbf x_i$ 的框 $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ 中，然后根据 $\hat b_i$ 将 $p$ 粘贴到 $\textbf x_i$ ：
 \begin{equation}
 \tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
 \end{equation}
-The tracker then takes $\tilde{\textbf z}_i=\textbf z_i+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
+然后，跟踪器将 $\tilde{\textbf z}_i=\textbf z_i+\delta$ 和 $\tilde{ \textbf x}_i$ 作为输入，随后的跟踪过程与SiamFC ++相同。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Experiments}
+\section{实验}
 
-\subsection{Experimental Setup}
+\subsection{实验设置}
 
-\textit{Evaluation Benchmarks} We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, \ie, OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, and LaSOT \cite{LaSOT}. Generally speaking, OTB2015 is a typical tracking benchmark which is widely used for evaluation for several years, GOT-10k has the advantage of magnitudes wider coverage of object classes, and LaSOT has much longer video sequences with average duration of 84 seconds. They all follow the One-Pass Evaluation (OPE) protocol and their evaluation methodologies are similar as the measurement is mostly based on the success and precision of the trackers over the test videos. For instance, they all measure the success based on the fraction of frames in a sequence where the intersection-over-union (IoU) overlap of the predicted and ground truth rectangles exceeds a given threshold, and then the trackers are ranked using the area-under-the-curve (AUC) criterion. Since the average of IoU overlaps (AO) over all the test video frames is recently proved to be equivalent to the AUC criterion, we thus denote the success measurement as AO in the following. Besides AO, a success rate (SR) metric is also directly used to measure the percentage of successfully tracked frames given a threshold as in GOT-10k. As for the precision, it encodes the proportion of frames for which the center of the predicted rectangle is within 20 pixels of the ground truth center. Since the precision metric is sensitive to the resolution of the images and the size of the bounding boxes, a metric of normalized precision over the size of the ground truth bounding box is proposed and the trackers are then ranked using the AUC for normalized precision between 0 and 0.5.
+\textit{评估基准} 我们在几种跟踪基准，即 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT}. 上评估针对目标攻击的视频不可知扰动。一般而言，OTB2015是典型的跟踪基准，已被广泛用于评估中，GOT-10k具有在幅度上更宽的对象类别的优势，LaSOT具有更长的视频序列，平均持续时间为84秒。它们都遵循单次通过评估（OPE）协议，其评估方法相似，因为测量主要基于测试视频上跟踪器的成功与精确。例如，它们均根据序列的帧分数来衡量成功，在该序列中，预测矩形和地面真实矩形的交点重叠（IoU）重叠超过给定阈值，然后使用面积-曲线下（AUC）准则。由于最近证明所有测试视频帧上的IoU重叠平均值（AO）均等效于AUC标准，因此在下文中将成功度量表示为AO。除了AO之外，成功率（SR）度量标准也可以直接用于测量在GOT-10k中给定阈值的成功跟踪帧的百分比。至于精度，它对帧的比例进行编码，对于这些比例，预测矩形的中心在地面真实中心的20个像素之内。由于精度度量对图像的分辨率和边界框的大小敏感，因此提出了在地面真实边界框的大小上进行归一化精度的度量，然后使用AUC对跟踪器进行排序，以使归一化精度介于0之间和0.5。
 
-\textit{Generating the Fake Trajectory} We need to predefine a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video to achieve targeted attack in the online-tracking phase, which we call the \textit{fake trajectory}. We denote the \textit{real trajectory} as $B^{gt}=\{b^{gt}_i\}_1^T$ with the bounding box ground truth.
-It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 16 pixels apart.
+\textit{生成伪造的轨迹} 我们需要为每个视频预先定义特定的轨迹 $B^{fake}=\{b^{fake}_i\}_1^{T}$ ，以实现在线跟踪中的有针对性的攻击阶段，我们称之为 \textit{假轨迹}。我们用边界框地面真值将 \textit{真实轨迹} 表示为 $B^{gt}=\{b^{gt}_i\}_1^T$。
+可以为每个视频手动标记任意 $B^{fake}$ ，但是，在我们的实验评估中这将非常耗时。因此，我们基于 $B^{gt}$ 生成 $B^{fake}$。具体来说，\textit{虚假轨迹} 遵循 \textit{真实轨迹}，并且 $b^{fake}_i$ 和 $b^{gt}_i$ 的边界相距 16 像素。
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$. Note that the annotations of GOT-10k's test data are kept private, so we only use its validation set for our evaluation and denote it as GOT-Val.
+\textit{虚假轨迹} 的边框尺寸由 $b^{gt}_1$ 的尺寸逐渐变为 $64\times 64$。请注意，GOT-10k测试数据的注释是保密的，因此我们仅将其验证集用于评估，并将其表示为GOT-Val。
 
-\textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated imperceptible template perturbation $\delta$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
+\textit{图像质量评估} 我们使用结构相似性（SSIM）\cite{SSIM} 来评估生成的不可感知模板扰动 $\delta$ 的质量。当SSIM接近1时很难找到（请参见表 \ref{tab:iter}）。
 
 \begin{table}
 \centering
@@ -219,20 +217,20 @@ The bounding box size of the \textit{fake trajectory} gradually changes from the
 \bottomrule
 \end{tabular}
 %}
-\caption{Overall attack results on the evaluation benchmarks.}
+\caption{评估基准上的总体攻击结果。}
 \label{tab:benchmark results}
 \end{table}
 
-\subsection{Implementation Details}
+\subsection{实施细节}
 
-In our evaluation, the backbone Siamese network of our base tracker SiamFC++ \cite{SiamFC++} adopts GoogLeNet \cite{GoogLeNet}.
-We implement our approach in Pytorch and train our perturbations using three GTX 1080Ti GPUs.
-We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.
-We train the perturbations for 32768 iterations with a mini-batch of 96 images (32 images per GPU).
-The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and for the adversarial patch it is $\epsilon_2 = 0.5$.
-We generate training samples following the practice in SiamFC++.
-During both the training and online-tracking phase, the off-the-shelf SiamFC++ tracking network model\footnote{It is exclusively trained on the training split of GOT-10k by the authors of SiamFC++ and can be downloaded from \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view}} is fixed and used for the whole evaluation, the spatial size of the template image is set to $127\times 127$, and the search image is $303\times 303$.
-In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\sigma=10^{-5}$.
+在我们的评估中，基本跟踪器SiamFC++ \cite{SiamFC++} 的主干Siamese网络采用GoogLeNet \cite{GoogLeNet}。
+我们在Pytorch中实施我们的方法，并使用三个GTX 1080Ti GPU训练我们的摄动。
+我们采用COCO \cite{COCO}，ILSVRC-VID \cite{VID}，及 GOT-10k \cite{GOT-10k} 与 LaSOT \cite{LaSOT} 的训练分割作为我们的训练集。
+我们以96个图像的微型批处理（每个GPU 32个图像）训练32768次迭代的扰动。
+模板扰动 $\epsilon_1$ 的学习速率设置为0.1，而对抗性补丁的学习速率为 $\epsilon_2 = 0.5$。
+我们按照SiamFC ++的实践生成培训样本。
+在培训和在线跟踪阶段，SiamFC ++跟踪网络模型 \footnote{由SiamFC ++的作者专门对GOT-10k的培训部分进行培训，可以从 \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view} 中下载。} 是固定的，并用于整个评估。模板图片的空间尺寸设置 $127\times 127$，搜索图片的价格为 $303\times 303$。
+在等式 \ref{eq:loss} 中，，我们设置 $\alpha=1, \beta=1, \gamma=1, \eta=0.005$ 和 $\sigma=10^{-5}$。
 
 \begin{table}
 \centering
@@ -252,13 +250,13 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \checkmark   & \checkmark   & \checkmark   & 0.818  & 0.890    & 0.035 & 0.023   \\ \bottomrule
 \end{tabular}
 %}
-\caption{Contribution of each loss on GOT-Val.}
+\caption{每项损失对GOT-Val的贡献。}
 \label{tab:loss}
 \end{table}
 
-\subsection{Attack Results on the Evaluation Benchmarks}
+\subsection{评估基准的攻击结果}
 
-\textit{Overall Attack Results} We test the performance of our targeted attack method on the evaluation benchmarks and gather the overall results in Table \ref{tab:benchmark results}. It is shown that the base tracker SiamFC++ can achieve state-of-the-art performance on all the evaluation benchmarks and run in real time (at about 58 fps on an GTX 1080Ti GPU). However this real-time performance requires the computationally intensive tracking system to occupy most of the computational resources, and thus it is appealing to develop a virtually costless attack method to fool the tracking system without scrambling for the resources. As shown in Table \ref{tab:benchmark results}, our attack method can satisfy this appealing demand and fool the SiamFC++ tracker effectively by misleading the tracker to follow a predefined \textit{fake trajectory}. Moreover, the high AO and Precision performance with respect to the \textit{fake trajectory} indicates a more effective attack without raising any suspicion (see Figure \ref{fig:vis}).
+\textit{总体攻击结果} 我们在评估基准上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:benchmark results}中。结果表明，基本跟踪器SiamFC ++可以在所有评估基准上达到最先进的性能，并且可以实时运行（在GTX 1080Ti GPU上约为58 fps）。但是，这种实时性能要求计算量大的跟踪系统占用大部分计算资源，因此吸引人的是开发一种几乎无成本的攻击方法来欺骗跟踪系统而不会争用资源。如表 \ref{tab:benchmark results}所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的 \textit{虚假轨迹} 来有效地欺骗SiamFC ++跟踪器。此外，相对于 \textit{fake trajectory} 而言，较高的AO和Precision性能表明在没有引起任何怀疑的情况下更有效的攻击（请参见 \ref{fig:vis}）。
 
 \begin{table*}
 \centering
@@ -281,7 +279,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \bottomrule
 \end{tabular}
 %}
-\caption{Influence of the training iteration number on GOT-Val.}
+\caption{训练迭代次数对GOT-Val的影响。}
 \label{tab:iter}
 \end{table*}
 
@@ -305,7 +303,7 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \bottomrule
 \end{tabular}
 %}
-\caption{Transferability to different backbones on GOT-Val.}
+\caption{可转移到GOT-Val上不同的主干。}
 \label{tab:backbone}
 \end{table}
 
@@ -326,29 +324,29 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \bottomrule
 \end{tabular}
 %}
-\caption{Transferability to different tracking architectures on OTB2015.}
+\caption{在OTB2015上可转移到不同的跟踪体系结构。}
 \label{tab:arch}
 \end{table}
 
-\textit{Ablation Study: Influence of Training Loss} We implement a series of experiments to analyse and evaluate the contribution of each loss component.
-In Table \ref{tab:loss}, we report our results on GOT-Val with respect to different perturbations trained with different combinations of loss terms in Equ. \ref{eq:loss}.
-To summarize, all the loss terms are beneficial whereas the classification term is more important than the quality assessment term for attacking.
+\textit{消融研究：培训损失的影响} 我们实施了一系列实验来分析和评估每个损失成分的贡献。
+在表 \ref{tab:loss}中，我们报告了关于GOT-Val的结果，这些结果与在等式中用损失项的不同组合训练的不同摄动有关。（等式\ref{eq:loss}）
+总而言之，所有损失项都是有益的，而分类项比质量评估项更重要。
 
-\textit{Ablation Study: Influence of Training Iterations} As shown in Table \ref{tab:iter}, after around 30000 training iterations, the generated perturbations can fool most targets in GOT-Val. The AO with respect to the \textit{real trajectory} falls down from 0.760 to 0.035. We notice that at the start of training period (when training iteration number is less than 2048), the decreasing of AO is significantly faster than in the later period. This demonstrates the fast convergence ability of our end-to-end training pipeline while generating the adversarial perturbations.
+\textit{消融研究：训练迭代的影响} 如表 \ref{tab:iter}所示，经过大约30000次训练迭代后，所产生的扰动会欺骗GOT-Val中的大多数目标。关于 \textit{虚假轨迹} 的AO从0.760下降到0.035。我们注意到，在训练周期开始时（训练迭代次数小于2048），AO的降低明显快于后期。这证明了我们的端到端训练流水线的快速收敛能力，同时产生了对抗性扰动。
 
-\subsection{Transferability Analysis}
+\subsection{传输性分析}
 
-\textit{Transferability to Different Backbones} We evaluate the transferability of our attacks when applying the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
-The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.196. However, our perturbations do not generalize well to SiamFC++-ShuffleNet, which we conjecture to be due to the particular group convolution and channel shuffle operations in ShuffleNet.
+\textit{向不同骨干的传输能力} 当将扰动应用于SiamFC ++的另外两个不同的主干，即，ShuffleNet \cite{ShuffleNet} 和 AlexNet \cite{AlexNet}。
+实验结果显示在表 \ref{tab:backbone}中。对于SiamFC ++-AlexNet，关于 \textit{真实轨迹} 的AO从0.72下降到0.196。但是，我们的扰动不能很好地推广到SiamFC ++-ShuffleNet，我们推测这是由于ShuffleNet中的特定组卷积和通道洗牌操作所致。
 
-\textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} to verify the transferability to different tracking architectures.
-SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.379 while the performance of SiamRPN++ is decreased from 0.676 to 0.518. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
+\textit{不同跟踪架构的迁移能力} 当将扰动应用于另外两个基于锚的最新跟踪器时，我们评估攻击的可传递性：基于AlexNet的SiamRPN \cite{SiamRPN} 和基于ResNet的SiamRPN ++ \cite{SiamRPN++} ，以验证对不同跟踪体系结构的可移植性。
+SiamRPN使用RPN网络在响应图上执行位置回归和目标分类。 SiamRPN ++在使用ResNet主干进行有效训练的基础上，执行分层和深度聚合，以提高准确性。实验结果显示在表 \ref{tab:arch}中。在SiamRPN的情况下，相对于 \textit{真实轨迹} 的AO从0.666降低到0.379，而SiamRPN ++的性能从0.676降低到0.518。结果表明，即使将生成的扰动应用于基于锚的跟踪器，我们的攻击也可以很好地转移到不同的跟踪体系结构。
 
-\subsection{Comparison with Other Methods}
+\subsection{与其他方法的比较}
 
-We compare the attack performance of our method with the recent promising attack approaches, \ie, the untargeted attack method CSA \cite{CSA} based on AlexNet and two other targeted attack methods FAN \cite{FAN} based on AlexNet and TTP \cite{TTP} based on ResNet-50.
-We report the precision score with respect to the \textit{real / fake trajectory} in Table \ref{tab:untargeted}.
-Our method significantly outperforms other methods at no additional cost except the mere addition and pasting operations -- and does not require gradient optimization or network inference.
+我们将我们的方法的攻击性能与最新的有前途的攻击方法进行比较，即基于AlexNet的非目标攻击方法CSA \cite{CSA}，和其他两种有目标攻击方法：基于 AlexNet 的 FAN \cite{FAN} 和基于 ResNet-50 的 TTP \cite{TTP}。
+我们在表 \ref{tab:untargeted} 中报告相对于 \textit{真实/虚假轨迹} 的精度得分。
+除了单纯的添加和粘贴操作外，我们的方法在性能上明显优于其他方法，而且不需要梯度优化或网络推断。
 
 \begin{table}[]
 \centering
@@ -364,12 +362,12 @@ TTP & SiamRPN++ & 8 & 0.910 & 0.080&0.692 \\
 \midrule
 Ours & SiamFC++ & 0 & 0.861 & 0.048&0.928 \\ \bottomrule
 \end{tabular}%
-\caption{Precision score with respect to the \textit{real / fake trajectory} on OTB2015.}
+\caption{关于OTB2015上 \textit{真实 / 虚假轨迹} 的精确度得分。}
 \label{tab:untargeted}
 \end{table}
 
-\section{Conclusion}
+\section{结论}
 
-In this paper, we propose a video-agnostic targeted attack method for Siamese trackers. 
-We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, \ie, a small adversarial patch, into the search image adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
-Experiments on several popular datasets show that our method can effectively fool the Siamese trackers in a targeted attack manner.
+在本文中，我们提出了一种针对暹罗跟踪器的视频不可知的有针对性的攻击方法。
+我们旨在通过向模板图像添加不可察觉的扰动并将 \textit{虚假目标} （即小的对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器，以便跟踪器输出位置和 \textit{虚假目标} 的大小，而不是实际目标。由于具有通用性，因此可以方便地利用生成的扰动来即时扰动视频，而无需进行额外的计算。
+在几个流行的数据集上进行的实验表明，我们的方法可以有效地以有针对性的攻击方式欺骗暹罗跟踪者。
