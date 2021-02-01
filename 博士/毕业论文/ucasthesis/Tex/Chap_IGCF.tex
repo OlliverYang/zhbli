@@ -27,7 +27,7 @@
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03327.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03482.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03733.jpg}}
-    \caption{Segmentation results of InstMask on COCO2017 \cite{COCO} validation dataset.}
+    \caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
     \label{fig:InstMask}
 \end{figure}
 
@@ -39,7 +39,7 @@
 \begin{figure*}
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/instmask1.pdf}
-    \caption{Architecture of the tracking framework IGCF.}
+    \caption{跟踪框架 IGCF 的结构。}
     \label{fig:IGCF}
 \end{figure*}
 
@@ -105,14 +105,13 @@ DCF跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 
 \textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net}中显示了网络体系结构。 InstMask的主干是基于ResNet50 \cite{He2016DeepRL}构建的，它由一个茎块和3个残差块组成。
 InstMask的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到词干块，生成 40$\times$40$\times$64 特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为3136的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量重整为 56$\times$56，以获得最终的分割蒙版。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有Intel E5-2620 CPU内核的平台上以5 FPS运行时最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
 
-\iffalse
 \begin{algorithm}
   \caption{The IGCF tracking algorithm.} 
   \begin{algorithmic}
     \Require Image $I_t$, object position on previous frame $p_{t-1}$, scale $s_{t-1}$, filter $h_{t-1}$, channel reliability $w_{t-1}$.
     \Ensure Position $p_t$, scale $s_t$ and updated models.
   \Statex
-  \LState \textbf{Localization:}
+  \State \textbf{Localization:}
   \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
     \item $p_t$: position of the maximum in correlation between $h_{t-1}$ and image patch features $f_{t}$ extracted on position $p_{t-1}$ and weighted by the channel reliability scores $w_{t-1}$ (Eq. \ref{eq:dcf}).
     \item Estimate segmentation mask $m$ (Sect. \ref{sec:InstMask}).
@@ -120,7 +119,7 @@ InstMask的输入是一个 160$\times$160$\times$3 图像补丁。它被发送�
     \item Using location $p_t$, estimate new scale $s_ t$ as in \cite{Danelljan2014AccurateSE}.
     \item Estimate detection reliability $\tilde{w}^{(det)}$  from per-channel responses using (\ref{eq:det}).
   \end{enumerate}
-  \LState \textbf{Update:}
+  \State \textbf{Update:}
   \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
     \item Estimate a new filter $\tilde{h}$ from $m$ using (\ref{eq:h1})$\sim$(\ref{eq:h3}).
     \item Estimate learning channel reliability $\tilde{w}^{(lrn)}$ from $h$ using (\ref{eq:lrn}).
@@ -129,7 +128,6 @@ InstMask的输入是一个 160$\times$160$\times$3 图像补丁。它被发送�
   \end{enumerate}
 \end{algorithmic}
 \end{algorithm}
-\fi
 
 \textbf{训练} 在训练期间，将 56$\times$56 蒙版上采样到原始图像大小 160$\times$。令 $l$ 表示大小为 $w \times h$的逐个像素的真实面罩。损失计算如下：
 \begin{equation}
@@ -149,7 +147,7 @@ InstMask脱机训练。在跟踪过程中，InstMask仅执行前向传播过程�
 \setlength\extrarowheight{1pt}
 \begin{table}
 \centering
-\caption{Network design of InstMask.}
+\caption{InstMask 的网络结构设计。}
 \begin{tabular}{|c|c|c|}
 \hline
 Layers & Output Size & Support \\\hline
@@ -171,7 +169,7 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
 \begin{figure*}
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
-    \caption{Architecture of our InstMask.}
+    \caption{InstMask 的网络结构。}
     \label{fig:net}
 \end{figure*}
 
@@ -219,7 +217,7 @@ p = \left\{ \begin{array}{ll}
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00025.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00027.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00031.jpg}}
-    \caption{The tracking result before (green) and after (blue) the instance guided self-correction component.}
+    \caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
     \label{fig:IGSC}
 \end{figure}
 
@@ -264,14 +262,14 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \begin{figure}
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2015.png}
-    \caption{Expected average overlap (EAO) plot on VOT2015 \cite{Kristan2015TheVO}.}
+    \caption{VOT2015的预期平均重叠（EAO）图 \cite{Kristan2015TheVO}.}
     \label{fig:vot15}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
-    \caption{Expected average overlap (EAO) plot on VOT2016 \cite{Kristan2016TheVO}.}
+    \caption{VOT2016的预期平均重叠（EAO）图 \cite{Kristan2016TheVO}.}
     \label{fig:vot16}
 \end{figure}
 
@@ -335,7 +333,7 @@ GOT-10k的评估指标是平均重叠（AO），它表示所有地面和估计�
 \subsection{对DAVIS2016的评估}
 配备了InstMask模块，所提出的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频对象分割数据集，它由五十个高质量视频序列组成，跨越了多次出现的常见视频对象分割挑战，例如遮挡，运动模糊和外观变化。我们在DAVIS2016的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis}所示。结果表明，提出的IGCF可以准确地恢复目标的轮廓，这在一定程度上解释了IGCF为什么可以提高跟踪性能。
 
-\section{Conclusion}
+\section{结论}
 在本文中，我们提出了一种新颖的跟踪器，该跟踪器结合了深度神经网络和相关过滤器的优点来提高对象跟踪的性能。
 InstMask用于约束相关滤波器的学习过程。基于实例级别的分割，我们进一步提出了一种自校正机制，以减轻对相关滤波器的漂移。
 通过与最新的跟踪器进行比较，实验结果显示了该方法的出色鲁棒性和效率。

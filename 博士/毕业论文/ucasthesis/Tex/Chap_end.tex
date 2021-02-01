@@ -77,19 +77,12 @@ SiamRPN++ \cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %The effect of this module can be interpreted from both the dropout and from the adversarial training perspectives.
 该模块具有辍学和对抗训练的优势：辍学使我们的暹罗网络在训练过程中随机断开神经单元，以防止目标特征的共同适应；而对抗训练则使我们的跟踪器学习困难的情况。
 
-\iffalse
-Our contributions are three folds:
-(1) We introduce a novel siamese tracking architecture equipped with a temporal aggregation module, which improves the per-frame features by aggregating features of adjacent frames.
-(2) We incorporate the adversarial dropout module in our tracker to improve the discrimination power of the siamese tracking network.
-(3) Experiments on GOT-10k and UAV20L tracking datasets show that the proposed method performs favorably against existing state-of-the-art methods (Fig. \ref{fig:visulization}).
-\fi
-\iffalse
+我们的贡献有三方面：
 \begin{itemize}
-    \item We introduce a novel siamese tracking architecture equipped with a temporal aggregation module, which improves the per-frame features by aggregating features of adjacent frames.
-    \item We utilize the adversarial dropout module to improve the discrimination power of the siamese tracking network.
-    \item Experiments on GOT-10k and UAV20L tracking datasets show that the proposed method performs favorably against existing state-of-the-art methods.
+\item 我们引入了一种新颖的暹罗跟踪体系结构，该体系结构配备了时间聚合模块，该模块通过聚合相邻帧的特征来改善每帧的特征。
+\item 我们在追踪器中加入了对抗性辍学模块，以提高暹罗追踪网络的辨别能力。
+\item 在GOT-10k和UAV20L跟踪数据集上进行的实验表明，该方法相对于现有的最新方法具有优越的性能（图 \ref{fig:visulization}）。
 \end{itemize}
-\fi
 
 \section{建议的方法}
 \label{sec:method}
@@ -280,17 +273,16 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 % For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
 \subsection{对GOT-10k数据集的评估}
 
-\iffalse
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.45\textwidth]{images/success_plot.png}
-    \caption{Overall performance on GOT-10k, ranked by their average overlap (AO) scores.}
+    \includegraphics[width=1\textwidth]{Img/end/success_plot.png}
+    \caption{GOT-10k的总体性能，按其平均重叠（AO）得分进行排名。}
     \label{fig:got10k}
 \end{figure}
-\fi
+
 \begin{table}
 \centering
-\caption{Performance of our algorithm with different components on GOT-10k test set.}
+\caption{我们的算法在GOT-10k测试仪上具有不同组件的性能。}
 \begin{tabular}{c c c c c}
 \bottomrule
 \begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
