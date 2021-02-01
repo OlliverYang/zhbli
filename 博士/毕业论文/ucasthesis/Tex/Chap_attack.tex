@@ -116,34 +116,32 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \textcolor{black} %(SiamFC++)
 {其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据 \textit{虚假目标} 的位置和大小生成的伪造标签。$\textbf 1$ 是指标函数，如果订阅中的条件成立，则取1，否则将取0，$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类结果的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的IoU损耗 \cite{iou-loss}。在SiamFC ++之后，如果将 $(x, y)$ 视为正样本，则将1分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
 
-\iffalse
 \begin{algorithm}[tb]
 \caption{Training Process}
 \label{alg:algorithm}
 \textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $\phi$, and max iteration number $N$.\\
 \textbf{Output}: Imperceptible perturbation $\delta$, and adversarial patch $p$.
 \begin{algorithmic}[1] %[1] enables line numbers
-\STATE Let $k = 0$.
-\WHILE{$k < N$}
-\STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
-\STATE Randomly pick paired frames $I_t, I_s$ from $V$.
-\STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-\STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
-\STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-\STATE Calculate the \textit{虚假目标} position $\{l^x, l^y, w, h\}$ with respect to the search image.
-\STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
-\STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
-\STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
-\STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-\STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
-\STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
-\STATE $k = k + 1.$
-\ENDWHILE
-\STATE \textbf{return} $\delta_N, p_N.$
+\State Let $k = 0$.
+\While{$k < N$}
+\State Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+\State Randomly pick paired frames $I_t, I_s$ from $V$.
+\State Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
+\State $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
+\State Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
+\State Calculate the \textit{虚假目标} position $\{l^x, l^y, w, h\}$ with respect to the search image.
+\State $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
+\State $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
+\State Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
+\State Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
+\State $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
+\State $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
+\State $k = k + 1.$
+\EndWhile
+\State \textbf{return} $\delta_N, p_N.$
 \end{algorithmic}
 \label{alg}
 \end{algorithm}
-\fi
 
 \begin{figure*}[t]
 \centering
