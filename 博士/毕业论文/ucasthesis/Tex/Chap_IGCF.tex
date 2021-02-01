@@ -275,40 +275,40 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
     \label{fig:vot16}
 \end{figure}
 
-\section{Experiments}
-We provide a comprehensive evaluation of the proposed tracker IGCF on three challenging object tracking datasets: VOT2015 \cite{Kristan2015TheVO}, VOT2016 \cite{Kristan2016TheVO} and GOT-10k \cite{GOT-10k}. Note that there is no overlap between the videos used for training the InstMask component and the evaluation datasets. In addition, a qualitative experiment is carried out on the video object segmentation dataset DAVIS \cite{Perazzi2016}.
-\subsection{Evaluation on VOT2015}
+\section{实验}
+我们在三个具有挑战性的对象跟踪数据集上对拟议的跟踪器IGCF进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练InstMask组件的视频与评估数据集之间没有重叠。另外，对视频对象分割数据集DAVIS \cite{Perazzi2016}进行了定性实验。
+\subsection{VOT2015评估}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/got10k/success_plot.png}
-    \caption{Overall performance on GOT-10k \cite{GOT-10k}, ranked by their average overlap (AO) scores.}
+    \caption{在GOT-10k \cite{GOT-10k}上的总体性能，按其平均重叠（AO）得分进行排名。}
     \label{fig:got10k}
 \end{figure}
 
-The VOT2015 \cite{Kristan2015TheVO} tracking dataset contains 60 challenging videos. It is constructed from over 300 sequences by an advanced sequence selection methodology that favours targets difficult to track and maximizes a visual attribute diversity cost function. 
-In VOT2015, three metrics are used to evaluate the performance of a tracker: (1) accuracy, (2) robustness and (3) EAO (expected average overlap). The accuracy measures how well the bounding box predicted by the tracker overlaps with the ground truth bounding box. The robustness measures how many times the tracker loses the target (fails) during tracking. EAO combines accuracy and robustness to evaluate the overall performance of the tracker. 
+The VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含60个具有挑战性的视频。它是通过先进的序列选择方法从300多个序列中构建的，该方法优先处理难以追踪的目标并最大化视觉属性多样性成本函数。
+在VOT2015中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（预期平均重叠）。精度衡量跟踪器预测的边界框与地面真值边界框的重叠程度。健壮性衡量跟踪器在跟踪过程中失去目标（失败）的次数。 EAO结合了准确性和鲁棒性来评估跟踪器的整体性能。
 
-We compare our algorithm with the following trackers: CSRDCF \cite{Lukezic2017DiscriminativeCF}, SRDCF \cite{Danelljan2015LearningSR}, TGPRfSRDCF \cite{gao2018tracking}, DeepSRDCF \cite{Danelljan2015ConvolutionalFF}, TCNN \cite{nam2016modeling}, Staple \cite{Bertinetto2016StapleC}, EBT \cite{Zhu2016BeyondLS}, NSAMF \cite{Hua2015OnlineOT} and Struck \cite{Hare2011StruckSO}.
-These trackers can be classified into three categories: Struck and EBT are traditional trackers. SRDCF, CSRDCF, TGPRfSRDCF, Staple and SAMF are DCF-based trackers. DeepSRDCF and TCNN are CNN-based trackers.
-The EAO scores of the trackers are shown in Fig. \ref{fig:vot15}. Compared to other listed approaches, our approach achieves a superior EAO of 0.342. 
-Struck uses a kernelized structured output support vector machine (SVM), which is learned online to provide adaptive tracking. In contrast, IGCF is based on powerful correlation filters. As a result, IGCF significantly outperforms Struck with a relative gain of 36.8\% in terms of EAO, which suggests the excellence of the DCF framework as well as the effectiveness of IGCF.
-CSRDCF generates target masks using the color histograms of the target and the background to constrain the learning of correlation filters, while IGCF use a neural network to generate the masks. Compared with CSRDCF, the relative improvement of the EAO score is 6.9\%, which suggests that the semantic masks generated from deep features are more conducive to the filter learning than the masks generated from the low level image features.
-DeepSRDCF incorporates deep convolutional features from a pre-trained network in the SRDCF framework. However, the deep features are not dedicated to instance segmentation. In contrast, InstMask is trained on the COCO segmentation dataset, which is designed for instance segmentation. On VOT2015, IGCF outperforms DeepSRCDF by a relative 7.5\% in terms of EAO, witch highlights the importance of the proposed InstMask and IGSC modules.
+我们将我们的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
+这些跟踪器可以分为三类：Struck和EBT是传统的跟踪器。 SRDCF，CSRDCF，TGPRfSRDCF，Staple和SAMF是基于DCF的跟踪器。 DeepSRDCF和TCNN是基于CNN的跟踪器。
+跟踪器的EAO得分如图 \ref{fig:vot15}。与其他列出的方法相比，我们的方法可实现0.342的出色EAO。
+Struck使用内核化的结构化输出支持向量机（SVM），可以在线学习以提供自适应跟踪。相反，IGCF基于强大的相关过滤器。结果，IGCF在EAO方面的相对收益显着优于Struck，达到36.8％，这表明DCF框架的出色表现以及IGCF的有效性。
+CSRDCF使用目标和背景的颜色直方图生成目标蒙版，以限制相关滤波器的学习，而IGCF使用神经网络生成蒙版。与CSRDCF相比，EAO分数的相对提高为6.9％，这表明与低级图像特征生成的掩码相比，深层特征生成的语义掩码更有利于过滤器学习。
+DeepSRDCF在SRDCF框架中结合了来自预训练网络的深度卷积功能。但是，深层功能并不专用于实例分割。相比之下，InstMask在针对实例细分而设计的COCO细分数据集上进行了训练。在VOT2015上，就EAO而言，IGCF优于DeepSRCDF达到7.5％，巫婆强调了拟议的InstMask和IGSC模块的重要性。
 
-\subsection{Evaluation on VOT2016}
-The VOT2016 \cite{Kristan2016TheVO} dataset contains 60 sequences from VOT2015 with improved annotations. The evaluation metrics of VOT2016 are the same as VOT2015, namely accuracy, robustness and EAO.
+\subsection{VOT2016评估}
+VOT2016 \cite{Kristan2016TheVO} 数据集包含来自VOT2015的60个序列，具有改进的注释。 VOT2016的评估指标与VOT2015相同，即准确性，鲁棒性和EAO。
 
-We compare our algorithm with the following trackers:
-CSRDCF \cite{Lukezic2017DiscriminativeCF}, SRDCF \cite{Danelljan2015LearningSR}, TGPRfSRDCF \cite{gao2018tracking}, DeepSRDCF \cite{Danelljan2015ConvolutionalFF}, TCNN \cite{nam2016modeling}, Staple \cite{Bertinetto2016StapleC}, EBT \cite{Zhu2016BeyondLS}, NSAMF \cite{Hua2015OnlineOT} and Struck \cite{Hare2011StruckSO}. Fig. \ref{fig:vot16} shows the EAO performance on the VOT2016. Among the compared methods, our approach achieves the best results with an EAO score of 0.330.
+我们将算法与以下跟踪器进行了比较：
+CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了VOT2016上EAO的性能。在比较的方法中，我们的方法以0.330的EAO得分达到最佳结果。
 
-\subsection{Evaluation on GOT-10k}
-GOT-10k \cite{GOT-10k} is a large high-diversity database for generic object tracking. The dataset contains more than 10000 video segments of real-world moving objects and over 1.5 million manually labeled bounding boxes. There are 563 classes of real-world moving objects and 87 classes of motion patterns. 
-To the best of our knowledge, GOT-10k is by far the richest motion trajectory dataset.
-We evaluate our tracker on the GOT-10k test subset which embodies 84 object classes and 32 motion patterns with 180 video segments.
-The evaluation metric of GOT-10k is average overlap (AO), which denotes the average of overlaps between all groundtruth and estimated bounding boxes. 
+\subsection{对GOT-10k的评估}
+GOT-10k \cite{GOT-10k} 是用于通用对象跟踪的大型高多样性数据库。数据集包含超过10000个真实运动对象的视频片段和超过150万个手动标记的边界框。现实世界中有563类运动对象和87种运动模式。
+据我们所知，GOT-10k是迄今为止最丰富的运动轨迹数据集。
+我们在GOT-10k测试子集上评估跟踪器，该子集包含84个对象类和具有180个视频段的32个运动模式。
+GOT-10k的评估指标是平均重叠（AO），它表示所有地面和估计边界框之间重叠的平均值。
 
-We compare our algorithm, denoted as IGCF, with the following trackers: CFNetc2 \cite{Valmadre2017EndtoEndRL}, ECOhc \cite{Danelljan2017ECOEC}, CFNetc5 \cite{Valmadre2017EndtoEndRL}, CFNetc1 \cite{Valmadre2017EndtoEndRL}, BACF \cite{Galoogahi2017LearningBC}, MEEM \cite{Zhang2014MEEMRT}, DAT \cite{Possegger2015InDO}, DSST \cite{Danelljan2014AccurateSE}, SAMF \cite{Li2014ASA}, Staple \cite{Bertinetto2016StapleC}, SRDCFdecon \cite{Danelljan2016AdaptiveDO}, SRDCF \cite{Danelljan2015LearningSR}, fDSST \cite{Danelljan2017DiscriminativeSS}, CSK \cite{Henriques2012ExploitingTC}, KCF \cite{henriques2014high-speed}, L1APG \cite{Bao2012RealTR}, LK \cite{Shi1994GoodFT} and IVT \cite{Ross2007IncrementalLF}. The success plot of the evaluated trackers is shown in Fig. \ref{fig:got10k}. It represents the percentage of frames for which the overlap measure exceeds a threshold, with respect to different thresholds. The AO score of our method is 0.299, which outperforms all other listed competitive tracking algorithms.
+我们将表示为IGCF的算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。评估的跟踪器的成功图如图 \ref{fig:got10k}所示。它代表重叠度量超过阈值的帧相对于不同阈值的百分比。我们的方法的AO得分为0.299，优于所有其他列出的竞争跟踪算法。
 
 \begin{figure}
 \centering
@@ -327,15 +327,15 @@ We compare our algorithm, denoted as IGCF, with the following trackers: CFNetc2 
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00017.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00036.jpg}}                   \hspace{-0.6em}
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00067.jpg}}
-    \caption{Qualitative results of our method in DAVIS2016 VAL dataset.}
+    \caption{我们的方法在DAVIS2016 VAL数据集中的定性结果。}
     \label{fig:davis}
 \end{figure}
 
 
-\subsection{Evaluation on DAVIS2016}
-Equipped with the InstMask module, the proposed tracker not only performs target tracking well, but also can be used for video segmentation. DAVIS \cite{Perazzi2016} is a video object segmentation dataset, which consists of fifty high quality video sequences, spanning multiple occurrences of common video object segmentation challenges such as occlusions, motion blur and appearance changes. We performed qualitative experiments on the validation set of DAVIS2016. The visualization results are shown in Fig. \ref{fig:davis}. The results show that the proposed IGCF can accurately recover the contour of a target, which explains to some extent why IGCF can achieve performance improvement in tracking.
+\subsection{对DAVIS2016的评估}
+配备了InstMask模块，所提出的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频对象分割数据集，它由五十个高质量视频序列组成，跨越了多次出现的常见视频对象分割挑战，例如遮挡，运动模糊和外观变化。我们在DAVIS2016的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis}所示。结果表明，提出的IGCF可以准确地恢复目标的轮廓，这在一定程度上解释了IGCF为什么可以提高跟踪性能。
 
 \section{Conclusion}
-In this paper, we propose a novel tracker which combines the advantages of deep neural networks and correlation filters to improve the performance of object tracking.
-The InstMask is used to constrain the learning process of correlation filters. Based on the instance-level segmentation, we further propose a self-correction mechanism to mitigate the drift to the correlation filter.
-Experiment results exhibit the superior robustness and efficiency of the proposed method by comparing it with state-of-the-art trackers.
+在本文中，我们提出了一种新颖的跟踪器，该跟踪器结合了深度神经网络和相关过滤器的优点来提高对象跟踪的性能。
+InstMask用于约束相关滤波器的学习过程。基于实例级别的分割，我们进一步提出了一种自校正机制，以减轻对相关滤波器的漂移。
+通过与最新的跟踪器进行比较，实验结果显示了该方法的出色鲁棒性和效率。
