@@ -60,7 +60,7 @@ Danelljan等 \cite{Danelljan2014AdaptiveCA} 通过学习有关多维颜色属性
 此外， \cite{Lukezic2017DiscriminativeCF} 中描述的CSR-DCF滤波器将信道和空间可靠性组件引入了DCF跟踪，并为它们在滤波器更新和跟踪过程中的有效无缝集成提供了学习算法。空间可靠性组件将过滤器支撑调整到目标的合适部分。信道可靠性组件根据特征的位置生成特征加权系数。 CSR-DCF跟踪器具有较大的搜索区域，可以有效跟踪非矩形目标。空间可靠性组件与Staple（模板和Pixelwise学习器的总和） \cite{Bertinetto2016StapleC} 跟踪器中使用的颜色分布具有一些相似之处。该跟踪器结合了补充提示，以提高鲁棒性。它解决了关于基于CF的模板模型和逐像素颜色分布模型的两个独立的岭回归问题。
 为了处理目标的尺度变化， \cite{Li2014ASA} 中提出的方法以不同的尺度对目标进行采样，并将采样调整为固定大小，以与每个帧上的学习模型相匹配。此方法还采用了多特征集成方案，该方案使用原始像素，渐变直方图 \cite{Forsyth2014ObjectDW} 和颜色命名 \cite{Weijer2009LearningCN} 来进一步增强跟踪器。这些基于DCF的跟踪器的主要缺点是缺乏对目标的高级语义信息的感知。
 
-\subsection{CNN-based trackers}
+\subsection{基于卷积神经网络的跟踪器}
 在过去的几年中，深度学习 \cite{Goodfellow2015DeepL} 在许多研究领域都取得了显著成功，尤其是在计算机视觉 \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}，语音识别 \cite{Kim2016JointCB, Liu2019AttentionGD}和自然语言处理 \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR}。一些跟踪器已经证明了深度学习的性能优势。
 
 大多数基于DCF的跟踪器仅限于单分辨率特征图，从而极大地限制了其潜力。为了解决此问题，CCOT跟踪器 \cite{CCOT} 学习连续卷积滤波器以融合以不同分辨率获得的特征图。这将为目标生成连续域置信度图。除了多分辨率融合之外，连续域学习公式还可以实现精确的亚像素定位。
@@ -72,37 +72,38 @@ ECO跟踪器 \cite{Danelljan2017ECOEC} 在核心DCF公式中包括分解卷积�
 
 也有一些工作致力于使用自校正机制来减轻跟踪漂移，从而提高跟踪的鲁棒性。例如，在 \cite{fan2018parallel}中，跟踪框架由两个组件（跟踪器和验证器）组成，它们在两个单独的线程上并行工作。跟踪器提供实时跟踪推断，并有望在大多数情况下表现良好。相反，验证者检查跟踪结果并在需要时更正跟踪器。
 
-\section{The Proposed Method}
+\section{方法}
 
-\subsection{Tracking Formulation}
-DCF trackers \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} have been widely studied and used. Specifically, consider the appearance feature: $f=\{f_d\}_{d=1:N_c}$ of an target, where $N_c$ is the channel number of the target feature. The goal of DCF-like trackers is to train a filter $h=\{h_d\}_{d=1:N_c}$, such that the correlation response $\tilde{g}$ between the feature and the filter fits the desired output $g$ which is typically a 2-D Gaussian function centered at the target location: 
+\subsection{跟踪范式}
+DCF跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑外观特征：目标的 $f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道号。类似于DCF的跟踪器的目标是训练过滤器 $h=\{h_d\}_{d=1:N_c}$，以使特征和过滤器之间的相关性响应 $\tilde{g}$ 适合所需输出 $g$ ，通常是一个以目标位置为中心的二维高斯函数： 
 \begin{equation} \label{eq:dcf}
 \tilde{g}=\sum_{d=1}^{N_c}f_d \star h_d \cdot w_d,
 \end{equation}
-where $\star$ represents the circular correlation operator and channel weights $w = \{w_d\}_{d=1:N_c}$ are the scaling factors based on the discriminative power of each feature channel \cite{Lukezic2017DiscriminativeCF}.
-The position of the peak of the response map is the estimated position of the target in the current frame.
-The optimal correlation filter $h$ is estimated by minimizing:
+其中 $\star$ 表示循环相关运算符，通道权重 $w = \{w_d\}_{d=1:N_c}$ 是基于每个特征通道 \cite{Lukezic2017DiscriminativeCF}.
+的判别力的缩放因子。
+响应图的峰值位置是目标在当前帧中的估计位置。
+最佳相关滤波器 $h$ 通过最小化来估算：
 \begin{equation}
 \varepsilon(h) = \sum_{d=1}^{N_c}||f_d \star h_d - g||^2+\lambda||h_d||^2.
 \end{equation}
 
-Recently, many studies \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} have demonstrated that spatial constraints imposed on a target improve the correlation filter learning by reducing the background interference. As described in \cite{Lukezic2017DiscriminativeCF}, the segmentation mask of an image patch is a spatial map with elements either 1 or 0, that indicates whether pixels belong to the target or belong to the background. During the filter training process, the filter $h$ is constrained by the mask $m$: $h \equiv m \odot h$, where $\odot$ represents the Hadamard (element-wise) product. This constraint adapts the filter support to the part of the target suitable for tracking. This makes it possible to use a large training region to capture more context information and overcomes the limitations of the rectangular boxes.
+最近，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已经证明，强加于目标的空间约束通过减少背景干扰来改善相关滤波器学习。如 \cite{Lukezic2017DiscriminativeCF}中所述，图像补丁的分割蒙版是一个元素为1或0的空间图，它指示像素是属于目标还是属于背景。在过滤器训练过程中，过滤器 $h$ 受掩码 $m$约束：$h \equiv m \odot h$，其中 $\odot$ 表示Hadamard（逐元素）乘积。该约束使滤波器支持适合目标的适合跟踪的部分。这使得可以使用较大的训练区域来捕获更多上下文信息，并克服了矩形框的局限性。
 
 \subsection{InstMask}
 \label{sec:InstMask}
-In this paper we use segmentation masks of tracked targets to constrain the learning of correlation filters. For efficiency and performance reasons, an ideal segmentation method should possess three key characteristics: (1) seamless integration with the tracking process, (2) be simple enough to accommodate the speed requirement of tracking, and (3) the proposed segment should match the target as accurately as possible.
-Most previous approaches for generating spatial constraints, rely on hand-designed rules or low-level image features like color histograms.
-In this paper, we present the InstMask network, which generates accurate instance masks for targets. InstMask is trained off-line and end-to-end using the data-driven approach to learn semantic information from the segmentation training sets, such as COCO2017 \cite{COCO}. The instance mask can constrain the learning of the correlation filters by suppressing background clutter. Based on the instance-level segmentation, we further propose a self-correction mechanism to mitigate the drift problem of CF trackers. This approach provides a notable gain in object tracking accuracy compared to classic DCF approaches.
-Unlike previous approaches for generating segmentation masks, we do not rely on edges, superpixels, or any other form of low-level segmentation. Instead, the core of our model is a ConvNet. By leveraging powerful ConvNet feature representations trained on ImageNet and adapted on the large amount of segmented training data available in COCO, we are able to generate semantic segmentation masks for targets to constrain the learning of correlation trackers.
-It is worth noting that it is sub-optimal to integrate the existing instance segmentation methods to provide spatial constraints for correlation filter learning. General tracking algorithms usually have complex network structures, which make it hard to strike a balance between tracking accuracy and speed. In contrast, the segmentation network proposed in this paper is designed for tracking and is lightweight, running at 5 FPS on the CPU.
+在本文中，我们使用跟踪目标的分割掩码来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的细分方法应具有三个关键特征：（1）与跟踪过程的无缝集成；（2）足够简单以适应跟踪的速度要求；（3）建议的细分应与尽可能准确地定位。
+以前大多数用于生成空间约束的方法都依赖于手工设计的规则或低级图像特征（例如颜色直方图）。
+在本文中，我们介绍了InstMask网络，该网络为目标生成准确的实例蒙版。使用数据驱动的方法对InstMask进行脱机和端到端培训，以从分段培训集中学习语义信息，例如COCO2017 \cite{COCO}。实例遮罩可以通过抑制背景杂波来限制相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来减轻CF跟踪器的漂移问题。与传统的DCF方法相比，此方法可显着提高对象跟踪精度。
+与以前的生成分割蒙版的方法不同，我们不依赖于边缘，超像素或任何其他形式的低级分割。相反，我们模型的核心是ConvNet。通过利用在ImageNet上训练的强大ConvNet特征表示并适应COCO中可用的大量分段训练数据，我们能够为目标生成语义分段掩码，以限制相关跟踪器的学习。
+值得注意的是，将现有的实例分割方法进行集成以为相关过滤器学习提供空间约束是次优的。通用跟踪算法通常具有复杂的网络结构，因此很难在跟踪精度和速度之间取得平衡。相比之下，本文提出的分段网络是专为跟踪而设计的，重量很轻，在CPU上以5 FPS运行。
 
-When tracking in the $i$-th frame, the segmentation mask of the target in frame $i$ needs to be obtained to constrain the learning of the correlation filter. 
-Assume that the target position in frame $i$ is in the vicinity of the target position in frame $i-1$, so the input to InstMask is always the small image region centered on the object position at the previous frame.
-This design has the following advantages: (1) Because of the strong consistency of the input data, the network can obtain accurate segmentation results using fewer parameters. (2) Because the network has fewer parameters and the image patch is small, only a short time is required for inference. (3) Searching around the target's previous location can avoid the adverse effects of distractors located in the background. During training, each sample $k$ in the training set contains (1) the RGB input patch $x_k$, which contains a target near to the centre of the input patch, (2) the binary mask $m_{k}$ corresponding to the input patch.
-We next describe the architecture and the training procedure.
+当在第 $i$帧中跟踪时，需要获得帧 $i$ 中目标的分割掩码以约束相关滤波器的学习。
+假定 $i$ 帧中的目标位置在 $i-1$帧中的目标位置附近，因此InstMask的输入始终是前一帧以对象位置为中心的小图像区域。
+该设计具有以下优点：（1）由于输入数据的强一致性，网络可以使用较少的参数获得准确的分割结果。 （2）由于网络参数较少且图像补丁较小，因此推理时间短。 （3）在目标的先前位置附近进行搜索可以避免位于后台的干扰因素的不利影响。在训练期间，训练集中的每个样本 $k$ 包含（1）RGB输入色块 $x_k$，其中包含接近输入色块中心的目标，（2）对应的二进制掩码 $m_{k}$ 输入补丁。
+接下来，我们描述体系结构和培训过程。
 
-\textbf{Architecture} The network architecture is shown in Table \ref{tab:InstMask} and Fig. \ref{fig:net}. The backbone of InstMask is constructed based on ResNet50 \cite{He2016DeepRL}, which consists of a stem block and 3 residual blocks.
-The input to InstMask is a 160$\times$160$\times$3 image patch. It is sent to the stem block, producing a 40$\times$40$\times$64 feature map. Then the feature map is sent to 3 residual blocks sequentially, producing feature maps of size 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024, respectively. Subsequently, the obtained feature map is sent to three convolution layers to generate the vector of length 3136, which allows a global receptive field to perceive all of the contextual information about the target. Finally, this vector is reshaped to 56$\times$56 to get the final segmentation mask. Since it is such a lightweight network, our proposed tracking method optimally balances the tracking accuracy and speed while running at 5 FPS on the platform with a Intel E5-2620 CPU core, making it possible to deploy the tracker in real-world applications including autonomous driving, robotics and augmented reality.
+\textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net}中显示了网络体系结构。 InstMask的主干是基于ResNet50 \cite{He2016DeepRL}构建的，它由一个茎块和3个残差块组成。
+InstMask的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到词干块，生成 40$\times$40$\times$64 特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为3136的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量重整为 56$\times$56，以获得最终的分割蒙版。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有Intel E5-2620 CPU内核的平台上以5 FPS运行时最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
 
 \iffalse
 \begin{algorithm}
@@ -130,20 +131,20 @@ The input to InstMask is a 160$\times$160$\times$3 image patch. It is sent to th
 \end{algorithm}
 \fi
 
-\textbf{Training} During training, the 56$\times$56 mask is up-sampling to the original image size 160$\times$160. Let $l$ denotes pixel-wise ground-truth mask of size $w \times h$. The loss is calculated as:
+\textbf{训练} 在训练期间，将 56$\times$56 蒙版上采样到原始图像大小 160$\times$。令 $l$ 表示大小为 $w \times h$的逐个像素的真实面罩。损失计算如下：
 \begin{equation}
 L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
 \end{equation}
-where $l_{x,y} \in \{ \pm 1 \}$ is the label corresponding to pixel $(x,y)$ of the object mask, and $P_{x,y}$ is the prediction of InstMask at location $(x,y)$.
+其中 $l_{x,y} \in \{ \pm 1 \}$ 是与对象蒙版的像素 $(x,y)$ 对应的标签，而 $P_{x,y}$ 是InstMask的预测在位置 $(x,y)$。
 
-The COCO2017 \cite{COCO} instance segmentation dataset is used to train InstMask.
-Contrast with many segmentation networks which only predict categories that appear in the training set, the proposed InstMask ignores category information during training and works as a class-agnostic segmentation network. In effect, InstMask detects the salient object in the search region. Although InstMask uses COCO dataset \cite{COCO} with only 80 classes for training, the network is able to segment targets in categories that do not appear in the training set, as shown in Fig. \ref{fig:IGSC}.
-We train our model using stochastic gradient descent with a batch size of 32 examples, momentum of 0.9, and weight decay of 0.00005. There are totally 50 epoches. The learning rate is decreased in log space from $10^{-2}$ to $10^{-4}$. During training, the input image size is set to 160$\times$160, and the target is located at the center of the image, with a size of 112$\times$112. To enhance the generalization of the network, we perform data augmentation. Specifically, we consider translation shifts (of $\pm$16 pixels), scale deformations (of $2^{\pm 1/4}$), and also horizontal flips.
+COCO2017 \cite{COCO} 实例细分数据集用于训练InstMask。
+与许多只能预测训练集中出现的类别的细分网络相反，提出的InstMask在训练过程中会忽略类别信息，并作为与类无关的细分网络工作。实际上，InstMask在搜索区域中检测到显着对象。尽管InstMask仅使用80个类别的COCO数据集 \cite{COCO} 进行训练，但是网络能够将目标细分为训练集中未出现的类别，如图 \ref{fig:IGSC}所示。
+我们使用随机梯度下降训练模型，批次大小为32个示例，动量为0.9，重量衰减为0.00005。总共有50个世代。日志空间中的学习率从 $10^{-2}$ 降低到 $10^{-4}$。在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，我们执行数据增强。具体来说，我们考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
 
-InstMask is trained offline. During tracking, InstMask only carries out a forward propagation process without the back propagation of the gradient. This not only prevents drift, but also meets the real-time requirements of tracking.
+InstMask脱机训练。在跟踪过程中，InstMask仅执行前向传播过程，而不会进行梯度的后向传播。这不仅可以防止漂移，还可以满足实时跟踪要求。
 
-Although our model shares high level similarities with CSRDCF \cite{Lukezic2017DiscriminativeCF}, the principle of the implementation is very different.
-In CSRDCF \cite{Lukezic2017DiscriminativeCF}, the segmentation masks are generated using the color histograms of the target and background. This heuristic approach has several disadvantages: (1) Since only low-level pixel information is used, it is difficult to accurately segment an target. (2) In order to adapt to the apparent changes of the target, the histogram model is constantly updated during the tracking process, which easily leads to drift of the tracker. In contrast, InstMask does not update parameters online. This improves computational efficiency while avoiding the undesired drift. Besides, tracking results are more accurate because of the use of semantic level rather than pixel-level information for segmentation.
+尽管我们的模型与CSRDCF \cite{Lukezic2017DiscriminativeCF}具有高度的相似性，但实现原理却大不相同。
+在CSRDCF \cite{Lukezic2017DiscriminativeCF}中，使用目标和背景的颜色直方图生成分割蒙版。这种启发式方法具有几个缺点：（1）由于仅使用低级像素信息，因此难以准确地分割目标。（2）为了适应目标的明显变化，在跟踪过程中会不断更新直方图模型，这很容易导致跟踪器漂移。相反，InstMask不会在线更新参数。这提高了计算效率，同时避免了不希望的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
 
 \setlength\extrarowheight{1pt}
 \begin{table}
@@ -174,33 +175,33 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
     \label{fig:net}
 \end{figure*}
 
-\subsection{Instance Guided Self-Correction Component} \label{sec:cog}
-InstMask allows better filters to be learnt and it helps to correct poor tracking results.
-In the DCF module, the position of the maximum of the correlation between filter $h$ and feature $f$ is regarded as the target position in the current frame. However, because of the on-line updating, the correlation filters can easily drift.
-The result of InstMask is generated according to the network parameters learnt from COCO dataset. However, we cannot rely only on the semantic segmentation mask of the target to produce the final tracking result because InstMask is not updated on-line.
-To utilize the advantages of both results and overcome their shortcomings, we propose the \textbf{I}nstance \textbf{G}uided \textbf{S}elf-\textbf{C}orrection component IGSC. IGSC combines both results, to obtain a better track. Specifically, the mask $m$ is generated according to $P$ using the hard threshold $b \in [0, 1] $:
+\subsection{实例引导的自纠正组件} \label{sec:cog}
+InstMask允许学习更好的过滤器，并有助于纠正不良的跟踪结果。
+在DCF模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
+InstMask的结果是根据从COCO数据集中获取的网络参数生成的。但是，由于InstMask不会在线更新，因此我们不能仅依靠目标的语义分割掩码来产生最终的跟踪结果。
+为了利用两个结果的优点并克服它们的缺点，我们建议使用 \textbf{I}nstance \textbf{G}uided \textbf{S}elf-\textbf{C}orrection 组件 IGSC。IGSC结合了这两个结果，以获得更好的跟踪。具体来说，使用硬阈值 $m$ 根据 $P$ 生成掩码 $b \in [0, 1] $：
 \begin{equation}
 m_{x,y} = \left\{ \begin{array}{ll}
  1 & \textrm{if $P_{x,y} > b$}\\
  0 & \textrm{if $P_{x,y} \le b$}
  \end{array} \right.
 \end{equation}
-$P$ is the probability map generated from InstMask. The element $P_{x,y}$ is the probability that a pixel $(x,y)$ belongs to the target.
-Then the target position is obtained from $m$:
+$P$ 是从InstMask生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属于目标的概率。
+然后从 $m$获得目标排名：
 \begin{equation}
 c_{m} = Centroid(m),
 \end{equation}
-where $Centroid(\mathord{\cdot})$ can calculate the geometric center of the region.
-Denote $p$ as the corrected target position.
-The self correction process can be described as following:
+其中 $Centroid(\mathord{\cdot})$ 可以计算区域的几何中心。
+将 $p$ 表示为校正后的目标排名。
+自校正过程可以描述如下：
 \begin{equation}
 p = \left\{ \begin{array}{ll}
  c_{m} & \textrm{if $||c_{m}-c_{dcf}||_2^2 < \beta$}\\
  c_{dcf} + \alpha \cdot (c_{m}-c_{dcf}) & \textrm{otherwise}
  \end{array} \right.,
 \end{equation}
-where $c_{dcf}$ is the position predicted by DCF, $\alpha$ is a hyper-parameter to control the strength of the self-correction, and $\beta$ is a threshold on the distance between $c_{m}$ and $c_{dcf}$.
-Thanks to the robustness of the segmentation results, the tracker can correct itself when the DCF result shows an unstable drift. The effectiveness of the proposed instance guided self-correction component is shown in Fig. \ref{fig:IGSC}.
+其中 $c_{dcf}$ 是DCF预测的位置，$\alpha$ 是控制自校正强度的超参数，而 $\beta$ 之间距离的阈值 $c_{m}$ 和 $c_{dcf}$。
+由于分割结果的鲁棒性，当DCF结果显示不稳定漂移时，跟踪器可以自行校正。图 \ref{fig:IGSC}中显示了提出的实例指导的自校正组件的有效性。
 
 \begin{figure} 
 \centering
@@ -222,19 +223,19 @@ Thanks to the robustness of the segmentation results, the tracker can correct it
     \label{fig:IGSC}
 \end{figure}
 
-\subsection{Overview}
-The tracking process consists of two phases: localization and model update. 
-At the localization phase, the target position $p_t$ is the position of the maximum in correlation between $h_{t-1}$ and image patch features $f$ extracted from the position $p_{t-1}$ and weighted by the channel reliability scores $w$ (Eq. \ref{eq:dcf}).
-The segmentation mask $m$ is estimated using the proposed InstMask network (Sect. \ref{sec:InstMask}).
-The centroid of the segmentation mask is used to correct the prediction bias of the correlation filter (Sect. \ref{sec:cog}).
-Then the new scale $s_t$ is estimated by a single scale-space correlation filter as in \cite{Danelljan2014AccurateSE}.
-The channel detection reliability $\tilde{w}^{(det)}$ is estimated as follows \cite{Lukezic2017DiscriminativeCF}:
+\subsection{总览}
+跟踪过程包括两个阶段：本地化和模型更新。
+在定位阶段，目标位置 $p_t$ 是相关的结果的最大位置： $h_{t-1}$ 和图像补丁特征 $f$ 从如下位置提取 $p_{t-1}$ 并根据通道依赖性得分加权 $w$ (等式 \ref{eq:dcf})。
+分割掩码 $m$ 使用提出的 InstMask 网络估计 (第 \ref{sec:InstMask} 节)。
+分割掩码的质心用于校正相关滤波器的预测偏差 (第 \ref{sec:cog} 节)。
+然后新的尺度 $s_t$ 由单个比例空间相关滤波器估计，像 \cite{Danelljan2014AccurateSE} 中一样。
+信道检测可靠性 $\tilde{w}^{(det)}$ 估算如下 \cite{Lukezic2017DiscriminativeCF}:
 \begin{equation} \label{eq:det}
 \tilde w_d^{(det)} = max(1 - \rho_d^{max2} / \rho_d^{max1}, 0.5),
 \end{equation}
-which reflects how uniquely each channel votes for a single target location. The $\tilde w_d^{(det)}$ are used to calculate $w$ later (Eq. \ref{eq:c}). $\rho_d^{max2}$ and $\rho_d^{max1}$ are the second and first highest non-adjacent peaks in the correlation response of channel $d$, respectively.
+这反映了每个渠道为一个目标位置投票的唯一性。 $\tilde w_d^{(det)}$ 用于稍后计算 $w$ (等式 \ref{eq:c})。 $\rho_d^{max2}$ 和 $\rho_d^{max1}$ 分别是通道 $d$的相关响应中第二高的非相邻峰值。
 
-At the model update phase, the new filter $\tilde{h}$ is estimated using mask $m$. We use the iterative approach proposed in \cite{Lukezic2017DiscriminativeCF} for efficiently solving the filter. Let $l$ be the Lagrange multiplier, $\mu > 0$, $h_m=m \odot h$, $\hat{h}^0 = h_{t-1}$ and $\hat{l}^0 = 0$. In each iteration, the following sub-problems are solved sequentially as in \cite{Lukezic2017DiscriminativeCF}:
+在模型更新阶段，新的滤波器 $\tilde{h}$ 使用模板 $m$ 进行估计。我们使用 \cite{Lukezic2017DiscriminativeCF} 中提出的迭代方法来有效地解决过滤器。令 $l$ 为拉格朗日乘数，$\mu > 0$，$h_m=m \odot h$，$\hat{h}^0 = h_{t-1}$ 和 $\hat{l}^0 = 0$。在每次迭代中，都按照 \cite{Lukezic2017DiscriminativeCF}中的顺序依次解决以下子问题：
 \begin{equation} \label{eq:h1}
 \hat{h}_c^{i+1} = \frac{\hat{f} \odot \bar{\hat{g}} +(\mu^i \hat{h}_m^i - \hat{l}^i)}{\bar{\hat{f}} \odot \hat f + \mu^i}
 \end{equation}
@@ -244,22 +245,21 @@ h^{i+1} = \frac{m \odot \mathcal{F}^{-1}[\hat{l}^i + \mu^i\hat{h}_c^{i+1}]}{\fra
 \begin{equation} \label{eq:h3}
 \hat{l}^{i+1} = \hat{l}^i + \mu(\hat{h}_c^{i+1} - \hat{h}^{i+1})
 \end{equation}
-Then the channel reliability $\tilde w_d$ \cite{Lukezic2017DiscriminativeCF} consisting of the channel learning reliability $\tilde w_d^{(lrn)}$ and the channel detection reliability $\tilde w_d^{(det)}$ is calculated as follows: 
+然后计算信道可靠性 $\tilde w_d$ \cite{Lukezic2017DiscriminativeCF} ，其中包括信道学习可靠性 $\tilde w_d^{(lrn)}$ 和信道检测可靠性 $\tilde w_d^{(det)}$ 如下： 
 \begin{equation} \label{eq:c}
 \tilde w_d = \tilde w_d^{(lrn)} \cdot \tilde w_d^{(det)},
 \end{equation}
-where $\tilde{w}^{(lrn)}$ is represents the maximum response value of a learned channel filter:
+其中 $\tilde{w}^{(lrn)}$ 表示学习的信道滤波器的最大响应值：
 \begin{equation} \label{eq:lrn}
 \tilde{w}_d^{lrn} = max(f_d * h_d).
 \end{equation}
-Finally, the filter and channel reliability are updated online:
-\begin{equation} \label{eq:update1}
+最后，过滤器和通道可靠性在线更新：\begin{equation} \label{eq:update1}
 h_t = (1 - \eta)h_{t-1} + \eta \tilde{h}
 \end{equation}
 \begin{equation} \label{eq:update2}
 w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \end{equation}
-where $\eta$ is the learning rate used to control the speed of model update.
+其中 $\eta$ 是用于控制模型更新速度的学习率。
 
 \begin{figure}
     \centering
