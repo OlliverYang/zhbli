@@ -312,74 +312,74 @@ LO子集包括验证集中最长的40个视频。
 \iffalse
 \begin{figure}[t]
 \begin{center}
-\subfigure[]{
+\subfloat[]{
 	\includegraphics[width=0.47\linewidth]
-	{images/UAV20L/quality_plot_overlap_OPE_AUC.png}
+	{Img/globally/UAV20L/quality_plot_overlap_OPE_AUC.png}
 }
-\subfigure[]{
+\subfloat[]{
 	\includegraphics[width=0.47\linewidth]
-	{images/UAV20L/quality_plot_error_OPE_threshold.png}
+	{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}
 }
 \end{center}
    \caption{Success and precision plots on UAV20L dataset.}
 \label{fig:uav20l}
 \end{figure}
+\fi
 
 \begin{figure*}
 \begin{center}
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/FOC_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/FOC_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/OV_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/OV_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/BC_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/BC_overlap_OPE_AUC.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/POC_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/POC_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/ARC_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/ARC_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/CM_overlap_OPE_AUC.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/FM_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/CM_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/IV_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/FM_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/LR_overlap_OPE_AUC.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/SOB_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/IV_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/SV_overlap_OPE_AUC.png}
 }
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/LR_overlap_OPE_AUC.png}
-}
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/SOB_overlap_OPE_AUC.png}
-}
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/SV_overlap_OPE_AUC.png}
-}
-\subfigure[]{
-	\includegraphics[width=0.234\linewidth]
-	{images/UAV20L/VC_overlap_OPE_AUC.png}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/globally/UAV20L/VC_overlap_OPE_AUC.png}
 }
 \end{center}
    \caption{Success plots with attributes on UAV20L. Best viewed on color display.}
 \label{fig:uav20l_attr}
 \end{figure*}
-\fi
 
 UAV20L \cite{mueller2016benchmark} 是从低空空中视角捕获的空中视频数据集。 UAV20L数据库专为长期跟踪而设计，包含20个视频，平均长度为2934帧。
 遵循OTB50 \cite{OTB}的评估方法，我们使用精度和成功度来评估UAV20L数据集上跟踪器的性能。精度是指从预测边界框的中心点到地面真值边界框的中心点的距离。成功是指预测边界框与地面真值边界框的并集​​（IOU）交集。在图 \ref{fig:uav20l}中，不同跟踪器的性能比较通过精度图和成功图可视化。
