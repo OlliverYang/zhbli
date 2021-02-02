@@ -91,58 +91,79 @@ DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA}
 
 \subsection{InstMask}
 \label{sec:InstMask}
-在本文中，我们使用被跟踪的目标的分割掩码来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特征：（1）与跟踪过程的无缝集成；（2）足够简单以适应跟踪的速度要求；（3）设计的分割算法应尽可能准确地预测目标的轮廓。
-以前大多数用于生成空间约束的方法都依赖于手工设计的规则或低级图像特征（例如颜色直方图）。
-在本文中，我们介绍了 InstMask 网络，该网络为目标生成准确的实例掩码。我们使用数据驱动的方法对 InstMask 进行离线地端到端训练，以从分割训练集中学习语义信息，例如COCO2017 \cite{COCO}。实例级别的语义分割掩码可以通过抑制背景杂波来限制相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来减轻相关滤波跟踪器的漂移问题。与传统的相关滤波跟踪方法相比，此方法可显着提高目标跟踪精度。
-与以前的生成分割掩码的方法不同，我们不依赖于边缘，超像素或任何其他形式的低级分割。相反，我们模型的核心是ConvNet。通过利用在ImageNet上训练的强大ConvNet特征表示并适应COCO中可用的大量分割训练数据，我们能够为目标生成语义分割掩码，以限制相关跟踪器的学习。
-值得注意的是，将现有的实例分割方法进行集成以为相关滤波器学习提供空间约束是次优的。通用跟踪算法通常具有复杂的网络结构，因此很难在跟踪精度和速度之间取得平衡。相比之下，本文提出的分割网络是专为跟踪而设计的，重量很轻，在CPU上以5 FPS运行。
+在本文中，我们使用被跟踪的目标的分割掩码来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特征：
 
-当在第 $i$帧中跟踪时，需要获得帧 $i$ 中目标的分割掩码以约束相关滤波器的学习。
-假定 $i$ 帧中的目标位置在 $i-1$帧中的目标位置附近，因此InstMask的输入始终是前一帧以对象位置为中心的小图像区域。
-该设计具有以下优点：（1）由于输入数据的强一致性，网络可以使用较少的参数获得准确的分割结果。（2）由于网络参数较少且图像补丁较小，因此推理时间短。（3）在目标的先前位置附近进行搜索可以避免位于后台的干扰因素的不利影响。在训练期间，训练集中的每个样本 $k$ 包含（1）RGB输入色块 $x_k$，其中包含接近输入色块中心的目标，（2）对应的二进制掩码 $m_{k}$ 输入补丁。
+\begin{itemize}
+\item 与跟踪过程的无缝集成；
+\item 足够简单以适应跟踪的速度要求；
+\item 设计的分割算法应尽可能准确地预测目标的轮廓。
+\end{itemize}
+
+以前大多数用于生成空间约束的方法都依赖于手工设计的规则或低级图像特征（例如颜色直方图）。
+在本文中，我们介绍了 InstMask 网络，该网络为目标生成准确的实例掩码。我们使用数据驱动的方法对 InstMask 进行离线地端到端训练，以从分割训练集中学习语义信息，例如 COCO2017 \cite{COCO}。实例级别的语义分割掩码可以通过抑制背景杂波来限制相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来减轻相关滤波跟踪器的漂移问题。与传统的相关滤波跟踪方法相比，此方法可显着提高目标跟踪精度。
+与以前的生成分割掩码的方法不同，我们不依赖于边缘，超像素或其他形式的低级分割。相反，我们模型的核心是卷积神经网络。通过利用在 ImageNet \cite{ImageNet} 上训练的强大卷积特征表示并适应 COCO 中可用的大量分割训练数据，我们能够为目标生成语义分割掩码，以限制相关跟踪器的学习。
+值得注意的是，将现有的实例分割方法进行集成以为相关滤波器学习提供空间约束是次优的。通用跟踪算法通常具有复杂的网络结构，因此很难在跟踪精度和速度之间取得平衡。相比之下，本文提出的分割网络是专为跟踪而设计的，重量很轻，在 CPU 上以 5 FPS 运行。
+
+当在第 $i$ 帧中跟踪时，需要获得帧 $i$ 中目标的分割掩码以约束相关滤波器的学习。
+假定 $i$ 帧中的目标位置在 $i-1$ 帧中的目标位置附近，因此 InstMask 的输入始终是前一帧以对象位置为中心的小图像区域。
+该设计具有以下优点：
+
+\begin{itemize}
+\item 由于输入数据的强一致性，网络可以使用较少的参数获得准确的分割结果。
+\item 由于网络参数较少且图像补丁较小，因此推理时间短。
+\item 在目标的先前位置附近进行搜索可以避免位于后台的干扰因素的不利影响。在训练期间，训练集中的每个样本 $k$ 包含（1）RGB输入色块 $x_k$，其中包含接近输入色块中心的目标，（2）对应的二进制掩码 $m_{k}$ 输入补丁。
+\end{itemize}
+
 接下来，我们描述体系结构和训练过程。
 
-\textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net}中显示了网络体系结构。InstMask的主干是基于ResNet50 \cite{He2016DeepRL}构建的，它由一个茎块和3个残差块组成。
-InstMask的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到词干块，生成 40$\times$40$\times$64 特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为3136的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量重整为 56$\times$56，以获得最终的分割掩码。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有Intel E5-2620 CPU内核的平台上以5 FPS运行时最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
+\textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net} 中显示了网络体系结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和3个残差块组成。
+InstMask 的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为 3136 的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割掩码。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，以最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
 
 \begin{algorithm}
-  \caption{The IGCF tracking algorithm.} 
+  \caption{IGCF 跟踪算法} 
   \begin{algorithmic}
-    \Require Image $I_t$, object position on previous frame $p_{t-1}$, scale $s_{t-1}$, filter $h_{t-1}$, channel reliability $w_{t-1}$.
-    \Ensure Position $p_t$, scale $s_t$ and updated models.
+    \Require 图像 $I_t$，目标在上一帧中的位置 $p_{t-1}$、尺度 $s_{t-1}$、滤波器 $h_{t-1}$，通道可靠性 $w_{t-1}$。
+    \Ensure 位置 $p_t$，尺度 $s_t$ 和更新后的模型。
   \Statex
-  \State \textbf{Localization:}
+  \State \textbf{定位：}
   \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
-    \item $p_t$: position of the maximum in correlation between $h_{t-1}$ and image patch features $f_{t}$ extracted on position $p_{t-1}$ and weighted by the channel reliability scores $w_{t-1}$ (Eq. \ref{eq:dcf}).
-    \item Estimate segmentation mask $m$ (Sect. \ref{sec:InstMask}).
-    \item Correct $p_t$ using $m$ (Sect. \ref{sec:cog}).
-    \item Using location $p_t$, estimate new scale $s_ t$ as in \cite{Danelljan2014AccurateSE}.
-    \item Estimate detection reliability $\tilde{w}^{(det)}$  from per-channel responses using (\ref{eq:det}).
+    \item $p_t$：$h_{t-1}$ 和从位置 $p_{t-1}$ 提取的图像块的特征 $f_{t}$ 进行相关后的最大响应的位置，由信道可靠性得分加权 $w_{t-1}$（等式 \ref{eq:dcf}）。
+    \item 估计分割掩码 $m$（第 \ref{sec:InstMask} 节）。
+    \item 使用 $m$ 校正 $p_t$ （第 \ref{sec:cog} 节）。
+    \item 使用位置 $p_t$ 估计新的尺度 $s_ t$ （参考 \cite{Danelljan2014AccurateSE}）。
+    \item 使用等式 \ref{eq:det}，根据逐通道响应，估计检测可靠性 $\tilde{w}^{(det)}$。
   \end{enumerate}
-  \State \textbf{Update:}
+  \State \textbf{更新：}
   \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
-    \item Estimate a new filter $\tilde{h}$ from $m$ using (\ref{eq:h1})$\sim$(\ref{eq:h3}).
-    \item Estimate learning channel reliability $\tilde{w}^{(lrn)}$ from $h$ using (\ref{eq:lrn}).
-    \item Calculate channel reliability $\tilde{w}$ using (\ref{eq:c}).
-    \item Update filter $h_t$ and channel reliability $w_t$ using (\ref{eq:update1}) and (\ref{eq:update2}).
+    \item 使用等式 \ref{eq:h1}至等式 \ref{eq:h3}，根据 $m$ 估计新滤波器 $\tilde{h}$。
+    \item 使用等式 \ref{eq:lrn}，根据 $h$ 估计学习通道可靠性 $\tilde{w}^{(lrn)}$。
+    \item 使用等式 \ref{eq:c} 计算通道可靠性 $\tilde{w}$。
+    \item 使用等式 \ref{eq:update1} 和等式 \ref{eq:update2} 更新滤波器 $h_t$ 和通道可靠性 $w_t$。
   \end{enumerate}
 \end{algorithmic}
 \end{algorithm}
 
-\textbf{训练} 在训练期间，将 56$\times$56 掩码上采样到原始图像大小 160$\times$。令 $l$ 表示大小为 $w \times h$的逐个像素的真实面罩。损失计算如下：
+\textbf{训练} 在训练期间，将空间分辨率为 56$\times$56 的掩码上采样至原始图像大小 160$\times$160。令 $l$ 表示大小为 $w \times h$ 的逐个像素的真实掩码。损失计算如下：
 \begin{equation}
 L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
 \end{equation}
-其中 $l_{x,y} \in \{ \pm 1 \}$ 是与对象掩码的像素 $(x,y)$ 对应的标签，而 $P_{x,y}$ 是InstMask的预测在位置 $(x,y)$。
+其中 $l_{x,y} \in \{ \pm 1 \}$ 是与对象掩码的像素 $(x,y)$ 对应的标签，而 $P_{x,y}$ 是 InstMask 的预测在位置 $(x,y)$。
 
-COCO2017 \cite{COCO} 实例分割数据集用于训练InstMask。
-与许多只能预测训练集中出现的类别的分割网络相反，提出的InstMask在训练过程中会忽略类别信息，并作为与类无关的分割网络工作。实际上，InstMask在搜索区域中检测到显着对象。尽管InstMask仅使用80个类别的COCO数据集 \cite{COCO} 进行训练，但是网络能够将目标分割为训练集中未出现的类别，如图 \ref{fig:IGSC}所示。
-我们使用随机梯度下降训练模型，批次大小为32个示例，动量为0.9，重量衰减为0.00005。总共有50个世代。日志空间中的学习率从 $10^{-2}$ 降低到 $10^{-4}$。在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，我们执行数据增强。具体来说，我们考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
+COCO2017 \cite{COCO} 实例分割数据集用于训练 InstMask。
+与许多只能预测训练集中出现的类别的分割网络相反，提出的 InstMask 在训练过程中会忽略类别信息，并作为与类无关的分割网络工作。实际上，InstMask 在搜索区域中检测到显著目标。尽管 InstMask 仅使用 80 个类别的 COCO 数据集 \cite{COCO} 进行训练，但是网络能够将目标分割为训练集中未出现的类别，如图 \ref{fig:IGSC} 所示。
+我们使用随机梯度下降训练模型，批次大小为 32，动量为 0.9，权重衰减为 0.00005。总共进行 50 轮迭代训练。学习率在对数空间内从 $10^{-2}$ 减小至 $10^{-4}$。在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，我们执行数据增强。具体来说，我们考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
 
-InstMask脱机训练。在跟踪过程中，InstMask仅执行前向传播过程，而不会进行梯度的后向传播。这不仅可以防止漂移，还可以满足实时跟踪要求。
+InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过程，而不会进行梯度的后向传播。这不仅可以防止漂移，还可以满足实时跟踪要求。
 
-尽管我们的模型与CSRDCF \cite{Lukezic2017DiscriminativeCF}具有高度的相似性，但实现原理却大不相同。
-在CSRDCF \cite{Lukezic2017DiscriminativeCF}中，使用目标和背景的颜色直方图生成分割掩码。这种启发式方法具有几个缺点：（1）由于仅使用低级像素信息，因此难以准确地分割目标。（2）为了适应目标的明显变化，在跟踪过程中会不断更新直方图模型，这很容易导致跟踪器漂移。相反，InstMask不会在线更新参数。这提高了计算效率，同时避免了不希望的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
+尽管我们的模型与 CSRDCF \cite{Lukezic2017DiscriminativeCF}具有高度的相似性，但实现原理却大不相同。
+在CSRDCF \cite{Lukezic2017DiscriminativeCF}中，使用目标和背景的颜色直方图生成分割掩码。这种启发式方法具有几个缺点：
+
+\begin{itemize}
+\item 由于仅使用低级像素信息，因此难以准确地分割目标。
+\item 为了适应目标的明显变化，在跟踪过程中会不断更新直方图模型，这很容易导致跟踪器漂移。
+\end{itemize}
+
+相反，InstMask 不会在线更新参数。这提高了计算效率，同时避免了不希望的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
 
 \setlength\extrarowheight{1pt}
 \begin{table}
@@ -182,9 +203,9 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
     \label{fig:net}
 \end{figure*}
 
-InstMask允许学习更好的滤波器，并有助于纠正不良的跟踪结果。
+InstMask 允许学习更好的滤波器，并有助于纠正不良的跟踪结果。
 在DCF模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
-InstMask的结果是根据从COCO数据集中获取的网络参数生成的。但是，由于InstMask不会在线更新，因此我们不能仅依靠目标的语义分割掩码来产生最终的跟踪结果。
+InstMask 的结果是根据从 COCO 数据集中获取的网络参数生成的。但是，由于InstMask不会在线更新，因此我们不能仅依靠目标的语义分割掩码来产生最终的跟踪结果。
 为了利用两个结果的优点并克服它们的缺点，我们建议使用 \textbf{I}nstance \textbf{G}uided \textbf{S}elf-\textbf{C}orrection 组件 IGSC。IGSC结合了这两个结果，以获得更好的跟踪。具体来说，使用硬阈值 $m$ 根据 $P$ 生成掩码 $b \in [0, 1] $：
 \begin{equation}
 m_{x,y} = \left\{ \begin{array}{ll}
@@ -300,7 +321,7 @@ The VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含60个具有挑战性的
 跟踪器的EAO得分如图 \ref{fig:vot15}。与其他列出的方法相比，我们的方法可实现0.342的出色EAO。
 Struck使用内核化的结构化输出支持向量机（SVM），可以在线学习以提供自适应跟踪。相反，IGCF基于强大的相关滤波器。结果，IGCF在EAO方面的相对收益显着优于Struck，达到36.8％，这表明DCF框架的出色表现以及IGCF的有效性。
 CSRDCF使用目标和背景的颜色直方图生成目标掩码，以限制相关滤波器的学习，而IGCF使用神经网络生成掩码。与CSRDCF相比，EAO分数的相对提高为6.9％，这表明与低级图像特征生成的掩码相比，深层特征生成的语义掩码更有利于滤波器学习。
-DeepSRDCF在SRDCF框架中结合了来自预训练网络的深度卷积功能。但是，深层功能并不专用于实例分割。相比之下，InstMask在针对实例分割而设计的COCO分割数据集上进行了训练。在VOT2015上，就EAO而言，IGCF优于DeepSRCDF达到7.5％，巫婆强调了拟议的InstMask和IGSC模块的重要性。
+DeepSRDCF在SRDCF框架中结合了来自预训练网络的深度卷积功能。但是，深层功能并不专用于实例分割。相比之下，InstMask在针对实例分割而设计的COCO分割数据集上进行了训练。在VOT2015上，就EAO而言，IGCF优于DeepSRCDF达到7.5％，巫婆强调了拟议的 InstMask 和 IGSC 模块的重要性。
 
 \subsection{VOT2016评估}
 VOT2016 \cite{Kristan2016TheVO} 数据集包含来自VOT2015的60个序列，具有改进的注释。VOT2016的评估指标与VOT2015相同，即准确性，鲁棒性和EAO。
