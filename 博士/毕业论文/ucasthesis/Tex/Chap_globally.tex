@@ -45,13 +45,11 @@
 \section{拟议的算法}
 \label{sec:method}
 
-\iffalse
 \begin{figure}[t]
-    \includegraphics{images/Arch7.pdf}
+    \includegraphics{Img/globally/Arch7.pdf}
     \caption{我们基于全球时空感知（GSTP）的跟踪系统的架构。}
     \label{fig:arch}
 \end{figure}
-\fi
 
 \iffalse
 \begin{figure*}
@@ -149,14 +147,12 @@ where $\lambda$ is hyper-parameter to balance the classification loss and the re
 is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for regression.
 \fi
 
-\iffalse
 \begin{figure*}
     \centering
-    \includegraphics[width=17cm]{images/SiamRCNN.pdf}
-    \caption{Architecture of SiamRCNN.}
+    \includegraphics[width=1.0\textwidth]{Img/globally/SiamRCNN.pdf}
+    \caption{SiamRCNN 的网络结构示意图。}
     \label{fig:siamrcnn}
 \end{figure*}
-\fi
 
 \subsection{运动模型} 使用我们的跟踪组件检测到与给定的第一帧模板对象在视觉上相似的对象区域后，我们使用运动模型消除干扰因素并获得最终的跟踪结果。
 通过使用历史轨迹信息和当前帧的外观信息学习目标位置分布，运动模型以端到端的方式工作。
@@ -195,14 +191,12 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 \section{实验}
 \label{sec:experiments}
-\iffalse
+
 \begin{figure}[htb]
-    \includegraphics[width=8.6cm]{images/success_plot.png}
-    \caption{Overall performance on GOT-10k, ranked by their average overlap (AO) scores.
-}
+    \includegraphics[width=1.0\textwidth]{Img/globally/success_plot.png}
+    \caption{GOT-10k的总体性能，按其平均重叠（AO）得分进行排名。}
     \label{fig:ao}
 \end{figure}
-\fi
 
 \subsection{实施细节}
 我们的跟踪组件在GOT-10k \cite{GOT-10k} 训练集中进行了训练。它包含超过10000个真实运动对象的视频片段和超过150万个手动标记的边界框，其中包括563类真实运动对象和87类运动模式。
