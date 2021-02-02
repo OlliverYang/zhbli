@@ -196,6 +196,115 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{最先进的比较}
+
+\begin{figure*}
+\begin{center}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_ALL.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Out-of-View.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Out-of-Plane Rotation.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Occlusion.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Scale Variation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Background Clutters.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Deformation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Fast Motion.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Illumination Variation.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_In-Plane Rotation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Low Resolution.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/precision_Motion Blur.png}
+}
+\end{center}
+   \caption{OTB各属性精度图。}
+\end{figure*}
+
+\begin{figure*}
+\begin{center}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_ALL.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Out-of-View.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Out-of-Plane Rotation.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Occlusion.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Scale Variation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Background Clutters.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Deformation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Fast Motion.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Illumination Variation.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_In-Plane Rotation.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Low Resolution.png}
+}
+\subfloat[]{
+	\includegraphics[width=0.33\textwidth]
+	{Img/MTP/otb2015/success_Motion Blur.png}
+}
+\end{center}
+   \caption{OTB各属性成功图。}
+\end{figure*}
+
 \textbf{OTB2015} 我们使用成功率来评估跟踪器在 OTB2015 上的性能。成功率取决于预测边界框和地面实况边界框的交集相交（IOU）。我们将我们的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{nam2016learning}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为16。结果显示在表 \ref{table:otb}中。在成功率方面，我们的跟踪器比在线跟踪器ATOM优越2.8％，这证明了我们方法的强大模型自适应能力。
 
 \textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和准确性度量来比较跟踪器。鲁棒性表示跟踪失败的次数，而准确性表示跟踪器预测与地面真相框之间的平均重叠。两种度量均合并为单个预期平均重叠（EAO）分数。模板更新的迭代次数设置为2。如图 \ref{fig:eao} 所示，所有列出的跟踪器的性能均不如我们的算法。
