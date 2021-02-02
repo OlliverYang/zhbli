@@ -174,6 +174,14 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
 \end{figure*}
 
 \subsection{实例引导的自纠正组件} \label{sec:cog}
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/cog.pdf}
+    \caption{实例引导的自纠正原理图。}
+    \label{fig:net}
+\end{figure*}
+
 InstMask允许学习更好的过滤器，并有助于纠正不良的跟踪结果。
 在DCF模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
 InstMask的结果是根据从COCO数据集中获取的网络参数生成的。但是，由于InstMask不会在线更新，因此我们不能仅依靠目标的语义分割掩码来产生最终的跟踪结果。
