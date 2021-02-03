@@ -1,15 +1,16 @@
 \chapter{实例引导的相关滤波器}\label{chap:IGCF}
 
 \section{摘要}
-基于传统相关滤波器（CF）的跟踪器通常仅依靠岭回归进行在线学习，而不会感知目标在语义级别的实例信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，我们提出了实例引导的相关滤波器（IGCF），以提高跟踪的鲁棒性。具体来说，一个深层网络（即InstMask）旨在为目标生成实例掩码，该掩码用于约束相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试上进行的广泛实验表明，与最新的跟踪器相比，我们所提出的实例引导的相关滤波跟踪器表现出色，在单个 CPU 内核上的运行速度可达 5 帧每秒。
+基于传统相关滤波器（CF）的跟踪器通常仅依靠岭回归进行在线学习，而不会感知目标在语义级别的实例信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，我们提出了实例引导的相关滤波器（IGCF），以提高跟踪的鲁棒性。具体来说，一个深层网络（即 InstMask）旨在为目标生成实例掩码，该掩码用于约束相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试上进行的广泛实验表明，与最新的跟踪器相比，我们所提出的实例引导的相关滤波跟踪器表现出色，在单个 CPU 内核上的运行速度可达 5 帧每秒。
 
 \section{引言}
-目标跟踪是计算机视觉中的基本主题。给定视频起始帧中的初始化目标，跟踪的目的是估计后续帧中目标的状态。尽管在这方面进行了长期的努力，例如 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL}，但在低成本平台上仍难以实现可接受的跟踪精度和速度。遮挡，照明变化，外观变化和快速运动等使得在自动驾驶，机器人技术和增强现实等现实应用中难以进行跟踪。
+目标跟踪是计算机视觉中的基本主题。给定视频起始帧中的初始化目标，跟踪的目的是估计后续帧中目标的状态。尽管在这方面进行了长期的努力，例如 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL}，但在低成本平台上仍难以实现可接受的跟踪精度和速度。跟踪过程中的遮挡、照明变化、表观变化和快速运动等现象，使得在自动驾驶，机器人技术和增强现实等现实应用中难以进行跟踪。
 
 在过去的十年中，判别性相关滤波器（DCF）跟踪器 \cite{bolme2010visual, Zhang2018VisualTU} 引起了人们的极大兴趣，该跟踪器通过利用离散傅立叶变换以有效的方式利用了跟踪样本的所有空间偏移。但是，对于大多数 DCF 跟踪器，目标位置由一个矩形框描述。因此，矩形物体区域，特别是用于不规则形状的物体或具有空心中心的物体，将被掺杂大量的背景信息，这可能导致跟踪漂移和故障。此外，DCF跟踪器没有实例级语义信息。信息的缺乏限制了它们的潜力。
 
 基于 DCF 跟踪器的成功，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已证明目标上的空间约束可改善相关滤波器的学习。但是，大多数空间约束都是手工设计的，仍然没有考虑有关目标的语义信息。尽管实例级语义分割 \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}（旨在为图像中的每个像素分配语义标签）能够提取图像中的实例级语义信息，直接集成现有的实例分割方法以提供空间，相关滤波器学习的约束仍然很难在跟踪精度和速度之间取得平衡。
 
+\iffalse
 \begin{figure}
 \centering
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/00893.jpg}}          \hspace{-0.6em}        
@@ -29,6 +30,13 @@
     \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03733.jpg}}
     \caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
     \label{fig:InstMask}
+\end{figure}
+\fi
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{Img/IGCF/coco.pdf}
+\caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
 \end{figure}
 
 在这项工作中，我们提出了实例引导的相关滤波器（IGCF）来解决上述限制。具体而言，我们设计了一个深层卷积神经网络（即InstMask），旨在准确生成目标实例级别的语义分割掩码。我们利用COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:InstMask}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
@@ -119,7 +127,7 @@ DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA}
 \textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net} 中显示了网络体系结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和3个残差块组成。
 InstMask 的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为 3136 的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割掩码。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，以最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
 
-\begin{algorithm}
+\begin{algorithm}[t]
   \caption{IGCF 跟踪算法} 
   \begin{algorithmic}
     \Require 图像 $I_t$，目标在上一帧中的位置 $p_{t-1}$、尺度 $s_{t-1}$、滤波器 $h_{t-1}$，通道可靠性 $w_{t-1}$。
@@ -165,7 +173,7 @@ InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过�
 
 相反，InstMask 不会在线更新参数。这提高了计算效率，同时避免了不希望的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
 
-\setlength\extrarowheight{1pt}
+%\setlength\extrarowheight{1pt}
 \begin{table}
 \centering
 \caption{InstMask 的网络结构设计。}
@@ -187,7 +195,7 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
 \label{tab:InstMask}
 \end{table}
 
-\begin{figure*}
+\begin{figure*}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
     \caption{InstMask 的网络结构。}
@@ -196,9 +204,9 @@ Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \time
 
 \subsection{实例引导的自纠正组件} \label{sec:cog}
 
-\begin{figure*}
+\begin{figure*}[t]
     \centering
-    \includegraphics[width=1.0\textwidth]{Img/IGCF/cog.pdf}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/cog_arch.pdf}
     \caption{实例引导的自纠正原理图。}
     \label{fig:net}
 \end{figure*}
@@ -230,7 +238,8 @@ p = \left\{ \begin{array}{ll}
 其中 $c_{dcf}$ 是 DCF 预测的位置，$\alpha$ 是控制自校正强度的超参数，而 $\beta$ 之间距离的阈值 $c_{m}$ 和 $c_{dcf}$。
 由于分割结果的鲁棒性，当 DCF 结果显示不稳定漂移时，跟踪器可以自行校正。图 \ref{fig:IGSC} 中显示了提出的实例指导的自校正组件的有效性。
 
-\begin{figure} 
+\iffalse
+\begin{figure}[t]
 \centering
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00003.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00005.jpg}}          \hspace{-0.6em}        
@@ -248,6 +257,13 @@ p = \left\{ \begin{array}{ll}
     \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00031.jpg}}
     \caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
     \label{fig:IGSC}
+\end{figure}
+\fi
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{Img/IGCF/cog.pdf}
+\caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
 \end{figure}
 
 \subsection{总览}
@@ -288,14 +304,14 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \end{equation}
 其中 $\eta$ 是用于控制模型更新速度的学习率。
 
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2015.png}
     \caption{VOT2015的预期平均重叠（EAO）图 \cite{Kristan2015TheVO}.}
     \label{fig:vot15}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
     \caption{VOT2016 的预期平均重叠（EAO）图 \cite{Kristan2016TheVO}。}
@@ -304,9 +320,9 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 
 \section{实验}
 我们在三个具有挑战性的目标跟踪数据集上对拟议的跟踪器IGCF进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。另外，对视频目标分割数据集DAVIS \cite{Perazzi2016}进行了定性实验。
-\subsection{VOT2015评估}
+\subsection{对 VOT2015 的评估}
 
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{Img/IGCF/got10k/success_plot.png}
     \caption{在 GOT-10k \cite{GOT-10k}上的总体性能，按其平均重叠（AO）得分进行排名。}
@@ -323,20 +339,20 @@ Struck 使用内核化的结构化输出支持向量机（SVM），可以在线�
 CSRDCF 使用目标和背景的颜色直方图生成目标掩码，以限制相关滤波器的学习，而 IGCF 使用神经网络生成掩码。与 CSRDCF 相比，EAO 分数的相对提高为 6.9％，这表明，与使用底层图像特征生成的掩码相比，使用深层卷积特征生成的语义掩码更有利于滤波器的学习。
 DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征。但是，所使用的深层特征并不专用于实例分割。相比之下，InstMask 在针对实例分割而设计的 COCO 分割数据集上进行了训练。在 VOT2015 上，就 EAO 而言，IGCF 比 DeepSRCDF 高出 7.5％，这强调了提出的的 InstMask 和 IGSC 模块的重要性。
 
-\subsection{VOT2016评估}
+\subsection{对 VOT2016 的评估}
 VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性，鲁棒性和 EAO。
 
 我们将所提出的算法与以下跟踪器进行了比较：
 CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了 VOT2016 上 EAO 的性能。在比较的方法中，我们的方法以 0.330 的 EAO 得分达到最佳结果。
 
-\subsection{对GOT-10k的评估}
+\subsection{对 GOT-10k 的评估}
 GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据库。该数据集包含超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框。现实世界中有 563 类运动目标和 87 种运动模式。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
-GOT-10k的评估指标是平均重叠（AO），它表示所有地面和估计边界框之间重叠的平均值。
+GOT-10k 的评估指标是平均重叠（AO），它表示所有地面和估计边界框之间重叠的平均值。
 
 我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。评估的跟踪器的成功图如图 \ref{fig:got10k}所示。它代表重叠度量超过阈值的帧相对于不同阈值的百分比。我们的方法的 AO 得分为 0.299，优于所有其他列出的竞争跟踪算法。
 
-\begin{figure}
+\begin{figure}[t]
 \centering
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00001.jpg}}          \hspace{-0.6em}        
     \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00021.jpg}}          \hspace{-0.6em}        
@@ -358,7 +374,7 @@ GOT-10k的评估指标是平均重叠（AO），它表示所有地面和估计�
 \end{figure}
 
 
-\subsection{对DAVIS2016的评估}
+\subsection{对 DAVIS2016 的评估}
 配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，跨越了多次出现的常见视频目标分割挑战，例如遮挡，运动模糊和外观变化。我们在 DAVIS2016 的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis}所示。结果表明，提出的 IGCF 可以准确地恢复目标的轮廓，这在一定程度上解释了 IGCF 为什么可以提高跟踪性能。
 
 \section{结论}
