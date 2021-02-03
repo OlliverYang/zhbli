@@ -24,3 +24,36 @@ h)	基于注意力机制的跟踪器
 注意力机制首先用于神经科学领域[32]。它们已经扩展到其他领域，例如图像分类[33,34,35]，姿态估计[36]等。在目标跟踪领域中，注意力机制有利于使网络的学习关注更有效的信息。	RASNet模型[37]在孪生跟踪框架内重新构造了相关过滤器，并引入了各种注意机制来适应模型而无需在线更新模型。通过利用离线训练的通用注意力，目标自适应的残差注意力以及通道特征注意力，RASNet不仅减轻了深度网络训练中的过拟合问题，而且具有更强的判别能力和适应性，从而提高了跟踪的性能。文中提出的深度架构是端到端训练的，充分利用了丰富的时空信息来实现强大的视觉跟踪。在[38]中，作者提出了一种具有注意力机制的新型跟踪框架，该机制通过选择相关过滤器的子集以提高鲁棒性和计算效率。滤波器的子集由深度注意力网络根据目标的动态属性进行自适应选择。该算法的贡献主要有：（1）引入注意力相关过滤器网络，该网络可以自适应跟踪动态目标。（2）利用注意力网络将注意力转移到最佳候选模块，并预测当前非活动模块的估计准确性。（3）扩大了相关滤波器的种类，涵盖目标漂移，模糊，遮挡，缩放变化和灵活的宽高比。（4）通过大量实验验证了视觉跟踪注意机制的鲁棒性和效率。
 i)	基于串并联或级联结构的跟踪器
 SPM-Tracker[39]的基本思想是在两个单独的匹配阶段解决两个需求。在粗匹配（CM）阶段，通过通用训练增强了鲁棒性，而在精细匹配（FM）阶段，通过在线学习，增强了网络辨别力。 FM阶段的输入区域由CM阶段生成，因此这两个阶段串联连接。同时，这两个阶段也被并行连接，因为匹配分数信息和目标边框位置信息被融合以生成最终结果。这种创新的串并联结构充分利用了两个阶段的优势，并具有出色的性能。在[40]中，作者指出，最近流行的SiamRPN目标跟踪器在存在表观近似的干扰目标和目标剧烈变化的情况下会退化。为了解决这些问题，作者提出了一个多阶段跟踪框架，即孪生级联RPN（C-RPN），该框架由一系列来自孪生网络中不同层次的RPN组合而成。与以前的解决方案相比，C-RPN具有几个优点：（1）每个RPN在上一阶段都使用RPN的输出进行训练。这样的过程会关注难分的负采样，从而使训练样本更加均衡。因此，RPN在区分困难的背景（即类似的干扰因素）时将更具区分性。（2）提出了特征转移块（FTB）以充分利用多级特征，从而进一步使用高级语义和低级空间信息来改善C-RPN的辨别能力。（3）通过多步回归，C-RPN在多个阶段逐步调整每个RPN中目标的位置和形状，从而使定位更加准确。
+
+\subsection{孪生网络跟踪器}
+基于孪生跟踪器的网络结构首先在 SiamFC 被提出。SiamFC 的结构如图所示：
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Img/related/SiamFC.png}
+\caption{SiamFC}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Img/related/SiamFC.png}
+\caption{SiamFC}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Img/related/SiamRPN.png}
+\caption{SiamRPN}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Img/related/SiamRPN++.png}
+\caption{SiamRPN++}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{Img/related/SiamFC++.png}
+\caption{SiamFC++}
+\end{figure}
