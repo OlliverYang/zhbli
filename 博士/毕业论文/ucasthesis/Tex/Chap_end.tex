@@ -172,7 +172,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 每个调制的特征图都馈入两个同级的全连接层中-通道尺寸为 4$k$ 的边框回归层和通道尺寸为 2$k$ 的边框分类层，其中 $k$ 是每个位置的最大候选目标数量。
 % anchor 这个概念是必备的，所以是得讲一下。
 相对于一组锚定义了目标/背景标准和边界框回归。
-在 \cite{lin2017feature}之后，我们将具有相同比例的锚分配给每个不同的金字塔等级。有关锚点设置的详细信息，请参阅 \cite{lin2017feature}。
+在 \cite{lin2017feature} 之后，我们将具有相同比例的锚分配给每个不同的金字塔等级。有关锚点设置的详细信息，请参阅 \cite{lin2017feature}。
 % For every modulated layer, we attach a classification layer and a regression layer to make predict.
 \iffalse
 The loss function of stage 1 is:
@@ -192,23 +192,21 @@ The loss function of stage 1 is:
 % 或许该讲一下stage2的输入包括：真实目标特征+候选区域。
 % The input of stage 2 consists of: (1) The target feature is $f_{z} \in \mathbb R ^{256 \times 7 \times 7}$. (2) The candidate boxes generated from stage 1.
 % Stage 2 compose of a feature merge module, a adversarial dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
-这些候选投标的特征是使用RoIAlign \cite{he2017mask} 从搜索特征金字塔 $F_{x}$ 中裁剪出来的，然后与目标特征 $f_{z}$融合在一起：
+这些候选投标的特征是使用 RoIAlign \cite{he2017mask} 从搜索特征金字塔 $F_{x}$ 中裁剪出来的，然后与目标特征 $f_{z}$融合在一起：
 \begin{equation}
     \mathcal{X} = \mathcal{R}(b, F_{x}) \odot f_{z},
 \end{equation}
-其中 $\mathcal{R}$表示RoIAlign，$\odot$表示按元素相乘，$b$表示候选投标书中的RoI，$\mathcal{X}$表示$b$的融合特征。
+其中 $\mathcal{R}$ 表示 RoIAlign，$\odot$表示按元素相乘，$b$表示候选投标书中的RoI，$\mathcal{X}$表示$b$的融合特征。
 %where $x' \in \mathbb R ^{256 \times 7 \times 7}$.
 %$x' \in \mathbb R ^{256 \times 7 \times 7}$ is the feature of an RoI cropped from unmodulated feature pyramid using RoIAlign \cite{he2017mask}.
 %The merged feature of a candidate target is:$x = x' \odot x_0$, where $\odot$ represents the element-wise multiplication. $x$ is the merged feature of that RoI.
 % Maybe you need to say why you do the merge again.
 % The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
-\textbf{对抗性 dropout} 功能融合之后，我们使用对抗性dropout\cite{park2018adversarial, lee2019drop}来提高$\mathcal{X}$的判别能力。
-% 简短的描述你是怎么做的。这是很重要的，让读者先对你的东西有个大概的了解，才能进一步了解细节。
-我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性删除的功能。
-然后，我们旨在最大程度地减少随机删除的特征和对抗删除的特征之间的差异。
-%Specifically, we donate the random mask as $m^s$, the adversarial mask as $m^{adv}$.
-具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示阶段2中的分类层和回归层。
+\textbf{对抗性 dropout} 功能融合之后，我们使用对抗性 dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性 dropout 的特征。
+然后，我们旨在最大程度地减少随机 dropout 的特征和对抗性 dropout 的特征之间的差异。
+具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示阶段 2 中的分类层和回归层。
 根据 \cite{lee2019drop}，按如下方式计算对抗辍学掩码：
 \begin{equation}
 \begin{split}
@@ -216,30 +214,30 @@ The loss function of stage 1 is:
     & where~||\mathbf{m}^s - \mathbf{m}|| \leq \delta_e L,
 \end{split}
 \end{equation}
-其中 $L$ 代表 $\mathbf{m} \in \mathbb R^L$的尺寸，
-$\mathbf{m}^s$ 表示随机掩码， $\mathbf{m}^{adv}$ 表示对抗掩码。
-$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{lee2019drop}的摄动幅度。
+其中 $L$ 代表 $\mathbf{m} \in \mathbb R^L$ 的尺寸，
+$\mathbf{m}^s$ 表示随机掩码， $\mathbf{m}^{adv}$ 表示对抗性掩码。
+$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{lee2019drop}的扰动幅度。
 %and $\delta_{e}$ is a hyper parameter to control the perturbation magnitude with respect to $m^{s}$ \cite{lee2019drop}
-$D[p, p']  \geq 0$ 测量两个分布 $p$ 和 $p'$之间的差异。
+$D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
-为了计算 $\mathbf{m}^{adv}$，\cite{park2018adversarial} 通过在过程中适当放松来优化0/1背包问题。有关详细信息，请参考 \cite{park2018adversarial}。
+为了计算 $\mathbf{m}^{adv}$，\cite{park2018adversarial} 通过在过程中适当放松来优化 0/1 背包问题。有关详细信息，请参考 \cite{park2018adversarial}。
 %Then, we use the mask to dropout the feature, then send it to the classifier.
 %We also send the clean feature to the classifier, and wish the loss minimum:
-在生成 $\mathbf{m}^{adv}$之后，我们的目标是使关于 $\mathcal{X}$的两个预测分布之间的差异最小化：一个带有随机辍学掩码 $\mathbf{m}^{s}$ 和另一个带有对抗辍学面具 $\mathbf{m}^{adv}$ \cite{lee2019drop}。
+在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个带有随机 dropout 掩码 $\mathbf{m}^{s}$，另一个带有对抗 dropout 掩码 $\mathbf{m}^{adv}$ \cite{lee2019drop}。
 \begin{equation}
     \mathcal{L}_{adv} = \mathbb E[D_{KL}[h^{cls}(\mathcal{X} \odot\mathbf{m}^{s})||h^{cls}(\mathcal{X} \odot\mathbf{m}^{adv}))]],
 \end{equation}
-其中 $D_{KL}$ 是Kullback-Leibler散度。
+其中 $D_{KL}$ 是 Kullback-Leibler 散度。
 
-最后，对于每个RoI，分类层在两个类别（前景或背景）上生成softmax概率估计，而回归层为前景类别输出四个实数值。这四个值编码RoI的精确边界框位置。
-SiamTFA的损失是：
+最后，对于每个 RoI，分类层在两个类别（前景或背景）上生成 softmax 概率估计，而回归层为前景类别输出四个实数值。这四个值编码 RoI 的精确边界框位置。
+SiamTFA 的损失是：
 %The RoI Aligned features are fed into the global average pooling layer followed by two sibling output layers: one that produces softmax probability estimates over two classes (foreground or background) and another layer that outputs four real-valued numbers for the foreground class. These four values encode the refined bounding-box position for the RoI.
 %We get the final tracking result as follows: The classification layer $h^{cls}$ predicts a score for a RoI, the regression layer $h^{reg}$ has shape * and predicts a 4-d vector for it.
 %The RoI with the top score is the final box.
 \begin{equation}
 \mathcal{L} = \mathcal{L}_{cls}^{stage1} + \mathcal{L}_{cls}^{stage2} + \mathcal{L}_{reg}^{stage1}+\mathcal{L}_{reg}^{stage2} +  \lambda \mathcal{L}_{adv},
 \end{equation}
-其中 $\lambda$ 是用于平衡对抗损失和分类/回归损失的超参数。$\mathcal{L}_{cls}^{\cdot}$ 是交叉熵损失，$\mathcal{L}_{reg}^{\cdot}$ 是回归的标准平滑 $L1$ 损失。在测试过程中，具有最高分类得分的RoI被选择为预测目标。
+其中 $\lambda$ 是用于平衡对抗损失和分类/回归损失的超参数。$\mathcal{L}_{cls}^{\cdot}$ 是交叉熵损失，$\mathcal{L}_{reg}^{\cdot}$ 是回归的标准平滑 $L1$ 损失。在测试过程中，具有最高分类得分的 RoI 被选择为预测目标。
 
 
 \iffalse
@@ -253,13 +251,13 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \section{实验}
 在本节中，我们首先介绍实现细节。
-然后，我们对GOT-10K \cite{GOT-10k} 测试仪和UAV20L \cite{mueller2016benchmark} 数据集进行评估。
+然后，我们对 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据数据库进行评估。
 \subsection{实施细节}
-拟议的网络在GOT-10k \cite{GOT-10k} 的训练集上进行训练，而骨干网在ImageNet上进行了预训练。
-我们应用动量​​为0.9的随机梯度下降，并将权重衰减设置为0.0005。
-学习率从 $10^{-2}$ 降至 $10^{-4}$.。
-批次大小设置为2，并且对网络进行了90000次迭代训练。
-我们的跟踪器是使用PyTorch在Python中实现的。
+本文提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而骨干网络在 ImageNet 上进行了预训练。
+我们应用动量​​为 0.9 的随机梯度下降，并将权重衰减设置为 0.0005。
+学习率从 $10^{-2}$ 降至 $10^{-4}$。
+批次大小设置为 2，并且对网络进行了 90000 次迭代训练。
+我们的跟踪器是使用 PyTorch 在 Python 中实现的。
 %First stage, we select 4000 proposals to send to stage2, the positive/negative rate is 1:3.
 %To shift channels $K=2$.
 %Because of the memory limit, the batch size is 2.
@@ -267,18 +265,18 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 %For both training and testing, the size of a template image is 
 % 其实有些对不上。按论文上讲，第一阶段是找到若干候选框。第二阶段是得到唯一结果。实际上是，第一阶段得到若干候选框，第二阶段进一步筛选得到约10个候选框（这才是真正的相似目标），然后按IoU和得分来选择最终结果。
 % For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
-\subsection{对GOT-10k数据集的评估}
+\subsection{对 GOT-10k 数据集的评估}
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=1\textwidth]{Img/end/success_plot.png}
-    \caption{GOT-10k的总体性能，按其平均重叠（AO）得分进行排名。}
+    \caption{GOT-10k 的总体性能，按其平均重叠（AO）得分进行排名。}
     \label{fig:got10k}
 \end{figure}
 
 \begin{table}
 \centering
-\caption{我们的算法在GOT-10k测试仪上具有不同组件的性能。}
+\caption{我们的算法在 GOT-10k 测试集上具有不同组件的性能。}
 \begin{tabular}{c c c c c}
 \bottomrule
 \begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
@@ -292,7 +290,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \end{table}
 \begin{table}
 \centering
-\caption{将我们的方法的结果与GOT-10k测试集上的其他方法进行比较。}
+\caption{将我们的方法的结果与 GOT-10k 测试集上的其他方法进行比较。}
 \begin{tabular}{l l l l}
 \bottomrule
 Method   &  $AO$   &  $SR_{0.50}$ & $SR_{0.75}$  \\
@@ -312,30 +310,29 @@ MDNet	 &  0.299&  0.303 &0.099 \\
 \end{tabular}
 \label{table:got}
 \end{table}
-在本小节中，我们在GOT-10k \cite{GOT-10k} 数据集上评估我们的方法。
+在本小节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估我们的方法。
 % Say something about this dataset.
-GOT-10k是最新的大规模高多样性数据集，包含10,000多个视频序列，目标序列由轴对齐的边界框注释。
+GOT-10k 是最近提出的目标跟踪数据集，包含 10000 多个视频序列，目标序列由轴对齐的边界框注释。
 %Note that the classes between training and test sets are zero-overlapped. 
 %This one-shot protocol avoids the evaluation bias towards familiar objects. 
-GOT-10k测试装置包括180种序列，具有84种不同的目标类别和32种运动模式。作为性能指标，我们使用 \cite{GOT-10k}中提出的平均重叠（AO）分数和成功率（SR）。AO表示所有地面和估计边界框之间重叠的平均值，而SR表示重叠超过0.5 / 0.75的成功跟踪帧的百分比。
+GOT-10k 测试装置包括 180 种序列，具有 84 种不同的目标类别和 32 种运动模式。作为性能指标，我们使用 \cite{GOT-10k}中提出的平均重叠（AO）分数和成功率（SR）。AO表示所有地面和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
 
 \textbf{消融研究}
-从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中，我们看到，通过添加时间聚合模块，AO性能提高了1.9％。
+从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中，我们看到，通过添加时间聚合模块，AO 性能提高了1.9％。
 这是因为时间聚集模块通过聚集来自相邻帧的时间信息来改善每帧特征。
 %The RPN stage rapidly filters out most background samples, and the RoI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
-从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中，我们看到，通过对抗性辍学模块，AO增加了1.6％。
+从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中，我们看到，通过对抗性 dropout 模块，AO 增加了1.6％。
 %This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
 这是因为对抗性退出模块提高了我们的孪生跟踪网络的识别能力。
 
 \textbf{总体效果}
-我们将我们提出的方法与8个跟踪器（包括最新技术）进行了比较。
+我们将我们提出的方法与 8 个跟踪器（包括最新技术）进行了比较。
 表 \ref{table:got}.
 中显示了评估的跟踪器的性能。
-与其他列出的方法相比，我们的方法实现了0.577的出色AO。
-%ECO \cite{danelljan2017eco} is a state-of-the-art DCF-based tracker, which introduces a factorized convolution operator that dramatically reduces the number of parameters in the DCF model. In contrast, our tracker is based on the powerful siamese architecture. As a result, our tracker significantly outperforms ECO with a gain of 26.1\% in terms of AO score, which suggests the effectiveness of the siamese architecture for the object tracking task.
-%SiamMask \cite{Wang2018SiamMask} is a recently proposed siamese tracker. It simultaneously trains a siamese network on three tasks, each corresponding to a different strategy to establish correspondences between the target object and candidate regions in the new frames.
-% However, it is based on the local search mechanism: searching the target within a small neighborhood centered on the target position of the previous frame. In the contrast, our SiamTFA use the the global search mechanism. It is always able to perceive the target over the entire image. As a result, our tracker outperforms SiamMask by relative * in terms of AO, which highlights ...
-与SiamMask相比，我们的跟踪器旨在充分利用时间信息。结果，我们的跟踪器在AO方面的性能优于SiamMask 11.8％，这凸显了建议的时间聚合模块的重要性。
+与其他列出的方法相比，我们的方法实现了 0.577 的出色 AO。
+ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显着减少 DCF 模型中的参数数量。 相比之下，我们的跟踪器基于强大的孪生架构。因此，我们的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在对象跟踪任务方面的有效性。
+SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以在新帧中建立目标对象和候选区域之间的对应关系。
+但是，它是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，我们的 SiamTFA 使用全局搜索机制。它始终能够感知整个图像上的目标，且能够充分利用时间信息。结果，我们的跟踪器在 AO 方面的性能优于 SiamMask 11.8％，这凸显了建议的时间聚合模块的重要性。
 
 \begin{figure}[t]
 \begin{minipage}[b]{0.5\textwidth}
@@ -347,29 +344,19 @@ GOT-10k测试装置包括180种序列，具有84种不同的目标类别和32种
   \centering
   \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
-%
-\caption{UAV20L数据集上的成功图和精度图。}
+\caption{UAV20L 数据集上的成功图和精度图。}
 \label{fig:uav20l}
-%
 \end{figure}
-\subsection{对UAV20L数据集的评估}
-在本小节中，我们在UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
-% say something about this dataset: length, 20段
-它包含从低空鸟瞰视角捕获的20个高清视频序列，平均序列长度为2934帧。
-% It has mean frames of 2934 and max frames of 5527.
-% say something about the measures. 
+\subsection{对 UAV20L 数据集的评估}
+在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
+它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
 在此实验中，使用两种方法对所有跟踪器进行了比较：精度和成功率。精度的度量是预测边界框的中心与相应的地面真值边界框的中心之间的距离。成功是通过预测边界框内的像素与地面真实边界框内的像素并集的交点来衡量的。
-% say something about the accuracy.
-在图 \ref{fig:uav20l}中，我们可以发现，与某些代表性跟踪器相比，该算法具有更好的跟踪性能。
-在成功图中，我们的跟踪器获得的AUC得分为0.606。
-% PTAV is ... Compared with it, our is higher. This demonstrates the effectiveness of our designed architecture.
-在精度图中，所提算法的得分为0.804。
-% MUSTER is ... Compared with it, our is higher.
-它表明我们的跟踪器超越了其他最新算法，例如SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了我们的跟踪器在长期跟踪情况下的有效性。
-%designed architecture.
-%It shows that our tracker surpass another siamese tracker -- SiamRPN. This demonstrates the effectiveness of our designed architecture. Moreover, compared with other state-of-the-art algorithms, such as PTAV \cite{} and MUSTER \cite{}, our trackers are still superior in terms of precision.
+在图 \ref{fig:uav20l} 中，我们可以发现，与某些代表性跟踪器相比，该算法具有更好的跟踪性能。
+在成功图中，我们的跟踪器获得的 AUC 得分为 0.606。
+在精度图中，所提算法的得分为 0.804。
+它表明我们的跟踪器超越了其他最新算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了我们的跟踪器在长期跟踪情况下的有效性。
+
 \section{结论}
-%一句话指出我们提出了什么。
 在本文中，我们介绍了一种用于视觉目标跟踪的新颖孪生架构。
 具体来说，我们提出的算法包含两个主要模块，即时间聚合模块和对抗性删除模块。时间聚集模块通过聚集相邻帧的特征来改善每帧特征。对抗性辍学模块提高了孪生跟踪网络的辨别能力。
 大量的实验结果表明，所提出的算法的性能优于最新算法。
