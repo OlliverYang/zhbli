@@ -14,7 +14,7 @@
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/globally/visulization.pdf}
-    \caption{我们的方法与最先进的跟踪器SiamMask \cite{Wang2018SiamMask} 和SiamFCv2\cite{SiamFC} 的比较。示例帧来自GOT-10k \cite{GOT-10k} 测试集中。
+    \caption{我们的方法与最先进的跟踪器 SiamMask \cite{Wang2018SiamMask} 和SiamFCv2\cite{SiamFC} 的比较。示例帧来自GOT-10k \cite{GOT-10k} 测试集中。
     % Our approach performs better compared to existing approaches.
     }
     \label{fig:visulization}
@@ -204,7 +204,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 \begin{figure}[htb]
 \centering
     \includegraphics[width=0.75\textwidth]{Img/globally/success_plot.png}
-    \caption{GOT-10k的 总体性能，按其平均重叠（AO）得分进行排名。}
+    \caption{GOT-10k 的总体性能，按其平均重叠（AO）得分进行排名。}
     \label{fig:ao}
 \end{figure}
 
@@ -317,58 +317,65 @@ LO 子集包括验证集中最长的40个视频。
 %
 \end{figure}
 
-\begin{figure*}
+\begin{figure*}[t]
 \begin{center}
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/FOC_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/OV_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.33\textwidth]
-	{Img/globally/UAV20L/BC_overlap_OPE_AUC.png}
 }\\
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
-	{Img/globally/UAV20L/POC_overlap_OPE_AUC.png}
+	\includegraphics[width=0.5\textwidth]
+	{Img/globally/UAV20L/BC_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
+	{Img/globally/UAV20L/POC_overlap_OPE_AUC.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/ARC_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/CM_overlap_OPE_AUC.png}
-}\\
+}
+\end{center}
+   \caption{在 UAV20L 上成功绘制带有属性的图 1。 最好在彩色显示屏上观看。}
+\label{fig:uav20l_attr}
+\end{figure*}
+
+\begin{figure*}[t]
+\begin{center}
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/FM_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/IV_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.33\textwidth]
-	{Img/globally/UAV20L/LR_overlap_OPE_AUC.png}
 }\\
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
-	{Img/globally/UAV20L/SOB_overlap_OPE_AUC.png}
+	\includegraphics[width=0.5\textwidth]
+	{Img/globally/UAV20L/LR_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
+	{Img/globally/UAV20L/SOB_overlap_OPE_AUC.png}
+}\\
+\subfloat[]{
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/SV_overlap_OPE_AUC.png}
 }
 \subfloat[]{
-	\includegraphics[width=0.33\textwidth]
+	\includegraphics[width=0.5\textwidth]
 	{Img/globally/UAV20L/VC_overlap_OPE_AUC.png}
 }
 \end{center}
-   \caption{在 UAV20L 上成功绘制带有属性的图。 最好在彩色显示屏上观看。}
+   \caption{在 UAV20L 上成功绘制带有属性的图 2。 最好在彩色显示屏上观看。}
 \label{fig:uav20l_attr}
 \end{figure*}
 
