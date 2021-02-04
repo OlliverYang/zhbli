@@ -1,4 +1,4 @@
-\chapter{为孪生视觉跟踪的模型调整操作模板像素}\label{chap:MTP}
+\chapter{利用自适应信息提高目标跟踪对特定物体的跟踪效果}\label{chap:MTP}
 
 \section{摘要}
 在本文中，我们表明可以通过简单地在孪生网络中操纵模板图像的像素来处理视觉目标跟踪中具有挑战性的模型自适应任务。对于不包含在离线训练集中的目标，模板图像像素的稍加修改即可改善离线训练的孪生网络的预测结果。流行的对抗样本生成方法可用于执行模板像素操纵以进行模型调整。与当前的模板更新方法（旨在合并先前帧的目标特征）不同，我们专注于在第一帧中使用目标地面真实性进行初始自适应。我们的模型调整方法是可插拔的，因为它不会改变其基本跟踪器的总体架构。据我们所知，这项工作是直接操纵模板像素以在基于孪生的跟踪器中进行模型调整的首次尝试。在最近的基准测试中进行的大量实验表明，我们的方法比其他一些最新的跟踪器具有更好的性能。我们的代码可从 https://github.com/lizhenbang56/MTP 获得。
@@ -10,7 +10,6 @@
     \centering
     \includegraphics[width=1.0\textwidth]{Img/MTP/got10k/visulization2.pdf}
     \caption{我们的方法与最先进的跟踪器 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
-    %\caption{A comparison of our method with ATOM \cite{danelljan2019atom} and SiamFCv2 \cite{SiamFC}. The example frames are from the GOT-10k \cite{GOT-10k} testing set.}
     \label{fig:vis}
 \end{figure}
 
@@ -86,11 +85,10 @@ BIM 可以很容易地变成特定期望目标类的攻击者，称为迭代目�
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
-\renewcommand\arraystretch{0.8}
 \caption{与流行的跟踪基准 OTB2015 的最新运行速度进行比较。 FPS：每秒帧数。我们的速度已经在 NVIDIA RTX 2080Ti GPU 上进行了测试。}
 \setlength{\tabcolsep}{3pt}
 \begin{center}
-\begin{tabular}{l | c c c c c c}
+\begin{tabular}{r c c c c c c}
 \toprule
 Trackers & ECO & MDNet & SiamRPN++ & ATOM & SiamFC++\_G & Ours \\
 \midrule
@@ -105,7 +103,6 @@ FPS     & 8    & 1     & 35        & 30       & 90         & 82  \\
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
-\renewcommand\arraystretch{0.8}
 \centering
 \caption{在 TrackingNet 测试数据集上的精度，标准化精度和成功方面的最新比较。}
 \begin{tabular}{l c c c}
@@ -146,12 +143,12 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 后续跟踪过程与SiamFC++ 相同。
 
 %%%%%%%%%%%%%
-\begin{table}
+\begin{table}[t]
 \caption{在不同数据库上的消融实验。}
 \begin{center}
-\begin{tabular}{c c|c c}
+\begin{tabular}{c cc c}
 \toprule
-\multicolumn{2}{c|}{Trackers} & 
+\multicolumn{2}{c}{跟踪器} & 
 \begin{tabular}{c} \textbf{SiamFC++\_} \\ \textbf{GoogLeNet} \end{tabular} &
 \begin{tabular}{c} \textbf{Ours} \\ \textbf{GoogLeNet} \end{tabular} \\
 \midrule
@@ -173,7 +170,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 & Norm. Prec. & 80.0 & 81.7 \\
 & Succ.       & 75.4 & 74.9 \\
 \midrule
-\multicolumn{2}{c|}{FPS} & 90 & 82\\
+\multicolumn{2}{c}{FPS} & 90 & 82\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -330,13 +327,12 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 %%%%%%%%%%%%%%%
 \begin{table}[t]
-\renewcommand\arraystretch{0.7}
 \centering
 \caption{使用嘈杂的初始帧在 OTB2015 上的性能。}
-\begin{tabular}{c c c | c c}
+\begin{tabular}{c c c c c}
 \toprule
-\multicolumn{3}{c|}{Coefficients of Noise} & \multicolumn{2}{c}{Success Score} \\
-\midrule
+\multicolumn{3}{c}{Coefficients of Noise} & \multicolumn{2}{c}{Success Score} \\
+\cmidrule(lr){1-3} \cmidrule(lr){4-5}
 $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 \midrule
 0.57  &	1.6	 & 0.93	& 67.3    & 69.5 \\
@@ -348,9 +344,9 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 1.0   & 0.81 & 0.79 & 65.3    & 66.0 \\
 1.1   &	1.9  & 0.90	& 67.6    & 68.8 \\
 1.2   & 0.70 & 0.79 & 65.7    & 66.6 \\
-%1.3   & 1.3  & 0.77 & 64.9    & 65.8 \\
+1.3   & 1.3  & 0.77 & 64.9    & 65.8 \\
 1.5   & 0.19 & 0.79 & 64.8    & 66.3 \\
-%1.5   & 1.3  & 0.86 & 66.7    & 68.0 \\
+1.5   & 1.3  & 0.86 & 66.7    & 68.0 \\
 \bottomrule
 \end{tabular}
 \label{table:noise}
@@ -359,13 +355,13 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
-\renewcommand\arraystretch{0.8}
+%\renewcommand\arraystretch{0.8}
 \centering
-\setlength{\tabcolsep}{2pt}
+%\setlength{\tabcolsep}{2pt}
 \caption{通过成功得分将 OTB2015 的 11 种属性进行比较。}
-\begin{tabular}{r c c c c c c c c c c c}
+\begin{tabular}{c c c c c c c c c c c c}
 \toprule
-            & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
+跟踪器 & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
 \midrule
 SiamFC++\_G  &  62.5 & 63.9 & 68.0          & 69.2          & 69.5          & \textbf{72.5}  & 66.7 & 60.9 & 66.9 & 55.8 & 68.4 \\
 Ours        & \textbf{66.5} & \textbf{66.8} & \textbf{68.7} & \textbf{71.3} & \textbf{69.6} & 69.8  & \textbf{67.3} & \textbf{62.5} & \textbf{68.4} & \textbf{57.1} & \textbf{69.8} \\
