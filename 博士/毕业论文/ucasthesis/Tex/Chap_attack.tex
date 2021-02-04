@@ -190,7 +190,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \begin{tabular}{c c c c c}
 \toprule
 \multirow{2}{*}[-2pt]{数据库} & \multirow{2}{*}[-2pt]{评价指标} & 原始图像 & \multicolumn{2}{c}{对抗图像}  \\
-\cmidrule{3-5}
+\cmidrule(lr){3-3} \cmidrule(lr){4-5}
                           &                         & 真实轨迹 & 真实轨迹 & 虚假轨迹     \\ 
 \midrule
 \multirow{2}{*}{OTB-15} 
@@ -242,7 +242,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \begin{tabular}{ccccccc} 
 \toprule
 \multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
-\cmidrule{4-7}
+\cmidrule(lr){4-5} \cmidrule(lr){6-7}
                        &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
 \midrule
 \checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
@@ -290,9 +290,9 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \begin{tabular}{c cc cc cc} 
 \toprule
 \multirow{3}{*}[-6pt]{主干网络} & \multicolumn{2}{c}{原始视频}    & \multicolumn{4}{c}{扰动视频}                                        \\ 
-\cmidrule{2-7}
+\cmidrule(lr){2-3} \cmidrule(lr){4-7}
                           & \multicolumn{2}{c}{真实轨迹} & \multicolumn{2}{c}{真实轨迹} & \multicolumn{2}{c}{虚假轨迹}  \\ 
-\cmidrule{2-7}
+\cmidrule(lr){2-3} \cmidrule(lr){4-7}
                           & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
 \midrule
 GoogLeNet                 & 0.760 & 0.897                        & 0.035 & 0.023                        & 0.818 & 0.890                        \\
@@ -310,7 +310,7 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \begin{tabular}{ccccc} 
 \toprule
 \multirow{2}{*}[-2pt]{跟踪器} & \multicolumn{2}{c}{原始视频} & \multicolumn{2}{c}{对抗视频}  \\
-\cmidrule{2-5}
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
                           & AO & Precision              & AO & Precision                   \\
 \midrule
 SiamRPN++                 & 0.676   & 0.879                  & 0.518   & 0.691                       \\
@@ -350,15 +350,16 @@ SiamRPN 使用 RPN 网络在响应图上执行位置回归和目标分类。 Sia
 
 \begin{table}[t]
 \centering
-\begin{tabular}{@{}cccccc@{}}
+\begin{tabular}{@{}ccccccc@{}}
 \toprule
-\multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} & \multicolumn{2}{c}{对抗视频} \\ \cmidrule(l){4-6} 
- &  &  & 真实轨迹 & 真实轨迹 & 虚假轨迹 \\ \midrule
-CSA & SiamRPN & 4720 & 0.851 & 0.458 & - \\
-FAN & SiamFC & 10 & 0.720 & 0.180&0.420 \\
-TTP & SiamRPN++ & 8 & 0.910 & 0.080&0.692 \\
+\multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} && \multicolumn{2}{c}{对抗视频} \\
+\cmidrule{4-4} \cmidrule{6-7}
+ &  &  & 真实轨迹 & & 真实轨迹 & 虚假轨迹 \\ \midrule
+CSA & SiamRPN & 4720 & 0.851 & & 0.458 & - \\
+FAN & SiamFC & 10 & 0.720    & & 0.180&0.420 \\
+TTP & SiamRPN++ & 8 & 0.910  && 0.080&0.692 \\
 \midrule
-Ours & SiamFC++ & 0 & 0.861 & 0.048&0.928 \\ \bottomrule
+Ours & SiamFC++ & 0 & 0.861  & & 0.048&0.928 \\ \bottomrule
 \end{tabular}%
 \caption{关于 OTB2015 上 \textit{真实/虚假轨迹} 的精确度得分。}
 \label{tab:untargeted}
