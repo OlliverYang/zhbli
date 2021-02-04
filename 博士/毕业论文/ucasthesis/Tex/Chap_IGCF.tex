@@ -10,33 +10,11 @@
 
 基于 DCF 跟踪器的成功，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已证明目标上的空间约束可改善相关滤波器的学习。但是，大多数空间约束都是手工设计的，仍然没有考虑有关目标的语义信息。尽管实例级语义分割 \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}（旨在为图像中的每个像素分配语义标签）能够提取图像中的实例级语义信息，直接集成现有的实例分割方法以提供空间，相关滤波器学习的约束仍然很难在跟踪精度和速度之间取得平衡。
 
-\iffalse
-\begin{figure}
-\centering
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/00893.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01107.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01108.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01564.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01664.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/01939.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/02078.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/02285.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/02497.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/02589.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/02700.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03000.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03327.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03482.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.4cm]{Img/IGCF/coco/03733.jpg}}
-    \caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
-    \label{fig:InstMask}
-\end{figure}
-\fi
-
 \begin{figure}
 \centering
 \includegraphics[width=1.0\textwidth]{Img/IGCF/coco.pdf}
 \caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
+\label{fig:InstMask}
 \end{figure}
 
 在这项工作中，我们提出了实例引导的相关滤波器（IGCF）来解决上述限制。具体而言，我们设计了一个深层卷积神经网络（即InstMask），旨在准确生成目标实例级别的语义分割掩码。我们利用COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:InstMask}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
@@ -82,6 +60,30 @@ ECO 跟踪器 \cite{Danelljan2017ECOEC} 在核心 DCF 公式中包括分解卷�
 
 \section{方法}
 
+\begin{algorithm}[t]
+  \caption{IGCF 跟踪算法} 
+  \begin{algorithmic}
+    \Require 图像 $I_t$，目标在上一帧中的位置 $p_{t-1}$、尺度 $s_{t-1}$、滤波器 $h_{t-1}$，通道可靠性 $w_{t-1}$。
+    \Ensure 位置 $p_t$，尺度 $s_t$ 和更新后的模型。
+  \Statex
+  \State \textbf{定位：}
+  \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
+    \item $p_t$：$h_{t-1}$ 和从位置 $p_{t-1}$ 提取的图像块的特征 $f_{t}$ 进行相关后的最大响应的位置，由信道可靠性得分加权 $w_{t-1}$（等式 \ref{eq:dcf}）。
+    \item 估计分割掩码 $m$（第 \ref{sec:InstMask} 节）。
+    \item 使用 $m$ 校正 $p_t$ （第 \ref{sec:cog} 节）。
+    \item 使用位置 $p_t$ 估计新的尺度 $s_ t$ （参考 \cite{Danelljan2014AccurateSE}）。
+    \item 使用等式 \ref{eq:det}，根据逐通道响应，估计检测可靠性 $\tilde{w}^{(det)}$。
+  \end{enumerate}
+  \State \textbf{更新：}
+  \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
+    \item 使用等式 \ref{eq:h1}至等式 \ref{eq:h3}，根据 $m$ 估计新滤波器 $\tilde{h}$。
+    \item 使用等式 \ref{eq:lrn}，根据 $h$ 估计学习通道可靠性 $\tilde{w}^{(lrn)}$。
+    \item 使用等式 \ref{eq:c} 计算通道可靠性 $\tilde{w}$。
+    \item 使用等式 \ref{eq:update1} 和等式 \ref{eq:update2} 更新滤波器 $h_t$ 和通道可靠性 $w_t$。
+  \end{enumerate}
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{跟踪范式}
 DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑目标的表观特征：$f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道号。类似于 DCF 跟踪器的目标是训练滤波器 $h=\{h_d\}_{d=1:N_c}$，以使特征和滤波器之间的相关性响应 $\tilde{g}$ 适合所需输出 $g$ ，通常是一个以目标位置为中心的二维高斯函数： 
 \begin{equation} \label{eq:dcf}
@@ -99,6 +101,35 @@ DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA}
 
 \subsection{InstMask}
 \label{sec:InstMask}
+
+\begin{table}[t]
+\centering
+\caption{InstMask 的网络结构设计。}
+\begin{tabular}{|c|c|c|}
+\hline
+层数 & 输出尺寸 & 卷积操作 \\\hline
+Data & $160 \times 160 \times 3$ &  -\\\hline
+\multirow{2}*{茎块} & $80 \times 80 \times 64$ &  $ 7 \times 7 \text{ conv} $\\\cline{2-3}
+~ & $40 \times 40 \times 64$ &  $ 2 \times 2 \text{ maxpool} $\\\hline
+残差块（1）& $40 \times 40 \times 256$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 3 $\\\hline
+残差块（2）& $20 \times 20 \times 512$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 4 $\\\hline
+残差块（3）& $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 6 $\\\hline
+\multirow{5}*{解码器} & $10 \times 10 \times 128$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
+~ & $1 \times 1 \times 512$ &  $ 10 \times 10 \text{ conv} $\\\cline{2-3}
+~ & $1 \times 1 \times 3136$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
+~ & $56 \times 56$ & reshape \\\cline{2-3}
+~ & $160 \times 160$ & upscale \\\hline
+\end{tabular}
+\label{tab:InstMask}
+\end{table}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
+    \caption{InstMask 的网络结构。}
+    \label{fig:net}
+\end{figure*}
+
 在本文中，我们使用被跟踪的目标的分割掩码来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特征：
 
 \begin{itemize}
@@ -127,30 +158,6 @@ DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA}
 \textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net} 中显示了网络体系结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和3个残差块组成。
 InstMask 的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图顺序发送到3个残差块，分别生成大小为 40$\times$40$\times$256, 20$\times$20$\times$512, 10$\times$10$\times$1024 的特征图。随后，将获得的特征图发送到三个卷积层以生成长度为 3136 的向量，该向量使全局接收场能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割掩码。由于它是一个轻量级的网络，因此我们建议的跟踪方法可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，以最佳地平衡跟踪准确性和速度，从而可以将跟踪器部署在包括自动控制在内的实际应用中驾驶，机器人技术和增强现实。
 
-\begin{algorithm}[t]
-  \caption{IGCF 跟踪算法} 
-  \begin{algorithmic}
-    \Require 图像 $I_t$，目标在上一帧中的位置 $p_{t-1}$、尺度 $s_{t-1}$、滤波器 $h_{t-1}$，通道可靠性 $w_{t-1}$。
-    \Ensure 位置 $p_t$，尺度 $s_t$ 和更新后的模型。
-  \Statex
-  \State \textbf{定位：}
-  \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
-    \item $p_t$：$h_{t-1}$ 和从位置 $p_{t-1}$ 提取的图像块的特征 $f_{t}$ 进行相关后的最大响应的位置，由信道可靠性得分加权 $w_{t-1}$（等式 \ref{eq:dcf}）。
-    \item 估计分割掩码 $m$（第 \ref{sec:InstMask} 节）。
-    \item 使用 $m$ 校正 $p_t$ （第 \ref{sec:cog} 节）。
-    \item 使用位置 $p_t$ 估计新的尺度 $s_ t$ （参考 \cite{Danelljan2014AccurateSE}）。
-    \item 使用等式 \ref{eq:det}，根据逐通道响应，估计检测可靠性 $\tilde{w}^{(det)}$。
-  \end{enumerate}
-  \State \textbf{更新：}
-  \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
-    \item 使用等式 \ref{eq:h1}至等式 \ref{eq:h3}，根据 $m$ 估计新滤波器 $\tilde{h}$。
-    \item 使用等式 \ref{eq:lrn}，根据 $h$ 估计学习通道可靠性 $\tilde{w}^{(lrn)}$。
-    \item 使用等式 \ref{eq:c} 计算通道可靠性 $\tilde{w}$。
-    \item 使用等式 \ref{eq:update1} 和等式 \ref{eq:update2} 更新滤波器 $h_t$ 和通道可靠性 $w_t$。
-  \end{enumerate}
-\end{algorithmic}
-\end{algorithm}
-
 \textbf{训练} 在训练期间，将空间分辨率为 56$\times$56 的掩码上采样至原始图像大小 160$\times$160。令 $l$ 表示大小为 $w \times h$ 的逐个像素的真实掩码。损失计算如下：
 \begin{equation}
 L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
@@ -172,35 +179,6 @@ InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过�
 \end{itemize}
 
 相反，InstMask 不会在线更新参数。这提高了计算效率，同时避免了不希望的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
-
-%\setlength\extrarowheight{1pt}
-\begin{table}
-\centering
-\caption{InstMask 的网络结构设计。}
-\begin{tabular}{|c|c|c|}
-\hline
-Layers & Output Size & Support \\\hline
-Data & $160 \times 160 \times 3$ &  -\\\hline
-\multirow{2}*{Stem Block} & $80 \times 80 \times 64$ &  $ 7 \times 7 \text{ conv} $\\\cline{2-3}
-~ & $40 \times 40 \times 64$ &  $ 2 \times 2 \text{ maxpool} $\\\hline
-Res Block (1) & $40 \times 40 \times 256$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 3 $\\\hline
-Res Block (2) & $20 \times 20 \times 512$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 4 $\\\hline
-Res Block (3) & $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 6 $\\\hline
-\multirow{5}*{Decoder} & $10 \times 10 \times 128$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
-~ & $1 \times 1 \times 512$ &  $ 10 \times 10 \text{ conv} $\\\cline{2-3}
-~ & $1 \times 1 \times 3136$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
-~ & $56 \times 56$ & reshape \\\cline{2-3}
-~ & $160 \times 160$ & upscale \\\hline
-\end{tabular}
-\label{tab:InstMask}
-\end{table}
-
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
-    \caption{InstMask 的网络结构。}
-    \label{fig:net}
-\end{figure*}
 
 \subsection{实例引导的自纠正组件} \label{sec:cog}
 
@@ -237,28 +215,6 @@ p = \left\{ \begin{array}{ll}
 \end{equation}
 其中 $c_{dcf}$ 是 DCF 预测的位置，$\alpha$ 是控制自校正强度的超参数，而 $\beta$ 之间距离的阈值 $c_{m}$ 和 $c_{dcf}$。
 由于分割结果的鲁棒性，当 DCF 结果显示不稳定漂移时，跟踪器可以自行校正。图 \ref{fig:IGSC} 中显示了提出的实例指导的自校正组件的有效性。
-
-\iffalse
-\begin{figure}[t]
-\centering
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00003.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00005.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00007.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00013.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/birds1/00057.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/book/00002.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/book/00005.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/book/00011.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/book/00013.jpg}}                     \hspace{-0.6em}    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/book/00016.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00015.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00019.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00025.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00027.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.45cm]{Img/IGCF/cog/butterfly/00031.jpg}}
-    \caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
-    \label{fig:IGSC}
-\end{figure}
-\fi
 
 \begin{figure}
 \centering

@@ -183,6 +183,14 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 %%%%%%%%%%%%%%%%%%%%%
 \section{实验}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/MTP/got10k/visulization.pdf}
+    \caption{我们的方法与最先进的跟踪器 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
+    \label{fig:vis}
+\end{figure}
+
 在本节中，我们首先介绍实现细节。然后，我们将我们的方法与四个跟踪数据集上的最新跟踪器进行比较：OTB2015 \cite{OTB}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并特别选择了 60 种序列的各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视频目标跟踪数据集。它们都涵盖了训练和测试集中的各种目标类和场景。对于 GOT-10k，训练和测试集拆分之间的目标类别没有重叠，从而提高了对看不见的目标类别进行泛化的重要性。
 
 %%%%%%%%%%%%%%%%%
@@ -201,7 +209,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{最先进的比较}
 
-\begin{figure*}
+\begin{figure*}[t]
 \begin{center}
 \subfloat[]{
 	\includegraphics[width=0.33\textwidth]
