@@ -11,15 +11,6 @@
 流行的孪生跟踪器 \cite{SiamFC, SiamRPN, Wang2018SiamMask} 通常基于本地搜索机制：搜索目标在以前一帧的目标位置为中心的小邻域中确定其当前位置。
 如果目标仅在两个相邻帧之间具有较小的位移，则此机制起作用。这在另一个方面也带来了好处，避免了来自干扰因素的干扰。
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/globally/visulization.pdf}
-    \caption{我们的方法与最先进的跟踪器 SiamMask \cite{Wang2018SiamMask} 和SiamFCv2\cite{SiamFC} 的比较。示例帧来自GOT-10k \cite{GOT-10k} 测试集中。
-    % Our approach performs better compared to existing approaches.
-    }
-    \label{fig:visulization}
-\end{figure}
-
 但是，本地搜索机制有一些缺点：
 
 \begin{itemize}
@@ -200,6 +191,13 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 \section{实验}
 \label{sec:experiments}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/globally/visulization.pdf}
+    \caption{我们的方法与最先进的跟踪器 SiamMask \cite{Wang2018SiamMask} 和SiamFCv2\cite{SiamFC} 的比较。示例帧来自GOT-10k \cite{GOT-10k} 测试集中。}
+    \label{fig:visulization}
+\end{figure}
 
 \begin{figure}[htb]
 \centering

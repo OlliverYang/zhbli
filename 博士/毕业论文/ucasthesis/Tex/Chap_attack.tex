@@ -7,9 +7,16 @@
 
 \section{简介}
 
+\begin{figure}[t]
+\centering
+\subfloat{\includegraphics[width=0.3\textwidth]{Img/attack/x.jpg}} \qquad 
+\subfloat{\includegraphics[width=0.3\textwidth]{Img/attack/z.jpg}}
+\caption{补丁可视化结果。}
+\end{figure}
+
 给定初始视频帧中的任意检测到或注释的关注对象，视觉对象跟踪的目标是识别并定位同一对象在后续帧中的其他实例。在线跟踪阶段中从单个初始样本跟踪视觉对象的这种范式最近被广泛地描述为基于孪生网络的单发问题 \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}，称为孪生视觉跟踪，并被认为对视觉跟踪非常有效。
 
-\begin{figure}[htbp]
+\begin{figure}[thbp]
 \centering
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/z.jpg}}
@@ -249,6 +256,12 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{table}
 
 \subsection{评估基准的攻击结果}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.0\textwidth]{Img/attack/txt_visualize.pdf}
+\caption{可视化结果}
+\end{figure}
 
 \textit{总体攻击结果} 我们在评估基准上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:benchmark results}中。结果表明，基本跟踪器 SiamFC++ 可以在所有评估基准上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能要求计算量大的跟踪系统占用大部分计算资源，因此吸引人的是开发一种几乎无成本的攻击方法来欺骗跟踪系统而不会争用资源。如表 \ref{tab:benchmark results}所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的 \textit{虚假轨迹} 来有效地欺骗 SiamFC++ 跟踪器。此外，相对于 \textit{虚假轨迹} 而言，较高的 AO 和 Precision 性能表明在没有引起任何怀疑的情况下更有效的攻击（请参见 \ref{fig:vis}）。
 
