@@ -185,24 +185,13 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{实验}
 
-\subsection{实验设置}
-
-\textit{评估基准} 我们在几种跟踪基准，即 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 上评估针对目标攻击的视频不可知扰动。一般而言，OTB2015 是典型的跟踪基准，已被广泛用于评估中，GOT-10k 具有在幅度上更宽的对象类别的优势，LaSOT 具有更长的视频序列，平均持续时间为 84 秒。它们都遵循单次通过评估（OPE）协议，其评估方法相似，因为测量主要基于测试视频上跟踪器的成功与精确。例如，它们均根据序列的帧分数来衡量成功，在该序列中，预测矩形和地面真实矩形的交点重叠（IoU）重叠超过给定阈值，然后使用面积-曲线下（AUC）准则。由于最近证明所有测试视频帧上的 IoU 重叠平均值（AO）均等效于 AUC 标准，因此在下文中将成功度量表示为 AO。除了 AO 之外，成功率（SR）度量标准也可以直接用于测量在 GOT-10k 中给定阈值的成功跟踪帧的百分比。至于精度，它对帧的比例进行编码，对于这些比例，预测矩形的中心在地面真实中心的 20 个像素之内。由于精度度量对图像的分辨率和边界框的大小敏感，因此提出了在地面真实边界框的大小上进行归一化精度的度量，然后使用 AUC 对跟踪器进行排序，以使归一化精度介于0之间和0.5。
-
-\textit{生成伪造的轨迹} 我们需要为每个视频预先定义特定的轨迹 $B^{fake}=\{b^{fake}_i\}_1^{T}$ ，以实现在线跟踪中的有针对性的攻击阶段，我们称之为 \textit{假轨迹}。我们用边界框地面真值将 \textit{真实轨迹} 表示为 $B^{gt}=\{b^{gt}_i\}_1^T$。
-可以为每个视频手动标记任意 $B^{fake}$ ，但是，在我们的实验评估中这将非常耗时。因此，我们基于 $B^{gt}$ 生成 $B^{fake}$。具体来说，\textit{虚假轨迹} 遵循 \textit{真实轨迹}，并且 $b^{fake}_i$ 和 $b^{gt}_i$ 的边界相距 16 像素。
-%The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-\textit{虚假轨迹} 的边框尺寸由 $b^{gt}_1$ 的尺寸逐渐变为 $64\times 64$。请注意，GOT-10k 测试数据的注释是保密的，因此我们仅将其验证集用于评估，并将其表示为 GOT-Val。
-
-\textit{图像质量评估} 我们使用结构相似性（SSIM）\cite{SSIM} 来评估生成的不可感知模板扰动 $\delta$ 的质量。当 SSIM 接近 1 时很难找到（请参见表 \ref{tab:iter}）。
-
 \begin{table}
 \centering
-\begin{tabular}{c c | c | c | c}
+\begin{tabular}{c c c c c}
 \toprule
-\multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+\multirow{2}{*}[-2pt]{数据库} & \multirow{2}{*}[-2pt]{评价指标} & 原始图像 & \multicolumn{2}{c}{对抗图像}  \\
 \cmidrule{3-5}
-                          &                         & Real Traj. & Real Traj. & Fake Traj.     \\ 
+                          &                         & 真实轨迹 & 真实轨迹 & 虚假轨迹     \\ 
 \midrule
 \multirow{2}{*}{OTB-15} 
 & AO   & 0.642 & 0.035 & 0.842\\
@@ -218,13 +207,24 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 & AO & 0.525 & 0.022 & 0.767\\
 %& Succ. rate  & 0.626 & 0.016 & 0.834\\
 \midrule
-\multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
+\multicolumn{2}{c}{FPS} & 58 & 58 & 58\\
 \bottomrule
 \end{tabular}
 %}
 \caption{评估基准上的总体攻击结果。}
 \label{tab:benchmark results}
 \end{table}
+
+\subsection{实验设置}
+
+\textit{评估基准} 我们在几种跟踪基准，即 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 上评估针对目标攻击的视频不可知扰动。一般而言，OTB2015 是典型的跟踪基准，已被广泛用于评估中，GOT-10k 具有在幅度上更宽的对象类别的优势，LaSOT 具有更长的视频序列，平均持续时间为 84 秒。它们都遵循单次通过评估（OPE）协议，其评估方法相似，因为测量主要基于测试视频上跟踪器的成功与精确。例如，它们均根据序列的帧分数来衡量成功，在该序列中，预测矩形和地面真实矩形的交点重叠（IoU）重叠超过给定阈值，然后使用面积-曲线下（AUC）准则。由于最近证明所有测试视频帧上的 IoU 重叠平均值（AO）均等效于 AUC 标准，因此在下文中将成功度量表示为 AO。除了 AO 之外，成功率（SR）度量标准也可以直接用于测量在 GOT-10k 中给定阈值的成功跟踪帧的百分比。至于精度，它对帧的比例进行编码，对于这些比例，预测矩形的中心在地面真实中心的 20 个像素之内。由于精度度量对图像的分辨率和边界框的大小敏感，因此提出了在地面真实边界框的大小上进行归一化精度的度量，然后使用 AUC 对跟踪器进行排序，以使归一化精度介于0之间和0.5。
+
+\textit{生成伪造的轨迹} 我们需要为每个视频预先定义特定的轨迹 $B^{fake}=\{b^{fake}_i\}_1^{T}$ ，以实现在线跟踪中的有针对性的攻击阶段，我们称之为 \textit{假轨迹}。我们用边界框地面真值将 \textit{真实轨迹} 表示为 $B^{gt}=\{b^{gt}_i\}_1^T$。
+可以为每个视频手动标记任意 $B^{fake}$ ，但是，在我们的实验评估中这将非常耗时。因此，我们基于 $B^{gt}$ 生成 $B^{fake}$。具体来说，\textit{虚假轨迹} 遵循 \textit{真实轨迹}，并且 $b^{fake}_i$ 和 $b^{gt}_i$ 的边界相距 16 像素。
+%The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
+\textit{虚假轨迹} 的边框尺寸由 $b^{gt}_1$ 的尺寸逐渐变为 $64\times 64$。请注意，GOT-10k 测试数据的注释是保密的，因此我们仅将其验证集用于评估，并将其表示为 GOT-Val。
+
+\textit{图像质量评估} 我们使用结构相似性（SSIM）\cite{SSIM} 来评估生成的不可感知模板扰动 $\delta$ 的质量。当 SSIM 接近 1 时很难找到（请参见表 \ref{tab:iter}）。
 
 \subsection{实施细节}
 
@@ -239,9 +239,9 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \begin{table}
 \centering
-\begin{tabular}{ccc|cc|cc} 
+\begin{tabular}{ccccccc} 
 \toprule
-\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c|}{Fake Traj.}          & \multicolumn{2}{c}{Real Traj.}           \\ 
+\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
 \cmidrule{4-7}
                        &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
 \midrule
@@ -265,34 +265,33 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \textit{总体攻击结果} 我们在评估基准上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:benchmark results}中。结果表明，基本跟踪器 SiamFC++ 可以在所有评估基准上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能要求计算量大的跟踪系统占用大部分计算资源，因此吸引人的是开发一种几乎无成本的攻击方法来欺骗跟踪系统而不会争用资源。如表 \ref{tab:benchmark results}所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的 \textit{虚假轨迹} 来有效地欺骗 SiamFC++ 跟踪器。此外，相对于 \textit{虚假轨迹} 而言，较高的 AO 和 Precision 性能表明在没有引起任何怀疑的情况下更有效的攻击（请参见 \ref{fig:vis}）。
 
-\begin{table*}
+\begin{table*}[t]
 \centering
-\begin{tabular}{cc|cccccccccccccccc} 
+\begin{tabular}{rrcccccccccccccccc} 
 \toprule
-\multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
+\multicolumn{2}{r}{迭代次数}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
 \midrule
-\multirow{2}{*}{Fake Traj.} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
+\multirow{2}{*}{虚假轨迹} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
                                  & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
 \midrule
-\multirow{2}{*}{Real Traj.} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
+\multirow{2}{*}{真实轨迹} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
                                  & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
 \midrule
-\multicolumn{2}{c|}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-%\multicolumn{2}{c|}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
+\multicolumn{2}{r}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
+\multicolumn{2}{r}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
 \bottomrule
 \end{tabular}
-%}
 \caption{训练迭代次数对 GOT-Val 的影响。}
 \label{tab:iter}
 \end{table*}
 
-\begin{table}
+\begin{table}[t]
 \centering
-\begin{tabular}{c|cc|cc|cc} 
+\begin{tabular}{c cc cc cc} 
 \toprule
-\multirow{3}{*}[-6pt]{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
+\multirow{3}{*}[-6pt]{主干网络} & \multicolumn{2}{c}{原始视频}    & \multicolumn{4}{c}{扰动视频}                                        \\ 
 \cmidrule{2-7}
-                          & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c}{Fake Traj.}  \\ 
+                          & \multicolumn{2}{c}{真实轨迹} & \multicolumn{2}{c}{真实轨迹} & \multicolumn{2}{c}{虚假轨迹}  \\ 
 \cmidrule{2-7}
                           & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
 \midrule
@@ -308,9 +307,9 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 
 \begin{table}
 \centering
-\begin{tabular}{c|cc|cc} 
+\begin{tabular}{ccccc} 
 \toprule
-\multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
+\multirow{2}{*}[-2pt]{跟踪器} & \multicolumn{2}{c}{原始视频} & \multicolumn{2}{c}{对抗视频}  \\
 \cmidrule{2-5}
                           & AO & Precision              & AO & Precision                   \\
 \midrule
@@ -343,12 +342,18 @@ SiamRPN 使用 RPN 网络在响应图上执行位置回归和目标分类。 Sia
 我们在表 \ref{tab:untargeted} 中报告相对于 \textit{真实/虚假轨迹} 的精度得分。
 除了单纯的添加和粘贴操作外，我们的方法在性能上明显优于其他方法，而且不需要梯度优化或网络推断。
 
-\begin{table}[]
+\section{结论}
+
+在本文中，我们提出了一种针对孪生跟踪器的视频不可知的有针对性的攻击方法。
+我们旨在通过向模板图像添加不可察觉的扰动并将 \textit{虚假目标}（即小的对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器，以便跟踪器输出位置和 \textit{虚假目标} 的大小，而不是实际目标。由于具有通用性，因此可以方便地利用生成的扰动来即时扰动视频，而无需进行额外的计算。
+在几个流行的数据集上进行的实验表明，我们的方法可以有效地以有针对性的攻击方式欺骗孪生跟踪者。
+
+\begin{table}[t]
 \centering
 \begin{tabular}{@{}cccccc@{}}
 \toprule
-\multirow{2}{*}[-2pt]{Method} & \multirow{2}{*}[-2pt]{Tracker} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular}} & \multicolumn{2}{c}{Perturbed Videos} \\ \cmidrule(l){5-6} 
- &  &  &  & Real Traj. & Fake Traj. \\ \midrule
+\multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} & \multicolumn{2}{c}{对抗视频} \\ \cmidrule(l){4-6} 
+ &  &  & 真实轨迹 & 真实轨迹 & 虚假轨迹 \\ \midrule
 CSA & SiamRPN & 4720 & 0.851 & 0.458 & - \\
 FAN & SiamFC & 10 & 0.720 & 0.180&0.420 \\
 TTP & SiamRPN++ & 8 & 0.910 & 0.080&0.692 \\
@@ -358,9 +363,3 @@ Ours & SiamFC++ & 0 & 0.861 & 0.048&0.928 \\ \bottomrule
 \caption{关于 OTB2015 上 \textit{真实/虚假轨迹} 的精确度得分。}
 \label{tab:untargeted}
 \end{table}
-
-\section{结论}
-
-在本文中，我们提出了一种针对孪生跟踪器的视频不可知的有针对性的攻击方法。
-我们旨在通过向模板图像添加不可察觉的扰动并将 \textit{虚假目标}（即小的对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器，以便跟踪器输出位置和 \textit{虚假目标} 的大小，而不是实际目标。由于具有通用性，因此可以方便地利用生成的扰动来即时扰动视频，而无需进行额外的计算。
-在几个流行的数据集上进行的实验表明，我们的方法可以有效地以有针对性的攻击方式欺骗孪生跟踪者。
