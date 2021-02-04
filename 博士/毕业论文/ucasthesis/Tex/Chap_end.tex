@@ -21,13 +21,6 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %(The bug is, I cannot find any temporal information used in siamese trackers. (I cannot believe it!!! Check it again.--Checked)) For example, A use a time memory to store the appearance information. B use a simple feature average during test. C use history positional information to predict the object position in current frame. However, all these method cannot handle the temporal information during training, which lead to sub-optimal result. To solve this problem, 
 但是，上述所有孪生算法都基于仅从当前帧裁剪的特征执行跟踪，这限制了孪生跟踪器的功能。
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
-    \caption{将我们的方法与 SiamMask 和 SiamFCv2 进行比较。示例框架来自 GOT-10k 测试装置。与现有方法相比，我们的方法可有效处理不良的目标外观。}
-    \label{fig:visulization}
-\end{figure}
-
 实际上，视频具有关于目标的丰富信息，并且这种时间信息是视频理解和跟踪的重要基础。
 例如，在视频目标检测中，FGFA~\cite{zhu2017flow} 在特征级别上利用了时间一致性。它通过沿运动路径聚集附近的特征来改善每帧特征，从而提高了视频识别精度。
 在视频目标分割中，STCNN~\cite{xu2019spatiotemporal} 引入了时间相干模块，该模块着重于捕获动态外观和运动提示以提供目标分割的指导。
@@ -250,6 +243,14 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \fi
 
 \section{实验}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
+    \caption{将我们的方法与 SiamMask 和 SiamFCv2 进行比较。示例框架来自 GOT-10k 测试装置。与现有方法相比，我们的方法可有效处理不良的目标外观。}
+    \label{fig:visulization}
+\end{figure}
+
 在本节中，我们首先介绍实现细节。
 然后，我们对 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据数据库进行评估。
 \subsection{实施细节}
