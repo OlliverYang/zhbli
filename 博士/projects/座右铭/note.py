@@ -15,14 +15,13 @@ words = ['不要猜测','自由','循序渐进', '对自己诚实', '不同的�
                '如果感到不满意，可以选择立刻采取措施',
                '根据自己的耳鸣/黑眼圈/性能力/睡眠质量可以得出结论，自己的身体状况距正常人有很大差距']
 length = len(words)
-def show(event):
-    global i
-    while True:
-        print(i)
-        time.sleep(2)
-        lab.config(text=words[i%length])
-        lab.update()
-        i+=1
 
-lab.bind('<Enter>',show)
-mainloop()
+i = 0
+while True:
+    print(i)
+    time.sleep(2)
+    lab.config(text=words[i%length])
+    lab.update()
+    i += 1
+
+lab.mainloop()
