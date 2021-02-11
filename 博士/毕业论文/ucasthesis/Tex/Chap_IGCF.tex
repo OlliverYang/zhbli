@@ -310,25 +310,10 @@ GOT-10k 的评估指标是平均重叠（AO），它表示所有地面和估计�
 
 \begin{figure}[t]
 \centering
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00001.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00021.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00032.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00069.jpg}}          \hspace{-0.6em}        
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/paragliding-launch/00079.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/parkour/00001.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/parkour/00006.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/parkour/00026.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/parkour/00063.jpg}}                     \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/parkour/00065.jpg}}\\[0.2ex]
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00001.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00014.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00017.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00036.jpg}}                   \hspace{-0.6em}
-    \subfloat{\includegraphics[width=2.43cm]{Img/IGCF/davis16val/bmx-trees/00067.jpg}}
-    \caption{我们的方法在 DAVIS2016 VAL 数据集中的定性结果。}
-    \label{fig:davis}
+\includegraphics[width=\textwidth]{Img/IGCF/davis.pdf}
+\caption{我们的方法在 DAVIS2016 VAL 数据集中的定性结果。}
+\label{fig:davis}
 \end{figure}
-
 
 \subsection{对 DAVIS2016 的评估}
 配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，跨越了多次出现的常见视频目标分割挑战，例如遮挡，运动模糊和外观变化。我们在 DAVIS2016 的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis}所示。结果表明，提出的 IGCF 可以准确地恢复目标的轮廓，这在一定程度上解释了 IGCF 为什么可以提高跟踪性能。
