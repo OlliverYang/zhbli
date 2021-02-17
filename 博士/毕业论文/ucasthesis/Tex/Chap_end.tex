@@ -129,6 +129,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 \textbf{特征提取器} 为了处理目标的比例变化，我们使用 Res50-FPN \cite{lin2017feature} 作为特征提取器。
 % You need to describe FPN here. What is FPN?
 \textbf{F}eature \textbf{P}yramid \textbf{N}etwork（FPN）利用深层卷积网络固有的多尺度金字塔层次结构来构建具有少量额外成本的特征金字塔。
+与现有目标跟踪的工作不同，我们提出采用特征金字塔架构作为目标跟踪网络的特征提取器。因为特征金字塔具有很多优点。例如使图像金字塔的每个级别特征化的主要优点是，它会产生多尺度特征表示，其中所有级别在语义上都很强大，包括高分辨率级别。众所周知，特征金字塔是识别的基本组成部分用于检测不同比例物体的系统。但是最近的深度学习对象检测器避免了金字塔表示，部分原因是它们需要大量计算和内存。在本文中，我们利用深层卷积网络固有的多尺度金字塔层次结构来构建具有边际额外成本的特征金字塔。开发了具有横向连接的自上而下的体系结构，以构建各种规模的高级语义特征图。这种称为功能金字塔网络（FPN）的体系结构在多种应用程序中作为通用的特征提取器显示出了显着的改进。为了避免金字塔造成的计算荣誉，FPN 自然地利用卷积神经网络的要素层次结构的金字塔形状，同时创建在各个尺度上具有强大语义的要素金字塔。为了实现此目标，我们依靠通过自上而下的路径和横向连接将低分辨率，语义上强的特征与高分辨率，语义上弱的特征相结合的体系结构（图1（d））。结果是一个功能金字塔，在所有级别上都具有丰富的语义，并且可以从单个输入图像比例快速构建。换句话说，我们展示了如何创建网络内特征金字塔，这些特征金字塔可用于替换特征化的图像金字塔而不会牺牲表示能力，速度或内存。% Feature Pyramid Networks for Object Detection
 我们的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出按比例大小的特征图。
 %The input of the feature extractor is an image pair consists of a template image and a search image. The search image is resized to min size 800. The template is cropped according to ground truth bounding box and resized into 400*400. According to the siamese architecture, the template/search image share the same parameters. 
 %For the search image, we got 5 different features and they have strides of \{4, 8, 16, 32, 64\} pixels with respect to the input image. For template branch, we use the last layer of FPN with size 7*7. 
@@ -212,6 +213,7 @@ The loss function of stage 1 is:
 % The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
 \textbf{对抗性 dropout} 功能融合之后，我们使用对抗性 dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+之所以使用这一模块，是因为 dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元[42]。据Srivastava等人。 [42]，辍学具有整合网络的多个子集的作用。 Park等。 [30]着重指出了卷积层上的辍学效果。汤普森等[44]指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间缺失的方法，即丢弃整个特征图，而不是单个神经元。 Hou el等人建立在空间辍学的基础上。 [16]提出了一个加权的信道丢弃，该信道对各个信道使用可变的丢弃率，其中丢弃率取决于信道的平均激活值。加权通道丢失仅应用于网络的较深层，在这些深层中，激活具有很高的特异性[51、50、49]。最初提出对抗性辍学是一种用于监督和半监督学习的有效正则化方法。更具体地说，Park等。 [31]定义了两种类型的对抗性辍学：监督对抗性辍学（SAdD）和虚拟对抗性辍学（VAdD）。通过访问地面事实标签，可以使用SAdD最大化模型预测与地面事实标签之间的差异。另一方面，如果没有标签，则使用VAdD最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
 我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性 dropout 的特征。
 然后，我们旨在最大程度地减少随机 dropout 的特征和对抗性 dropout 的特征之间的差异。
 具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示阶段 2 中的分类层和回归层。
