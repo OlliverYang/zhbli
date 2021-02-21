@@ -54,16 +54,16 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 
 %improve the generalization ability on bad object.
 %Our insight is that, if we only rely on the traditional training method, the bad image in the training data will be over wheeled by the easy cases. So the tracker shows bad performance when meeting with bad image during testing. To solve this problem, we take advantage of the recent progress in adversarial learning to increase the robustness of object features.
-%Our method employs adversarial dropout to increase the robustness of object features. 
+%Our method employs adversarial Dropout to increase the robustness of object features. 
 %注意，由于该模块在文章中占据次要位置，所以不应该写目前方法存在的缺点，而应该直接写用了这个模块后起到的作用。
 %感觉概括性的优点不太好想，所以可以多些几句实现细节。这就要求我们弄懂代码原理。
 为了提高目标特征的鲁棒性，我们在孪生跟踪网络中进一步整合了一个对抗性 Dropout \cite{park2018adversarial} 模块。
-% add adversarial dropout to enforce the tracker to learn difficult cases. 
+% add adversarial Dropout to enforce the tracker to learn difficult cases. 
 % (We further propose a adversarial training module to enforce the tracker to learn difficult cases. The motivation is that ... This is achieved by computing the adversarial masks based on diversity maximum. This simple form of feature selection improves the discrimination power of the tracker.)
-%Specifically, we calculate the diversity of two dropouts, and make the loss max to learn the difficult dropout mask.
+%Specifically, we calculate the diversity of two Dropouts, and make the loss max to learn the difficult Dropout mask.
 具体而言，首先根据散度最大值预测对抗性 Dropout 模板。
 然后，我们旨在最大程度地减小随机删除的特征和对抗删除的特征之间的差异。
-%The effect of this module can be interpreted from both the dropout and from the adversarial training perspectives.
+%The effect of this module can be interpreted from both the Dropout and from the adversarial training perspectives.
 该模块具有 Dropout 和对抗训练的双重优势：Dropout 使基于孪生网络的视频目标跟踪器在训练过程中随机断开神经元，以防止目标特征的过拟合；而对抗训练则使基于孪生网络的视频目标跟踪器学习困难的情况。
 
 总体来说，本章的贡献有三个方面：
@@ -93,8 +93,8 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %In this section, we will introduce the proposed tracking method, SiamTFA (Fig. \ref{fig:SiamTFA}). 
 %The main feature is:
 %(1) A strong backbone. Use FPN and new-proposed feature modulation.
-%(2) Equipped with 2 useful module: temporal aggregation module and adversarial dropout module to improve the robustness of features.
-%In the following, three sub-section will be introduced: (1) Overview of tracking (2) Temporal aggregation module (3) Adversarial dropout module.
+%(2) Equipped with 2 useful module: temporal aggregation module and adversarial Dropout module to improve the robustness of features.
+%In the following, three sub-section will be introduced: (1) Overview of tracking (2) Temporal aggregation module (3) Adversarial Dropout module.
 %网络结构怎么描述？可以参考ATOM。
 %Our SiamTFA bases on a strong feature extractor -- FPN.
 %We insert our temporal aggregation module in the backbone. Details of this module will be introduced at sec 3.2.
@@ -108,26 +108,30 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %SiamTFA is composed of ... and ...
 %Inspired by the great success of siamese trackers \cite{SiamRPN++, Wang2018SiamMask}, we also construct our SiamTFA based on the siamese architecture.
 在本节中，我们将介绍基于孪生体系结构的跟踪方法，即 SiamTFA（图 \ref{fig:SiamTFA}），其灵感来自孪生跟踪器 \cite{SiamRPN++, Wang2018SiamMask} 的巨大成功。
-具体而言，SiamTFA 将图像对作为输入，包括模板图像和搜索图像。模板图像是根据地面真实边界框从初始帧裁剪的图像块。搜索图像是视频其余部分中的一整帧。两个输入共享相同的特征提取器和参数。
-受两阶段检测范例 \cite{ren2015faster} 成功的启发，我们的孪生跟踪器也是一种两阶段方法。第一阶段旨在生成在视觉上类似于给定模板目标的建议。在这个阶段，我们介绍一个时间聚合模块
+具体而言，SiamTFA 将图像对作为输入，包括模板图像和搜索图像。模板图像是根据真实边界框从初始帧裁剪的图像块。搜索图像是视频序列中的某一帧。两个输入共享相同的特征提取器和网络参数。
+受两阶段检测框架 \cite{ren2015faster} 启发，本章提出的孪生跟踪器也是一种两阶段方法。第一阶段旨在生成在视觉上类似于给定模板目标的候选目标区域。在该阶段，我们引入一个时间聚合模块
 %(Fig. \ref{fig:TSM}) 
-增强时间信息（请参见第 \ref{sec:stage1} 节）。第二阶段旨在从候选提案中确定目标。
+以增强时间信息（请参见第 \ref{sec:stage1} 节）。第二阶段旨在从候选目标区域确定跟踪的最终结果。
 % select the target from candidate proposals. 
-在这一阶段，我们插入一个对抗性 dropout 模块以学习更强大的功能（第 \ref{sec:stage2}节）。
+在该阶段，我们引入一个对抗性 Dropout 模块以学习更具判别性的特征（第 \ref{sec:stage2}节）。
 
 \subsection{时间聚合模块}
 \label{sec:stage1}
 % Note that 'stage1' and 'stage2' is a local term. You should introduce the global architecture which includes 'stage1' and 'stage2' first.
 % You need to say something about ‘siamese' and the 'input'.
-候选目标生成阶段包括3个组件：（1）特征提取器，（2）时间聚合模块和（3）特征调制模块。
-% 需要综述三个模块在stage1中的作用。
-特征提取器分别为搜索图像和模板图像生成搜索特征和模板特征。时间聚合模块被集成到特征提取器中以利用时间信息。特征调制模块合并搜索特征和模板特征以识别候选目标。
+候选目标生成阶段包括三个个组件：（1）特征提取器，（2）时间聚合模块和（3）特征调制模块。
+特征提取器分别为搜索图像和模板图像生成搜索特征和模板特征。时间聚合模块被集成到特征提取器中以利用时间信息。特征调制模块聚合搜索特征和模板特征以识别候选目标。
 
 \textbf{特征提取器} 为了处理目标的比例变化，我们使用 Res50-FPN \cite{lin2017feature} 作为特征提取器。
 % You need to describe FPN here. What is FPN?
-\textbf{F}eature \textbf{P}yramid \textbf{N}etwork（FPN）利用深层卷积网络固有的多尺度金字塔层次结构来构建具有少量额外成本的特征金字塔。
-与现有目标跟踪的工作不同，我们提出采用特征金字塔架构作为目标跟踪网络的特征提取器。因为特征金字塔具有很多优点。例如使图像金字塔的每个级别特征化的主要优点是，它会产生多尺度特征表示，其中所有级别在语义上都很强大，包括高分辨率级别。众所周知，特征金字塔是识别的基本组成部分用于检测不同比例物体的系统。但是最近的深度学习目标检测器避免了金字塔表示，部分原因是它们需要大量计算和内存。在本章中，我们利用深层卷积网络固有的多尺度金字塔层次结构来构建具有边际额外成本的特征金字塔。开发了具有横向连接的自上而下的体系结构，以构建各种规模的高级语义特征图。这种称为功能金字塔网络（FPN）的体系结构在多种应用程序中作为通用的特征提取器显示出了显着的改进。为了避免金字塔造成的计算荣誉，FPN 自然地利用卷积神经网络的要素层次结构的金字塔形状，同时创建在各个尺度上具有强大语义的要素金字塔。为了实现此目标，我们依靠通过自上而下的路径和横向连接将低分辨率，语义上强的特征与高分辨率，语义上弱的特征相结合的体系结构（图1（d））。结果是一个功能金字塔，在所有级别上都具有丰富的语义，并且可以从单个输入图像比例快速构建。换句话说，我们展示了如何创建网络内特征金字塔，这些特征金字塔可用于替换特征化的图像金字塔而不会牺牲表示能力，速度或内存。% Feature Pyramid Networks for Object Detection
-我们的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出按比例大小的特征图。
+\textbf{F}eature \textbf{P}yramid \textbf{N}etwork（FPN）利用深层卷积网络固有的多尺度金字塔层次结构来构建具有较小计算成本的特征金字塔。
+%与现有目标跟踪的工作不同，我们提出采用特征金字塔架构作为目标跟踪网络的特征提取器。因为特征金字塔具有很多优点。例如使图像金字塔的每个级别特征化的主要优点是，它会产生多尺度特征表示，其中所有级别在语义上都很强大，包括高分辨率级别。众所周知，
+特征金字塔是目标检测领域用于检测不同尺度目标的重要组件。
+%但是最近的深度学习目标检测器避免了金字塔表示，部分原因是它们需要大量计算和内存。在本章中，
+然而传统的特征金字塔方法往往需要消耗大量计算资源和内存空间。为了解决这一问题，FPN 利用深层卷积网络固有的多尺度金字塔层次结构来构建具有较小计算成本的特征金字塔，开发了具有横向连接的自上而下的体系结构，以构建各种尺度的高级语义特征图。
+FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显著的性能改进。
+%为了避免金字塔造成的计算量增加，FPN 自然地利用卷积神经网络中金字塔形状的特征层次结构，创建在各个尺度上具有强大语义的特征金字塔。为了实现此目标，我们依靠通过自上而下的路径和横向连接将低分辨率，语义上强的特征与高分辨率，语义上弱的特征相结合的体系结构（图1（d））。结果是一个功能金字塔，在所有级别上都具有丰富的语义，并且可以从单个输入图像比例快速构建。换句话说，我们展示了如何创建网络内特征金字塔，这些特征金字塔可用于替换特征化的图像金字塔而不会牺牲表示能力，速度或内存。% Feature Pyramid Networks for Object Detection
+因此，我们将 FPN 体系结构引入孪生网络跟踪器当中。所提出的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出不同尺度的特征图。
 %The input of the feature extractor is an image pair consists of a template image and a search image. The search image is resized to min size 800. The template is cropped according to ground truth bounding box and resized into 400*400. According to the siamese architecture, the template/search image share the same parameters. 
 %For the search image, we got 5 different features and they have strides of \{4, 8, 16, 32, 64\} pixels with respect to the input image. For template branch, we use the last layer of FPN with size 7*7. 
 我们将搜索图像的输出表示为 $F_{x} = \{f_{x}^i\}_{i=1:5}$，并注意它们的步幅为 \{4, 8, 16, 32, 64\} 相对于输入搜索图像为像素。
@@ -191,14 +195,14 @@ The loss function of stage 1 is:
 %The generated proposes with top-K classification scores is send to stage2.
 在优化阶段，我们使用排名靠前的 $N$ 个提案区域。
 
-\subsection{对抗性 dropout 模块}
+\subsection{对抗性 Dropout 模块}
 %stage 1 的网络结构已经交代清楚了，就是一个FPN。和调制，和分类/回归层。那么stage的网络结构也应该交代清楚：roi align + 特征融合 + 对抗 + 分类/回归层。
 \label{sec:stage2}
 % 首先你要讲一下stage2在全局中的作用。
 优化阶段旨在从候选提案中选择目标。
 % 或许该讲一下stage2的输入包括：真实目标特征+候选区域。
 % The input of stage 2 consists of: (1) The target feature is $f_{z} \in \mathbb R ^{256 \times 7 \times 7}$. (2) The candidate boxes generated from stage 1.
-% Stage 2 compose of a feature merge module, a adversarial dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
+% Stage 2 compose of a feature merge module, a adversarial Dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
 这些候选投标的特征是使用 RoIAlign \cite{he2017mask} 从搜索特征金字塔 $F_{x}$ 中裁剪出来的，然后与目标特征 $f_{z}$融合在一起：
 \begin{equation}
     \mathcal{X} = \mathcal{R}(b, F_{x}) \odot f_{z},
@@ -210,10 +214,10 @@ The loss function of stage 1 is:
 % Maybe you need to say why you do the merge again.
 % The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
-\textbf{对抗性 dropout} 功能融合之后，我们使用对抗性 dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
-之所以使用这一模块，是因为 dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元[42]。据Srivastava等人。 [42]， Dropout 具有整合网络的多个子集的作用。 Park等。 [30]着重指出了卷积层上的 Dropout 效果。汤普森等[44]指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间缺失的方法，即丢弃整个特征图，而不是单个神经元。 Hou el等人建立在空间 Dropout 的基础上。 [16]提出了一个加权的信道丢弃，该信道对各个信道使用可变的丢弃率，其中丢弃率取决于信道的平均激活值。加权通道丢失仅应用于网络的较深层，在这些深层中，激活具有很高的特异性[51、50、49]。最初提出对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。更具体地说，Park等。 [31]定义了两种类型的对抗性 Dropout ：监督对抗性 Dropout （SAdD）和虚拟对抗性 Dropout （VAdD）。通过访问地面事实标签，可以使用SAdD最大化模型预测与地面事实标签之间的差异。另一方面，如果没有标签，则使用VAdD最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
-我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性 dropout 的特征。
-然后，我们旨在最大程度地减少随机 dropout 的特征和对抗性 dropout 的特征之间的差异。
+\textbf{对抗性 Dropout} 功能融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元[42]。据Srivastava等人。 [42]， Dropout 具有整合网络的多个子集的作用。 Park等。 [30]着重指出了卷积层上的 Dropout 效果。汤普森等[44]指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间缺失的方法，即丢弃整个特征图，而不是单个神经元。 Hou el等人建立在空间 Dropout 的基础上。 [16]提出了一个加权的信道丢弃，该信道对各个信道使用可变的丢弃率，其中丢弃率取决于信道的平均激活值。加权通道丢失仅应用于网络的较深层，在这些深层中，激活具有很高的特异性[51、50、49]。最初提出对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。更具体地说，Park等。 [31]定义了两种类型的对抗性 Dropout ：监督对抗性 Dropout （SAdD）和虚拟对抗性 Dropout （VAdD）。通过访问地面事实标签，可以使用SAdD最大化模型预测与地面事实标签之间的差异。另一方面，如果没有标签，则使用VAdD最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
+我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性 Dropout 的特征。
+然后，我们旨在最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
 具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示阶段 2 中的分类层和回归层。
 根据 \cite{lee2019drop}，按如下方式计算对抗 Dropout 掩码：
 \begin{equation}
@@ -229,9 +233,9 @@ $\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{l
 $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
 为了计算 $\mathbf{m}^{adv}$，\cite{park2018adversarial} 通过在过程中适当放松来优化 0/1 背包问题。有关详细信息，请参考 \cite{park2018adversarial}。
-%Then, we use the mask to dropout the feature, then send it to the classifier.
+%Then, we use the mask to Dropout the feature, then send it to the classifier.
 %We also send the clean feature to the classifier, and wish the loss minimum:
-在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个带有随机 dropout 掩码 $\mathbf{m}^{s}$，另一个带有对抗 dropout 掩码 $\mathbf{m}^{adv}$ \cite{lee2019drop}。
+在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个带有随机 Dropout 掩码 $\mathbf{m}^{s}$，另一个带有对抗 Dropout 掩码 $\mathbf{m}^{adv}$ \cite{lee2019drop}。
 \begin{equation}
     \mathcal{L}_{adv} = \mathbb E[D_{KL}[h^{cls}(\mathcal{X} \odot\mathbf{m}^{s})||h^{cls}(\mathcal{X} \odot\mathbf{m}^{adv}))]],
 \end{equation}
@@ -295,7 +299,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \caption{我们的算法在 GOT-10k 测试集上具有不同组件的性能。}
 \begin{tabular}{c c c c c}
 \bottomrule
-\begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
+\begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\Dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
 \hline
           &           & 0.542 & 0.607 & 0.456 \\
 \checkmark&           & 0.561 & 0.645 & 0.480 \\
@@ -338,7 +342,7 @@ GOT-10k 测试装置包括 180 种序列，具有 84 种不同的目标类别和
 从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中，我们看到，通过添加时间聚合模块，AO 性能提高了1.9％。
 这是因为时间聚集模块通过聚集来自相邻帧的时间信息来改善每帧特征。
 %The RPN stage rapidly filters out most background samples, and the RoI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
-从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中，我们看到，通过对抗性 dropout 模块，AO 增加了1.6％。
+从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中，我们看到，通过对抗性 Dropout 模块，AO 增加了1.6％。
 %This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
 这是因为对抗性退出模块提高了我们的孪生跟踪网络的识别能力。
 
