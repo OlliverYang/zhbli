@@ -273,7 +273,7 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
     \label{fig:vot16}
 \end{figure}
 
-\section{实验}
+\section{实验结果与分析}
 我们在三个具有挑战性的目标跟踪数据集上对提出的跟踪器 IGCF 进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。最后，我们对视频目标分割数据集 DAVIS \cite{Perazzi2016} 进行了定性实验。
 \subsection{对 VOT2015 的评估}
 
@@ -289,21 +289,21 @@ VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的�
 
 我们将我们的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
 这些跟踪器可以分为三类：Struck 和 EBT 是传统的跟踪器。SRDCF，CSRDCF，TGPRfSRDCF，Staple 和 SAMF 是基于 DCF 的跟踪器。DeepSRDCF 和 TCNN 是基于 CNN 的跟踪器。
-跟踪器的 EAO 得分如图 \ref{fig:vot15}。与其他列出的方法相比，我们的方法可实现 0.342 的出色 EAO。
-Struck 使用内核化的结构化输出支持向量机（SVM），可以在线学习以提供自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 在EAO 方面的相对提升显著优于 Struck，达到 36.8％，这表明 DCF 框架的出色表现以及 IGCF 的有效性。
+跟踪器的 EAO 得分如图 \ref{fig:vot15} 所示。与其他列出的方法相比，本章提出的方法可实现 0.342 的 EAO。
+Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 在 EAO 方面的相对提升显著优于 Struck，达到 36.8％，这表明 DCF 框架的出色表现以及 IGCF 的有效性。
 CSRDCF 使用目标和背景的颜色直方图生成目标模板，以限制相关滤波器的学习，而 IGCF 使用神经网络生成模板。与 CSRDCF 相比，EAO 分数的相对提高为 6.9％，这表明，与使用底层图像特征生成的模板相比，使用深层卷积特征生成的语义模板更有利于滤波器的学习。
 DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征。但是，所使用的深层特征并不专用于实例分割。相比之下，InstMask 在针对实例分割而设计的 COCO 分割数据集上进行了训练。在 VOT2015 上，就 EAO 而言，IGCF 比 DeepSRCDF 高出 7.5％，这强调了提出的的 InstMask 和 IGSC 模块的重要性。
 
 \subsection{对 VOT2016 的评估}
-VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性，鲁棒性和 EAO。
+VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性、鲁棒性和 EAO。
 
 我们将所提出的算法与以下跟踪器进行了比较：
-CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了 VOT2016 上 EAO 的性能。在比较的方法中，我们的方法以 0.330 的 EAO 得分达到最佳结果。
+CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了 VOT2016 上 EAO 的性能。与所列出的方法相比，我们的方法以 0.330 的 EAO 得分达到最佳结果。
 
 \subsection{对 GOT-10k 的评估}
-GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据库。该数据集包含超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框。现实世界中有 563 类运动目标和 87 种运动模式。
+GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据库。该数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包含了现实世界中的 563 类运动目标和 87 种运动模式。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
-GOT-10k 的评估指标是平均重叠（AO），它表示所有地面和估计边界框之间重叠的平均值。
+GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
 我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。评估的跟踪器的成功图如图 \ref{fig:got10k}所示。它代表重叠度量超过阈值的帧相对于不同阈值的百分比。我们的方法的 AO 得分为 0.299，优于所有其他列出的竞争跟踪算法。
 
@@ -315,9 +315,9 @@ GOT-10k 的评估指标是平均重叠（AO），它表示所有地面和估计�
 \end{figure}
 
 \subsection{对 DAVIS2016 的评估}
-配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，跨越了多次出现的常见视频目标分割挑战，例如遮挡，运动模糊和外观变化。我们在 DAVIS2016 的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis}所示。结果表明，提出的 IGCF 可以准确地恢复目标的轮廓，这在一定程度上解释了 IGCF 为什么可以提高跟踪性能。
+配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，包含常见的视频目标分割挑战，例如遮挡、运动模糊和表观变化等。我们在 DAVIS2016 的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis} 所示。结果表明，提出的 IGCF 可以准确地恢复目标的轮廓，这在一定程度上解释了 IGCF 可以提高跟踪性能的原因。
 
-\section{结论}
+\section{本章小结}
 在本文中，我们提出了一种新颖的跟踪器，该跟踪器结合了深度神经网络和相关滤波器的优点来提高目标跟踪的性能。
 InstMask 用于约束相关滤波器的学习过程。基于实例级别的分割，我们进一步提出了一种自校正机制，以减轻对相关滤波器的漂移。
 通过与最新的跟踪器进行比较，实验结果显示了该方法的出色鲁棒性和效率。
