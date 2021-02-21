@@ -134,7 +134,7 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 因此，我们将 FPN 体系结构引入孪生网络跟踪器当中。所提出的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出不同尺度的特征图。
 %The input of the feature extractor is an image pair consists of a template image and a search image. The search image is resized to min size 800. The template is cropped according to ground truth bounding box and resized into 400*400. According to the siamese architecture, the template/search image share the same parameters. 
 %For the search image, we got 5 different features and they have strides of \{4, 8, 16, 32, 64\} pixels with respect to the input image. For template branch, we use the last layer of FPN with size 7*7. 
-我们将搜索图像的输出表示为 $F_{x} = \{f_{x}^i\}_{i=1:5}$，并注意它们的步幅为 \{4, 8, 16, 32, 64\} 相对于输入搜索图像为像素。
+我们将搜索图像的输出特征图表示为 $F_{x} = \{f_{x}^i\}_{i=1:5}$，特征图的步幅分别为 \{4, 8, 16, 32, 64\} 像素。
 对于模板图像，我们使用 FPN 最后阶段的输出作为模板特征，其空间大小为 $7 \times 7$。
 %Different from traditional trackers, our template/search features have temporal information. The reason is because we insert the temporal shift module into the backbone, which will be introduced next.
 
