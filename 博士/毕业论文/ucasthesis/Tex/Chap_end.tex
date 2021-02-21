@@ -79,11 +79,11 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 在 \cite{TRN} 中，作者认为时间关系推理使人类能够根据过去情况分析当前情况，并就下一步可能发生的情况提出假设。时间关系推理对于视频动作识别至关重要，它构成了描述事件的基础。因此，作者提出了一种有效且可解释的网络模块，即时间关系网络（temporal relational reasoning，TRN），该模块旨在学习和推理多个时间尺度上视频帧之间的时间依赖性。% Temporal Relational Reasoning in Videos 1711
 在 \cite{AdaFuse} 中，作者认为时间建模是有效的视频动作识别的关键。虽然了解时间信息可以提高动态动作的识别精度，但是消除时间冗余和重用过去的特征可以大大节省计算量，从而实现有效的动作识别。因此，作者提出了一种称为 AdaFuse 的自适应时间融合网络，该网络可以动态融合当前和过去特征图中的通道，以实现强大的时间建模，从而提高识别精度和效率。% ADAFUSE: ADAPTIVE TEMPORAL FUSION NETWORK FOR EFFICIENT ACTION RECOGNITION
 \subsection{时间信息在视频目标检测中的应用}
-在视频目标检测算法 TCNN \cite{TCNN} 中，作者认为在相邻帧中目标的位置和表观应保持连续性，即，预测的边界框位置和检测置信度不应在短时间内发生剧烈变化。然而，如果将图像目标检测框架直接应用于视频目标检测任务中，则目标的检测置信度往往会在相邻帧之间发生显著变化。为了解决这一问题，作者提出了一个深度学习框架，该框架扩展了流行的图像检测框架 R-CNN \cite{girshick2014rich} 和 Faster R-CNN \cite{FasterRCNN}，以通过合并相邻帧的时间信息和上下文信息来解决视频中的通用目标检测问题。该算法可以在相邻帧中传播检测结果，并可沿着跟踪算法生成的轨迹修改检测置信度，从而有效地提高现有图像检测框架的在视频目标检测任务中的性能。% T-CNN: Tubelets with Convolutional Neural Networks for Object Detection from Videos 1604
-该工作虽然提高了识别准确性，具有较高的计算成本。为了减少计算量，在 \cite{DeepFeature} 中，作者了深度特征流，一种快速、准确的视频目标检测方法。该方法在稀疏的关键帧上应用图像检测网络，通过流场将深度特征图从关键帧传播到其他帧。传播后的特征类似于原始特征。通常，流估计和特征传播比卷积特征的计算快得多。因此，该方法避免了计算瓶颈，显著提高了检测速度。当流场也由网络估算时，整个架构将进行端到端训练，可同时优化目标检测任务和流网络。% Deep Feature Flow for Video Recognition
+在视频目标检测算法 TCNN \cite{TCNN} 中，作者认为在相邻帧中目标的位置和表观应保持连续性，即，预测的边界框位置和检测置信度不应在短时间内发生剧烈变化。然而，如果将图像目标检测框架直接应用于视频目标检测任务中，则目标的检测置信度往往会在相邻帧之间发生显著变化。为了解决这一问题，作者提出了一个深度学习框架，该框架扩展了流行的图像检测框架 R-CNN \cite{girshick2014rich} 和 Faster R-CNN \cite{ren2015faster}，以通过合并相邻帧的时间信息和上下文信息来解决视频中的通用目标检测问题。该算法可以在相邻帧中传播检测结果，并可沿着跟踪算法生成的轨迹修改检测置信度，从而有效地提高现有图像检测框架的在视频目标检测任务中的性能。% T-CNN: Tubelets with Convolutional Neural Networks for Object Detection from Videos 1604
+该工作虽然提高了识别准确性，具有较高的计算成本。为了减少计算量，在文献 \cite{DeepFeature} 中，作者了深度特征流，一种快速、准确的视频目标检测方法。该方法在稀疏的关键帧上应用图像检测网络，通过流场将深度特征图从关键帧传播到其他帧。传播后的特征类似于原始特征。通常，流估计和特征传播比卷积特征的计算快得多。因此，该方法避免了计算瓶颈，显著提高了检测速度。当流场也由网络估算时，整个架构将进行端到端训练，可同时优化目标检测任务和流网络。% Deep Feature Flow for Video Recognition
 \subsection{时间信息在视频目标跟踪中的应用}
 大多数现有的相关滤波跟踪器仅考虑当前帧的表观特征，几乎无法从运动和帧间信息中受益。在诸如部分遮挡和形变之类的挑战中，缺少时间信息会降低跟踪性能。目标跟踪所处理的是视频信息，因此时序信息很重要。以前有很多工作利用时序信息进行目标跟踪。
-在文献 \cite{DeepMotion} 中，作者首次提出将表观信息与深度运动功能融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动功能对视频目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视频目标跟踪。
+在文献 \cite{DeepMotion} 中，作者首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动功能对视频目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视频目标跟踪。
 该方法虽然利用光流提高了视频目标跟踪算法的性能，但采用的是在在动作识别任务中预训练的深层光流网络，并没有在视频目标跟踪任务中进行端到端训练，因此没有获得最佳跟踪效果。
 为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出深度学习框架中共同训练光流网络和跟踪网络你，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
 
@@ -119,7 +119,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 \label{sec:stage1}
 % Note that 'stage1' and 'stage2' is a local term. You should introduce the global architecture which includes 'stage1' and 'stage2' first.
 % You need to say something about ‘siamese' and the 'input'.
-候选目标生成阶段包括三个个组件：（1）特征提取器，（2）时间聚合模块和（3）特征调制模块。
+候选目标生成阶段包括三个组件：（1）特征提取器，（2）时间聚合模块和（3）特征调制模块。
 特征提取器分别为搜索图像和模板图像生成搜索特征和模板特征。时间聚合模块被集成到特征提取器中以利用时间信息。特征调制模块聚合搜索特征和模板特征以识别候选目标。
 
 \textbf{特征提取器} 为了处理目标的比例变化，我们使用 Res50-FPN \cite{lin2017feature} 作为特征提取器。
@@ -140,25 +140,37 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 
 \textbf{时间聚合模块}
 %Different from traditional trackers, we use the rich information about the same object instance by 
-最受欢迎的孪生跟踪器 \cite{SiamRPN++, Wang2018SiamMask} 使用静止图像进行预测。% However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
-这限制了这些孪生跟踪器的能力。
-一方面，单帧跟踪会产生不稳定的结果，并且在表观不佳时会失败（图 \ref{fig:visulization}）；另一方面，
-时间相邻帧可以提供有关目标的更多信息。
+大多数基于孪生网络的视频目标跟踪算法 \cite{SiamRPN++, Wang2018SiamMask} 使用静止图像预测目标的位置，% However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
+这限制了孪生跟踪器的能力。
+一方面，基于单帧进行跟踪可能会产生不稳定的结果，从而导致在目标表观发生退化时跟踪失败（图 \ref{fig:visulization}）；另一方面，
+在时间上相邻的帧可以提供有关目标的更多信息。
 %the video has rich information about the target. 
-因此，我们旨在通过汇总相邻帧的特征来改善每帧特征。
-传统的2D CNN在计算上便宜，但无法捕获时间关系。基于3D CNN的方法可以实现良好的性能，但计算量大，因此部署成本高。在本章所设计的跟踪其中，我们引入了一种既高效又高性能的通用有效的时间移位模块（TSM）。具体来说，它可以实现3D CNN的性能，但保持2D CNN的复杂性。TSM沿时间维度移动部分通道；因此便于在相邻帧之间交换信息。可以将其插入2D CNN中，以零计算和零参数实现时间建模。我们引入 TSM 模块，是因为该模块有很多好处。具体地说，视频模型中的激活可以表示为A∈RN×C×T×H×W，其中N是批处理大小，C是通道数，T是时间维，H和W是空间决议。传统的2D CNN在尺寸T上独立运行；因此，没有时间建模会产生影响（图1a）。相反，我们的时间移位模块（TSM）沿时间维度向前和向后移动通道。如图1b所示，来自相邻帧的信息在移位后与当前帧混合在一起。我们的直觉是：卷积运算由移位和乘法累加组成。我们将时间维度偏移±1，并将乘积从时间维度折叠到通道维度。为了实时了解在线视频，将来的框架不能转移到现在，因此我们使用单向TSM（图1c）进行在线视频理解。尽管移位运算具有零运算的性质，但根据经验，我们发现仅采用图像分类中使用的空间移位策略[51]会带来两个主要的视频理解问题：（1）它效率不高：移位运算在概念上为零FLOP但会导致数据移动。数据移动的额外成本不可忽略，并且会导致延迟增加。由于视频网络通常会占用大量内存（5D激活），因此这种现象在视频网络中更加严重。 （2）这是不准确的：在网络中移动太多通道会严重损害空间建模能力，并导致性能下降。为了解决这些问题，我们做出了两项技术贡献。 （1）我们使用时间局部移位策略：为了有效的时间融合，我们只移位了一小部分信道，而不是移位所有信道。这种策略显着降低了数据移动成本（图2a）。 （2）我们将TSM插入残差分支内而不是外部，以便保留当前帧的激活，这不会损害2D CNN骨干的空间特征学习能力。% TSM: Temporal Shift Module for Efficient Video Understanding
-具体来说，我们将一个时间聚合模块插入特征提取器的最后一个阶段。
+因此，我们旨在通过聚合相邻帧的特征来改善每帧中的目标特征。
+相比于三维卷积神经网络，传统的二维卷积卷积神经网络消耗的计算资源相对较少，但无法捕获时间关系。基于三维卷积神经网络的方法可以提取时间维度的特征，但计算量大，因此部署成本高。在本章所设计的跟踪器中，我们引入了一种性能高、速度快的通用时间移位模块（temporal shift module，TSM）。具体来说，该模块可以实现三维卷积神经网络的性能，同时保持二维卷积神经网络的复杂性。时间移位模块沿时间维度移动部分通道，因此可以在在相邻帧之间交换信息。该模块可以直接插入二维卷积神经网络中，在不增加计算量和参数量的情况下实现时间建模。。具体来说，神经网络中的特征激活可以表示为 $f \in R^{N\times C\times T\times H\times W}$，其中 $N$ 是批次大小，$C$ 是通道数，$T$ 是时间维度，$H$ 和 $W$ 是空间分辨率。传统的二维卷积神经网络在不同的时间 $T$ 上独立运行,因此无法进行时间建模。而时间移位模块沿时间维度向前或向后移动通道，使得来自相邻帧的信息在移位后与当前帧混合在一起。
+%我们的直觉是：卷积运算由移位和乘法累加组成。我们将时间维度偏移±1，并将乘积从时间维度折叠到通道维度。为了实时了解在线视频，将来的框架不能转移到现在，因此我们使用单向TSM（图1c）进行在线视频理解。
+尽管移位运算不会增加计算量，但仅简单地平移通道信息会带来两个主要的问题：
+\begin{itemize}
+\item 效率不高：移位运算在理论上不会增加计算量，但会导致数据移动。数据移动的额外成本不可忽略，并且会导致延迟增加。这种现象在由于占用大量内存空间的视频视频理解神经网络中更加严重。
+\item 准确性差：在网络中移动太多通道会严重损害空间建模能力，并导致性能下降。
+\end{itemize}
+为了解决这些问题，在文献 \cite{lin2019tsm} 中，作者提出了两个解决方案：
+\begin{itemize}
+\item 采用局部移位策略：为了有效的时间融合，只移位一小部分信道，而不是移位所有信道。这种策略显着降低了数据移动成本。
+\item 将时间移位模块插入残差分支内，以便保留当前帧的激活，这不会损害二维卷积神经网络的空间特征学习能力。
+\end{itemize}
+% TSM: Temporal Shift Module for Efficient Video Understanding
+在本章中，我们将该模块入到基于孪生网络的视频目标跟踪算法中。具体来说，我们将时间聚合模块插入孪生特征提取器的最后一个阶段。
 % We have to cite TSM, because we use this idea.
-为了对时间信息进行建模，一批图像是同一视频中的几个相邻帧，并按时间排序，因此我们可以将批次维度视为时间维度。假设特征提取器最后阶段的特征映射为 $f \in \mathbb R ^ {T \times C \times H \times W}$。
+为了对时间信息进行建模，一批图像是同一视频中的几个相邻帧，并按时间排序，因此我们可以将批次维度视为时间维度。假设特征提取器最后阶段的特征图表示为 $f \in \mathbb R ^ {T \times C \times H \times W}$。
 对于时刻 $t \leq T$，我们首先将特征 $f^t \in \mathbb R ^ {C \times H \times W}$ 沿通道维度分为三部分：$f_{1:K}^t \in \mathbb R ^ {K \times H \times W}$，$f_{(K+1):2K}^t \in \mathbb R ^ {K \times H \times W}$ 和 $f_{(2K+1):C}^t \in \mathbb R ^ {(C-2K) \times H \times W}$。
 然后，按照 \cite{lin2019tsm} 沿时间维度移动通道：
 % Then The aggregated function at time $t$ is:
 \begin{equation}
     f_{agg}^t = \mathcal{C}(f_{{1:K}}^{t-1}, f_{(K+1):2K}^{t+1}, f_{(2K+1):C}^{t}),
 \end{equation}
-其中 $\mathcal{C}(\cdot)$ 是串联操作。根据 \cite{lin2019tsm}，移位操作仅在残差层执行，以保留孪生跟踪器的空间特征学习能力。
-请注意，聚合特征 $f_{agg}^t$ 具有与 $f^t$相同的形状，因此我们可以将此模块直接插入到主干中，而无需更改网络的其他部分。
-而且，此操作仅需要进行数据移动，因此它在计算上是免费的，并且可以端到端进行训练。
+其中 $\mathcal{C}(\cdot)$ 是串接操作。根据 \cite{lin2019tsm}，移位操作仅在残差层执行，以保留孪生跟踪器的空间特征学习能力。
+请注意，聚合特征 $f_{agg}^t$ 具有与 $f^t$ 相同的形状，因此我们可以将此模块直接插入到主干网络中，而无需更改网络的其他部分。
+而且，此操作仅需要进行数据移动，并且可以端到端进行训练。
 % Say the effect of this module.
 %After performing such channel fusion, rich target information in adjacent frames can be aggregated into the current frame. For example, if the current frame is blurred, target information that is not blurred in adjacent frames can be used.
 
@@ -169,21 +181,21 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
     \label{fig:TSM}
 \end{figure}
 
-\textbf{特征调制模块} 在获得模板特征 $f_{z}$ 和搜索图像的特征金字塔 $F_{x} = \{f_{x}^i\}_{i=1:5}$ 之后，被调制以生成特定于目标的特征。
-具体而言，使用全局平均池生成生成调制矢量 $f_{avg}$ 从 $f_{z}$，该全局平均池携带目标特定的表观信息。
+\textbf{特征调制模块} 在获得模板特征 $f_{z}$ 和搜索图像的特征金字塔 $F_{x} = \{f_{x}^i\}_{i=1:5}$ 之后，对其进行调制以生成特定于目标的特征。
+具体而言，使用全局平均池化操作根据 $f_{z}$ 生成调制矢量 $f_{avg}$，该调制矢量携带目标特定的表观信息。
 %The search feature pyramid is $F = \{f_1, f_2, f_3\}$. 
 %For $f_{x}^{i} \in F_{x}$, t
 调制后的特征金字塔 $F_{mod} = \{f_{mod}^i\}_{i=1:5}$ 的生成方式如下：
 \begin{equation}
     f_{mod}^i = \mathcal{M}(f_{avg}, f^i_x),
 \end{equation}
-其中 $\mathcal M(\cdot)$ 是主通道互相关操作 \cite{SiamRPN++}。
+其中 $\mathcal M(\cdot)$ 是逐通道互相关操作 \cite{SiamRPN++}。
 %So we get the modulated feature pyramid $F_{mod} = \{f_{mod}^i\}_{i=1:5}$. 
 %Then we predict proposals on $F_{mod}$.
-每个调制的特征图都馈入两个同级的全连接层中-通道尺寸为 4$k$ 的边框回归层和通道尺寸为 2$k$ 的边框分类层，其中 $k$ 是每个位置的最大候选目标数量。
+每个调制后的特征图都被送入两个并行的全连接层中——通道尺寸为 $4k$ 的边框回归层和通道尺寸为 $2k$ 的边框分类层，其中 $k$ 是每个空间位置的最大候选目标数量。
 % anchor 这个概念是必备的，所以是得讲一下。
-相对于一组锚定义了目标/背景标准和边界框回归。
-在 \cite{lin2017feature} 之后，我们将具有相同比例的锚分配给每个不同的金字塔等级。有关锚点设置的详细信息，请参阅 \cite{lin2017feature}。
+%相对于一组锚定义了目标/背景标准和边界框回归。
+我们根据 \cite{lin2017feature} 将具有相同尺度的锚框分配给每个不同的金字塔层级。有关锚框设置的详细信息，请参阅 \cite{lin2017feature}。
 % For every modulated layer, we attach a classification layer and a regression layer to make predict.
 \iffalse
 The loss function of stage 1 is:
@@ -193,33 +205,34 @@ The loss function of stage 1 is:
 \fi
 % you need to say how we get the candidates. Faster R-CNN already says it.
 %The generated proposes with top-K classification scores is send to stage2.
-在优化阶段，我们使用排名靠前的 $N$ 个提案区域。
+我们使用得分最高的前 $N$ 个候选目标区域送入细化阶段进行后处理。
 
 \subsection{对抗性 Dropout 模块}
 %stage 1 的网络结构已经交代清楚了，就是一个FPN。和调制，和分类/回归层。那么stage的网络结构也应该交代清楚：roi align + 特征融合 + 对抗 + 分类/回归层。
 \label{sec:stage2}
 % 首先你要讲一下stage2在全局中的作用。
-优化阶段旨在从候选提案中选择目标。
+细化阶段旨在从候选目标区域中选择目标。
 % 或许该讲一下stage2的输入包括：真实目标特征+候选区域。
 % The input of stage 2 consists of: (1) The target feature is $f_{z} \in \mathbb R ^{256 \times 7 \times 7}$. (2) The candidate boxes generated from stage 1.
 % Stage 2 compose of a feature merge module, a adversarial Dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
-这些候选投标的特征是使用 RoIAlign \cite{he2017mask} 从搜索特征金字塔 $F_{x}$ 中裁剪出来的，然后与目标特征 $f_{z}$融合在一起：
+这些候选目标的特征使用 RoIAlign \cite{he2017mask} 操作从搜索特征金字塔 $F_{x}$ 中裁剪出来，然后与目标特征 $f_{z}$ 进行融合：
 \begin{equation}
     \mathcal{X} = \mathcal{R}(b, F_{x}) \odot f_{z},
 \end{equation}
-其中 $\mathcal{R}$ 表示 RoIAlign，$\odot$表示按元素相乘，$b$表示候选投标书中的RoI，$\mathcal{X}$表示$b$的融合特征。
+其中 $\mathcal{R}$ 表示 RoIAlign 操作，$\odot$表示逐元素相乘操作，$b$表示候选目标区域，$\mathcal{X}$ 表示候选目标区域 $b$ 的融合特征。
 %where $x' \in \mathbb R ^{256 \times 7 \times 7}$.
 %$x' \in \mathbb R ^{256 \times 7 \times 7}$ is the feature of an RoI cropped from unmodulated feature pyramid using RoIAlign \cite{he2017mask}.
 %The merged feature of a candidate target is:$x = x' \odot x_0$, where $\odot$ represents the element-wise multiplication. $x$ is the merged feature of that RoI.
 % Maybe you need to say why you do the merge again.
 % The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
-\textbf{对抗性 Dropout} 功能融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
-之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元[42]。据Srivastava等人。 [42]， Dropout 具有整合网络的多个子集的作用。 Park等。 [30]着重指出了卷积层上的 Dropout 效果。汤普森等[44]指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间缺失的方法，即丢弃整个特征图，而不是单个神经元。 Hou el等人建立在空间 Dropout 的基础上。 [16]提出了一个加权的信道丢弃，该信道对各个信道使用可变的丢弃率，其中丢弃率取决于信道的平均激活值。加权通道丢失仅应用于网络的较深层，在这些深层中，激活具有很高的特异性[51、50、49]。最初提出对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。更具体地说，Park等。 [31]定义了两种类型的对抗性 Dropout ：监督对抗性 Dropout （SAdD）和虚拟对抗性 Dropout （VAdD）。通过访问地面事实标签，可以使用SAdD最大化模型预测与地面事实标签之间的差异。另一方面，如果没有标签，则使用VAdD最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
-我们首先根据散度最大值预测对抗丢包率。将该掩码应用于 $\mathcal{X}$ 以获得对抗性 Dropout 的特征。
+\textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
+对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
+在本章种，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别行。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
 然后，我们旨在最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
-具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示阶段 2 中的分类层和回归层。
-根据 \cite{lee2019drop}，按如下方式计算对抗 Dropout 掩码：
+具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示细化阶段中的分类层和回归层。
+根据 \cite{lee2019drop}，按如下方式计算对抗性 Dropout 掩码：
 \begin{equation}
 \begin{split}
     & \mathbf{m}^{adv} = \mathop{\arg\max}\limits_{\mathbf{m}}D[h^{cls}(\mathcal{X} \odot \mathbf{m}^s), h^{cls}(\mathcal{X} \odot \mathbf{m})] \\
@@ -227,21 +240,21 @@ The loss function of stage 1 is:
 \end{split}
 \end{equation}
 其中 $L$ 代表 $\mathbf{m} \in \mathbb R^L$ 的尺寸，
-$\mathbf{m}^s$ 表示随机掩码， $\mathbf{m}^{adv}$ 表示对抗性掩码。
-$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{lee2019drop}的扰动幅度。
+$\mathbf{m}^s$ 表示随机 Dropout 掩码， $\mathbf{m}^{adv}$ 表示对抗性 Dropout 掩码。
+$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{lee2019drop} 的扰动幅度。
 %and $\delta_{e}$ is a hyper parameter to control the perturbation magnitude with respect to $m^{s}$ \cite{lee2019drop}
 $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
-为了计算 $\mathbf{m}^{adv}$，\cite{park2018adversarial} 通过在过程中适当放松来优化 0/1 背包问题。有关详细信息，请参考 \cite{park2018adversarial}。
+为了计算 $\mathbf{m}^{adv}$，\cite{park2018adversarial} 通过在计算过程中进行适当放松来优化 0/1 背包问题。有关详细信息，请参考 \cite{park2018adversarial}。
 %Then, we use the mask to Dropout the feature, then send it to the classifier.
 %We also send the clean feature to the classifier, and wish the loss minimum:
-在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个带有随机 Dropout 掩码 $\mathbf{m}^{s}$，另一个带有对抗 Dropout 掩码 $\mathbf{m}^{adv}$ \cite{lee2019drop}。
+在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个采用随机 Dropout 掩码 $\mathbf{m}^{s}$ 获得，另一个采用对抗性 Dropout 掩码 $\mathbf{m}^{adv}$ 获得 \cite{lee2019drop}。
 \begin{equation}
     \mathcal{L}_{adv} = \mathbb E[D_{KL}[h^{cls}(\mathcal{X} \odot\mathbf{m}^{s})||h^{cls}(\mathcal{X} \odot\mathbf{m}^{adv}))]],
 \end{equation}
 其中 $D_{KL}$ 是 Kullback-Leibler 散度。
 
-最后，对于每个 RoI，分类层在两个类别（前景或背景）上生成 softmax 概率估计，而回归层为前景类别输出四个实数值。这四个值编码 RoI 的精确边界框位置。
+最后，对于每个候选目标区域，分类层在两个类别（前景或背景）上生成 softmax 概率估计，而回归层为前景类别输出四个实数值，用于编码候选目标区域的精确边界框位置。
 SiamTFA 的损失是：
 %The RoI Aligned features are fed into the global average pooling layer followed by two sibling output layers: one that produces softmax probability estimates over two classes (foreground or background) and another layer that outputs four real-valued numbers for the foreground class. These four values encode the refined bounding-box position for the RoI.
 %We get the final tracking result as follows: The classification layer $h^{cls}$ predicts a score for a RoI, the regression layer $h^{reg}$ has shape * and predicts a 4-d vector for it.
@@ -249,7 +262,7 @@ SiamTFA 的损失是：
 \begin{equation}
 \mathcal{L} = \mathcal{L}_{cls}^{stage1} + \mathcal{L}_{cls}^{stage2} + \mathcal{L}_{reg}^{stage1}+\mathcal{L}_{reg}^{stage2} +  \lambda \mathcal{L}_{adv},
 \end{equation}
-其中 $\lambda$ 是用于平衡对抗损失和分类/回归损失的超参数。$\mathcal{L}_{cls}^{\cdot}$ 是交叉熵损失，$\mathcal{L}_{reg}^{\cdot}$ 是回归的标准平滑 $L1$ 损失。在测试过程中，具有最高分类得分的 RoI 被选择为预测目标。
+其中 $\lambda$ 是用于平衡对抗损失和分类/回归损失的超参数。$\mathcal{L}_{cls}^{\cdot}$ 是交叉熵损失，$\mathcal{L}_{reg}^{\cdot}$ 是回归分支的平滑 $L1$ 损失。在测试过程中，具有最高分类得分的区域被选择为预测目标。
 
 
 \iffalse
@@ -261,7 +274,7 @@ B^*_t = h^{reg}(\mathop{\arg\max}\limits_{x \in \mathcal{X}}h^{cls}(x)),
 where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \fi
 
-\section{实验}
+\section{实验评估与分析}
 
 \begin{figure}[t]
     \centering
