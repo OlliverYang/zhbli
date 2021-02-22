@@ -1,5 +1,5 @@
 \chapter{时间信息增强的视频目标跟踪算法研究}\label{chap:end}
-在上一章中，我们研究了如何为基于孪生网络的视频目标跟踪算法提供更丰富的空间信息以克服跟踪的累计误差。然而，如何在基于孪生网络的视频目标跟踪算法中利用\textbf{时间信息}尚未得到广泛研究。在本章中，我们提出了一种新型孪生跟踪体系结构，配备有一个时间聚合模块，该模块通过聚合来自相邻帧的时间信息来改善每帧的特征。这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。此外，我们在孪生网络中整合了对抗性 Dropout 模块，以端到端的方式学习更具判别性的目标特征。本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了基于时间信息增强的跟踪系统的有效性。
+在上一章中，我们研究了如何为基于孪生网络的视频目标跟踪算法提供更丰富的空间信息以克服跟踪的累计误差。然而，如何在基于孪生网络的视频目标跟踪算法中利用\textbf{时间信息}尚未得到广泛研究。在本章中，我们提出了一种新型孪生跟踪体系结构，配备有一个时间聚合模块，该模块通过聚合来自相邻帧的时间信息来改善每帧的特征。这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。此外，我们在孪生网络中整合了对抗性 Dropout 模块，以端到端的方式学习更具判别性的目标特征。本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了所提出的时间信息增强的视频目标跟踪算法的有效性。
 
 \section{引言}
 \label{sec:intro}
@@ -279,18 +279,18 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
-    \caption{将我们的方法与 SiamMask 和 SiamFCv2 进行比较。示例框架来自 GOT-10k 测试装置。与现有方法相比，我们的方法可有效处理不良的目标表观。}
+    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
     \label{fig:visulization}
 \end{figure}
 
 在本节中，我们首先介绍实现细节。
-然后，我们对 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据数据库进行评估。
-\subsection{实施细节}
-本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而骨干网络在 ImageNet 上进行了预训练。
-我们应用动量​​为 0.9 的随机梯度下降，并将权重衰减设置为 0.0005。
+然后，我们在 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据库上进行跟踪性能的评估。
+\subsection{实现细节}
+本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
+我们应用动量​​为 0.9 的随机梯度下降作为优化方法，并将权重衰减设置为 0.0005。
 学习率从 $10^{-2}$ 降至 $10^{-4}$。
-批次大小设置为 2，并且对网络进行了 90000 次迭代训练。
-我们的跟踪器是使用 PyTorch 在 Python 中实现的。
+批次大小设置为 2，并对网络进行了 90000 次迭代训练。
+本章提出的跟踪器是使用 PyTorch 在 Python 中实现的。
 %First stage, we select 4000 proposals to send to stage2, the positive/negative rate is 1:3.
 %To shift channels $K=2$.
 %Because of the memory limit, the batch size is 2.
@@ -303,13 +303,13 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \begin{figure}[t]
     \centering
     \includegraphics[width=1\textwidth]{Img/end/success_plot.png}
-    \caption{GOT-10k 的总体性能，按其平均重叠（AO）得分进行排名。}
+    \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
     \label{fig:got10k}
 \end{figure}
 
 \begin{table}[t]
 \centering
-\caption{我们的算法在 GOT-10k 测试集上具有不同组件的性能。}
+\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
 \begin{tabular}{c c c c c}
 \bottomrule
 \begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\Dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
@@ -324,7 +324,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \begin{table}[t]
 \centering
-\caption{将我们的方法的结果与 GOT-10k 测试集上的其他方法进行比较。}
+\caption{将本章提出的方法与其他方法在 GOT-10k 测试集上进行比较。}
 \begin{tabular}{l l l l}
 \bottomrule
 Method   &  $AO$   &  $SR_{0.50}$ & $SR_{0.75}$  \\
@@ -344,29 +344,28 @@ MDNet	 &  0.299&  0.303 &0.099 \\
 \end{tabular}
 \label{table:got}
 \end{table}
-在本小节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估我们的方法。
+在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估本章提出的算法。
 % Say something about this dataset.
-GOT-10k 是最近提出的目标跟踪数据集，包含 10000 多个视频序列，目标序列由轴对齐的边界框注释。
+GOT-10k 是最近提出的目标跟踪数据集，包含超过 10000 个视频序列，目标由矩形边界框注释。
 %Note that the classes between training and test sets are zero-overlapped. 
 %This one-shot protocol avoids the evaluation bias towards familiar objects. 
-GOT-10k 测试装置包括 180 种序列，具有 84 种不同的目标类别和 32 种运动模式。作为性能指标，我们使用 \cite{GOT-10k}中提出的平均重叠（AO）分数和成功率（SR）。AO表示所有地面和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
+GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别和 32 种运动模式。我们使用 \cite{GOT-10k} 中提出的平均重叠（AO）分数和成功率（SR）作为性能指标。AO 表示所有真实边界框和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
 
-\textbf{消融研究}
-从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中，我们看到，通过添加时间聚合模块，AO 性能提高了1.9％。
-这是因为时间聚集模块通过聚集来自相邻帧的时间信息来改善每帧特征。
+\textbf{消融实验}
+从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中可以看出，通过添加时间聚合模块，AO 性能提高了 1.9％。
+这是因为时间聚合模块通过聚合来自相邻帧的时间信息以改善每帧特征。
 %The RPN stage rapidly filters out most background samples, and the RoI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
-从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中，我们看到，通过对抗性 Dropout 模块，AO 增加了1.6％。
+从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中可以看出，通过对抗性 Dropout 模块，AO 增加了 1.6％。
 %This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
-这是因为对抗性退出模块提高了我们的孪生跟踪网络的识别能力。
+这是因为对抗性 Dropout 模块提高了本章提出的孪生跟踪网络的特征判别能力。
 
 \textbf{总体效果}
-我们将我们提出的方法与 8 个跟踪器（包括最新技术）进行了比较。
-表 \ref{table:got}.
-中显示了评估的跟踪器的性能。
-与其他列出的方法相比，我们的方法实现了 0.577 的出色 AO。
-ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显着减少 DCF 模型中的参数数量。 相比之下，我们的跟踪器基于强大的孪生架构。因此，我们的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在目标跟踪任务方面的有效性。
-SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以在新帧中建立目标目标和候选区域之间的对应关系。
-但是，它是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，我们的 SiamTFA 使用全局搜索机制。它始终能够感知整个图像上的目标，且能够充分利用时间信息。结果，我们的跟踪器在 AO 方面的性能优于 SiamMask 11.8％，这凸显了建议的时间聚合模块的重要性。
+我们将本章提出的方法与 8 个主流跟踪器进行了比较。
+表 \ref{table:got} 中显示了这些跟踪器的性能。
+与所对比的方法相比，本章提出的方法实现了 0.577 的 AO 值。
+ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显着减少 DCF 模型中的参数数量。相比之下，本章提出的跟踪器基于强大的孪生架构。因此，本章提出的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在目标跟踪任务方面的有效性。
+SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以建立真实目标和候选区域之间的对应关系。
+然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
 
 \begin{figure}[t]
 \begin{minipage}[b]{0.5\textwidth}
@@ -384,13 +383,13 @@ SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时�
 \subsection{对 UAV20L 数据集的评估}
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
-在此实验中，使用两种方法对所有跟踪器进行了比较：精度和成功率。精度的度量是预测边界框的中心与相应的地面真值边界框的中心之间的距离。成功是通过预测边界框内的像素与地面真实边界框内的像素并集的交点来衡量的。
-在图 \ref{fig:uav20l} 中，我们可以发现，与某些代表性跟踪器相比，该算法具有更好的跟踪性能。
+在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框内的像素与真实边界框的边框重叠。
+在图 \ref{fig:uav20l} 中可以看出，本章提出的算法具有较好好的跟踪性能。
 在成功图中，我们的跟踪器获得的 AUC 得分为 0.606。
-在精度图中，所提算法的得分为 0.804。
-它表明我们的跟踪器超越了其他最新算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了我们的跟踪器在长期跟踪情况下的有效性。
+在精度图中，我们的跟踪器的得分为 0.804。
+它表明本章提出的跟踪器一些有代表性的最新跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
 
 \section{结论}
-在本章中，我们介绍了一种用于视觉目标跟踪的新型孪生架构。
-具体来说，我们提出的算法包含两个主要模块，即时间聚合模块和对抗性删除模块。时间聚集模块通过聚集相邻帧的特征来改善每帧特征。对抗性 Dropout 模块提高了孪生跟踪网络的辨别能力。
-大量的实验结果表明，所提出的算法的性能优于最新算法。
+在本章中，我们提出了一种用于视频目标跟踪的新型孪生架构。
+具体来说，我们提出的算法包含两个主要模块，即时间聚合模块和对抗性 Dropout 模块。时间聚集模块通过聚合相邻帧的特征来改善每帧种目标的特征表示。对抗性 Dropout 模块提高了孪生跟踪网络的特征判别能力。
+大量的实验结果证明了所提出的时间信息增强的跟踪系统的有效性。
