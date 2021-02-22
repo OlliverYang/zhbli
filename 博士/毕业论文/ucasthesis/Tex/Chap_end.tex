@@ -226,6 +226,49 @@ The loss function of stage 1 is:
 % Maybe you need to say why you do the merge again.
 % The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Img/end/success_plot.png}
+    \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
+    \label{fig:got10k}
+\end{figure}
+
+\begin{figure}[t]
+\begin{minipage}{0.5\textwidth}
+  \centering
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_overlap_OPE_AUC.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+  \centering
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
+\end{minipage}
+\caption{UAV20L 数据集上的成功图和精度图。}
+\label{fig:uav20l}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
+    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
+    \label{fig:visulization}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
+\begin{tabular}{c c c c c}
+\bottomrule
+\begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\Dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
+\hline
+          &           & 0.542 & 0.607 & 0.456 \\
+\checkmark&           & 0.561 & 0.645 & 0.480 \\
+\checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
+\bottomrule
+\label{tabel:ablation}
+\end{tabular}
+\end{table}
+
 \textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
 之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
@@ -275,14 +318,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \fi
 
 \section{实验评估与分析}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
-    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
-    \label{fig:visulization}
-\end{figure}
-
 在本节中，我们首先介绍实现细节。
 然后，我们在 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据库上进行跟踪性能的评估。
 \subsection{实现细节}
@@ -299,29 +334,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 % 其实有些对不上。按论文上讲，第一阶段是找到若干候选框。第二阶段是得到唯一结果。实际上是，第一阶段得到若干候选框，第二阶段进一步筛选得到约10个候选框（这才是真正的相似目标），然后按IoU和得分来选择最终结果。
 % For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
 \subsection{对 GOT-10k 数据集的评估}
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1\textwidth]{Img/end/success_plot.png}
-    \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
-    \label{fig:got10k}
-\end{figure}
-
-\begin{table}[t]
-\centering
-\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
-\begin{tabular}{c c c c c}
-\bottomrule
-\begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\Dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
-\hline
-          &           & 0.542 & 0.607 & 0.456 \\
-\checkmark&           & 0.561 & 0.645 & 0.480 \\
-\checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
-\bottomrule
-\label{tabel:ablation}
-\end{tabular}
-\end{table}
-
 \begin{table}[t]
 \centering
 \caption{将本章提出的方法与其他方法在 GOT-10k 测试集上进行比较。}
@@ -367,19 +379,6 @@ ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分�
 SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以建立真实目标和候选区域之间的对应关系。
 然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
 
-\begin{figure}[t]
-\begin{minipage}[b]{0.5\textwidth}
-  \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_overlap_OPE_AUC.png}}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.5\textwidth}
-  \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
-\end{minipage}
-\caption{UAV20L 数据集上的成功图和精度图。}
-\label{fig:uav20l}
-\end{figure}
 \subsection{对 UAV20L 数据集的评估}
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。

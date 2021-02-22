@@ -154,6 +154,27 @@ is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for
     \label{fig:siamrcnn}
 \end{figure*}
 
+\begin{figure}[tb]
+\centering
+    \includegraphics[width=0.75\textwidth]{Img/globally/success_plot.png}
+    \caption{GOT-10k 的总体性能，按平均重叠（AO）得分进行排名。}
+    \label{fig:ao}
+\end{figure}
+
+\begin{figure}[t]
+\begin{minipage}{0.5\linewidth}
+  \centering
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_overlap_OPE_AUC.png}}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\linewidth}
+  \centering
+  \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}}
+\end{minipage}
+\caption{UAV20L 数据集上的成功图和精度图。}
+\label{fig:uav20l}
+\end{figure}
+
 \subsection{轨迹预测模块}
 使用前文提出的的跟踪框架提取到与给定的第一帧模板目标在视觉表观上相似的候选目标区域后，我们利用轨迹预测模块消除近似物体的干扰并获得最终的跟踪结果。
 轨迹预测模块以端到端的方式，使用目标的历史轨迹信息和当前帧的表观信息学习目标位置分布，该目标位置分布是一个二维热图，用于度量目标位于每个空间位置的可能性，我们根据该目标位置分布信息重新评估每个候选目标。
@@ -199,13 +220,6 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
     \label{fig:visulization}
 \end{figure}
 
-\begin{figure}[htb]
-\centering
-    \includegraphics[width=0.75\textwidth]{Img/globally/success_plot.png}
-    \caption{GOT-10k 的总体性能，按平均重叠（AO）得分进行排名。}
-    \label{fig:ao}
-\end{figure}
-
 \subsection{实现细节}
 本章提出的跟踪框架在 GOT-10k \cite{GOT-10k} 训练集中进行了训练。GOT-10k 数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包括 563 类真实运动目标和 87 类运动模式。
 我们执行多尺度训练：目标大小从 $64 \times 64$ 至 $256 \times 256$ 不等。图像大小在跟踪过程中保持不变。跟踪框架使用随机梯度下降（stochastic gradient descent，SGD）进行训练。权重衰减为 $10^{-4}$，动量大小为 0.9。我们执行了 27000 次迭代以训练跟踪框架，学习率从 $10^{-2}$ 降至 $10^{-4}$。
@@ -222,7 +236,8 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 
 \textbf{总体效果}
 我们在 GOT-10k 测试集上将本章提出的方法与 8 个跟踪器（包括最新提出的跟踪器）进行了比较。
-\begin{table}
+
+\begin{table}[t]
 \centering
 \caption{本章提出的算法在 GOT-10k 测试集上，不同组件的性能。}
 \begin{tabular}{c c c c c}
@@ -236,7 +251,8 @@ ROI head & Motion model & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\
 \label{tabel:ablation}
 \end{tabular}
 \end{table}
-\begin{table}
+
+\begin{table}[t]
 \centering
 \caption{将本章提出的方法与其他视频目标跟踪方法在 GOT-10k 测试集上的跟踪结果进行比较。跟踪器按其平均重叠（AO）分数排名。}
 \begin{tabular}{l l l l}
@@ -299,22 +315,6 @@ LO 子集包括验证集中最长的 40 段视频。
 在 LO 子集上，与 SiamMask 相比，AO 得分的相对提升为 12.13％。结果表明，全局感知机制可以有效减少视频目标跟踪算法在跟踪长视频时的累积误差。
 
 \subsection{对 UAV20L 数据集的评估}
-
-\begin{figure}[htb]
-\begin{minipage}[b]{0.5\linewidth}
-  \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_overlap_OPE_AUC.png}}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.5\linewidth}
-  \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}}
-\end{minipage}
-%
-\caption{UAV20L 数据集上的成功图和精度图。}
-\label{fig:uav20l}
-%
-\end{figure}
 
 \begin{figure*}[t]
 \begin{center}
