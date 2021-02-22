@@ -89,26 +89,26 @@ $B^{gt}=\{b^{gt}_i\}_1^T$ 用于表示目标在每一帧中的真实位置。
 $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段新的视频仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
 
 \subsection{产生视频无关的对抗扰动}
-在本节中，我们展示了如何为孪生跟踪器训练与视频无关的扰动 $(\delta, p)$ 在训练的第 $k$ 次迭代中，从训练数据集 $V=\{I_i\}_1^T$ 中随机选择了视频 $\mathcal V$。假设第 $k$ 次迭代的模板扰动是 $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$，而对抗性补丁是 $p_k \in \mathbb{R}^{128\times 128\times 3}$。我们首先从 $V$ 中随机选择配对的帧 $I_t, I_s$。
+在本节中，我们展示了如何为孪生跟踪器训练与视频无关的扰动 $(\delta, p)$。在训练的第 $k$ 次迭代中，从训练数据集 $V=\{I_i\}_1^T$ 中随机选择一段视频 $\mathcal V$。假设第 $k$ 次迭代的模板扰动是 $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$，而对抗性补丁是 $p_k \in \mathbb{R}^{128\times 128\times 3}$。我们首先从 $V$ 中随机选择两帧 $I_t, I_s$。
 干净的模板图像 $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ 是根据 $I_t$ 和 $b^{gt}_t$ 生成的，受干扰的模板图像为：
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_k.
 \end{equation}
 类似地，干净的搜索图像 $\textbf x \in \mathbb{R}^{303\times 303 \times 3}$ 是根据 $I_s$ 和 $b^{gt}_s$ 生成的。
-如前所述，补丁被视为 虚假目标 并粘贴到搜索图像中。我们将 虚假目标 的中心位置逼近真实目标的中心位置（在64个像素的移动范围内），其中移动定义为由均匀分布生成的最大平移范围。
-虚假目标 的宽度/高度在 32 像素和 128 像素之间随机选择。
+如前所述，补丁被视为虚假目标并粘贴到搜索图像中。我们使虚假目标的中心位置靠近真实目标的中心位置（具有最大 64 个像素的随机平移）。
+虚假目标的宽度/高度介于在 32 像素和 128 像素之间。
 扰动的搜索图像生成如下：
 \begin{equation}
 \tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)),
 \end{equation}
-其中 $(l^x, l^y)$ 和 $(w, h)$ 分别表示 虚假目标 相对于搜索图像的位置和大小。$A$ 是补丁应用程序运算符 \cite{patch}，它首先将补丁 $p_k \in \mathbb{R}^{128\times 128\times 3}$ 的大小调整为 $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$，然后将调整大小的补丁 $\hat{p}_k$ 粘贴到搜索图像 $\textbf x$ 的 $(l^x,l^y)$ 位置。
+其中 $(l^x, l^y)$ 和 $(w, h)$ 分别表示虚假目标相对于搜索图像的位置和大小。$A$ 是补丁粘贴操作 \cite{patch}，该操作首先将补丁 $p_k \in \mathbb{R}^{128\times 128\times 3}$ 的大小调整为 $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$，然后将调整过大小的补丁 $\hat{p}_k$ 粘贴到搜索图像 $\textbf x$ 的 $(l^x,l^y)$ 位置。
 
 随后，SiamFC++ 跟踪器 $\phi(\cdot)$ 将 $\tilde {\textbf x}$ 和 $\tilde{\textbf z}$ 作为输入，并进行如下预测：
 \begin{equation}
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
 
-\textit{训练目标} 损失函数的计算如下：
+\textbf{训练目标} 损失函数的计算如下：
 \begin{equation}
 \begin{array}{l}
 \begin{aligned}
@@ -121,7 +121,7 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{eq:loss}
 \end{equation}
 \textcolor{black} %(SiamFC++)
-{其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据 虚假目标 的位置和大小生成的伪造标签。$\textbf 1$ 是指标函数，如果订阅中的条件成立，则取 1，否则将取 0，$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类结果的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的 IoU 损耗 \cite{iou-loss}。在SiamFC++ 之后，如果将 $(x, y)$ 视为正样本，则将 1 分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
+{其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据虚假目标的位置和大小生成的虚假标签。$\textbf 1$ 是指示函数，如果条件成立，则取 1，否则将取 0。$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的 IoU 损失 \cite{iou-loss}。根据文献 SiamFC++，如果将 $(x, y)$ 视为正样本，则将 1 分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
 
 \begin{algorithm}[tb]
 \caption{训练过程}
@@ -162,24 +162,24 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
 p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
-其中 $\epsilon_1$ 用于确保感知不到添加到模板图像的扰动，而 $\epsilon_2$ 用于维护训练稳定性。
+其中 $\epsilon_1$ 用于确保添加到模板图像的扰动难以感知，而 $\epsilon_2$ 用于确保训练稳定性。
 在训练期间，我们仅优化扰动 $(\delta, p)$ 的值，而孪生网络的参数保持不变。
 
 我们在算法 \ref{alg} 中概述了该训练过程。
 
 \subsection{在推理时攻击跟踪器}
 
-一旦对扰动 $(\delta, p)$ 进行了训练，我们就可以使用它们来扰动模板图像并搜索任何新颖视频的图像进行攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对新颖的视频进行干扰仅涉及将干扰添加和粘贴到模板和搜索图像上，而无需进行梯度优化或网络推断。
-假设 $B^{fake}=\{b^{fake}_i\}_1^{T}$ 是我们希望跟踪器输出的轨迹。
-在跟踪视频 $V=\{I_i\}_1^T$ 的第 $i$ 帧期间，我们需要变换边界框 $b^{fake}_i$（相对于原始帧 $I_i$）放入相对于搜索图像 $\textbf x_i$ 的框 $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ 中，然后根据 $\hat b_i$ 将 $p$ 粘贴到 $\textbf x_i$ ：
+一旦对扰动 $(\delta, p)$ 进行了训练，便可被用于对基于孪生网络的视频目标跟踪算法的攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对一段新视频进行扰动仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
+假设 $B^{fake}=\{b^{fake}_i\}_1^{T}$ 是希望跟踪器输出的指定轨迹。
+在跟踪视频 $V=\{I_i\}_1^T$ 的第 $i$ 帧期间，我们需要将相对于原始帧 $I_i$ 的边界框变换为 $b^{fake}_i$ 相对于搜索图像 $\textbf x_i$ 的边界框 $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ 中，然后根据 $\hat b_i$ 将 $p$ 粘贴到 $\textbf x_i$ ：
 \begin{equation}
 \tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
 \end{equation}
-然后，跟踪器将 $\tilde{\textbf z}_i=\textbf z_i+\delta$ 和 $\tilde{\textbf x}_i$ 作为输入，随后的跟踪过程与 SiamFC++ 相同。
+跟踪器将 $\tilde{\textbf z}_i=\textbf z_i+\delta$ 和 $\tilde{\textbf x}_i$ 作为输入，随后的跟踪过程与 SiamFC++ 相同。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{实验}
+\section{实验评估与分析}
 
 \begin{table}
 \centering
