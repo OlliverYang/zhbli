@@ -381,7 +381,7 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 %\renewcommand\arraystretch{0.8}
 \centering
 %\setlength{\tabcolsep}{2pt}
-\caption{通过成功得分将 OTB2015 的 11 种属性进行比较。}
+\caption{OTB2015 在 11 种属性下对成功率进行比较。}
 \begin{tabular}{c c c c c c c c c c c c}
 \toprule
 跟踪器 & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
@@ -398,10 +398,10 @@ Ours        & \textbf{66.5} & \textbf{66.8} & \textbf{68.7} & \textbf{71.3} & \t
 To verify the contribution of the proposed model adaptation method, we compare our tracker with the baseline SiamFC++\_GoogLeNet \cite{SiamFC++} on 4 challenging tracking datasets. In comparison with the baseline tracker on OTB2015, our tracker improves the success score by 1.4\%. On VOT2018, our tracker outperforms the baseline tracker by 1.2\% in terms of EAO. On GOT-10k, our tracker improves the AO score by 1.0\%. On TrackingNet, our tracker outperforms the baseline tracker by 1.7\% in terms of the normalized precision score. All these consistent improvements highlight the effectiveness of the proposed model adaptation method.
 \fi
 
-\textbf{对嘈杂的初始帧的鲁棒性} 若要研究该方法在第一个帧与第二个帧相比有噪点的情况下的鲁棒性，我们通过以下方式在第一帧中添加三种噪声：更改图像亮度，应用高斯模糊以及使用不准确的地面真实边界框注释。我们将 $\gamma_1 \in [0.5, 1.5]$ 表示为亮度变化系数，将 $\gamma_2 \in [0, 2]$ 作为模糊半径，将 $\gamma_3 \in [0.75, 1]$ 作为IoU非精确的第一帧边界框注释和真实边界框注释。我们在 OTB2015 上对基线跟踪器和跟踪器都运行了 10 次，并随机采样了 $\gamma_1, \gamma_2$ 和 $\gamma_3$ （见表 \ref{table:noise}）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，我们的跟踪器在不同的噪声水平下始终表现更好，这表明我们的跟踪器对嘈杂的初始帧具有鲁棒性。%the first frame noise.
+\textbf{对嘈杂初始帧的鲁棒性} 为了研究本章提出的模型自适应方法在第初始帧与后续帧相比有噪声的情况下的鲁棒性，我们通过以下方式在第一帧中添加三种噪声：更改图像亮度，应用高斯模糊以及使用不准确的真实边界框注释。我们用 $\gamma_1 \in [0.5, 1.5]$ 表示亮度变化系数，用 $\gamma_2 \in [0, 2]$ 表示模糊半径系数，用 $\gamma_3 \in [0.75, 1]$ 表示不准确的第一帧边界框注释和真实边界框注释之间的边框重叠交并比（IoU）。我们随机采样 $\gamma_1, \gamma_2$ 和 $\gamma_3$，并在 OTB2015 上对基线跟踪器和我们的跟踪器都运行了 10 次（见表 \ref{table:noise}）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，我们的跟踪器在不同的噪声水平下始终表现更好，这表明我们的跟踪器对嘈杂的初始帧具有鲁棒性。%the first frame noise.
 
-\textbf{基于属性的分析} 对于跟踪性能的进一步分析，我们还通过对 OTB2015 数据集的序列进行基于属性的比较来证明我们算法的优势（请参见表 \ref{table:attr}）。在 OTB2015 中，每个序列都具有 11 种不同的属性，即：背景杂波（BC），变形（DEF），快速运动（FM），照明变化（IV），面内旋转（IPR），低分辨率（LR），运动模糊（MB），遮挡（OCC），平面外旋转（OPR），视线外（OV）和缩放比例变化（SV）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，我们的跟踪器在 11 个属性中的 10 个上具有更好的性能，这证明了其在挑战性跟踪场景（例如照明变化和运动模糊）中的鲁棒性。
+\textbf{基于属性的分析} 为了对跟踪性能进行进一步分析，我们还通过对 OTB2015 数据集的序列进行基于属性的比较来证明我们算法的优势（请参见表 \ref{table:attr}）。在 OTB2015 中，每个序列都具有 11 种不同的属性，即：背景混杂（BC），形变（DEF），快速运动（FM），照明变化（IV），平面内旋转（IPR），低分辨率（LR），运动模糊（MB），遮挡（OCC），平面外旋转（OPR），目标出画面（OV）和缩放尺度变化（SV）。在 11 个属性中，与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，本章提出的跟踪器在 10 个属性上具有更好的性能，这证明了其在挑战性跟踪场景（例如照明变化和运动模糊）中的鲁棒性。
 
 %%%%%%%%%%%%%%%%%%%%
 \section{结论}
-在本章中，我们提出了一种用于孪生跟踪器的新型模型自适应方法，可实现高速准确的跟踪。我们表明，在视频目标跟踪中具有挑战性的模型适应任务可以通过使用第一帧中的目标地面真相简单地操纵模板图像的像素来处理。我们的模型调整方法是可插拔的，因为它不会改变基本跟踪器的总体架构。在四个目标跟踪基准上的大量实验结果证明了所提出的模型自适应方法的有效性。
+在本章中，我们提出了一种用于孪生跟踪器的新型模型自适应方法，可实现高速准确的跟踪。我们表明，在视频目标跟踪中具有挑战性的模型适应任务可以使用第一帧中的目标真实标注框，通过简单地操纵模板图像的像素来实现。我们的模型自适应方法是可插拔的，因为它不会改变基本跟踪器的总体架构。在四个目标跟踪基准上的大量实验结果证明了所提出的模型自适应方法的有效性。
