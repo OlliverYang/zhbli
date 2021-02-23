@@ -247,13 +247,6 @@ The loss function of stage 1 is:
 \label{fig:uav20l}
 \end{figure}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
-    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
-    \label{fig:visulization}
-\end{figure}
-
 \begin{table}[t]
 \centering
 \caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
@@ -370,6 +363,13 @@ GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别
 从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中可以看出，通过对抗性 Dropout 模块，AO 增加了 1.6％。
 %This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
 这是因为对抗性 Dropout 模块提高了本章提出的孪生跟踪网络的特征判别能力。
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/visulization.pdf}
+    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
+    \label{fig:visulization}
+\end{figure}
 
 \textbf{总体效果}
 我们将本章提出的方法与 8 个主流跟踪器进行了比较。
