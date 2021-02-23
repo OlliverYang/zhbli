@@ -320,8 +320,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \end{figure}
 %\clearpage
 
-在本节中，我们首先介绍实现细节。
-然后，我们在 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 数据库上进行跟踪性能的评估。
+在本章中我们提出的时间信息增强的跟踪算法增强了基于孪生网络的视频目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于目标的退化特征具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视频目标跟踪数据库 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
 \subsection{实现细节}
 本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
 我们应用动量​​为 0.9 的随机梯度下降作为优化方法，并将权重衰减设置为 0.0005。
