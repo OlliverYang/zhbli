@@ -387,7 +387,7 @@ UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频
 In order to perform a more in-depth and detailed analysis of the performance of the trackers, we also report the results on challenging attributes in UAV20L. Fig. \ref{fig:uav20l_attr} lists the success plots of 14 different methods on 12 attributes: ARC (Aspect Ratio Change), BC (Background Clutter), CM (Camera Motion), FM (Fast Motion), FOC (Full Occlusion), IV (Illumination Variation), LR (LR Low Resolution), OV (Out-of-View), POC (Partial Occlusion), SOB (Similar Object), SV (Scale Variation) and VC (Viewpoint Change). We can observe that the AUC of the proposed algorithm perform better than other methods on most challenging attributes, which means our method is more robust than other approaches on various difficult situations.
 \fi
 
-\section{结论}
+\section{本章小结}
 \label{sec:conclusion}
 
 在本章中，我们提出了一种空间信息增强的视频目标跟踪算法，其中包括基于全局感知机制的两阶段跟踪框架和数据驱动的轨迹预测模块。全局感知机制允许跟踪组件减少跟踪过程中的累积误差。跟踪框架使用非常深的网络进行两阶段跟踪，使跟踪器提取的特征更具判别性。轨迹预测模块通过端到端训练，能够从大规模轨迹数据集中学习目标的运动模式。通过基于全局感知机制的两阶段跟踪框架和轨迹预测模块的协同工作，本章所提出的方法可实现较好的跟踪性能。
