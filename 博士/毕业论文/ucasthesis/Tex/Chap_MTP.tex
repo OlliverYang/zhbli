@@ -146,15 +146,6 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{table}
 %%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.75\textwidth]{Img/MTP/got10k/success_plot.png}
-    \caption{将本章提出的跟踪器与其他跟踪器在 GOT-10k 测试集上进行比较。按平均重叠分数对跟踪器进行排名。}
-    \label{fig:got10k}
-\end{figure}
-%%%%%%%%%%%%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{跟踪框架}
 所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $z_0$ 和从第 $i$ 帧裁剪的搜索图像 $x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(z_0, x_0)$ 进行 $N$ 步像素更新获得 $z'$ 后，跟踪器在 $(z', x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $x_0\in\mathbb R^{3\times289\times 289}$。
@@ -164,6 +155,9 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{equation}
 其中 $L_{\text{cls}}$ 是焦点损失 \cite{focal}。$L_{\text{quality}}$ 是用于质量评估的二进制交叉熵（BCE）损失。$L_{reg}$ 是边框回归的 IoU 损失 \cite{yu2016unitbox}。根据等式 \ref{equ:adaptaion}，相对于模板 $z_0$ 的梯度用于生成 $z_1$。通过应用少数几次迭代可以获得更新的模板 $z'$（等式 \ref{equ:adaptaion}）。请注意，模板图像仅使用给定序列的第一帧进行更新，并在整个跟踪过程中保持固定以确保稳定性。
 后续跟踪过程与SiamFC++ 相同。
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{实验评估与分析}
 
 %%%%%%%%%%%%%
 \begin{table}[t]
@@ -201,10 +195,16 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{table}
 %%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%
-\section{实验评估与分析}
-
+%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Img/MTP/got10k/success_plot.png}
+    \caption{将本章提出的跟踪器与其他跟踪器在 GOT-10k 测试集上进行比较。按平均重叠分数对跟踪器进行排名。}
+    \label{fig:got10k}
+\end{figure}
+%%%%%%%%%%%%
+
+\begin{figure}[p]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/MTP/got10k/visulization.pdf}
     \caption{本章提出的跟踪器与 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
@@ -229,7 +229,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{与主流跟踪器的比较}
 
-\begin{figure*}[t]
+\begin{figure*}[p]
 \begin{center}
 \subfloat[]{
 	\includegraphics[width=0.33\textwidth]
@@ -283,7 +283,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
    \caption{OTB 各属性精度图。}
 \end{figure*}
 
-\begin{figure*}
+\begin{figure*}[p]
 \begin{center}
 \subfloat[]{
 	\includegraphics[width=0.33\textwidth]

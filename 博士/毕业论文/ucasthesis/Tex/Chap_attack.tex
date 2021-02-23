@@ -16,7 +16,19 @@
 %在线跟踪阶段中从单个初始样本跟踪视觉对象的这种范式最近被广泛地描述为基于孪生网络的单发问题 \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}，称为
 最近提出的孪生网络框架 \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++} 可有效地处理视频目标跟踪任务。
 
-\begin{figure}[thbp]
+近年来，孪生跟踪器的鲁棒性引起了很多关注，并且研究重点已转向设计更有效、计算成本更低的攻击方法 \cite{TTP,FAN,SPARK}。尽管很多攻击方法可以成功地攻击孪生网络跟踪器，但这些攻击方法仍不适合以有限的计算资源来攻击基于低功耗计算平台构建的在线跟踪系统。原因是这些攻击方法仍然需要基于迭代优化或对抗生成网络推理来独立地为每个视频制作扰动。因此，在计算密集型的跟踪系统中可能无法确保计算资源充足可用。
+
+在文献 \cite{UAP} 中，作者提出的通用对抗性扰动（universarial adversarial perturbation，UAP）能够以与图像无关的方式欺骗同一数据分布中的大多数图像。UAP 具有通用性，可以用于快速扰动数据，而无需进行额外的计算。因此，攻击在计算资源有限的平台上部署的实时应用程序时，UAP 具有重要作用。然而，很少有工作研究如何使用 UAP 攻击孪生跟踪器，因为很难将现有的 UAP 直接应用于攻击孪生跟踪器。主要原因在于：
+\begin{itemize}
+\item 大多数 UAP 是为传统神经网络架构设计的，该架构接受一幅图像作为输入，而孪生网络同时接受模板图像和搜索图像作为输入。
+\item 现有 UAP 方法的目标往往用于干扰模型的二进制输出，而我们需要使用通用扰动使得孪生追踪器遵循指定的轨迹。
+\end{itemize}
+
+在本章中，我们首次尝试了为最新的孪生跟踪器，即 SiamFC++ \cite{SiamFC++} 生成视频无关的通用对抗性扰动信息。具体来说，我们旨在通过向模板图像添加通用的不可感知的扰动并将虚假目标（即小的通用对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器（如图 \ref{fig:1}），以便跟踪器输出虚假目标而非真实目标的位置和大小。利用本章提出的视频无关的通用扰动攻击一段新视频时，仅需执行加法操作和图像粘贴操作即可，而无需执行梯度优化或网络推理，因此几乎不会增加计算成本。在 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 基准测试数据库中的实验结果证明了我们方法的有效性。
+%\nopagebreak[4]
+\section{相关工作}
+
+\begin{figure}[t]
 \centering
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/x.jpg}} \qquad
 %\subfigure{\includegraphics[width=0.2\textwidth]{Img/attack/z.jpg}}
@@ -27,18 +39,6 @@
 %The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
 \label{fig:1}
 \end{figure}
-
-近年来，孪生跟踪器的鲁棒性引起了很多关注，并且研究重点已转向设计更有效、计算成本更低的攻击方法 \cite{TTP,FAN,SPARK}。尽管很多攻击方法可以成功地攻击孪生网络跟踪器，但这些攻击方法仍不适合以有限的计算资源来攻击基于低功耗计算平台构建的在线跟踪系统。原因是这些攻击方法仍然需要基于迭代优化或对抗生成网络推理来独立地为每个视频制作扰动。因此，在计算密集型的跟踪系统中可能无法确保计算资源充足可用。
-
-在文献 \cite{UAP} 中，作者提出的通用对抗性扰动（universarial adversarial perturbation，UAP）能够以与图像无关的方式欺骗同一数据分布中的大多数图像。UAP 具有通用性，可以用于快速扰动数据，而无需进行额外的计算。因此，攻击在计算资源有限的平台上部署的实时应用程序时，UAP 具有重要作用。然而，很少有工作研究如何使用 UAP 攻击孪生跟踪器，因为很难将现有的 UAP 直接应用于攻击孪生跟踪器。主要原因在于：
-\begin{itemize}
-\item 大多数 UAP 是为传统神经网络架构设计的，该架构接受一幅图像作为输入，而孪生网络同时接受模板图像和搜索图像作为输入。
-\item 现有 UAP 方法的目标往往用于干扰模型的二进制输出，而我们需要使用通用扰动使得孪生追踪器遵循指定的轨迹。
-\end{itemize}
-
-在本章中，我们首次尝试了为最新的孪生跟踪器，即 SiamFC++ \cite{SiamFC++} 生成视频无关的通用对抗性扰动信息。具体来说，我们旨在通过向模板图像添加通用的不可感知的扰动并将虚假目标（即小的通用对抗补丁）粘贴到符合预定轨迹的搜索图像中来攻击跟踪器（如图 \ref{fig:1}），以便跟踪器输出虚假目标而非真实目标的位置和大小。利用本章提出的视频无关的通用扰动攻击一段新视频时，仅需执行加法操作和图像粘贴操作即可，而无需执行梯度优化或网络推理，因此几乎不会增加计算成本。在 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 基准测试数据库中的实验结果证明了我们方法的有效性。
-
-\section{相关工作}
 
 \subsection{孪生视频目标跟踪}
 
@@ -107,7 +107,6 @@ $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段
 \begin{equation}
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
-
 \textbf{训练目标} 损失函数的计算如下：
 \begin{equation}
 \begin{array}{l}
@@ -150,13 +149,6 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \label{alg}
 \end{algorithm}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
-\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
-\label{fig:vis}
-\end{figure*}
-
 \textit{优化} 在每个训练步骤中，扰动更新如下：
 \begin{gather}
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
@@ -180,6 +172,13 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{实验评估与分析}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
+\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
+\label{fig:vis}
+\end{figure*}
 
 \begin{table}
 \centering
@@ -237,7 +236,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 在训练和在线跟踪阶段，SiamFC++ 跟踪网络模型 \footnote{由 SiamFC++ 的作者使用 GOT-10k 训练集进行训练，可以从 \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view} 中下载。} 是固定的，并用于整个评估流程。模板图片的空间尺寸设置为 $127\times 127$，搜索图片的空间尺寸设置为 $303\times 303$。
 在等式 \ref{eq:loss} 中，我们设置 $\alpha=1, \beta=1, \gamma=1, \eta=0.005$ 和 $\sigma=10^{-5}$。
 
-\begin{table}
+\begin{table}[t]
 \centering
 \begin{tabular}{ccccccc} 
 \toprule
@@ -257,7 +256,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \subsection{攻击结果评估}
 
-\begin{figure}
+\begin{figure}[p]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/txt_visualize.pdf}
 \caption{可视化结果。}
@@ -305,7 +304,7 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \label{tab:backbone}
 \end{table}
 
-\begin{table}
+\begin{table}[t]
 \centering
 \begin{tabular}{ccccc} 
 \toprule
@@ -328,6 +327,23 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 
 \textbf{消融研究：训练迭代次数的影响} 如表 \ref{tab:iter} 所示，经过大约 30000 次训练迭代后，所产生的扰动会欺骗 GOT-Val 中的大多数目标。相对于虚假轨迹的 AO 从 0.760 下降到 0.035。我们注意到，在训练周期开始时（训练迭代次数小于 2048），AO 的下降速度明显快于后期。这证明了我们的端到端训练方案的快速收敛能力。
 
+\begin{table}[t]
+\centering
+\begin{tabular}{@{}ccccccc@{}}
+\toprule
+\multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} && \multicolumn{2}{c}{对抗视频} \\
+\cmidrule{4-4} \cmidrule{6-7}
+ &  &  & 真实轨迹 & & 真实轨迹 & 虚假轨迹 \\ \midrule
+CSA & SiamRPN & 4720 & 0.851 & & 0.458 & - \\
+FAN & SiamFC & 10 & 0.720    & & 0.180&0.420 \\
+TTP & SiamRPN++ & 8 & 0.910  && 0.080&0.692 \\
+\midrule
+Ours & SiamFC++ & 0 & 0.861  & & 0.048&0.928 \\ \bottomrule
+\end{tabular}%
+\caption{关于 OTB2015 上 \textit{真实/虚假轨迹} 的精确度得分。}
+\label{tab:untargeted}
+\end{table}
+
 \subsection{可迁移性分析}
 
 \textbf{不同主干网络的迁移能力} 为了验证对抗性信息在不同主干网络上的迁移能力，我们将扰动应用于 SiamFC++ 的另外两个不同的主干，即，ShuffleNet \cite{ShuffleNet} 和 AlexNet \cite{AlexNet}。
@@ -346,20 +362,3 @@ SiamRPN 使用 RPN 网络在响应图上执行位置回归和目标分类。 Sia
 
 在本章中，我们提出了一种针对孪生跟踪器的视频无关的针对性攻击方法，旨在通过向模板图像添加不可感知的扰动并将虚假目标（即小的对抗补丁）根据预定轨迹粘贴到搜索图像中来攻击跟踪器，以便跟踪器输出虚假目标而非真实目标的位置和大小。所提出的对抗性信息具有通用性，因此可以用于扰动任意，而无需进行额外的计算。
 在几个流行的数据集上进行的实验表明，我们的方法可以有效地以针对性攻击的方式欺骗孪生网络跟踪器。
-
-\begin{table}[t]
-\centering
-\begin{tabular}{@{}ccccccc@{}}
-\toprule
-\multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} && \multicolumn{2}{c}{对抗视频} \\
-\cmidrule{4-4} \cmidrule{6-7}
- &  &  & 真实轨迹 & & 真实轨迹 & 虚假轨迹 \\ \midrule
-CSA & SiamRPN & 4720 & 0.851 & & 0.458 & - \\
-FAN & SiamFC & 10 & 0.720    & & 0.180&0.420 \\
-TTP & SiamRPN++ & 8 & 0.910  && 0.080&0.692 \\
-\midrule
-Ours & SiamFC++ & 0 & 0.861  & & 0.048&0.928 \\ \bottomrule
-\end{tabular}%
-\caption{关于 OTB2015 上 \textit{真实/虚假轨迹} 的精确度得分。}
-\label{tab:untargeted}
-\end{table}
