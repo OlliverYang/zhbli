@@ -322,6 +322,14 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 在本章中我们提出的时间信息增强的跟踪算法增强了基于孪生网络的视频目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于目标的退化特征具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视频目标跟踪数据库 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
 \subsection{实验设置}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/FPN.pdf}
+    \caption{本章提出的跟踪框架的网络结构参数展示。}
+    \label{fig:TSM}
+\end{figure}
+
 下面我们介绍本章提出的端到端孪生跟踪网络在离线训练时的参数设置。
 
 本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
