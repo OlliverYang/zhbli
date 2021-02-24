@@ -341,6 +341,19 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \textbf{网络架构设计}：本章提出的时间信息增强的孪生视频目标跟踪网络主要有两个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制自网络以及用于边框微调的区域细化自网络。它们的网络结构如图 \ref{fig:end_FPN} 所示，主干网络为基于 ResNet-50 的特征金字塔网络，可以为搜索区域图像提取不同分辨率的特征图，以提升特征表示能力。
 
+\nopagebreak[3]
+\begin{figure}[!t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_1.pdf}
+    \caption{基于评测库~UAV20L~的6个属性标注的算法跟踪性能对比展示。}
+\end{figure}
+\nopagebreak[3]
+\begin{figure*}[t!]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_2.pdf}
+    \caption{基于评测库~UAV20L~的6个属性标注的算法跟踪性能对比展示。}
+\end{figure*}
+
 \textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过拟合，离线训练过程在大规模单目标视频跟踪数据库 GOT-10k \cite{GOT-10k} 的训练数据集中训练网络参数。该数据集包含超过 10000 个视频序列，具有较为丰富多样的视频场景分布。该数据集被广泛应用在最近提出的孪生网络跟踪算法 \cite{SiamFC++} 的训练中。
 
 \textbf{优化器参数设定}：本章使用动量为 0.9 的随机梯度下降（stochastic gradient descent，SGD）优化器从在 ImageNet 上预训练的网络参数开始训练，并将权值衰减参数设置为 0.0005。学习率从 $10^{-2}$ 指数衰减到 $10^{-4}$。该模型经过 90000 次迭代训练，每个批次大小为 2 个样本对。
@@ -408,17 +421,6 @@ GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别
 ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显着减少 DCF 模型中的参数数量。相比之下，本章提出的跟踪器基于强大的孪生架构。因此，本章提出的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在目标跟踪任务方面的有效性。
 SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以建立真实目标和候选区域之间的对应关系。
 然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_1.pdf}
-    \caption{属性图。}
-\end{figure}
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_2.pdf}
-    \caption{属性图。}
-\end{figure}
 
 \subsection{对 UAV20L 数据集的评估}
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
