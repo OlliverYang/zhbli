@@ -83,7 +83,12 @@ SPARK \cite{SPARK} 通过使用过去帧中的信息算增量扰动以对孪生�
 $B^{gt}=\{b^{gt}_i\}_1^T$ 用于表示目标在每一帧中的真实位置。
 视频目标跟踪旨在给定目标初始状态的情况下，在随后的帧中预测此目标的位置 $B^{pred}=\{b^{pred}_i\}_1^T$。
 在 SiamFC++ 中，跟踪器首先将参考帧 $I_1$ 根据对应的注释边界框 $b_1^{gt}$ 转换为模板图像 $\textbf z$，然后将搜索帧 $I_i$ 转换为以上一帧中估计的位置为中心的搜索图像 $\textbf x_i$。
-在每个时刻，模板图像 $\textbf z$ 和搜索图像 $\textbf x_i$ 首先分别通过共享的骨干网络提取特征，其次利用若干非共享层处理所得的特征，并使用逐通道互相关操作对其进行融合。融合后的特征随后送入自网络中，以无锚的方式预测分类图 $\textbf{C}$，边界框回归图 $\textbf{R}$ 和质量评估图 $\textbf{Q}$。简而言之，$\textbf C$ 编码每个空间位置包含目标的概率，$\textbf R$ 回归目标的边界框，而 $\textbf Q$ 预测目标状态质量评估得分。最后，根据 $\textbf{C}$，$\textbf{R}$ 和 $\textbf{Q}$ 生成目标边界框。
+在每个时刻，模板图像 $\textbf z$ 和搜索图像 $\textbf x_i$ 首先分别通过共享的骨干网络提取特征，其次利用若干非共享层处理所得的特征，并使用逐通道互相关操作对其进行融合：
+\begin{equation}
+f_{i}(z, x)=\psi_{i}(\phi(textbf z)) \star \psi_{i}(\phi(textbf x)), i \in\{\mathrm{cls}, \mathrm{reg}\}
+\end{equation}
+其中，$\star$ 表示逐通道互相关操作，$\phi(\cdot)$ 表示孪生网络的特征提取器，$\psi(\cdot)$ 表示特定于分类或回归任务的层，$i$ 表示特定任务类型（$cls$ 表示分类任务，$reg$ 表示回归任务）。$\psi_{\mathrm{cls}}$ 和 $\psi_{\mathrm{reg}}$ 均设计为两个卷积层，用于将通用特征调整到特定于分类/回归任务的特征空间。$\psi_{\mathrm{cls}}$ 和 $\psi_{\mathrm{reg}}$ 所提取的特征具有相同尺寸。
+融合后的特征随后送入自网络中，以无锚的方式预测分类图 $\textbf{C}$，边界框回归图 $\textbf{R}$ 和质量评估图 $\textbf{Q}$。简而言之，$\textbf C$ 编码每个空间位置包含目标的概率，$\textbf R$ 回归目标的边界框，而 $\textbf Q$ 预测目标状态质量评估得分。最后，根据 $\textbf{C}$，$\textbf{R}$ 和 $\textbf{Q}$ 生成目标边界框。
 
 我们的任务是为模板图像 $\textbf z$ 训练不可感知的扰动 $\delta$，为搜索图像 $\textbf x_i$ 训练对抗性补丁 $p$。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x_i$ 之后，跟踪器将输出对抗性补丁而非真实目标的位置和大小（请参见图 \ref{fig:net}）。
 $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段新的视频仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
@@ -107,6 +112,30 @@ $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段
 \begin{equation}
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
+
+遵循 SiamFC++ \cite{SiamFC++} 中将分类任务和回归任务解耦的设计准则，在嵌入空间执行逐通道互相关后，分别设计分类分支和回归分支。对于互相关得到的特征图中的每一个像素，分类分支将 $\psi_{\mathrm{cls}}$ 作为输入，判断该像素对应图像块为正样本或负样本。类似地，回归分支将 $\psi_{\mathrm{reg}}$ 作为输入，并输出额外的回归偏移量以对预测的边界框位置进行优化。
+
+对于分类分支，特征图 $\psi_{\mathrm{cls}}$ 上的位置 $(x,y)$ 对应于输入图像上的位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$。如果该位置落入虚假目标的标注框内，则认为 $(x,y)$ 是正样本，反之则认为是负样本。$s=8$ 表示特征提取网络的总步长。
+
+在回归分支中，最后一个卷积层预测位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ 到虚假目标标注框的四个边的距离，表示为四维向量 $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$。因此，位置 $(x,y)$ 的回归标签可表示为：
+
+\begin{equation}
+\begin{array}{ll}
+l^{*}=\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right)-x_{0}, \quad t^{*}=\left(\left\lfloor\frac{s}{2}\right\rfloor+y s\right)-y_{0} \\
+r^{*}=x_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right), \quad b^{*}=y_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+y s\right)
+\end{array}
+\end{equation}
+其中，$(x_0, y_0)$ 和 $(x_1, y_1)$ 分别表示虚假目标标注框 $B^*$ 的左上角和右下角坐标。
+
+分类和回归分支的特征图中的每个位置 $(x,y)$，都对应于输入图像中以位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ 为中心的图像块。SiamFC++ \cite{SiamFC++} 直接对该位置对应的图像块进行分类，并在该位置上回归目标边框位置。换句话说，SiamFC++ 直接将位置作为训练样本。然而，在基于锚框的跟踪器中，将输入图像上的位置视为多个锚框的中心，为同一位置输出多个分类得分，并相对锚框进行边框回归，从而导致目标与锚框的匹配产生歧义。因此在 SiamFC++ 中，以逐像素的方式进行预测，从而仅为特征图上的每个像素进行一次预测。每个分类得分直接表明该位置对应的图像区域的目标置信度。由于 SiamFC++ 不利用预定义的锚框，而是根据位置进行分类和回归，因此没有关于目标分布的任何先验知识（如尺度、长宽比等），提高了算法的泛化性。
+
+如果仅使用分类得分选择最终的目标框，可能会导致定位精度的降低。因为 Jiang 等人 \cite{IoU-Net} 表明分类置信度与定位精度没有很好的相关性。根据 Luo 等人 \cite{ERF} 的分析，位于子窗口中心附近的像素在相应的输出特征上具有更高的重要性。因此，SiamFC++ 假设目标中心附近的特征像素将比其他像素具有更高的重要性。遵循 SiamFC++ 的设计，我们利用一个 $1 \times 1$ 卷积层进行质量评估，即学习预测边框与虚假目标标注框的交并比（intersection over union，IoU）得分：
+\begin{equation}
+\mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
+\end{equation}
+
+测试时，用于最终目标框选择的得分通过质量评估得分与分类得分相乘得出。因此，远离目标中心的边界框将具有较低的权重，因此提高了跟踪精度。
+
 \textbf{训练目标} 损失函数的计算如下：
 \begin{equation}
 \begin{array}{l}
@@ -159,6 +188,13 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 我们在算法 \ref{alg} 中概述了该训练过程。
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
+\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
+\label{fig:vis}
+\end{figure*}
+
 \subsection{在推理时攻击跟踪器}
 
 一旦对扰动 $(\delta, p)$ 进行了训练，便可被用于对基于孪生网络的视频目标跟踪算法的攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对一段新视频进行扰动仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
@@ -172,13 +208,6 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{实验评估与分析}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
-\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
-\label{fig:vis}
-\end{figure*}
 
 \begin{table}
 \centering
