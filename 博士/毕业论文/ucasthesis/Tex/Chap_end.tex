@@ -233,6 +233,7 @@ The loss function of stage 1 is:
     \label{fig:got10k}
 \end{figure}
 
+
 \begin{figure}[t]
 \begin{minipage}{0.5\textwidth}
   \centering
@@ -247,20 +248,13 @@ The loss function of stage 1 is:
 \label{fig:uav20l}
 \end{figure}
 
-\begin{table}[t]
+\iffalse
+\begin{figure}[t]
 \centering
-\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
-\begin{tabular}{c c c c c}
-\bottomrule
-\begin{tabular}[x]{@{}c@{}}Temporal\\aggregation\end{tabular} & \begin{tabular}[x]{@{}c@{}}Adversarial\\Dropout\end{tabular} & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
-\hline
-          &           & 0.542 & 0.607 & 0.456 \\
-\checkmark&           & 0.561 & 0.645 & 0.480 \\
-\checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
-\bottomrule
-\label{tabel:ablation}
-\end{tabular}
-\end{table}
+\caption{UAV20L 数据集上的成功图和精度图。}
+\includegraphics[width=1.0\textwidth]{Img/end/UAV20L.pdf}
+\end{figure}
+\fi
 
 \textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
 之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
@@ -310,6 +304,21 @@ B^*_t = h^{reg}(\mathop{\arg\max}\limits_{x \in \mathcal{X}}h^{cls}(x)),
 where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \fi
 
+\begin{table}[t]
+\centering
+\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
+\begin{tabular}{c c c c c}
+\bottomrule
+时间聚合模块 & 对抗性 Dropout 模板 & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
+\hline
+          &           & 0.542 & 0.607 & 0.456 \\
+\checkmark&           & 0.561 & 0.645 & 0.480 \\
+\checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
+\bottomrule
+\label{tabel:ablation}
+\end{tabular}
+\end{table}
+
 \section{实验评估与分析}
 
 \begin{figure}[p]
@@ -327,16 +336,25 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/FPN.pdf}
     \caption{本章提出的跟踪框架的网络结构参数展示。}
-    \label{fig:TSM}
+    \label{fig:end_FPN}
 \end{figure}
 
-下面我们介绍本章提出的端到端孪生跟踪网络在离线训练时的参数设置。
+\textbf{网络架构设计}：本章提出的时间信息增强的孪生视频目标跟踪网络主要有两个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制自网络以及用于边框微调的区域细化自网络。它们的网络结构如图 \ref{fig:end_FPN} 所示，主干网络为基于 ResNet-50 的特征金字塔网络，可以为搜索区域图像提取不同分辨率的特征图，以提升特征表示能力。
 
-本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
-我们应用动量​​为 0.9 的随机梯度下降作为优化方法，并将权重衰减设置为 0.0005。
-学习率从 $10^{-2}$ 降至 $10^{-4}$。
-批次大小设置为 2，并对网络进行了 90000 次迭代训练。
-本章提出的跟踪器是使用 PyTorch 在 Python 中实现的。
+\textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过拟合，离线训练过程在大规模单目标视频跟踪数据库 GOT-10k \cite{GOT-10k} 的训练数据集中训练网络参数。该数据集包含超过 10000 个视频序列，具有较为丰富多样的视频场景分布。该数据集被广泛应用在最近提出的孪生网络跟踪算法 \cite{SiamFC++} 的训练中。
+
+\textbf{优化器参数设定}：本章使用动量为 0.9 的随机梯度下降（stochastic gradient descent，SGD）优化器从在 ImageNet 上预训练的网络参数开始训练，并将权值衰减参数设置为 0.0005。学习率从 $10^{-2}$ 指数衰减到 $10^{-4}$。该模型经过 90000 次迭代训练，每个批次大小为 2 个样本对。
+
+本章所提出的时间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
+
+
+%下面我们介绍本章提出的端到端孪生跟踪网络在离线训练时的参数设置。
+
+%本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
+%我们应用动量​​为 0.9 的随机梯度下降作为优化方法，并将权重衰减设置为 0.0005。
+%学习率从 $10^{-2}$ 降至 $10^{-4}$。
+%批次大小设置为 2，并对网络进行了 90000 次迭代训练。
+%本章提出的跟踪器是使用 PyTorch 在 Python 中实现的。
 %First stage, we select 4000 proposals to send to stage2, the positive/negative rate is 1:3.
 %To shift channels $K=2$.
 %Because of the memory limit, the batch size is 2.
