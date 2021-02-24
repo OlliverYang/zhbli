@@ -501,4 +501,5 @@ seqTC128 = {struct('name','Airport_ce','path','D:\data_seq\TC128\Airport_ce\img\
 	struct('name','Yo-yos_ce2','path','D:\data_seq\TC128\Yo-yos_ce2\img\','startFrame',1,'endFrame',454,'nz',4,'ext','jpg','init_rect',[0,0,0,0]),...
 	struct('name','Yo-yos_ce3','path','D:\data_seq\TC128\Yo-yos_ce3\img\','startFrame',1,'endFrame',201,'nz',4,'ext','jpg','init_rect',[0,0,0,0])};
 	
-seqs = seqUAV123; %seqUAV123, seqUAV123_10fps, seqUAV20L, TC128, OTB100
+%seqs = seqUAV123; %seqUAV123, seqUAV123_10fps, seqUAV20L, TC128, OTB100
+seqs = seqUAV20L;
