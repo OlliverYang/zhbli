@@ -129,28 +129,6 @@ r^{*}=x_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right), \quad b^{*}=y
 
 分类和回归分支的特征图中的每个位置 $(x,y)$，都对应于输入图像中以位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ 为中心的图像块。SiamFC++ \cite{SiamFC++} 直接对该位置对应的图像块进行分类，并在该位置上回归目标边框位置。换句话说，SiamFC++ 直接将位置作为训练样本。然而，在基于锚框的跟踪器中，将输入图像上的位置视为多个锚框的中心，为同一位置输出多个分类得分，并相对锚框进行边框回归，从而导致目标与锚框的匹配产生歧义。因此在 SiamFC++ 中，以逐像素的方式进行预测，从而仅为特征图上的每个像素进行一次预测。每个分类得分直接表明该位置对应的图像区域的目标置信度。由于 SiamFC++ 不利用预定义的锚框，而是根据位置进行分类和回归，因此没有关于目标分布的任何先验知识（如尺度、长宽比等），提高了算法的泛化性。
 
-如果仅使用分类得分选择最终的目标框，可能会导致定位精度的降低。因为 Jiang 等人 \cite{IoU-Net} 表明分类置信度与定位精度没有很好的相关性。根据 Luo 等人 \cite{ERF} 的分析，位于子窗口中心附近的像素在相应的输出特征上具有更高的重要性。因此，SiamFC++ 假设目标中心附近的特征像素将比其他像素具有更高的重要性。遵循 SiamFC++ 的设计，我们利用一个 $1 \times 1$ 卷积层进行质量评估，即学习预测边框与虚假目标标注框的交并比（intersection over union，IoU）得分：
-\begin{equation}
-\mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
-\end{equation}
-
-测试时，用于最终目标框选择的得分通过质量评估得分与分类得分相乘得出。因此，远离目标中心的边界框将具有较低的权重，因此提高了跟踪精度。
-
-\textbf{训练目标} 损失函数的计算如下：
-\begin{equation}
-\begin{array}{l}
-\begin{aligned}
-L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_{x, y}, \textbf{C}_{x, y}^{*}\right) \\
-&+\frac{\beta}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{quality}}\left(\textbf{Q}_{x, y}, \textbf{Q}_{x, y}^{*}\right) \\
-&+\frac{\gamma}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{reg}}\left(\textbf{R}_{x, y}, \textbf{R}_{x, y}^{*}\right) \\
-&+\eta \cdot ||\delta_k||_2^2 +  \sigma \cdot ||p_k||^2_2,
-\end{aligned}
-\end{array}
-\label{eq:loss}
-\end{equation}
-\textcolor{black} %(SiamFC++)
-{其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据虚假目标的位置和大小生成的虚假标签。$\textbf 1$ 是指示函数，如果条件成立，则取 1，否则将取 0。$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的 IoU 损失 \cite{iou-loss}。根据文献 SiamFC++，如果将 $(x, y)$ 视为正样本，则将 1 分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
-
 \begin{algorithm}[tb]
 \caption{训练过程}
 \label{alg:algorithm}
@@ -175,8 +153,37 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \EndWhile
 \State \textbf{返回} $\delta_N, p_N.$
 \end{algorithmic}
-\label{alg}
+\label{attack_alg}
 \end{algorithm}
+
+如果仅使用分类得分选择最终的目标框，可能会导致定位精度的降低。因为 Jiang 等人 \cite{IoU-Net} 表明分类置信度与定位精度没有很好的相关性。根据 Luo 等人 \cite{ERF} 的分析，位于子窗口中心附近的像素在相应的输出特征上具有更高的重要性。因此，SiamFC++ 假设目标中心附近的特征像素将比其他像素具有更高的重要性。遵循 SiamFC++ 的设计，我们利用一个 $1 \times 1$ 卷积层进行质量评估，即学习预测边框与虚假目标标注框的交并比（intersection over union，IoU）得分：
+\begin{equation}
+\mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
+\end{equation}
+
+测试时，用于最终目标框选择的得分通过质量评估得分与分类得分相乘得出。因此，远离目标中心的边界框将具有较低的权重，因此提高了跟踪精度。
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
+\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
+\label{fig:attack_vis}
+\end{figure*}
+
+\textbf{训练目标} 损失函数的计算如下：
+\begin{equation}
+\begin{array}{l}
+\begin{aligned}
+L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_{x, y}, \textbf{C}_{x, y}^{*}\right) \\
+&+\frac{\beta}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{quality}}\left(\textbf{Q}_{x, y}, \textbf{Q}_{x, y}^{*}\right) \\
+&+\frac{\gamma}{N_{\mathrm{pos}}} \sum_{x, y} \textbf{1}_{\left\{\textbf{C}_{x, y}^{*}>0\right\}} L_{\mathrm{reg}}\left(\textbf{R}_{x, y}, \textbf{R}_{x, y}^{*}\right) \\
+&+\eta \cdot ||\delta_k||_2^2 +  \sigma \cdot ||p_k||^2_2,
+\end{aligned}
+\end{array}
+\label{eq:loss}
+\end{equation}
+\textcolor{black} %(SiamFC++)
+{其中 $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ 分别表示 $\textbf{C}, \textbf{R}, \textbf{Q}$ 在位置 $(x, y)$ 的值。$\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ 是根据虚假目标的位置和大小生成的虚假标签。$\textbf 1$ 是指示函数，如果条件成立，则取 1，否则将取 0。$N_{\mathrm{pos}}$ 表示训练阶段正样本的数量，$L_{\mathrm{cls}}$ 表示分类的焦点损失 \cite{focal}，$L_{\mathrm{quality}}$ 表示质量评估的二元交叉熵（BCE）损失，$L_{\mathrm{reg}}$ 表示边界框回归的 IoU 损失 \cite{iou-loss}。根据文献 SiamFC++，如果将 $(x, y)$ 视为正样本，则将 1 分配给 $\textbf{C}_{x, y}^{*}$，如果视为负样本，则分配 0。}
 
 \textbf{优化} 在每个训练步骤中，扰动更新如下：
 \begin{gather}
@@ -186,30 +193,9 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 其中 $\epsilon_1$ 用于确保添加到模板图像的扰动难以感知，而 $\epsilon_2$ 用于确保训练稳定性。
 在训练期间，我们仅优化扰动 $(\delta, p)$ 的值，而孪生网络的参数保持不变。
 
-我们在算法 \ref{alg} 中概述了该训练过程。
+我们在算法 \ref{attack_alg} 中概述了该训练过程。
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
-\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
-\label{fig:attack_vis}
-\end{figure*}
-
-\subsection{在推理时攻击跟踪器}
-
-一旦对扰动 $(\delta, p)$ 进行了训练，便可被用于对基于孪生网络的视频目标跟踪算法的攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对一段新视频进行扰动仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
-假设 $B^{fake}=\{b^{fake}_i\}_1^{T}$ 是希望跟踪器输出的指定轨迹。
-在跟踪视频 $V=\{I_i\}_1^T$ 的第 $i$ 帧期间，我们需要将相对于原始帧 $I_i$ 的边界框变换为 $b^{fake}_i$ 相对于搜索图像 $\textbf x_i$ 的边界框 $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ 中，然后根据 $\hat b_i$ 将 $p$ 粘贴到 $\textbf x_i$ ：
-\begin{equation}
-\tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
-\end{equation}
-跟踪器将 $\tilde{\textbf z}_i=\textbf z_i+\delta$ 和 $\tilde{\textbf x}_i$ 作为输入，随后的跟踪过程与 SiamFC++ 相同。
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{实验评估与分析}
-
-\begin{table}
+\begin{table}[t]
 \centering
 \begin{tabular}{c c c c c}
 \toprule
@@ -239,6 +225,17 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \label{tab:benchmark results}
 \end{table}
 
+\subsection{在推理时攻击跟踪器}
+
+一旦对扰动 $(\delta, p)$ 进行了训练，便可被用于对基于孪生网络的视频目标跟踪算法的攻击。$\delta$ 和 $p$ 都是通用的（即与视频无关），这意味着对一段新视频进行扰动仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
+假设 $B^{fake}=\{b^{fake}_i\}_1^{T}$ 是希望跟踪器输出的指定轨迹。
+在跟踪视频 $V=\{I_i\}_1^T$ 的第 $i$ 帧期间，我们需要将相对于原始帧 $I_i$ 的边界框变换为 $b^{fake}_i$ 相对于搜索图像 $\textbf x_i$ 的边界框 $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ 中，然后根据 $\hat b_i$ 将 $p$ 粘贴到 $\textbf x_i$ ：
+\begin{equation}
+\tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
+\end{equation}
+跟踪器将 $\tilde{\textbf z}_i=\textbf z_i+\delta$ 和 $\tilde{\textbf x}_i$ 作为输入，随后的跟踪过程与 SiamFC++ 相同。
+
+\section{实验评估与分析}
 \subsection{实验设置}
 
 \textbf{评估基准} 我们在几种跟踪基准，即 OTB2015 \cite{OTB}，GOT-10k \cite{GOT-10k} 和 LaSOT \cite{LaSOT} 上评估针对跟踪器的对抗攻击效果。具体而言，OTB2015 是典型的跟踪基准数据库，已被广泛用于跟踪性能评估中。GOT-10k 具有更多的目标类别，LaSOT 具有更长的视频序列，平均持续时间为 84 秒。它们都遵循单次通过评估（OPE）协议，具有相似的评价指标，主要基于跟踪器在测试视频上的跟踪效果衡量其成功率与精确度。
@@ -246,6 +243,24 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 %由于最近证明所有测试视频帧上的 IoU 重叠平均值（AO）均等效于 AUC 标准，因此在下文中将成功度量表示为 AO。
 %除了 AO 之外，成功率（SR）度量标准也可以直接用于测量在 GOT-10k 中给定阈值的成功跟踪帧的百分比。
 %至于精度，它对帧的比例进行编码，对于这些比例，预测矩形的中心在地面真实中心的 20 个像素之内。由于精度度量对图像的分辨率和边界框的大小敏感，因此提出了在地面真实边界框的大小上进行归一化精度的度量，然后使用 AUC 对跟踪器进行排序，以使归一化精度介于0之间和0.5。
+
+\begin{table}[t]
+\centering
+\begin{tabular}{ccccccc} 
+\toprule
+\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
+\cmidrule(lr){4-5} \cmidrule(lr){6-7}
+                       &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
+\midrule
+\checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
+   & \checkmark   &    & 0.044  & 0.044    & 0.703 & 0.842   \\
+   &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
+\checkmark   & \checkmark   & \checkmark   & 0.818  & 0.890    & 0.035 & 0.023   \\ \bottomrule
+\end{tabular}
+%}
+\caption{每项损失对 GOT-Val 的贡献。}
+\label{tab:attack_loss}
+\end{table}
 
 \textbf{生成虚假轨迹} 我们需要为每个视频预先定义特定的轨迹 $B^{fake}=\{b^{fake}_i\}_1^{T}$，以实现在线跟踪中的针对性攻击，我们称之为虚假轨迹。我们将使用真实边界框表示的真实轨迹定义为 $B^{gt}=\{b^{gt}_i\}_1^T$。
 我们可以为每个视频手动标记任意虚假轨迹 $B^{fake}$ ，然而这将非常耗时。因此，我们基于 $B^{gt}$ 生成 $B^{fake}$。具体来说，虚假轨迹沿真实轨迹运动，且 $b^{fake}_i$ 和 $b^{gt}_i$ 的边界相距 16 像素。
@@ -265,26 +280,34 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 在训练和在线跟踪阶段，SiamFC++ 跟踪网络模型 \footnote{由 SiamFC++ 的作者使用 GOT-10k 训练集进行训练，可以从 \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view} 中下载。} 是固定的，并用于整个评估流程。模板图片的空间尺寸设置为 $127\times 127$，搜索图片的空间尺寸设置为 $303\times 303$。
 在等式 \ref{eq:loss} 中，我们设置 $\alpha=1, \beta=1, \gamma=1, \eta=0.005$ 和 $\sigma=10^{-5}$。
 
-\begin{table}[t]
+\begin{table}[t!]
 \centering
-\begin{tabular}{ccccccc} 
+\begin{tabular}{@{}lllllll@{}}
 \toprule
-\multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
-\cmidrule(lr){4-5} \cmidrule(lr){6-7}
-                       &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
-\midrule
-\checkmark   &    &    & 0.718  & 0.824    & 0.086 & 0.083   \\
-   & \checkmark   &    & 0.044  & 0.044    & 0.703 & 0.842   \\
-   &    & \checkmark   & 0.664  & 0.726    & 0.165 & 0.184   \\
-\checkmark   & \checkmark   & \checkmark   & 0.818  & 0.890    & 0.035 & 0.023   \\ \bottomrule
+\multirow{2}{*}{迭代次数} & \multicolumn{2}{c}{虚假轨迹} & \multicolumn{2}{c}{真实轨迹} & \multirow{2}{*}{SSIM} & \multicolumn{1}{c}{\multirow{2}{*}{MSE}} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+ & \multicolumn{1}{c}{AO} & \multicolumn{1}{c}{SR-50} & \multicolumn{1}{c}{GT-AO} & \multicolumn{1}{c}{GT-SR-50} &  & \multicolumn{1}{c}{} \\ \midrule
+1 & 0.002 & 0 & 0.757 & 0.894 & 1 &  \\
+2 & 0.002 & 0 & 0.756 & 0.891 & 1 &  \\
+4 & 0.002 & 0 & 0.757 & 0.893 & 1 &  \\
+8 & 0.002 & 0 & 0.757 & 0.891 & 1 &  \\
+16 & 0.002 & 0 & 0.758 & 0.893 & 0.99 &  \\
+32 & 0.003 & 0.001 & 0.759 & 0.896 & 0.99 &  \\
+64 & 0.007 & 0.005 & 0.753 & 0.888 & 0.97 & 2.03 \\
+128 & 0.042 & 0.044 & 0.72 & 0.852 & 0.93 & 5.65 \\
+256 & 0.299 & 0.335 & 0.474 & 0.559 & 0.86 & 15.1 \\
+512 & 0.668 & 0.749 & 0.15 & 0.164 & 0.86 & 25.43 \\
+1024 & 0.746 & 0.822 & 0.095 & 0.098 & 0.87 & 23.7 \\
+2048 & 0.781 & 0.855 & 0.071 & 0.066 & 0.88 & 21.89 \\
+4096 & 0.798 & 0.872 & 0.041 & 0.031 & 0.88 & 20.69 \\
+8192 & 0.82 & 0.895 & 0.032 & 0.021 & 0.88 & 20.49 \\
+16384 & 0.821 & 0.897 & 0.032 & 0.022 & 0.88 & 20.03 \\
+32768 & 0.818 & 0.89 & 0.035 & 0.023 & 0.88 & 20.87 \\ \bottomrule
 \end{tabular}
-%}
-\caption{每项损失对 GOT-Val 的贡献。}
-\label{tab:loss}
+\caption{训练迭代次数对 GOT-Val 的影响。}
+\label{tab:attack_iter}
 \end{table}
 
 \subsection{攻击结果评估}
-
 \begin{figure}[p]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/txt_visualize.pdf}
@@ -292,26 +315,6 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{figure}
 
 \textbf{总体攻击结果} 我们在目标跟踪数据集上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:benchmark results}中。结果表明，基线跟踪器 SiamFC++ 可以在所有视频目标跟踪数据集上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能的代价是计算量大，导致跟踪系统会占用大部分计算资源，因此有必要开发一种几乎不增加计算成本的攻击方法来欺骗跟踪系统而不会预期争用资源。如表 \ref{tab:benchmark results} 所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的虚假轨迹来有效地欺骗 SiamFC++ 跟踪器。此外，相对于虚假轨迹而言，较高的 AO 和 Precision 得分表明对抗性信息在不引起任何怀疑的情况下执行有效攻击（请参见 \ref{fig:attack_vis}）。
-
-\begin{table*}[t]
-\centering
-\begin{tabular}{rrcccccccccccccccc} 
-\toprule
-\multicolumn{2}{r}{迭代次数}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  & 16384 & 32768  \\ 
-\midrule
-\multirow{2}{*}{虚假轨迹} & AO    & 0.002 & 0.002 & 0.002 & 0.002 & 0.002 & 0.003 & 0.007 & 0.042 & 0.299 & 0.668 & 0.746 & 0.781 & 0.798 & 0.820 & 0.821 & 0.818  \\
-                                 & SR    & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.005 & 0.044 & 0.335 & 0.749 & 0.822 & 0.855 & 0.872 & 0.895 & 0.897 & 0.890  \\ 
-\midrule
-\multirow{2}{*}{真实轨迹} & AO    & 0.757 & 0.756 & 0.757 & 0.757 & 0.758 & 0.759 & 0.753 & 0.720 & 0.474 & 0.150 & 0.095 & 0.071 & 0.041 & 0.032 & 0.032 & 0.035  \\
-                                 & SR    & 0.894 & 0.891 & 0.893 & 0.891 & 0.893 & 0.896 & 0.888 & 0.852 & 0.559 & 0.164 & 0.098 & 0.066 & 0.031 & 0.021 & 0.022 & 0.023  \\ 
-\midrule
-\multicolumn{2}{r}{SSIM of $\delta$}                        & 1.00  & 1.00  & 1.00  & 1.00  & 0.99  & 0.99  & 0.97  & 0.93  & 0.86  & 0.86  & 0.87  & 0.88  & 0.88  & 0.88  & 0.88  & 0.88   \\
-\multicolumn{2}{r}{MSE}                         & 0.51  & 0.26  & 0.32  & 0.37  & 0.48  & 0.84  & 2.03  & 5.65  & 15.10 & 25.43 & 23.70 & 21.89 & 20.69 & 20.49 & 20.03 & 20.87  \\
-\bottomrule
-\end{tabular}
-\caption{训练迭代次数对 GOT-Val 的影响。}
-\label{tab:iter}
-\end{table*}
 
 \begin{table}[t]
 \centering
