@@ -113,6 +113,7 @@ In addition, two steps of regressions achieve accurate localization even for obj
   \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
 \caption{UAV20L 数据集上的成功图和精度图。}
+\label{fig:globally_uav20l}
 \end{figure}
 
 %(The backbone and RPN are frozen and only the redetection head (after concatenation) is trained for tracking) they fixed the parameters in the backbone and the RPN. Only the second stage is used for target spercific tracking, which is not good for "generatic" object tracking: because some objects are foreground in some cases and background in others. Instead, our tracker use the correlation before RPN, the "target" which is good for general object tracking. The architecture of our tracking component is described as follows:
@@ -300,7 +301,7 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 \nopagebreak[3]
 \begin{figure}[p!]
     \centering
-    \includegraphics[width=1.0\textwidth]{Img/globally/visulization.pdf}
+    \includegraphics[width=0.9\textwidth]{Img/globally/visulization.pdf}
     \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和SiamFCv2\cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
     \label{fig:gloablly_vis}
 \end{figure}
@@ -394,9 +395,9 @@ LO 子集包括验证集中最长的 40 段视频。
 \fi
 
 UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频数据集。UAV20L 数据库专为长期跟踪而设计，包含 20 个视频，平均长度为 2934 帧。
-遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
+遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
 
-我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的相对 AUC 提升分别为 31.7％ 和 22.7％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的相对性能提升分别为 25.8\% 和 24.4\%。
+我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:globally_uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的相对 AUC 提升分别为 31.7％ 和 22.7％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的相对性能提升分别为 25.8\% 和 24.4\%。
 
 \iffalse
 In order to perform a more in-depth and detailed analysis of the performance of the trackers, we also report the results on challenging attributes in UAV20L. Fig. \ref{fig:uav20l_attr} lists the success plots of 14 different methods on 12 attributes: ARC (Aspect Ratio Change), BC (Background Clutter), CM (Camera Motion), FM (Fast Motion), FOC (Full Occlusion), IV (Illumination Variation), LR (LR Low Resolution), OV (Out-of-View), POC (Partial Occlusion), SOB (Similar Object), SV (Scale Variation) and VC (Viewpoint Change). We can observe that the AUC of the proposed algorithm perform better than other methods on most challenging attributes, which means our method is more robust than other approaches on various difficult situations.
