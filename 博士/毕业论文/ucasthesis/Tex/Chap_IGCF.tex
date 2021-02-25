@@ -1,24 +1,24 @@
 \chapter{语义信息引导的视频目标跟踪算法研究}\label{chap:IGCF}
 
 对于视频目标跟踪算法而言，判别表观学习具有极其重要的地位。在缺少目标类别先验的情况下，跟踪任意类别的目标通常需要在线进行目标前景与背景的判别信息学习。同时由于目标大小、形状、视角以及背景场景中光照、遮挡物、嘈杂干扰等都会随着时间发生剧烈变化。
-基于传统相关滤波器（CF）的跟踪器通常仅依靠岭回归进行表观模型的建模，而不会感知目标在语义级别的实例信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，本章提出了实例引导的相关滤波器（instance guided correlation filter，IGCF），以提高跟踪的鲁棒性。具体来说，本章提出一个深层卷积神经网络（即 InstMask），旨在为目标生成时立级别的分割模板，该模板用于约束相关滤波器的学习。在实例级分割的基础上，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试数据库上进行的广泛实验验证了我们所提出的实例引导的相关滤波跟踪器的有效性。%，在单个 CPU 内核上的运行速度可达 5 帧每秒。
+基于传统相关滤波器（CF）的跟踪器通常仅依靠岭回归进行表观模型的建模，而不会感知目标在语义级别的实例信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，本章提出了实例引导的相关滤波器（instance guided correlation filter，IGCF），以提高跟踪的鲁棒性。具体来说，本章提出一个深层卷积神经网络（即 InstMask），旨在为目标生成实例级别的分割模板，该模板用于约束相关滤波器的学习。在实例级分割的基础上，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试数据库上进行的广泛实验验证了我们所提出的实例引导的相关滤波跟踪器的有效性。%，在单个 CPU 内核上的运行速度可达 5 帧每秒。
 
 \section{引言}
 目标跟踪是计算机视觉中的重要研究方向之一。给定视频起始帧中的目标位置，跟踪的目的是估计后续帧中目标的状态。尽管研究人员在该领域进行了长期的努力 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL}，但在低功耗平台上仍难以实现可接受的跟踪精度和速度。另外，跟踪过程中的遮挡、照明变化、表观变化和快速运动等现象，使得目标跟踪算法难以在自动驾驶、机器人技术和增强现实等现实应用中难以进行部署和应用。
 
-在过去的十年中，判别性相关滤波（discriminative correlation filter，DCF）跟踪器 \cite{MOSSE,Henriques2012ExploitingTC,Danelljan2014AdaptiveCA} 引起了研究人员的极大兴趣，此类跟踪器通过利用离散傅立叶变换以高效的方式利用了跟踪样本的所有空间偏移。然而，对于大多数 DCF 跟踪器而言，目标位置由一个矩形框描述。然而，对于形状不规则形状的目标，或具有环状结构的目标而言，矩形目标区域中将被掺杂大量的背景信息，这可能导致跟踪漂移和失效。此外，实例级别语义信息的缺失限制了 DCF 跟踪器的性能潜力。
+在过去的十年中，判别性相关滤波（discriminative correlation filter，DCF）跟踪器 \cite{MOSSE,Henriques2012ExploitingTC,Danelljan2014AdaptiveCA} 引起了研究人员的极大兴趣，此类跟踪器通过利用离散傅立叶变换以高效的方式利用了跟踪样本的所有空间偏移。然而，对于大多数 DCF 跟踪器而言，目标位置由一个矩形框描述。然而，对于形状不规则的目标，或具有环状结构的目标而言，矩形目标区域中将被掺杂大量的背景信息，这可能导致跟踪漂移和失效。此外，实例级别语义信息的缺失限制了 DCF 跟踪器的性能潜力。
 
-基于 DCF 跟踪器的成功，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已证明对目标进行空间约束可改善相关滤波器的表观建模。然而，大多数空间约束都是手工设计的，且未考虑有关目标的语义信息。尽管实例级语义分割 \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}（旨在为图像中的每个像素分配语义标签）能够提取图像中的实例级语义信息，直接集成现有的实例分割方法以对相关滤波器学习的进行空间约束很难在跟踪精度和速度之间取得平衡。
+基于 DCF 跟踪器的成功，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已证明对目标进行空间约束可改善相关滤波器的表观建模。然而，大多数空间约束都是手工设计的，且未考虑有关目标的语义信息。尽管实例级语义分割 \cite{Pinheiro2015LearningTS, Zhang2019ProgressivelyDN}（旨在为图像中的每个像素分配语义标签）能够提取图像中的实例级语义信息，直接集成现有的实例分割方法以对相关滤波器的学习进行空间约束很难在跟踪精度和速度之间取得平衡。
 
 \begin{figure}
 \centering
 \includegraphics[width=1.0\textwidth]{Img/IGCF/coco.pdf}
 \caption{InstMask 在 COCO2017 \cite{COCO} 验证集上的分割结果。}
-\label{fig:InstMask}
+\label{fig:IGCF_vis_coco}
 \end{figure}
 
-在本章中，我们提出了实例引导的相关滤波器（IGCF）来解决上述问题。具体而言，我们设计了一个深层卷积神经网络（即InstMask），旨在准确生成目标实例级别的语义分割模板。我们利用 COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:InstMask}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
-与常见的目标分割任务不同，我们设计了一种新的网络结构和训练方法，使得 InstMask 能够识别位于搜索图像中心附近的任意类别的显著目标。值得注意的是，InstMask 可以识别任意类别的目标，而不仅限于识别训练集中出现的类别中的目标。此外，我们的网络中包括一个 $1 \times 1$ 卷积层，可以利用全局感受野从目标附近获取上下文信息，从而增加了分割的准确性。所提出的轻量级的分割网络可在单个 CPU 核心平台上以 5 FPS 的速度运行时，可在精度和速度之间取得平衡。
+在本章中，我们提出了实例引导的相关滤波器（IGCF）来解决上述问题。具体而言，我们设计了一个深层卷积神经网络（即 InstMask），旨在准确生成目标实例级别的语义分割模板。我们利用 COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:InstMask}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
+与常见的目标分割任务不同，我们设计了一种新的网络结构和训练方法，使得 InstMask 能够识别位于搜索图像中心附近的显著目标。值得注意的是，InstMask 可以识别任意类别的目标，而不仅限于识别训练集中出现的类别中的目标。此外，我们的网络中包括一个 $1 \times 1$ 卷积层，可以利用全局感受野从目标附近获取上下文信息，从而增加了分割的准确性。所提出的轻量级的分割网络可在单个 CPU 核心平台上以 5 FPS 的速度运行时，可在精度和速度之间取得平衡。
 
 此外，我们注意到，为满足跟踪自适应性要求而在线更新的相关滤波器与满足鲁棒性要求的离线 InstMask 模块是独立且互补的。因此，两个组件的输出可以集成在一起，以进一步提高跟踪性能。具体而言，基于实例级别的分割，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。分割模板的几何中心用于校正相关滤波器的预测偏差。配备有 InstMask 模块的 IGCF 不仅可以精确地跟踪目标，还可以用于视频目标分割，这证明了我们算法的广泛应用。所提出的的跟踪框架 IGCF 的体系结构如图 \ref{fig:IGCF} 所示。
 
@@ -39,23 +39,23 @@
 
 Bolme 等人 \cite{MOSSE} 提出基于平方误差最小输出和（MOSSE）滤波器的跟踪器。该跟踪器以每秒 669 帧的速度运行，可以抵抗光照变化、尺度变化，姿势变化和非刚性变形。
 CSK 跟踪器 \cite{Henriques2012ExploitingTC} 通过采用图像子窗口的循环结构并使用快速傅里叶变换（FFT）快速合并来自所有子窗口的信息，对 MOSSE 跟踪器进行了改进。此外，文献 \cite{Henriques2012ExploitingTC} 表明，使用核技巧可以像在原始图像空间中一样高效地完成非线性空间中的分类。
-在文献 \cite{Danelljan2014AdaptiveCA} 中，作者提出通过学习多维颜色属性的多通道滤波器来改进 CSK 跟踪器。为了避免由于颜色属性的高维度而导致的计算开销，文献 \cite{Danelljan2014AdaptiveCA} 提出了一种自适应维降技术，可以将原始的 11 维减少到只有 2 维。
-后来，\cite{henriques2014high-speed} 为大量平移图像块提出了一种分析模型，并使用离散傅立叶变换将模型对角线化。该操作可以将存储和计算量减少几个数量级。
+在文献 \cite{Danelljan2014AdaptiveCA} 中，Danelljan 等人提出通过学习多维颜色属性的多通道滤波器来改进 CSK 跟踪器。为了避免由于颜色属性的高维度而导致的计算开销，作者提出了一种自适应维降技术，可以将原始的 11 维减少到只有 2 维。
+后来，Henriques 等人 \cite{henriques2014high-speed} 为大量平移图像块提出了一种分析模型，并使用离散傅立叶变换将模型对角线化。该操作可以将存储和计算量减少几个数量级。
 
 最近，许多研究 \cite{Danelljan2015LearningSR, Lukezic2017DiscriminativeCF} 已将空间约束引入到相关滤波器的学习中。在文献 \cite{Danelljan2015LearningSR} 中，作者提出了一种称为“空间正则化差异相关滤波器（SRDCF）”的跟踪器。SRDCF 在学习过程中引入了空间正则化组件，以根据相关滤波器系数的空间位置对它们进行惩罚。
 此外，文献 \cite{Lukezic2017DiscriminativeCF} 提出的 CSR-DCF 滤波器将通道和空间可靠性组件引入了相关滤波跟踪器，并为它们在滤波器更新和跟踪过程中的有效无缝集成提供了学习算法。空间可靠性组件将滤波器用于适应目标的空间位置。通道可靠性组件根据特征的通道信息生成特征加权系数。CSR-DCF 跟踪器具有较大的搜索区域，可以有效跟踪非矩形目标。空间可靠性组件与 Staple \cite{Bertinetto2016StapleC} 跟踪器中使用的颜色分布具有一些相似之处，该工作解决了相关滤波器的模板模型和逐像素颜色分布模型的两个独立的岭回归问题。
-为了处理目标的尺度变化， \cite{Li2014ASA} 中提出的方法以不同的尺度对目标进行采样，并将采样调整为固定大小，以便与每帧的模型相匹配。此方法还采用了多特征集成方案，该方案使用原始像素、渐变直方图 \cite{Forsyth2014ObjectDW} 和颜色名称特征 \cite{Weijer2009LearningCN} 来进一步增强跟踪器的性能。这些基于 DCF 的跟踪器的主要缺点是缺乏对目标的高级语义信息的感知。
+为了处理目标的尺度变化，Li 等人 \cite{Li2014ASA} 提出的方法以不同的尺度对目标进行采样，并将采样调整为固定大小，以便与每帧的模型相匹配。此方法还采用了多特征集成方案，该方案使用原始像素、梯度直方图 \cite{Forsyth2014ObjectDW} 和颜色名称特征 \cite{Weijer2009LearningCN} 来进一步增强跟踪器的性能。这些基于 DCF 的跟踪器的主要缺点是缺乏对目标的高级语义信息的感知。
 
 \subsection{基于卷积神经网络的跟踪器}
-在过去的几年中，深度学习 \cite{Goodfellow2015DeepL} 在许多研究领域都取得了显著成功，尤其是在计算机视觉 \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}，语音识别 \cite{Kim2016JointCB, Liu2019AttentionGD}和自然语言处理 \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR} 等领域。一些跟踪器已经证明了深度学习的性能优势。
+在过去的几年中，深度学习 \cite{Goodfellow2015DeepL} 在许多研究领域都取得了显著成功，尤其是在计算机视觉 \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}，语音识别 \cite{Kim2016JointCB, Liu2019AttentionGD} 和自然语言处理 \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR} 等领域。一些跟踪器已经证明了深度学习的性能优势。
 
 大多数基于 DCF 的跟踪器仅限于单分辨率特征图，从而极大地限制了其潜力。为了解决此问题，CCOT 跟踪器 \cite{CCOT} 学习连续卷积滤波器以融合以不同分辨率获得的特征图。这将为目标生成连续域置信度图。除了多分辨率融合之外，连续域学习公式还可以实现精确的亚像素定位。
 ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算子训练样本分布的紧凑生成模型，并采用保守的模型更新策略。ECO 使用了 CNN 特征，同时减轻了计算开销。CF2 跟踪器 \cite{Ma2015HierarchicalCF} 自适应地学习每个卷积层上的相关滤波器，以对目标表观进行编码，并使用每一层的相关响应来推断目标位置。
 
-\cite{GOTURN} 提出了一种离线训练的神经网络来进行跟踪目标，使用简单的前馈网络，而无需在线训练。该网络可感知目标运动与表观之间的一般关系，并可用于跟踪未出现在训练集中的新目标。
-最近，一系列跟踪器，例如 SiamFC \cite{SiamFC}，SiamRPN \cite{SiamRPN}，DasiamRPN \cite{zhu2018distractor} 和 SiamMask \cite{Wang2018SiamMask}，使用孪生网络来学习搜索图像和模板图像之间的相似性。它们在跟踪速度和准确性之间取得了良好的平衡。SiamMask 是在一个端到端学习框架中同时执行跟踪和分割的首次尝试。尽管在准确性和鲁棒性方面都具有良好的性能，但是上述大多数跟踪器都具有很高的特征提取计算开销，因此不适合于低功耗平台。例如，SiamMask 算法在 Intel E5-2620 CPU 平台上的运行速度仅以 1 FPS。
+在文献 \cite{GOTURN} 中，Held 等人提出了一种离线训练的神经网络来进行跟踪目标，使用简单的前馈网络，而无需在线训练。该网络可感知目标运动与表观之间的一般关系，并可用于跟踪未出现在训练集中的新目标。
+最近，一系列跟踪器（例如 SiamFC \cite{SiamFC}、SiamRPN \cite{SiamRPN}、DasiamRPN \cite{zhu2018distractor} 和 SiamMask \cite{Wang2018SiamMask}）使用孪生网络来学习搜索图像和模板图像之间的相似性。它们在跟踪速度和准确性之间取得了良好的平衡。SiamMask 是在一个端到端学习框架中同时执行跟踪和分割的首次尝试。尽管在准确性和鲁棒性方面都具有良好的性能，但是上述大多数跟踪器都具有很高的特征提取计算开销，因此不适合于低功耗平台。例如，SiamMask 算法在 Intel E5-2620 CPU 平台上的运行速度仅为 1 帧每秒。
 
-也有一些工作致力于使用自校正机制来减轻跟踪漂移，从而提高跟踪的鲁棒性。例如，在 \cite{fan2018parallel} 中，跟踪框架由两个组件（跟踪器和验证器）组成，它们在两个单独的线程上并行工作。跟踪器提供实时跟踪推断，并有望在大多数情况下表现良好。相反，验证者检查跟踪结果并在需要时更正跟踪器。
+也有一些工作致力于使用自校正机制来减轻跟踪漂移，从而提高跟踪的鲁棒性。例如，在文献 \cite{fan2018parallel} 中，跟踪框架由两个组件（跟踪器和验证器）组成，它们在两个单独的线程上并行工作。跟踪器提供实时跟踪推断，并有望在大多数情况下表现良好。相反，验证者检查跟踪结果并在需要时更正跟踪器。
 
 \section{实例引导的相关滤波器}
 
@@ -84,7 +84,7 @@ ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算�
 \end{algorithm}
 
 \subsection{相关滤波跟踪器}
-DCF 跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑目标的表观特征：$f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道数。DCF 跟踪器的目标是训练滤波器 $h=\{h_d\}_{d=1:N_c}$，以使特征和滤波器之间的相关性响应 $\tilde{g}$ 拟合所需输出 $g$ ，通常是一个以目标位置为中心的二维高斯函数： 
+相关滤波跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑目标的表观特征：$f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道数。DCF 跟踪器的目标是训练滤波器 $h=\{h_d\}_{d=1:N_c}$，以使特征和滤波器之间的相关性响应 $\tilde{g}$ 拟合所需输出 $g$ ，通常是一个以目标位置为中心的二维高斯函数： 
 \begin{equation} \label{eq:dcf}
 \tilde{g}=\sum_{d=1}^{N_c}f_d \star h_d \cdot w_d,
 \end{equation}
@@ -125,7 +125,7 @@ Data & $160 \times 160 \times 3$ &  -\\\hline
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/net.pdf}
     \caption{InstMask 的网络结构。}
-    \label{fig:net}
+    \label{fig:IGCF_net}
 \end{figure*}
 
 在本章中，我们使用被跟踪目标的分割模板来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特点：
@@ -154,7 +154,7 @@ Data & $160 \times 160 \times 3$ &  -\\\hline
 在训练期间，训练集中的每个样本 $k$ 包含（1）RGB 图像补丁 $x_k$，目标位于图像补丁中心附近，（2）图像补丁所对应的二进制分割模板 $m_{k}$。
 接下来，我们描述体系结构和训练过程。
 
-\textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:net} 中显示了网络体系结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和3个残差块组成。
+\textbf{体系结构} 表 \ref{tab:InstMask} 和图 \ref{fig:IGCF_net} 中显示了网络体系结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和三个残差块组成。
 InstMask 的输入是一个 160$\times$160$\times$3 图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图依次送入 3 个残差块，分别生成大小为 40$\times$40$\times$256，20$\times$20$\times$512，10$\times$10$\times$1024 的特征图。随后，将获得的特征图送入三个卷积层以生成长度为 3136 的向量，该向量具有全局感受野，能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割模板。InstMask 是一个轻量级的网络，可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，能够较好地平衡跟踪准确性和速度，使跟踪器在包括自动驾驶、机器人技术和增强现实等实际应用中进行部署成为可能。
 
 \textbf{训练} 在训练期间，将空间分辨率为 56$\times$56 的模板上采样至原始图像大小 160$\times$160。令 $l$ 表示大小为 $w \times h$ 的逐个像素的真实模板。损失计算如下：
@@ -163,7 +163,7 @@ L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
 \end{equation}
 其中 $l_{x,y} \in \{ \pm 1 \}$ 是与对象模板的像素 $(x,y)$ 对应的标签，而 $P_{x,y}$ 是 InstMask 的预测在位置 $(x,y)$。
 
-我们采用 COCO2017 \cite{COCO} 实例分割数据集 InstMask 对 InstMask 进行训练。
+我们采用 COCO2017 \cite{COCO} 实例分割数据集对 InstMask 进行训练。
 与许多只能预测训练集中出现的类别的分割网络不同，提出的 InstMask 在训练过程中会忽略类别信息，并作为与类别无关的分割网络工作。实际上，InstMask 能够在搜索区域中检测到显著目标。尽管 InstMask 使用仅有 80 个类别的 COCO 数据集 \cite{COCO} 进行训练，但是网络能够对训练集中未出现的目标类别进行分割，如图 \ref{fig:IGSC} 所示。
 在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，我们执行数据增强。具体来说，我们考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
 InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过程，而不会进行梯度的后向传播。这不仅可以防止漂移，还可以满足实时跟踪要求。
@@ -182,9 +182,9 @@ InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过�
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=1.0\textwidth]{Img/IGCF/cog_arch.pdf}
+    \includegraphics[width=0.7\textwidth]{Img/IGCF/cog_arch.pdf}
     \caption{实例引导的自纠正原理图。}
-    \label{fig:net}
+    \label{fig:cog}
 \end{figure*}
 
 InstMask 允许学习更好的滤波器，并有助于纠正不良的跟踪结果。
@@ -218,6 +218,7 @@ p = \left\{ \begin{array}{ll}
 \centering
 \includegraphics[width=1.0\textwidth]{Img/IGCF/cog.pdf}
 \caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
+\label{fig:IGSC}
 \end{figure}
 
 \subsection{跟踪过程}
@@ -267,15 +268,8 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
     \label{fig:vot15}
 \end{figure}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
-    \caption{VOT2016 的预期平均重叠（EAO）图 \cite{Kristan2016TheVO}。}
-    \label{fig:vot16}
-\end{figure}
-
 \subsection{实验设置}
-\textbf{网络架构设计}：本章所提出的用于对相关滤波跟踪器提供语义引导信息的分割网络 InstMask 主要由三个自网络构成，分别是用于特征提取的主干网络和用于生成分割模板的解码网络。它们的网络结果如表 \ref{tab:InstMask} 所示，网络主干包含三个残差块，可以快速将搜索图像区域图像的分辨率下降到较低尺度，以提升计算效率。
+\textbf{网络架构设计}：本章所提出的用于对相关滤波跟踪器提供语义引导信息的分割网络 InstMask 主要由两个子网络构成，分别是用于特征提取的主干网络和用于生成分割模板的解码网络。它们的网络结果如表 \ref{tab:InstMask} 所示，网络主干包含三个残差块，可以快速将搜索图像区域图像的分辨率下降到较低尺度，以提升计算效率。
 
 \textbf{训练数据}：为了提高分割结果的泛化能力，同时避免在稀缺的跟踪数据上过度拟合，InstMask 的离线训练过程在大规模图像分割数据集 COCO2017 \cite{COCO} 的训练数据集中训练网络参数。该数据集以场景理解为目的，主要从复杂的日常场景中截取，图像中的目标通过精确的分割进行位置的标定，包含超过 33 万张图片和 80 个类别。该数据集被广泛使用在最近提出的图像分割算法 \cite{He2018MaskR} 训练中。
 
@@ -284,15 +278,15 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 本章所提出的用于对相关滤波跟踪器提供语义引导信息的分割网络 InstMask 使用 MatConvNet \cite{MatConvNet} 在 MATLAB 平台上实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
 我们在三个具有挑战性的目标跟踪数据集上对提出的跟踪器 IGCF 进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。最后，我们对视频目标分割数据集 DAVIS \cite{Perazzi2016} 进行了定性实验。
-\subsection{对 VOT2015 的评估}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.8\textwidth]{Img/IGCF/got10k/success_plot.png}
-    \caption{在 GOT-10k \cite{GOT-10k}上的总体性能，按其平均重叠（AO）得分进行排名。}
-    \label{fig:got10k}
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
+    \caption{VOT2016 的预期平均重叠（EAO）图 \cite{Kristan2016TheVO}。}
+    \label{fig:vot16}
 \end{figure}
 
+\subsection{对 VOT2015 的评估}
 在本节中，将使用视觉目标跟踪工具包的最新版本进行实验对比。该工具包采用基于目标重置的跟踪性能评估方法。评估算法一旦检测到跟踪器发生错误跟踪（即跟踪器预测和真实目标标签的重叠率为 0），就会在错误帧后的第五帧重新初始化跟踪器。
 %测评性能使用期望平均重叠率（EAO）来度量排序，EAO 指标同时定量反映算法的鲁棒性和准确性。
 VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的视频。该数据集是通过先进的序列选择方法从 300 多个序列中构建的，该序列选择方法优先考虑难以追踪的目标并最大化视觉属性多样性成本函数。
@@ -304,6 +298,13 @@ VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的�
 Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 在 EAO 方面的相对提升显著优于 Struck，达到 36.8％，这表明 DCF 框架的出色表现以及 IGCF 的有效性。
 CSRDCF 使用目标和背景的颜色直方图生成目标模板，以限制相关滤波器的学习，而 IGCF 使用神经网络生成模板。与 CSRDCF 相比，EAO 分数的相对提高为 6.9％，这表明，与使用底层图像特征生成的模板相比，使用深层卷积特征生成的语义模板更有利于滤波器的学习。
 DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征。但是，所使用的深层特征并不专用于实例分割。相比之下，InstMask 在针对实例分割而设计的 COCO 分割数据集上进行了训练。在 VOT2015 上，就 EAO 而言，IGCF 比 DeepSRCDF 高出 7.5％，这强调了提出的的 InstMask 和 IGSC 模块的重要性。
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Img/IGCF/got10k/success_plot.png}
+    \caption{在 GOT-10k \cite{GOT-10k} 上的总体性能，按其平均重叠（AO）得分进行排名。}
+    \label{fig:IGCF_got10k}
+\end{figure}
 
 \subsection{对 VOT2016 的评估}
 VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性、鲁棒性和 EAO。
