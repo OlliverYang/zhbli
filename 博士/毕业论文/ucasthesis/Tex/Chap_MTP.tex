@@ -206,10 +206,22 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 \begin{figure}[p]
     \centering
-    \includegraphics[width=1.0\textwidth]{Img/MTP/got10k/visulization.pdf}
+    \includegraphics[width=0.99\textwidth]{Img/MTP/got10k/visulization.pdf}
     \caption{本章提出的跟踪器与 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
     \label{fig:MTP_vis}
 \end{figure}
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.99\textwidth]{Img/MTP/SiamFC++.pdf}
+    \caption{网络结构参数示意图。}
+    \label{fig:MTP_SiamFC++}
+\end{figure}
+
+\subsection{实验设置}
+\textbf{网络架构设计}：本章所采用的基线孪生目标跟踪网络主要由四个子网络组成，分别是用于共享特征提取的主干网络，用于预测边框位置的回归子网络，用于判断目标出现可能性的分类分支，以及用于预测边框质量的质量评估分支。网络结构如图 \ref{fig:MTP_SiamFC++} 所示。主干网由 5 个卷积层和 8 个 Inception 块 \cite{GoogLeNet} 构成，可为模板图像和搜索图像提取高层语义信息，以提升跟踪精度。
+
+\textbf{训练数据}：为了提高特征表示的泛化能力和判别力，同时避免在稀缺的跟踪数据上过度拟合，基线网络的离线训练数据集包括 ILSVRC-VID/DET \cite{VID}、COCO \cite{COCO}、YoutubeBB \cite{real2017youtube}、LaSOT \cite{LaSOT} 和 GOT-10k \cite{GOT-10k}。
 
 在本节中，我们首先介绍实现细节。然后将我们的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 种序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视频目标跟踪数据集。它们在训练和测试集中涵盖了的各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪其对目标类别的泛化能力。
 
@@ -343,7 +355,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 \textbf{GOT-10k} 我们将平均重叠（AO）分数用作 \cite{GOT-10k} 的性能指标。我们将本章提出的方法与 CF2 \cite{CF2}，ECO \cite{danelljan2017eco}，CCOT \cite{CCOT}，GOTURN \cite{GOTURN}，SiamFC \cite{SiamFC}，SiamFCv2 \cite{valmadre2017end}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在该数据库上进行比较。模板更新的迭代次数设置为 2。在图 \ref{fig:got10k} 中可以发现，与列出的跟踪器相比，本章提出的算法具有更好的跟踪性能。
 
-\textbf{TrackingNet} 我们将本章提出的方法与 SiamFC \cite{SiamFC}，ECO \cite{danelljan2017eco}，MDNet \cite{nam2016learning}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 进行比较。模板更新的迭代次数设置为 32。表 \ref{tabel:trackingnet} 显示，我们的跟踪器在精确度和标准化精确度方面表现最佳，同时保持了较高的成功率。
+\textbf{TrackingNet} 我们将本章提出的方法与 SiamFC \cite{SiamFC}，ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 进行比较。模板更新的迭代次数设置为 32。表 \ref{tabel:trackingnet} 显示，我们的跟踪器在精确度和标准化精确度方面表现最佳，同时保持了较高的成功率。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{消融实验}
