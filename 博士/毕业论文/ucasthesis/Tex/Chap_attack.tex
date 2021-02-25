@@ -222,7 +222,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{tabular}
 %}
 \caption{评估基准上的总体攻击结果。}
-\label{tab:benchmark results}
+\label{tab:attack_benchmark results}
 \end{table}
 
 \subsection{在推理时攻击跟踪器}
@@ -314,7 +314,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \caption{可视化结果。}
 \end{figure}
 
-\textbf{总体攻击结果} 我们在目标跟踪数据集上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:benchmark results}中。结果表明，基线跟踪器 SiamFC++ 可以在所有视频目标跟踪数据集上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能的代价是计算量大，导致跟踪系统会占用大部分计算资源，因此有必要开发一种几乎不增加计算成本的攻击方法来欺骗跟踪系统而不会预期争用资源。如表 \ref{tab:benchmark results} 所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的虚假轨迹来有效地欺骗 SiamFC++ 跟踪器。此外，相对于虚假轨迹而言，较高的 AO 和 Precision 得分表明对抗性信息在不引起任何怀疑的情况下执行有效攻击（请参见 \ref{fig:attack_vis}）。
+\textbf{总体攻击结果} 我们在目标跟踪数据集上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:attack_benchmark results}中。结果表明，基线跟踪器 SiamFC++ 可以在所有视频目标跟踪数据集上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能的代价是计算量大，导致跟踪系统会占用大部分计算资源，因此有必要开发一种几乎不增加计算成本的攻击方法来欺骗跟踪系统而不会预期争用资源。如表 \ref{tab:attack_benchmark results} 所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的虚假轨迹来有效地欺骗 SiamFC++ 跟踪器。此外，相对于虚假轨迹而言，较高的 AO 和 Precision 得分表明对抗性信息在不引起任何怀疑的情况下执行有效攻击（请参见 \ref{fig:attack_vis}）。
 
 \begin{table}[t]
 \centering

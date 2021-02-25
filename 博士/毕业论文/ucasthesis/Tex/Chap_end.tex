@@ -228,6 +228,7 @@ The loss function of stage 1 is:
     \centering
     \includegraphics[width=0.75\textwidth]{Img/end/success_plot.png}
     \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
+    \label{fig:end_uav20l}
 \end{figure}
 
 
@@ -318,7 +319,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \begin{figure}[p]
     \centering
-    \includegraphics[width=1\textwidth]{Img/end/visulization.pdf}
+    \includegraphics[width=0.9\textwidth]{Img/end/visulization.pdf}
     \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
 \end{figure}
 %\clearpage
@@ -419,7 +420,7 @@ SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时�
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
 在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框内的像素与真实边界框的边框重叠。
-在图 \ref{fig:uav20l} 中可以看出，本章提出的算法具有较好好的跟踪性能。
+在图 \ref{fig:end_uav20l} 中可以看出，本章提出的算法具有较好的跟踪性能。
 在成功图中，我们的跟踪器获得的 AUC 得分为 0.606。
 在精度图中，我们的跟踪器的得分为 0.804。
 它表明本章提出的跟踪器一些有代表性的最新跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
