@@ -2,9 +2,8 @@
 在上一章中，我们研究了如何为基于孪生网络的视频目标跟踪算法提供更丰富的空间信息以克服跟踪的累计误差。然而，如何在基于孪生网络的视频目标跟踪算法中利用\textbf{时间信息}尚未得到广泛研究。在本章中，我们提出了一种新型孪生跟踪体系结构，配备有一个时间聚合模块，该模块通过聚合来自相邻帧的时间信息来改善每帧的特征。这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。此外，我们在孪生网络中整合了对抗性 Dropout 模块，以端到端的方式学习更具判别性的目标特征。本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了所提出的时间信息增强的视频目标跟踪算法的有效性。
 
 \section{引言}
-\label{sec:intro}
 视频目标跟踪的目的是在视频序列每一帧中估计任意目标的状态。 
-最近，孪生网络已经为目标跟踪的性能带来显著提高。然而，由于视频中由于运动模糊等原因导致的目标表观信息退化（图\ref{fig:visulization}），往往造成学习到的通用特征表示的判别力下降。
+最近，孪生网络已经为目标跟踪的性能带来显著提高。然而，由于运动模糊等原因导致的目标表观信息退化（图\ref{fig:end_vis}），往往造成学习到的通用特征表示的判别力下降。
 研究人员尝试了不同的方法来改进特征表示。
 例如，
 %RASNet \cite{wang2018learning} explores diverse attention mechanisms to adapt the offline learned feature representations to a specific tracking target.
@@ -20,7 +19,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 然而，这些方法仅利用从当前帧裁剪的特征执行跟踪，这限制了孪生跟踪器的性能。
 
 实际上，视频具有关于目标的丰富信息，并且这种时间信息是视频理解和跟踪的重要基础。
-例如，在视频目标检测中，FGFA~\cite{zhu2017flow} 在特征级别上利用了时间一致性。该算法通过沿运动路径聚聚合相邻的特征来改善每帧特征，从而提高了视频识别精度。
+例如，在视频目标检测中，FGFA~\cite{zhu2017flow} 在特征级别上利用了时间一致性。该算法通过沿运动路径聚合相邻帧的特征来改善每帧特征，从而提高了视频识别精度。
 在视频目标分割中，STCNN~\cite{xu2019spatiotemporal} 引入了时间模块，该模块着重于捕获动态表观和运动线索以提供目标分割的指导信息。
 在基于判别性相关滤波器的目标跟踪中，FlowTrack~\cite{zhu2018end} 专注于利用连续帧中丰富的流信息来改善特征表示和跟踪精度。
 但是，如何在孪生跟踪器中利用时间信息尚未得到广泛研究。
@@ -70,25 +69,24 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 \begin{itemize}
 \item 在本章中，我们提出了一种新型孪生跟踪体系结构，配备有时间聚合模块，可通过聚合相邻帧的特征来改善每帧中目标的特征表示。
 \item 我们在孪生网络跟踪器中进一步引入了对抗性 Dropout 模块，以提高孪生跟踪网络的特征判别能力。
-\item 在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 跟踪数据集上的大量实验结果，证明了基于时间信息增强的跟踪系统的有效性。（图 \ref{fig:visulization}）。
+\item 在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 跟踪数据集上的大量实验结果，证明了基于时间信息增强的跟踪系统的有效性（图 \ref{fig:end_vis}）。
 \end{itemize}
 
 \section{相关工作}
 \subsection{时间信息在视频动作识别中的应用}
-远程时间结构在理解动作视频的动态过程中起着重要的作用。但是，主流的卷积神经网络框架通常集中在表观信息和短期运动上，因此缺乏整合远程时间结构的能力。最近，有一些尝试 \cite{Motionlets} 来解决这个问题。这些方法主要依赖于具有预定采样间隔的密集时间采样。当将这种方法应用于长视频序列时，将导致过高的计算成本，这限制了其在现实世界中的应用，并存在丢失长视频中重要信息的风险。因此，在 \cite{TSN} 中，基于远程时态结构建模的思想，提出了一种视频动作识别的新型框架。该框架结合了稀疏的时间采样策略和视频级别的监督，可以使用整个动作视频进行高效地学习。该框架采用稀疏采样方案在长视频序列上提取短视频片段，其中采样点沿时间维度均匀分布。在此基础上，采用分层结构聚合来自采样视频段的信息。因此，该算法能够对整个视频的远程时间结构进行建模。此外，这种稀疏的采样策略可以使用较低的成本保存视频信息，从而可以在合理的时间和计算资源预算下，在长视频序列上进行端到端学习。% Temporal Segment Networks: Towards Good Practices for Deep Action Recognition 1608
-在 \cite{TRN} 中，作者认为时间关系推理使人类能够根据过去情况分析当前情况，并就下一步可能发生的情况提出假设。时间关系推理对于视频动作识别至关重要，它构成了描述事件的基础。因此，作者提出了一种有效且可解释的网络模块，即时间关系网络（temporal relational reasoning，TRN），该模块旨在学习和推理多个时间尺度上视频帧之间的时间依赖性。% Temporal Relational Reasoning in Videos 1711
-在 \cite{AdaFuse} 中，作者认为时间建模是有效的视频动作识别的关键。虽然了解时间信息可以提高动态动作的识别精度，但是消除时间冗余和重用过去的特征可以大大节省计算量，从而实现有效的动作识别。因此，作者提出了一种称为 AdaFuse 的自适应时间融合网络，该网络可以动态融合当前和过去特征图中的通道，以实现强大的时间建模，从而提高识别精度和效率。% ADAFUSE: ADAPTIVE TEMPORAL FUSION NETWORK FOR EFFICIENT ACTION RECOGNITION
+远程时间结构在理解动作视频的动态过程中起着重要的作用。但是，主流的卷积神经网络框架通常集中在表观信息和短期运动上，因此缺乏整合远程时间结构的能力。最近，有一些尝试 \cite{Motionlets} 来解决这个问题。这些方法主要依赖于具有预定采样间隔的密集时间采样。当将这种方法应用于长视频序列时，将导致过高的计算成本，这限制了其在现实世界中的应用，并存在丢失长视频中重要信息的风险。因此，在 文献 \cite{TSN} 中，Wang 等人基于远程时态结构建模的思想，提出了一种视频动作识别的新型框架。该框架结合了稀疏的时间采样策略和视频级别的监督，可以使用整个动作视频进行高效地学习。该框架采用稀疏采样方案在长视频序列上提取短视频片段，其中采样点沿时间维度均匀分布。在此基础上，采用分层结构聚合来自采样视频段的信息。因此，该算法能够对整个视频的远程时间结构进行建模。此外，这种稀疏的采样策略可以使用较低的成本保存视频信息，从而可以在合理的时间和计算资源预算下，在长视频序列上进行端到端学习。% Temporal Segment Networks: Towards Good Practices for Deep Action Recognition 1608
+在文献 \cite{TRN} 中，Zhou 等人认为时间关系推理使人类能够根据过去情况分析当前情况，并就下一步可能发生的情况提出假设。时间关系推理对于视频动作识别至关重要，它构成了描述事件的基础。因此，作者提出了一种有效且可解释的网络模块，即时间关系网络（temporal relational reasoning，TRN），该模块旨在学习和推理多个时间尺度上视频帧之间的时间依赖性。% Temporal Relational Reasoning in Videos 1711
+在文献 \cite{AdaFuse} 中，Meng 等人认为时间建模是有效的视频动作识别的关键。虽然了解时间信息可以提高动态动作的识别精度，但是消除时间冗余和重用过去的特征可以大大节省计算量，从而实现有效的动作识别。因此，作者提出了一种称为 AdaFuse 的自适应时间融合网络，该网络可以动态融合当前和过去特征图中的通道，以实现强大的时间建模，从而提高识别精度和效率。% ADAFUSE: ADAPTIVE TEMPORAL FUSION NETWORK FOR EFFICIENT ACTION RECOGNITION
 \subsection{时间信息在视频目标检测中的应用}
-在视频目标检测算法 TCNN \cite{TCNN} 中，作者认为在相邻帧中目标的位置和表观应保持连续性，即，预测的边界框位置和检测置信度不应在短时间内发生剧烈变化。然而，如果将图像目标检测框架直接应用于视频目标检测任务中，则目标的检测置信度往往会在相邻帧之间发生显著变化。为了解决这一问题，作者提出了一个深度学习框架，该框架扩展了流行的图像检测框架 R-CNN \cite{girshick2014rich} 和 Faster R-CNN \cite{ren2015faster}，以通过合并相邻帧的时间信息和上下文信息来解决视频中的通用目标检测问题。该算法可以在相邻帧中传播检测结果，并可沿着跟踪算法生成的轨迹修改检测置信度，从而有效地提高现有图像检测框架的在视频目标检测任务中的性能。% T-CNN: Tubelets with Convolutional Neural Networks for Object Detection from Videos 1604
-该工作虽然提高了识别准确性，具有较高的计算成本。为了减少计算量，在文献 \cite{DeepFeature} 中，作者了深度特征流，一种快速、准确的视频目标检测方法。该方法在稀疏的关键帧上应用图像检测网络，通过流场将深度特征图从关键帧传播到其他帧。传播后的特征类似于原始特征。通常，流估计和特征传播比卷积特征的计算快得多。因此，该方法避免了计算瓶颈，显著提高了检测速度。当流场也由网络估算时，整个架构将进行端到端训练，可同时优化目标检测任务和流网络。% Deep Feature Flow for Video Recognition
+在视频目标检测算法 TCNN \cite{TCNN} 中，Kang 等人认为在相邻帧中目标的位置和表观应保持连续性，即，预测的边界框位置和检测置信度不应在短时间内发生剧烈变化。然而，如果将图像目标检测框架直接应用于视频目标检测任务中，则目标的检测置信度往往会在相邻帧之间发生显著变化。为了解决这一问题，作者提出了一个深度学习框架，该框架扩展了流行的图像检测框架 R-CNN \cite{girshick2014rich} 和 Faster R-CNN \cite{ren2015faster}，以通过合并相邻帧的时间信息和上下文信息来解决视频中的通用目标检测问题。该算法可以在相邻帧中传播检测结果，并可沿着跟踪算法生成的轨迹修改检测置信度，从而有效地提高现有图像检测框架的在视频目标检测任务中的性能。% T-CNN: Tubelets with Convolutional Neural Networks for Object Detection from Videos 1604
+该工作虽然提高了识别准确性，但是具有较高的计算成本。为了减少计算量，在文献 \cite{DeepFeature} 中，Zhu 等人基于深度特征流提出了一种快速、准确的视频目标检测方法。该方法在稀疏的关键帧上应用图像检测网络，通过流场将深度特征图从关键帧传播到其他帧。传播后的特征类似于原始特征。通常，流估计和特征传播比卷积特征的计算快得多。因此，该方法避免了计算瓶颈，显著提高了检测速度。当流场也由网络估算时，整个架构将进行端到端训练，可同时优化目标检测任务和流网络。% Deep Feature Flow for Video Recognition
 \subsection{时间信息在视频目标跟踪中的应用}
 大多数现有的相关滤波跟踪器仅考虑当前帧的表观特征，几乎无法从运动和帧间信息中受益。在诸如部分遮挡和形变之类的挑战中，缺少时间信息会降低跟踪性能。目标跟踪所处理的是视频信息，因此时序信息很重要。以前有很多工作利用时序信息进行目标跟踪。
-在文献 \cite{DeepMotion} 中，作者首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动功能对视频目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视频目标跟踪。
+在文献 \cite{DeepMotion} 中，Gladh 等人首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动特征对视频目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视频目标跟踪。
 该方法虽然利用光流提高了视频目标跟踪算法的性能，但采用的是在在动作识别任务中预训练的深层光流网络，并没有在视频目标跟踪任务中进行端到端训练，因此没有获得最佳跟踪效果。
-为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出深度学习框架中共同训练光流网络和跟踪网络你，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
+为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出在深度学习框架中共同训练光流网络和跟踪网络，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
 
 \section{孪生网络跟踪器的端到端时间聚合}
-\label{sec:method}
 %应该提及我们的跟踪器的损失函数包括：对抗性损失，加上常规跟踪损失。
 %In this section, we will introduce the proposed tracking method, SiamTFA (Fig. \ref{fig:SiamTFA}). 
 %The main feature is:
@@ -142,7 +140,7 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 %Different from traditional trackers, we use the rich information about the same object instance by 
 大多数基于孪生网络的视频目标跟踪算法 \cite{SiamRPN++, Wang2018SiamMask} 使用静止图像预测目标的位置，% However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
 这限制了孪生跟踪器的能力。
-一方面，基于单帧进行跟踪可能会产生不稳定的结果，从而导致在目标表观发生退化时跟踪失败（图 \ref{fig:visulization}）；另一方面，
+一方面，基于单帧进行跟踪可能会产生不稳定的结果，从而导致在目标表观发生退化时跟踪失败（图 \ref{fig:end_vis}）；另一方面，
 在时间上相邻的帧可以提供有关目标的更多信息。
 %the video has rich information about the target. 
 因此，我们旨在通过聚合相邻帧的特征来改善每帧中的目标特征。
@@ -230,7 +228,6 @@ The loss function of stage 1 is:
     \centering
     \includegraphics[width=0.75\textwidth]{Img/end/success_plot.png}
     \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
-    \label{fig:got10k}
 \end{figure}
 
 
@@ -245,7 +242,6 @@ The loss function of stage 1 is:
   \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
 \caption{UAV20L 数据集上的成功图和精度图。}
-\label{fig:uav20l}
 \end{figure}
 
 \iffalse
@@ -315,7 +311,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \checkmark&           & 0.561 & 0.645 & 0.480 \\
 \checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
 \bottomrule
-\label{tabel:ablation}
 \end{tabular}
 \end{table}
 
@@ -325,7 +320,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
     \centering
     \includegraphics[width=1\textwidth]{Img/end/visulization.pdf}
     \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
-    \label{fig:visulization}
 \end{figure}
 %\clearpage
 
@@ -396,7 +390,6 @@ MDNet	 &  0.299&  0.303 &0.099 \\
 %ECOhc	 &  0.286&  0.276 &0.096 \\
 \bottomrule
 \end{tabular}
-\label{table:got}
 \end{table}
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估本章提出的算法。
 % Say something about this dataset.
