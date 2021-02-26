@@ -313,6 +313,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \checkmark&\checkmark & 0.577 & 0.662 & 0.509 \\
 \bottomrule
 \end{tabular}
+\label{table:end_ablition}
 \end{table}
 
 \section{实验评估与分析}
@@ -321,8 +322,8 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
     \centering
     \includegraphics[width=0.9\textwidth]{Img/end/visulization.pdf}
     \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
+    \label{fig:end_vis}
 \end{figure}
-%\clearpage
 
 在本章中我们提出的时间信息增强的跟踪算法增强了基于孪生网络的视频目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于目标的退化特征具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视频目标跟踪数据库 GOT-10K \cite{GOT-10k} 数据库和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
 \subsection{实验设置}
@@ -400,10 +401,13 @@ GOT-10k 是最近提出的目标跟踪数据集，包含超过 10000 个视频�
 GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别和 32 种运动模式。我们使用 \cite{GOT-10k} 中提出的平均重叠（AO）分数和成功率（SR）作为性能指标。AO 表示所有真实边界框和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
 
 \textbf{消融实验}
-从表 \ref{tabel:ablation} (第 $1^{st}$ 行和第 $2^{nd}$ 行）中可以看出，通过添加时间聚合模块，AO 性能提高了 1.9％。
+为了分析本章提出的时间聚合模块和对抗性 Dropout 模块的有效性，我们训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:end_ablation} 第一行）在我们最终提出的跟踪器中同时剔除了时间聚合模块和对抗性 Dropout 模块。变体 2（参见表 \ref{table:end_ablition} 第二行）在我们最终提出的跟踪器中剔除对抗性 Dropout 模块，仅保留时间聚合模块。表 \ref{table:end_abliation} 的第三行表示我们最终提出的跟踪器，同时配备有时间聚合模块和对抗性 Dropout 模块。
+我们在 GOT-10k 测试集上对上述三个跟踪器的性能进行了对比。
+从第一行可以看出，变体 1 的 AO 值为 0.542，具有较好的跟踪性能。这是因为主干网络采用了特征金字塔网络，可充分利用目标的底层和高层信息，对于大目标在较高尺度上进行预测，对于小目标在较低尺度上进行预测，从而提高了跟踪性能。然而，该跟踪器仅利用单帧图像进行跟踪，未利用视频中的时间信息，因此当目标表观发生退化时具有较差的性能。
+从第二行可以看出，变体 2 的 AO 值为 0.561，相比于变体 1，AO 性能提高了 1.9％。
 这是因为时间聚合模块通过聚合来自相邻帧的时间信息以改善每帧特征。
 %The RPN stage rapidly filters out most background samples, and the RoI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
-从表 \ref{tabel:ablation} (第 $2^{nd}$ 行和第 $3^{rd}$ 行）中可以看出，通过对抗性 Dropout 模块，AO 增加了 1.6％。
+从第三行中可以看出，通过添加对抗性 Dropout 模块，跟踪器的 AO 进一步增加了 1.6％。
 %This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
 这是因为对抗性 Dropout 模块提高了本章提出的孪生跟踪网络的特征判别能力。
 
@@ -425,7 +429,9 @@ SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时�
 在精度图中，我们的跟踪器的得分为 0.804。
 它表明本章提出的跟踪器一些有代表性的最新跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
 
+\textbf{基于属性的分析} UAV20L 包含常见的视觉跟踪挑战其中，宽高比变化（aspect ration change，ARC）表示第一帧中目标的宽高比与至少后续一帧中目标宽高比的比值超出区间 $[0.5, 2]$；背景混杂（background clutter，BC）表示目标附近的背景表观与目标表观近似；相机运动（camera motion，CM）表示相机的突然运动；快速运动（fast motion，FM）表示目标标注框在相邻两帧之间的位移超过 20 像素；完全遮挡（Full Occlusion，FOC）表示目标被完全遮挡；光照变化（illumination variation，IV）表示目标的光照发生显著变化；低分辨率（low resolution，LR）表示至少有一个真实标注框的分辨率小于 400 像素；视线外（out-of-view，OV）表示目标的某些部分离开视线；部分遮挡（partial occlusion，POC）表示目标被部分遮挡；相似目标（similar object，SOB）表示目标附近有相似形状或相同类型的目标；尺度变化（scale variation，SV）表示目标的初始边界框和至少一个后续边界框的尺度比率超出范围 $[0.5，2]$；视点改变（viewpoint change，VC）表示视点会显著影响目标表观。
+与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
+在文献 \cite{fan2018parallel} 中，Fan 等人提出了并行跟踪与验证（parallel tracking and verifying，PTAV）跟踪框架。PTAV 由跟踪器和验证器两个模块组成，在两个单独的线程上并行工作。跟踪器旨在提供实时跟踪预测，在大多数时间表现良好；验证器检查跟踪结果并在必要时矫正跟踪器。通过两个模块的合作，PTAV 既具有较高的跟踪效率，也具有较强的跟踪性能。因此，该算法在光照变化、宽高比变化等属性上得分较高。尽管如此，PTAV 与本文提出的算法仍具有较大差距。比如在光照变化属性中，PTAV 的成功率为 0.430，而本章提出的算法成功率为 0.630。可能的原因是 PTAV 仅基于单帧图像执行跟踪，而本章提出的跟踪器融合了相邻帧中目标的表观信息，更能克服由于光照变化而造成的目标表观退化现象。
+
 \section{本章小结}
-在本章中，我们提出了一种用于视频目标跟踪的新型孪生架构。
-具体来说，我们提出的算法包含两个主要模块，即时间聚合模块和对抗性 Dropout 模块。时间聚集模块通过聚合相邻帧的特征来改善每帧种目标的特征表示。对抗性 Dropout 模块提高了孪生跟踪网络的特征判别能力。
-大量的实验结果证明了所提出的时间信息增强的跟踪系统的有效性。
+在本章中，我们提出了一种时间信息增强的视频目标跟踪算法。该算法主要在特征提取方面对基于孪生网络的视频目标跟踪算法进行优化。首先，我们从基于孪生网络的在线视频跟踪算法鲁棒性不足问题出发，将时间信息引入在线视频目标跟踪中。通过来自相邻帧的目标表观信息的聚合，使得目标表观特征更加丰富，弥补基于孪生网络的视频目标跟踪算法局限于从单帧提取目标表观，从而对目标表观表示能力不足的缺点，从而提高跟踪的效果，实现鲁棒的跟踪。在端到端时间聚合的基础上，我们通过引入对抗性 Dropout 模块，并通过在大规模数据集上端到端训练，使得孪生网络跟踪器在目标由于运动模糊等导致的表观不佳的情况下具有更好的表现，从而进一步提高跟踪的鲁棒性。我们在目前流行的视频目标跟踪评测库上进行了算法的对比试验以及成分分析实验，从而验证算法改进的有效性。
