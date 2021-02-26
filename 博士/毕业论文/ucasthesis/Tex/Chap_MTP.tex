@@ -165,9 +165,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \begin{center}
 \begin{tabular}{c cc c}
 \toprule
-\multicolumn{2}{c}{跟踪器} & 
-\begin{tabular}{c} \textbf{SiamFC++\_} \\ \textbf{GoogLeNet} \end{tabular} &
-\begin{tabular}{c} \textbf{Ours} \\ \textbf{GoogLeNet} \end{tabular} \\
+跟踪器 & 评价指标 & 基线方法 & 本章方法\\
 \midrule
 \multirow{1}{*}{OTB-15} 
 & Success & 68.3 & 69.7\\
@@ -222,8 +220,24 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \textbf{网络架构设计}：本章所采用的基线孪生目标跟踪网络主要由四个子网络组成，分别是用于共享特征提取的主干网络，用于预测边框位置的回归子网络，用于判断目标出现可能性的分类分支，以及用于预测边框质量的质量评估分支。网络结构如图 \ref{fig:MTP_SiamFC++} 所示。主干网由 5 个卷积层和 8 个 Inception 块 \cite{GoogLeNet} 构成，可为模板图像和搜索图像提取高层语义信息，以提升跟踪精度。
 
 \textbf{训练数据}：为了提高特征表示的泛化能力和判别力，同时避免在稀缺的跟踪数据上过度拟合，基线网络的离线训练数据集包括 ILSVRC-VID/DET \cite{VID}、COCO \cite{COCO}、YoutubeBB \cite{real2017youtube}、LaSOT \cite{LaSOT} 和 GOT-10k \cite{GOT-10k}。
+其中，大规模视觉识别挑战赛（ImageNet Large Scale Visual Recognition Challenge，简称 ILSVRC）数据集包含超过 4000 个视频序列以及约 130 万个矩形框标注，具有较为丰富多样的视频场景分布。
+COCO 数据集是一个大型的、丰富的物体检测、分割和字幕数据集。该数据集以场景理解为目标，主要从复杂的日常场景中截取，图像中的目标通过精确的分割进行位置的标定。图像包括 91 类目标，328000 幅图像和 2500000 个标签。
+YoutubeBB 数据集是带有高质量单目标边框注释的大规模数据集，从 240000 段 YouTube 视频中提取大约 380000 个时长 15 秒至 20 秒的视频片段。所选择的视频大多以手持设备（如手机摄像头）拍摄，未进行编辑和后处理。所有视频片段标注有高精度的分类标签，并以 1 帧每秒的帧率进行人工边框标注。该数据集的目的是推动机器学习的进展，以促进视频理解。
+LaSOT 数据集是一个具有高质量手动密集标注的对象跟踪数据集，包含 1400 个视频，每个序列平均 2512 帧。每一帧都经过仔细检查和手动标记，并在需要时对结果进行目视检查和纠正，从而生成大约 352 万个高质量的边界框标注。LaSOT 共包含 70 个类别，每个类别包含 20 个序列。
+GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动目标和 87 类运动模式，以尽可能覆盖现实情况中的各种挑战性模式，并带有超过 150 万个手动标记的边界框，从而可以对深度跟踪器进行统一训练和稳定评估。在 GOT-10k 采用的跟踪器评估协议中，训练集和测试集的物体类别是零重叠的。该协议避免了评估结果的偏差
+上述数据集被广泛使用在最近提出的孪生网络跟踪算法 \cite{SiamRPN++,Wang2018SiamMask} 训练中。
+对于视频数据集 VID、LaSOT 和 GOT-10k，从间隔小于 100 帧内抽取图像对。对于视频数据集 YoutubeBB，从间隔小于 5 帧内抽取图像对。对于图像数据集 COCO 和 ImageNetDet，生成负样本对作为训练样本的一部分，以增强模型区分近似目标的能力。在搜索图像上按均匀分布指定随机平移和缩放以进行数据增强。
 
-在本节中，我们首先介绍实现细节。然后将我们的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 种序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视频目标跟踪数据集。它们在训练和测试集中涵盖了的各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪其对目标类别的泛化能力。
+\textbf{优化器参数设定}：对于基线网络的训练，使用动量为 0.9 的随机梯度下降（stochastic gradient descent，SGD）优化器对网络参数进行训练，并将权值衰减参数设置为 0.0005。
+模型经过 20 个迭代周期的训练，每个迭代周期中图像对的数量为 300000 对。
+主干网络中的参数在前 10 个迭代周期中被冻结，并从第 11 个迭代周期开始进行训练以避免过拟合。
+模型的全局学习率为 $2\times 10^{-2}$。主干网络中参数的学习率为全局学习率的十分之一。
+公式 \ref{equ:adaptaion} 中的参数 $\alpha$ 设为 0.05。
+
+\textbf{测试阶段}：测试时，除利用自适应信息对模板像素进行调整外，不对基线网络进行任何更改。测试阶段的模型输出是一组带有置信度得分的边界框。根据边界框的尺度/长宽比变化以及距上一帧中预测目标的位置，对置信度得分进行惩罚，最后选择得分最高的边界框用于更新目标状态。
+
+本章所提出的自适应信息增强的孪生网络跟踪器使用 PyTorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz
+和 NVIDIA RTX 2080Ti GPU 的工作站上执行。本章提出的跟踪器在 NVIDIA RTX 2080Ti GPU 上以超过 80 FPS 的速度运行。
 
 %%%%%%%%%%%%%%%%%
 \begin{figure}[t]
@@ -234,13 +248,13 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{figure}
 %%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{实验细节}
-我们使用 SiamFC++ \cite{SiamFC++} 作为基本跟踪器，而主干孪生网络采用 GoogLeNet \cite{GoogLeNet}。除了模型调整组件，我们不执行任何更改。等式 \ref{equ:adaptaion} 中的参数 $\alpha$ 设为 0.05。本章算法是使用 PyTorch 在 Python 中实现的。本章提出的跟踪器在 NVIDIA RTX 2080Ti GPU 上以超过 80 FPS 的速度运行。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{与主流跟踪器的比较}
 
+在本节中，我们将本章提出的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 种序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视频目标跟踪数据集。它们在训练和测试集中涵盖了的各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪其对目标类别的泛化能力。
+
+\iffalse
 \begin{figure*}[p]
 \begin{center}
 \subfloat[]{
@@ -348,6 +362,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \end{center}
    \caption{OTB 各属性成功图。}
 \end{figure*}
+\fi
 
 \textbf{OTB2015} 我们使用成功率来评估跟踪器在 OTB2015 上的性能。成功率取决于预测边界框和真实边界框的交并比。我们将本章提出的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为 16。结果显示在表 \ref{table:otb} 中。在成功率方面，我们的跟踪器比在线跟踪器 ATOM 高出 2.8％，这证明了我们方法的强大模型自适应能力。
 
@@ -366,7 +381,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \caption{使用嘈杂的初始帧在 OTB2015 上的性能。}
 \begin{tabular}{c c c c c}
 \toprule
-\multicolumn{3}{c}{Coefficients of Noise} & \multicolumn{2}{c}{Success Score} \\
+\multicolumn{3}{c}{噪声系数} & \multicolumn{2}{c}{成功率得分} \\
 \cmidrule(lr){1-3} \cmidrule(lr){4-5}
 $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 \midrule
@@ -388,29 +403,30 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_G & Ours  \\
 \end{table}
 %%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%
-\begin{table}[t]
-%\renewcommand\arraystretch{0.8}
-\centering
-%\setlength{\tabcolsep}{2pt}
-\caption{OTB2015 在 11 种属性下对成功率进行比较。}
-\begin{tabular}{c c c c c c c c c c c c}
-\toprule
-跟踪器 & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
-\midrule
-SiamFC++\_G  &  62.5 & 63.9 & 68.0          & 69.2          & 69.5          & \textbf{72.5}  & 66.7 & 60.9 & 66.9 & 55.8 & 68.4 \\
-Ours        & \textbf{66.5} & \textbf{66.8} & \textbf{68.7} & \textbf{71.3} & \textbf{69.6} & 69.8  & \textbf{67.3} & \textbf{62.5} & \textbf{68.4} & \textbf{57.1} & \textbf{69.8} \\
-\bottomrule
-\end{tabular}
-\label{table:attr}
-\end{table}
-%%%%%%%%%%%
-
 \iffalse
 To verify the contribution of the proposed model adaptation method, we compare our tracker with the baseline SiamFC++\_GoogLeNet \cite{SiamFC++} on 4 challenging tracking datasets. In comparison with the baseline tracker on OTB2015, our tracker improves the success score by 1.4\%. On VOT2018, our tracker outperforms the baseline tracker by 1.2\% in terms of EAO. On GOT-10k, our tracker improves the AO score by 1.0\%. On TrackingNet, our tracker outperforms the baseline tracker by 1.7\% in terms of the normalized precision score. All these consistent improvements highlight the effectiveness of the proposed model adaptation method.
 \fi
 
 \textbf{对嘈杂初始帧的鲁棒性} 为了研究本章提出的模型自适应方法在第初始帧与后续帧相比有噪声的情况下的鲁棒性，我们通过以下方式在第一帧中添加三种噪声：更改图像亮度，应用高斯模糊以及使用不准确的真实边界框注释。我们用 $\gamma_1 \in [0.5, 1.5]$ 表示亮度变化系数，用 $\gamma_2 \in [0, 2]$ 表示模糊半径系数，用 $\gamma_3 \in [0.75, 1]$ 表示不准确的第一帧边界框注释和真实边界框注释之间的边框重叠交并比（IoU）。我们随机采样 $\gamma_1, \gamma_2$ 和 $\gamma_3$，并在 OTB2015 上对基线跟踪器和我们的跟踪器都运行了 10 次（见表 \ref{table:noise}）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，我们的跟踪器在不同的噪声水平下始终表现更好，这表明我们的跟踪器对嘈杂的初始帧具有鲁棒性。%the first frame noise.
+
+%%%%%%%%%%%%%%%%
+\begin{table}[t]
+%\renewcommand\arraystretch{0.8}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{c c c c c c c c c c c c}
+\toprule
+跟踪器 & BC & DEF & FM            & IV            & IPR           & LR    & MB    & OCC   & OPR   & OV    & SV    \\
+\midrule
+基线算法  &  62.5 & 63.9 & 68.0          & 69.2          & 69.5          & \textbf{72.5}  & 66.7 & 60.9 & 66.9 & 55.8 & 68.4 \\
+本章算法        & \textbf{66.5} & \textbf{66.8} & \textbf{68.7} & \textbf{71.3} & \textbf{69.6} & 69.8  & \textbf{67.3} & \textbf{62.5} & \textbf{68.4} & \textbf{57.1} & \textbf{69.8} \\
+\bottomrule
+\end{tabular}
+}
+\caption{OTB2015 在 11 种属性下对成功率进行比较。}
+\label{table:attr}
+\end{table}
+%%%%%%%%%%%
 
 \textbf{基于属性的分析} 为了对跟踪性能进行进一步分析，我们还通过对 OTB2015 数据集的序列进行基于属性的比较来证明我们算法的优势（请参见表 \ref{table:attr}）。在 OTB2015 中，每个序列都具有 11 种不同的属性，即：背景混杂（BC），形变（DEF），快速运动（FM），照明变化（IV），平面内旋转（IPR），低分辨率（LR），运动模糊（MB），遮挡（OCC），平面外旋转（OPR），目标出画面（OV）和缩放尺度变化（SV）。在 11 个属性中，与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，本章提出的跟踪器在 10 个属性上具有更好的性能，这证明了其在挑战性跟踪场景（例如照明变化和运动模糊）中的鲁棒性。
 
