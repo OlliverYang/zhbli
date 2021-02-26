@@ -291,8 +291,17 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 %测评性能使用期望平均重叠率（EAO）来度量排序，EAO 指标同时定量反映算法的鲁棒性和准确性。
 VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的视频。该数据集是通过先进的序列选择方法从 300 多个序列中构建的，该序列选择方法优先考虑难以追踪的目标并最大化视觉属性多样性成本函数。
 在 VOT2015 中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（预期平均重叠）。准确性衡量跟踪器预测的边界框与真值边界框的重叠程度。鲁棒性衡量跟踪器在跟踪过程中失去目标（即跟踪失败）的次数。EAO 结合了准确性和鲁棒性来评估跟踪器的整体性能。
+由于本章算法在 VOT 数据集中主要采用 EAO 进行度量，我们引述 VOT-2015 中对于 EAO 的具体定义。以一个序列长度为 $T_s$ 帧的跟踪视频为例，跟踪算法在序列首帧进行初始化，并一直跟踪到视频结束。如果跟踪器偏离目标真实位置，则假定它将一直保持偏离，直到序列结束。跟踪器在每一帧与真实目标位置之间的重叠率记作 $\Phi^i$，跟踪失败之后的所有图像帧的重叠率都记为 0，则跟踪器在该视频跟踪中的平均重叠率为：
+\begin{equation}
+\Phi^{T_{s}}=\frac{1}{T_{s}} \sum_{i=1}^{T_{s}} \Phi^{i}
+\end{equation}
+通过对许多段长度为 $T_s$ 的视频平均重叠率进行平均，我们可以得到帧长度为 $T_s$ 的视频的期望平均重叠率 $\Phi^{T_{s}}$，类似于 OTB 数据中的平均重叠率曲线图，我们计算一段视频长度间隔 $[T_{lo}, T_{hi}]$ 内的期望平均重叠率的均值，即可稳定估计跟踪算法的期望平均重叠率：
+\begin{equation}
+\hat{\Phi}=\frac{1}{T_{h i}-T_{l o}} \sum_{T_{s}=T_{l o}}^{T_{h i}} \hat{\Phi}^{T_{s}}
+\end{equation}
+平均期望重叠率指标同时考虑了算法的精度以及跟踪丢失情况。
 
-我们将我们的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
+我们将本章提出的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
 这些跟踪器可以分为三类：Struck 和 EBT 是传统的跟踪器。SRDCF，CSRDCF，TGPRfSRDCF，Staple 和 SAMF 是基于 DCF 的跟踪器。DeepSRDCF 和 TCNN 是基于 CNN 的跟踪器。
 跟踪器的 EAO 得分如图 \ref{fig:vot15} 所示。与其他列出的方法相比，本章提出的方法可实现 0.342 的 EAO。
 Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 在 EAO 方面的相对提升显著优于 Struck，达到 36.8％，这表明 DCF 框架的出色表现以及 IGCF 的有效性。
@@ -317,8 +326,10 @@ GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据库。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
-我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。评估的跟踪器的成功图如图 \ref{fig:got10k}所示。它代表重叠度量超过阈值的帧相对于不同阈值的百分比。我们的方法的 AO 得分为 0.299，优于所有其他列出的竞争跟踪算法。
-
+我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。评估的跟踪器的成功图如图 \ref{fig:got10k}所示。它代表重叠度量超过阈值的帧相对于不同阈值的百分比。
+本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所有其他列出的竞争跟踪算法。
+在文献 CFNet \cite{Valmadre2017EndtoEndRL} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
+而本章提出的网络 InstMask 基于 ResNet 设计，具有更多卷积层，可有效提取图像的高层语义信息，因此取得了更好的跟踪性能。
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{Img/IGCF/davis.pdf}
