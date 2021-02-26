@@ -47,7 +47,7 @@
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/globally/SiamRCNN.pdf}
-    \caption{SiamRCNN 的网络结构示意图。}
+    \caption{本章所提算法的网络结构示意图。}
     \label{fig:siamrcnn}
 \end{figure}
 
@@ -184,7 +184,7 @@ ROI head & Motion model & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\
 \checkmark&           & 0.521 & 0.595 & 0.440 \\
 \checkmark&\checkmark & 0.560 & 0.645 & 0.457 \\
 \bottomrule
-\label{tabel:ablation}
+\label{table:globally_ablition}
 \end{tabular}
 \end{table}
 
@@ -268,34 +268,44 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 \end{table}
 
 \section{实验结果与分析}
-\label{sec:experiments}
+
+\subsection{实验设置}
 
 \nopagebreak[3]
 \begin{figure}[t!]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/globally/UAV20L_1.pdf}
 \caption{在 UAV20L 上成功绘制带有属性的图 1。在彩色显示屏上观看效果最佳。}
+\label{fig:globally_uav20l_1}
 \end{figure}
 \nopagebreak[3]
 
-\subsection{实现细节}
-本章提出的跟踪框架在 GOT-10k \cite{GOT-10k} 训练集中进行了训练。GOT-10k 数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包括 563 类真实运动目标和 87 类运动模式。
-我们执行多尺度训练：目标大小从 $64 \times 64$ 至 $256 \times 256$ 不等。图像大小在跟踪过程中保持不变。跟踪框架使用随机梯度下降（stochastic gradient descent，SGD）进行训练。权重衰减为 $10^{-4}$，动量大小为 0.9。我们执行了 27000 次迭代以训练跟踪框架，学习率从 $10^{-2}$ 降至 $10^{-4}$。
+\textbf{网络架构设计}：本章提出的空间信息增强的孪生视频目标跟踪网络主要有三个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制子网络以及用于边框微调的区域细化子网络。它们的网络结构如图 \ref{fig:siamrcnn} 所示，主干网络基于 ResNet-50 设计，可以为模板图像和搜索区域图像提取深度特征，以提升特征表示能力。
+
+\textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过拟合，离线训练过程在大规模单目标视频跟踪数据库 GOT-10k \cite{GOT-10k} 的训练数据集中训练网络参数。GOT-10k 数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包括 563 类真实运动目标和 87 类运动模式。
+我们执行多尺度训练：目标大小从 $64 \times 64$ 至 $256 \times 256$ 不等。图像大小在跟踪过程中保持不变。
+
+\textbf{优化器参数设定}：本章使用动量为 0.9 的随机梯度下降（stochastic gradient descent，SGD）优化器从在 ImageNet 上预训练的网络参数开始训练，并将权值衰减参数设置为 $10^{-4}$。学习率从 $10^{-2}$ 指数衰减到 $10^{-4}$。该模型经过 27000 次迭代训练，每个批次大小为 2 个样本对。
 
 本章提出的轨迹预测模块也利用 GOT-10k 训练集进行训练。训练采用的优化器为 Adam 优化器 \cite{kingma2014adam}。初始学习率设置为 $10^{-3}$，并在第 170 轮和 200 轮迭代时分别降至 $10^{-4}$ 和 $10^{-5}$。训练过程在 210 轮迭代后终止。
+
+本章所提出的时间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
 \subsection{对 GOT-10k 数据集的评估}
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估所提出的跟踪算法。
 GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表示所有真实边界框和预测边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功进行跟踪的帧占总帧数的百分比。
 
 \textbf{对比实验}
-从表 \ref{tabel:ablation}（第 $1^{st}$ 行和第 $2^{nd}$ 行）中可以看出，通过添加 RoI 头，AO 性能提高了 11.1％。这是因为 RPN 阶段可快速过滤掉大多数背景样本，并且 RoI 头采用固定的前景与背景比率，以在前景与背景之间保持可控的样本平衡。
-从表 \ref{tabel:ablation}（第 $2^{nd}$ 行和第 $3^{rd}$ 行）中可以看出，通过添加轨迹预测模块，AO、SR$_{0.50}$ 和 SR$_{0.75}$ 分别增加 3.9\%，5.0\% 和 1.7\%。这是因为所提出的轨迹预测模块可以有效地预测目标的位置分布，从而避免了近似物体的不利干扰。
+为了分析本章提出的两阶段跟踪框架和轨迹预测模块的有效性，我们训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:globally_ablition} 第一行）在我们最终提出的跟踪器中同时剔除了 RoI 头和轨迹预测模块。变体 2（参见表 \ref{table:globally_ablition} 第二行）在我们最终提出的跟踪器中剔除轨迹预测模块，仅保留 RoI 头。表 \ref{table:globally_ablition} 的第三行表示我们最终提出的跟踪器，同时配备有 RoI 头和轨迹预测模块。
+我们在 GOT-10k 测试集上对上述三个跟踪器的性能进行了对比。
+从第一行和第二行中可以看出，通过添加 RoI 头，AO 性能提高了 11.1％。这是因为 RPN 阶段可快速过滤掉大多数背景样本，并且 RoI 头采用固定的前景与背景比率，以在前景与背景之间保持可控的样本平衡。
+第二行和第三行中可以看出，通过添加轨迹预测模块，AO、SR$_{0.50}$ 和 SR$_{0.75}$ 分别增加 3.9\%，5.0\% 和 1.7\%。这是因为所提出的轨迹预测模块可以有效地预测目标的位置分布，从而避免了近似物体的不利干扰。
 
 \begin{figure}[t!]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/globally/UAV20L_2.pdf}
 \caption{在 UAV20L 上成功绘制带有属性的图 2。在彩色显示屏上观看效果最佳。}
+\label{fig:globally_uav20l_2}
 \end{figure}
 
 \nopagebreak[3]
@@ -398,6 +408,10 @@ UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频
 遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
 
 我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:globally_uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的相对 AUC 提升分别为 31.7％ 和 22.7％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的相对性能提升分别为 25.8\% 和 24.4\%。
+
+此外，我们对 UAV20L 进行了基于属性的分析（参见图 \ref{fig:globally_uav20l_1} 和图 \ref{fig:globally_uav20l_2}）。UAV20L 包含常见的视觉跟踪挑战，包括宽高比变化（aspect ration change，ARC）、背景混杂（background clutter，BC）、相机运动（camera motion，CM）、快速运动（fast motion，FM）、完全遮挡（Full Occlusion，FOC）、光照变化（illumination variation，IV）、低分辨率（low resolution，LR）、视线外（out-of-view，OV）、部分遮挡（partial occlusion，POC）、相似目标（similar object，SOB）、尺度变化（scale variation，SV）和视点改变（viewpoint change，VC）。
+与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
+在文献 \cite{SiamRPN} 中，Li 等人提出了同时具有分类分支和回归分支的跟踪框架 SiamRPN。分类分支旨在在搜索图像中确定目标的位置，回归分支旨在优化目标的边框尺寸与长宽比。通过两个分支的合作，SiamRPN 具有较高的跟踪性能。因此，该算法在尺度变化、视点改变等属性上得分较高。尽管如此，SiamRPN 与本文提出的算法仍具有较大差距。比如在完全遮挡属性中，SiamRPN 的成功率仅为 0.192，而本章提出的算法成功率为 0.446。可能的原因是 SiamRPN 基于局部搜索机制进行跟踪，而本章提出的跟踪器采用了全局感知机制和轨迹预测模块，能够在目标再次出现在画面后及时进行继续跟踪。
 
 \iffalse
 In order to perform a more in-depth and detailed analysis of the performance of the trackers, we also report the results on challenging attributes in UAV20L. Fig. \ref{fig:uav20l_attr} lists the success plots of 14 different methods on 12 attributes: ARC (Aspect Ratio Change), BC (Background Clutter), CM (Camera Motion), FM (Fast Motion), FOC (Full Occlusion), IV (Illumination Variation), LR (LR Low Resolution), OV (Out-of-View), POC (Partial Occlusion), SOB (Similar Object), SV (Scale Variation) and VC (Viewpoint Change). We can observe that the AUC of the proposed algorithm perform better than other methods on most challenging attributes, which means our method is more robust than other approaches on various difficult situations.
