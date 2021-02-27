@@ -106,7 +106,7 @@ end
 metricTypeSet = {'error', 'overlap'};
 evalTypeSet = {'OPE'}; %'SRE', 'OPE'
 
-rankingType = 'AUC'; %AUC, threshold
+rankingType = 'threshold'; %AUC, threshold
 
 rankNum = 14;%number of plots to show
 
