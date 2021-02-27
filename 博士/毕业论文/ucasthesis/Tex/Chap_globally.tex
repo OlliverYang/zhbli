@@ -271,14 +271,18 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 \subsection{实验设置}
 
-\nopagebreak[3]
-\begin{figure}[t!]
-\centering
-\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L_1.pdf}
-\caption{在 UAV20L 上成功绘制带有属性的图 1。在彩色显示屏上观看效果最佳。}
+\begin{figure*}[t!]
+\begin{center}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/FOC_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/OV_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/BC_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/POC_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/ARC_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/CM_overlap_OPE_AUC.png}
+\end{center}
+   \caption{在 UAV20L 上成功绘制带有属性的图 1。在彩色显示屏上观看效果最佳。}
 \label{fig:globally_uav20l_1}
-\end{figure}
-\nopagebreak[3]
+\end{figure*}
 
 \textbf{网络架构设计}：本章提出的空间信息增强的孪生视频目标跟踪网络主要有三个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制子网络以及用于边框微调的区域细化子网络。它们的网络结构如图 \ref{fig:siamrcnn} 所示，主干网络基于 ResNet-50 设计，可以为模板图像和搜索区域图像提取深度特征，以提升特征表示能力。
 
@@ -301,12 +305,18 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 从第一行和第二行中可以看出，通过添加 RoI 头，AO 性能提高了 11.1％。这是因为 RPN 阶段可快速过滤掉大多数背景样本，并且 RoI 头采用固定的前景与背景比率，以在前景与背景之间保持可控的样本平衡。
 第二行和第三行中可以看出，通过添加轨迹预测模块，AO、SR$_{0.50}$ 和 SR$_{0.75}$ 分别增加 3.9\%，5.0\% 和 1.7\%。这是因为所提出的轨迹预测模块可以有效地预测目标的位置分布，从而避免了近似物体的不利干扰。
 
-\begin{figure}[t!]
-\centering
-\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L_2.pdf}
-\caption{在 UAV20L 上成功绘制带有属性的图 2。在彩色显示屏上观看效果最佳。}
+\begin{figure*}[t!]
+\begin{center}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/FM_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/IV_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/LR_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/SOB_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/SV_overlap_OPE_AUC.png}
+	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/VC_overlap_OPE_AUC.png}
+\end{center}
+   \caption{在 UAV20L 上成功绘制带有属性的图 2。在彩色显示屏上观看效果最佳。}
 \label{fig:globally_uav20l_2}
-\end{figure}
+\end{figure*}
 
 \nopagebreak[3]
 \begin{figure}[p!]
@@ -339,70 +349,6 @@ LO 子集包括验证集中最长的 40 段视频。
 在 LO 子集上，与 SiamMask 相比，AO 得分的相对提升为 12.13％。结果表明，全局感知机制可以有效减少视频目标跟踪算法在跟踪长视频时的累积误差。
 
 \subsection{对 UAV20L 数据集的评估}
-
-\iffalse
-\begin{figure*}[t]
-\begin{center}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/FOC_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/OV_overlap_OPE_AUC.png}
-}\\
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/BC_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/POC_overlap_OPE_AUC.png}
-}\\
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/ARC_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/CM_overlap_OPE_AUC.png}
-}
-\end{center}
-   \caption{在 UAV20L 上成功绘制带有属性的图 1。在彩色显示屏上观看效果最佳。}
-\label{fig:uav20l_attr}
-\end{figure*}
-
-\begin{figure*}[t]
-\begin{center}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/FM_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/IV_overlap_OPE_AUC.png}
-}\\
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/LR_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/SOB_overlap_OPE_AUC.png}
-}\\
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/SV_overlap_OPE_AUC.png}
-}
-\subfloat[]{
-	\includegraphics[width=0.5\textwidth]
-	{Img/globally/UAV20L/VC_overlap_OPE_AUC.png}
-}
-\end{center}
-   \caption{在 UAV20L 上成功绘制带有属性的图 2。在彩色显示屏上观看效果最佳。}
-\label{fig:uav20l_attr}
-\end{figure*}
-\fi
 
 UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频数据集。UAV20L 数据库专为长期跟踪而设计，包含 20 个视频，平均长度为 2934 帧。
 遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
