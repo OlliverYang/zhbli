@@ -213,7 +213,7 @@ The loss function of stage 1 is:
 % 或许该讲一下stage2的输入包括：真实目标特征+候选区域。
 % The input of stage 2 consists of: (1) The target feature is $f_{z} \in \mathbb R ^{256 \times 7 \times 7}$. (2) The candidate boxes generated from stage 1.
 % Stage 2 compose of a feature merge module, a adversarial Dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
-这些候选目标的特征使用 RoIAlign \cite{he2017mask} 操作从搜索特征金字塔 $F_{x}$ 中裁剪出来，然后与目标特征 $f_{z}$ 进行融合：
+这些候选目标的特征使用 RoI-Align \cite{he2017mask} 操作从搜索特征金字塔 $F_{x}$ 中裁剪出来，然后与目标特征 $f_{z}$ 进行融合：
 \begin{equation}
     \mathcal{X} = \mathcal{R}(b, F_{x}) \odot f_{z},
 \end{equation}
@@ -233,14 +233,14 @@ The loss function of stage 1 is:
 
 
 \begin{figure}[t]
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.48\textwidth}
   \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_overlap_OPE_AUC.png}}
+  \centerline{\includegraphics[width=0.99\textwidth]{Img/end/quality_plot_overlap_OPE_AUC.png}}
 \end{minipage}
 \hfill
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.48\textwidth}
   \centering
-  \centerline{\includegraphics[width=1.0\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
+  \centerline{\includegraphics[width=0.99\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
 \caption{UAV20L 数据集上的成功图和精度图。}
 \end{figure}
