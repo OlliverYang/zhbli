@@ -7,7 +7,7 @@
 \begin{figure}[t]
 	\centering
     \includegraphics[width=0.8\textwidth]{Img/globally/Arch7.pdf}
-    \caption{我们基于全局时空感知（GSTP）的跟踪系统的架构。}
+    \caption{空间信息增强的视频目标跟踪算法架构。}
 \end{figure}
 
 视频目标跟踪 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL} 是计算机视觉领域中一个具有挑战性的任务，旨在建立连续视频序列中待跟踪目标的位置关系。
@@ -36,7 +36,7 @@
 \begin{itemize}
 \item 基于全局感知机制，我们引入了一个两步跟踪管道，该管道使用非常深的网络来减少累积误差并提高鲁棒性。
 \item 提出了一种新颖的统一的端到端卷积神经网络的轨迹预测结构，利用历史轨迹信息和当前帧的出现信息来预测目标位置分布。
-\item 我们在 GOT-10k \cite{GOT-10k} 和UAV20L \cite{mueller2016benchmark} 长期跟踪数据库上优秀的性能证明了我们提出的基于全局时空知觉的跟踪系统（GSTP）的有效性。
+\item 我们在 GOT-10k \cite{GOT-10k} 和UAV20L \cite{mueller2016benchmark} 长期跟踪数据库上优秀的性能证明了本章提出的空间信息增强的孪生跟踪器的有效性。
 \end{itemize}
 
 \iffalse
@@ -249,21 +249,15 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 \begin{table}[t]
 \centering
 \caption{从 GOT-10k 验证集中收集的具有不同属性子集的性能。}
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{属性} &
-\multicolumn{2}{c|}{SiamFC} & \multicolumn{2}{c|}{SiamMask} &\multicolumn{2}{c|}{本章方法} \\
-\cline{2-7} & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ \\
-\hline
+\begin{tabular}{@{}ccccccc@{}}
+\toprule
+\multirow{2}{*}{属性} & \multicolumn{2}{c}{SiamFC} & \multicolumn{2}{c}{SiamMask} & \multicolumn{2}{c}{本章方法} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} 
+ & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ \\ \midrule
 快速运动 & 0.472 & 0.538 & 0.526 & 0.608 & 0.639 & 0.715 \\
-\hline
 遮挡 & 0.411 & 0.447 & 0.494 & 0.559 & 0.585 & 0.659 \\
-\hline
 图像边界切割 & 0.505 & 0.545 & 0.595 & 0.701 & 0.738 & 0.837 \\
-\hline
-长视频 & 0.557 & 0.655 & 0.643 & 0.779 & 0.721 & 0.807 \\
-\hline
-\end{tabular}
+长视频 & 0.557 & 0.655 & 0.643 & 0.779 & 0.721 & 0.807 \\ \bottomrule
+\end{tabular}%
 \label{table:attribute}
 \end{table}
 

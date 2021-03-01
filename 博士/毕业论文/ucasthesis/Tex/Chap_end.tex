@@ -28,7 +28,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/net_v3.pdf}
     \caption{
-    本章提出的两阶段 SiamTFA 概述。
+    本章提出的两阶段跟踪算法概述。
     %At the first stage, a siamese FPN equipped with a temporal aggregation module provides features of the template image and the search image. Then the feature modulation module is used to merge the features and generate proposals.
     %proposals of the object given in the first-frame bounding box. 
     %At the second stage, 
@@ -105,8 +105,8 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %The input of the network is ... We use notations ... to denote ..., respectively. ... has a size of ...
 %SiamTFA is composed of ... and ...
 %Inspired by the great success of siamese trackers \cite{SiamRPN++, Wang2018SiamMask}, we also construct our SiamTFA based on the siamese architecture.
-在本节中，我们将介绍基于孪生体系结构的跟踪方法，即 SiamTFA（图 \ref{fig:SiamTFA}），其灵感来自孪生跟踪器 \cite{SiamRPN++, Wang2018SiamMask} 的巨大成功。
-具体而言，SiamTFA 将图像对作为输入，包括模板图像和搜索图像。模板图像是根据真实边界框从初始帧裁剪的图像块。搜索图像是视频序列中的某一帧。两个输入共享相同的特征提取器和网络参数。
+%在本节中，我们将介绍基于孪生体系结构的跟踪方法，图 \ref{fig:SiamTFA}），其灵感来自孪生跟踪器 \cite{SiamRPN++, Wang2018SiamMask} 的巨大成功。
+本文提出的跟踪网络 \ref{fig:SiamTFA}）基于孪生跟踪架构 \cite{SiamRPN++, Wang2018SiamMask}，将图像对作为输入，包括模板图像和搜索图像。模板图像是根据真实边界框从初始帧裁剪的图像块。搜索图像是视频序列中的某一帧。两个输入共享相同的特征提取器和网络参数。
 受两阶段检测框架 \cite{ren2015faster} 启发，本章提出的孪生跟踪器也是一种两阶段方法。第一阶段旨在生成在视觉上类似于给定模板目标的候选目标区域。在该阶段，我们引入一个时间聚合模块
 %(Fig. \ref{fig:TSM}) 
 以增强时间信息（请参见第 \ref{sec:stage1} 节）。第二阶段旨在从候选目标区域确定跟踪的最终结果。
@@ -233,7 +233,16 @@ The loss function of stage 1 is:
     \label{fig:end_uav20l}
 \end{figure}
 
+\iffalse
+\begin{figure}[t]
+\centering
+\caption{UAV20L 数据集上的成功图和精度图。}
+\includegraphics[width=1.0\textwidth]{Img/end/UAV20L.pdf}
+\end{figure}
+\fi
 
+\textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
 \begin{figure}[t]
 \begin{minipage}{0.48\textwidth}
   \centering
@@ -246,17 +255,6 @@ The loss function of stage 1 is:
 \end{minipage}
 \caption{UAV20L 数据集上的成功图和精度图。}
 \end{figure}
-
-\iffalse
-\begin{figure}[t]
-\centering
-\caption{UAV20L 数据集上的成功图和精度图。}
-\includegraphics[width=1.0\textwidth]{Img/end/UAV20L.pdf}
-\end{figure}
-\fi
-
-\textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
-之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
 在本章种，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别行。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
 然后，我们旨在最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
@@ -284,7 +282,7 @@ $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 其中 $D_{KL}$ 是 Kullback-Leibler 散度。
 
 最后，对于每个候选目标区域，分类层在两个类别（前景或背景）上生成 softmax 概率估计，而回归层为前景类别输出四个实数值，用于编码候选目标区域的精确边界框位置。
-SiamTFA 的损失是：
+网络的整体损失函数是：
 %The RoI Aligned features are fed into the global average pooling layer followed by two sibling output layers: one that produces softmax probability estimates over two classes (foreground or background) and another layer that outputs four real-valued numbers for the foreground class. These four values encode the refined bounding-box position for the RoI.
 %We get the final tracking result as follows: The classification layer $h^{cls}$ predicts a score for a RoI, the regression layer $h^{reg}$ has shape * and predicts a 4-d vector for it.
 %The RoI with the top score is the final box.
