@@ -172,12 +172,14 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 % Say the effect of this module.
 %After performing such channel fusion, rich target information in adjacent frames can be aggregated into the current frame. For example, if the current frame is blurred, target information that is not blurred in adjacent frames can be used.
 
+\iffalse
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.7\textwidth]{Img/end/TSM_v1.pdf}
     \caption{时间聚合模块示意图。}
     \label{fig:TSM}
 \end{figure}
+\fi
 
 \textbf{特征调制模块} 在获得模板特征 $f_{z}$ 和搜索图像的特征金字塔 $F_{x} = \{f_{x}^i\}_{i=1:5}$ 之后，对其进行调制以生成特定于目标的特征。
 具体而言，使用全局平均池化操作根据 $f_{z}$ 生成调制矢量 $f_{avg}$，该调制矢量携带目标特定的表观信息。
