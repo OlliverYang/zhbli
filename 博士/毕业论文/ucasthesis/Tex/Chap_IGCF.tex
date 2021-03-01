@@ -100,23 +100,23 @@ ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算�
 \subsection{InstMask}
 \label{sec:InstMask}
 
-\begin{table}[t]
+\begin{table}[t!]
 \centering
 \caption{InstMask 的网络结构设计。}
-\begin{tabular}{|c|c|c|}
-\hline
-层数 & 输出尺寸 & 卷积操作 \\\hline
-Data & $160 \times 160 \times 3$ &  -\\\hline
-\multirow{2}*{主干块} & $80 \times 80 \times 64$ &  $ 7 \times 7 \text{ conv} $\\\cline{2-3}
-~ & $40 \times 40 \times 64$ &  $ 2 \times 2 \text{ maxpool} $\\\hline
-残差块（1）& $40 \times 40 \times 256$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 3 $\\\hline
-残差块（2）& $20 \times 20 \times 512$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 4 $\\\hline
-残差块（3）& $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ conv} \\ 3 \times 3 \text{ conv} \\ 1 \times 1 \text{ conv} \end{array} \right ] \times 6 $\\\hline
-\multirow{5}*{解码器} & $10 \times 10 \times 128$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
-~ & $1 \times 1 \times 512$ &  $ 10 \times 10 \text{ conv} $\\\cline{2-3}
-~ & $1 \times 1 \times 3136$ &  $ 1 \times 1 \text{ conv} $\\\cline{2-3}
-~ & $56 \times 56$ & reshape \\\cline{2-3}
-~ & $160 \times 160$ & upscale \\\hline
+\begin{tabular}{ccc}
+\toprule
+层数 & 输出尺寸 & 卷积操作 \\\midrule
+输入图像 & $160 \times 160 \times 3$ &  -\\\midrule
+\multirow{2}*{主干块} & $80 \times 80 \times 64$ &  $ 7 \times 7 \text{ 卷积} $\\
+~ & $40 \times 40 \times 64$ &  $ 2 \times 2 \text{ 最大池化} $\\\midrule
+残差块（1）& $40 \times 40 \times 256$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ 卷积} \\ 3 \times 3 \text{ 卷积} \\ 1 \times 1 \text{ 卷积} \end{array} \right ] \times 3 $\\\midrule
+残差块（2）& $20 \times 20 \times 512$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ 卷积} \\ 3 \times 3 \text{ 卷积} \\ 1 \times 1 \text{ 卷积} \end{array} \right ] \times 4 $\\\midrule
+残差块（3）& $10 \times 10 \times 1024$ &  $ \left [ \begin{array}{l} 1 \times 1 \text{ 卷积} \\ 3 \times 3 \text{ 卷积} \\ 1 \times 1 \text{ 卷积} \end{array} \right ] \times 6 $\\\midrule
+\multirow{5}*{解码器} & $10 \times 10 \times 128$ &  $ 1 \times 1 \text{ 卷积} $\\
+~ & $1 \times 1 \times 512$ &  $ 10 \times 10 \text{ 卷积} $\\
+~ & $1 \times 1 \times 3136$ &  $ 1 \times 1 \text{ 卷积} $\\
+~ & $56 \times 56$ & 调整特征尺寸 \\
+~ & $160 \times 160$ & 上采样 \\\bottomrule
 \end{tabular}
 \label{tab:InstMask}
 \end{table}

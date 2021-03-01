@@ -7,9 +7,9 @@
 
 \begin{figure}[t]
 \centering
-\subfloat{\includegraphics[width=0.3\textwidth]{Img/attack/x.jpg}} \qquad 
+\subfloat{\includegraphics[width=0.3\textwidth]{Img/attack/x.jpg}} \qquad \qquad 
 \subfloat{\includegraphics[width=0.3\textwidth]{Img/attack/z.jpg}}
-\caption{对抗性信息的可视化结果。}
+\caption{对抗性信息的可视化结果。左图：为搜索图像生成的对抗补丁。右图：为模板图像生成的对抗扰动。}
 \end{figure}
 
 给定视频初始帧中的任意目标，视频目标跟踪的任务是在后续帧中对该目标进行识别并定位。
@@ -115,7 +115,7 @@ $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段
 
 遵循 SiamFC++ \cite{SiamFC++} 中将分类任务和回归任务解耦的设计准则，在嵌入空间执行逐通道互相关后，分别设计分类分支和回归分支。对于互相关得到的特征图中的每一个像素，分类分支将 $\psi_{\mathrm{cls}}$ 作为输入，判断该像素对应图像块为正样本或负样本。类似地，回归分支将 $\psi_{\mathrm{reg}}$ 作为输入，并输出额外的回归偏移量以对预测的边界框位置进行优化。
 
-对于分类分支，特征图 $\psi_{\mathrm{cls}}$ 上的位置 $(x,y)$ 对应于输入图像上的位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$。如果该位置落入虚假目标的标注框内，则认为 $(x,y)$ 是正样本，反之则认为是负样本。$s=8$ 表示特征提取网络的总步长。
+对于分类分支，特征图 $\psi_{\mathrm{cls}}$ 上任意空间位置 $(x,y)$ 对应于输入图像上的位置为 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$。如果该位置落入虚假目标的标注框内，则认为 $(x,y)$ 是正样本，反之则认为是负样本。$s=8$ 表示特征提取网络的总步长。
 
 在回归分支中，最后一个卷积层预测位置 $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ 到虚假目标标注框的四个边的距离，表示为四维向量 $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$。因此，位置 $(x,y)$ 的回归标签可表示为：
 
