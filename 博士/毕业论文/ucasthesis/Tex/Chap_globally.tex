@@ -103,12 +103,12 @@ In addition, two steps of regressions achieve accurate localization even for obj
 与 Siam R-CNN \cite{voigtlaender2019siam} 相比，Siam R-CNN 的特征提取网络和 RPN 的网络参数是冻结的，未针对视频目标跟踪任务进行端到端训练，而本章提出的跟踪器中，特征提取网络可以生成特定于目标的特征，并且可以端到端地训练整个网络。在视频目标跟踪中，一个视频中的前景目标可能是另一个视频中的背景噪声。因此，本章跟踪器中的 RPN 模块生成的候选目标区域可以更好地满足通用目标跟踪的需求。
 
 \begin{figure}[t]
-\begin{minipage}{0.5\linewidth}
+\begin{minipage}{0.48\linewidth}
   \centering
   \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_overlap_OPE_AUC.png}}
 \end{minipage}
 \hfill
-\begin{minipage}{0.5\linewidth}
+\begin{minipage}{0.48\linewidth}
   \centering
   \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
