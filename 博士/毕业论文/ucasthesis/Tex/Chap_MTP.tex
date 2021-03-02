@@ -11,7 +11,7 @@
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/MTP/got10k/visulization2.pdf}
-    \caption{本章提出的方法与跟踪器 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
+    \caption{本章提出的跟踪器与主流跟踪器 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。}
     \label{fig:MTP_vis1}
 \end{figure}
 
@@ -110,15 +110,15 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
-\caption{在视觉目标跟踪数据库 OTB2015 上进行比较。FPS：每秒帧数。跟踪器速度在 NVIDIA RTX 2080Ti GPU 上进行测试。}
+\caption{本章提出的跟踪算法与相关算法在视觉目标跟踪数据库 OTB2015 上的评测结果。跟踪器速度在 NVIDIA RTX 2080Ti GPU 上进行测试。}
 \setlength{\tabcolsep}{3pt}
 \begin{center}
 \begin{tabular}{r c c c c c c}
 \toprule
-Trackers & ECO & MDNet & SiamRPN++ & ATOM & SiamFC++\_G & Ours \\
+Trackers & ECO & MDNet & SiamRPN++ & ATOM & SiamFC++\_G & 本章算法 \\
 \midrule
-Success & 70.0 & 67.8  & 69.6      & 66.9      & 68.3       & 69.7 \\
-FPS     & 8    & 1     & 35        & 30       & 90         & 82  \\
+成功率 & 70.0 & 67.8  & 69.6      & 66.9      & 68.3       & 69.7 \\
+跟踪速度（FPS）     & 8    & 1     & 35        & 30       & 90         & 82  \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -129,7 +129,7 @@ FPS     & 8    & 1     & 35        & 30       & 90         & 82  \\
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
 \centering
-\caption{在 TrackingNet 测试数据集上对精确度，标准化精确度和成功率的比较。}
+\caption{本章提出的跟踪算法与相关算法在 TrackingNet \cite{muller2018trackingnet} 测试集上的评测结果。}
 \begin{tabular}{l c c c}
 \toprule
 Method   &  Prec.   &  Norm. Prec. & Succ.  \\
@@ -163,26 +163,26 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 
 %%%%%%%%%%%%%
 \begin{table}[t]
-\caption{在不同数据库上的消融实验。}
+\caption{本章提出的算法在数据集 OTB2015、VOT2018、GOT-10k、TrackingNet 上的评测结果。}
 \begin{center}
 \begin{tabular}{c cc c}
 \toprule
 跟踪器 & 评价指标 & 基线方法 & 本章方法\\
 \midrule
-\multirow{1}{*}{OTB-15} 
+\multirow{1}{*}{OTB2015} 
 & Success & 68.3 & 69.7\\
 \midrule
-\multirow{3}{*}{VOT-18}
+\multirow{3}{*}{VOT2018}
 & A   & 0.587 & 0.591 \\
 & R   & 0.183 & 0.187 \\
 & EAO & 0.426 & 0.438 \\
 \midrule
-\multirow{3}{*}{GOT} 
+\multirow{3}{*}{GOT-10k} 
 & SR\textsubscript{.50} &  0.737 & 0.748 \\
 & SR\textsubscript{.75} & 0.464 & 0.475 \\
 & AO & 0.607 & 0.617 \\
 \midrule
-\multirow{3}{*}{T-Net} 
+\multirow{3}{*}{TrackingNet} 
 & Prec.       & 70.5 & 70.6 \\
 & Norm. Prec. & 80.0 & 81.7 \\
 & Succ.       & 75.4 & 74.9 \\
@@ -199,7 +199,7 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{Img/MTP/got10k/success_plot.png}
-    \caption{将本章提出的跟踪器与其他跟踪器在 GOT-10k 测试集上进行比较。按平均重叠分数对跟踪器进行排名。}
+    \caption{GOT-10k \cite{GOT-10k} 测试集中算法的平均重叠率（AO）排序图。}
     \label{fig:got10k}
 \end{figure}
 %%%%%%%%%%%%
@@ -207,14 +207,14 @@ SiamFC	 &  51.8&  65.2 &55.9 \\
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.99\textwidth]{Img/MTP/got10k/visulization.pdf}
-    \caption{本章提出的跟踪器与 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
+    \caption{本章提出的跟踪器与主流跟踪器 ATOM \cite{danelljan2019atom} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。}
     \label{fig:MTP_vis}
 \end{figure}
 
 \begin{figure}[t!]
     \centering
     \includegraphics[width=0.99\textwidth]{Img/MTP/SiamFC++.pdf}
-    \caption{网络结构参数示意图。}
+    \caption{本章采用的基线孪生网络结构参数示意图。}
     \label{fig:MTP_SiamFC++}
 \end{figure}
 
@@ -245,7 +245,7 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/MTP/vot18/vot18_eao.png}
-    \caption{预期平均重叠图。跟踪器根据 VOT2018 的预期平均重叠值从右到左排列。最右边的跟踪器是跟踪性能最好的跟踪器。}
+    \caption{数据集 VOT2018 中算法的期望平均重叠率（EAO）排序图。}
     \label{fig:eao}
 \end{figure}
 %%%%%%%%%%%%
@@ -368,7 +368,7 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 
 \textbf{OTB2015} 我们使用成功率来评估跟踪器在 OTB2015 上的性能。成功率取决于预测边界框和真实边界框的交并比。我们将本章提出的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为 16。结果显示在表 \ref{table:otb} 中。在成功率方面，我们的跟踪器比在线跟踪器 ATOM 高出 2.8％，这证明了我们方法的强大模型自适应能力。
 
-\textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标）——预期平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
+\textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标）——期望平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
 
 \textbf{GOT-10k} 我们将平均重叠（AO）分数用作 \cite{GOT-10k} 的性能指标。我们将本章提出的方法与 CF2 \cite{CF2}，ECO \cite{danelljan2017eco}，CCOT \cite{CCOT}，GOTURN \cite{GOTURN}，SiamFC \cite{SiamFC}，SiamFCv2 \cite{valmadre2017end}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在该数据库上进行比较。模板更新的迭代次数设置为 2。在图 \ref{fig:got10k} 中可以发现，与列出的跟踪器相比，本章提出的算法具有更好的跟踪性能。
 
@@ -415,7 +415,7 @@ To verify the contribution of the proposed model adaptation method, we compare o
 \begin{table}[t]
 %\renewcommand\arraystretch{0.8}
 \centering
-\caption{OTB2015 在 11 种属性下对成功率进行比较。}
+\caption{基于评测库 OTB2015 的 11 个属性标注的算法跟踪成功率对比展示。}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{c c c c c c c c c c c c}
 \toprule

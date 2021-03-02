@@ -28,7 +28,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/net_v3.pdf}
     \caption{
-    本章提出的两阶段跟踪算法概述。
+    本章提出的两阶段跟踪算法框架。
     %At the first stage, a siamese FPN equipped with a temporal aggregation module provides features of the template image and the search image. Then the feature modulation module is used to merge the features and generate proposals.
     %proposals of the object given in the first-frame bounding box. 
     %At the second stage, 
@@ -229,14 +229,14 @@ The loss function of stage 1 is:
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.75\textwidth]{Img/end/success_plot.png}
-    \caption{在 GOT-10k 数据库上的总体性能，按平均重叠（AO）得分进行排名。}
+    \caption{数据集 GOT-10k \cite{GOT-10k} 中算法的平均重叠率（AO）排序图。}
     \label{fig:end_uav20l}
 \end{figure}
 
 \iffalse
 \begin{figure}[t]
 \centering
-\caption{UAV20L 数据集上的成功图和精度图。}
+\caption{本章提出的跟踪算法与相关算法在 UAV20L \cite{mueller2016benchmark} 数据集上的跟踪成功率曲线以及精度曲线展示。}
 \includegraphics[width=1.0\textwidth]{Img/end/UAV20L.pdf}
 \end{figure}
 \fi
@@ -253,7 +253,7 @@ The loss function of stage 1 is:
   \centering
   \centerline{\includegraphics[width=0.99\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
-\caption{UAV20L 数据集上的成功图和精度图。}
+\caption{本章提出的跟踪算法与相关算法在 UAV20L \cite{mueller2016benchmark} 数据集上的跟踪成功率曲线以及精度曲线展示。}
 \end{figure}
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
 在本章种，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别行。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
@@ -303,10 +303,10 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 \begin{table}[t]
 \centering
-\caption{本章提出的算法的不同组件在 GOT-10k 测试集上的性能。}
+\caption{时间聚合模块以及对抗性 Dropout 模块在 GOT-10k \cite{GOT-10k} 测试集上的有效性展示。}
 \begin{tabular}{c c c c c}
 \bottomrule
-时间聚合模块 & 对抗性 Dropout 模板 & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
+时间聚合模块 & 对抗性 Dropout 模块 & AO & $\text{SR}_{0.50}$ & $\text{SR}_{0.75}$ \\ 
 \hline
           &           & 0.542 & 0.607 & 0.456 \\
 \checkmark&           & 0.561 & 0.645 & 0.480 \\
@@ -321,7 +321,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.9\textwidth]{Img/end/visulization.pdf}
-    \caption{将本章提出的算法与 SiamMask 和 SiamFCv2 进行比较。示例帧来自 GOT-10k 测试集。与现有方法相比，本章提出的方法可有效处理不良的目标表观。}
+    \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。本章提出的方法可有效处理不良的目标表观。}
     \label{fig:end_vis}
 \end{figure}
 
@@ -341,13 +341,13 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \begin{figure}[!t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_1.pdf}
-    \caption{基于评测库~UAV20L~的6个属性标注的算法跟踪性能对比展示。}
+    \caption{基于评测库 UAV20L \cite{mueller2016benchmark} 的 6 个属性标注的算法跟踪性能对比展示。}
 \end{figure}
 \nopagebreak[3]
 \begin{figure*}[t!]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/end/UAV20L_2.pdf}
-    \caption{基于评测库~UAV20L~的6个属性标注的算法跟踪性能对比展示。}
+    \caption{基于评测库 UAV20L \cite{mueller2016benchmark} 的 6 个属性标注的算法跟踪性能对比展示。}
 \end{figure*}
 
 \textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过拟合，离线训练过程在大规模单目标视频跟踪数据库 GOT-10k \cite{GOT-10k} 的训练数据集中训练网络参数。该数据集包含超过 10000 个视频序列，具有较为丰富多样的视频场景分布。该数据集被广泛应用在最近提出的孪生网络跟踪算法 \cite{SiamFC++} 的训练中。
@@ -374,10 +374,10 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 \subsection{基于数据集 GOT-10k 的评测结果分析}
 \begin{table}[t]
 \centering
-\caption{将本章提出的方法与其他方法在 GOT-10k 测试集上进行比较。}
+\caption{本章提出的跟踪算法与相关算法在 GOT-10k \cite{GOT-10k} 测试集上的评测结果。}
 \begin{tabular}{l l l l}
 \bottomrule
-Method   &  $AO$   &  $SR_{0.50}$ & $SR_{0.75}$  \\
+Method   &  AO   &  $\textbf{SR}_{0.50}$ & $\textbf{SR}_{0.75}$  \\
 \hline
 Ours &  $\textbf{0.577}^\textbf{1}$ & $\textbf{0.662}^\textbf{1}$  & $\textbf{0.509}^\textbf{1}$  \\
 SiamMask &  0.459&  0.560 &0.205 \\

@@ -192,14 +192,14 @@ $P$ 是从 InstMask 生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属�
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.7\textwidth]{Img/IGCF/cog_arch.pdf}
-    \caption{实例引导的自纠正机制原理图。}
+    \caption{实例引导的自校正机制原理图。}
     \label{fig:cog}
 \end{figure*}
 
-InstMask 允许学习更好的滤波器，并有助于纠正不良的跟踪结果。
+InstMask 允许学习更好的滤波器，并有助于校正不良的跟踪结果。
 在 DCF 模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
 InstMask 的结果是根据从 COCO 数据集中获取的网络参数生成的。但是，由于 InstMask 不会在线更新，因此我们不能仅依靠目标的语义分割模板来产生最终的跟踪结果。
-为了利用两个结果的优点并克服它们的缺点，我们提出了实例引导的自纠正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒形。具体而言，利用 $m$ 获得目标的几何中心：
+为了利用两个结果的优点并克服它们的缺点，我们提出了实例引导的自校正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒形。具体而言，利用 $m$ 获得目标的几何中心：
 \begin{equation}
 c_{m} = Centroid(m),
 \end{equation}
@@ -218,7 +218,7 @@ p = \left\{ \begin{array}{ll}
 \begin{figure}
 \centering
 \includegraphics[width=1.0\textwidth]{Img/IGCF/cog.pdf}
-\caption{实例指导（自我校正）组件之前（绿色）和之后（蓝色）的跟踪结果。}
+\caption{自校正模块效果示意图。绿色跟踪框表示应用自校正模块件之前的跟踪结果，蓝色跟踪框表示应用自校正模块之后的跟踪结果。}
 \label{fig:IGSC}
 \end{figure}
 
@@ -268,7 +268,7 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2015.png}
-    \caption{预期平均重叠（EAO）图。跟踪器根据 VOT2015 \cite{Kristan2015TheVO} 的预期平均重叠值从右到左排列。最右边的跟踪器是跟踪性能最好的跟踪器。}
+    \caption{数据集 VOT2015 \cite{Kristan2015TheVO} 中算法的期望平均重叠率（EAO）排序图。}
     \label{fig:vot15}
 \end{figure}
 
@@ -287,12 +287,12 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 在本节中，将使用视觉目标跟踪工具包的最新版本进行实验对比。该工具包采用基于目标重置的跟踪性能评估方法。评估算法一旦检测到跟踪器发生错误跟踪（即跟踪器预测和真实目标标签的重叠率为 0），就会在错误帧后的第五帧重新初始化跟踪器。
 %测评性能使用期望平均重叠率（EAO）来度量排序，EAO 指标同时定量反映算法的鲁棒性和准确性。
 VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的视频。该数据集是通过先进的序列选择方法从 300 多个序列中构建的，该序列选择方法优先考虑难以追踪的目标并最大化视觉属性多样性成本函数。
-在 VOT2015 中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（预期平均重叠）。准确性衡量跟踪器预测的边界框与真值边界框的重叠程度。鲁棒性衡量跟踪器在跟踪过程中失去目标（即跟踪失败）的次数。EAO 结合了准确性和鲁棒性来评估跟踪器的整体性能。
+在 VOT2015 中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（期望平均重叠）。准确性衡量跟踪器预测的边界框与真值边界框的重叠程度。鲁棒性衡量跟踪器在跟踪过程中失去目标（即跟踪失败）的次数。EAO 结合了准确性和鲁棒性来评估跟踪器的整体性能。
 由于本章算法在 VOT 数据集中主要采用 EAO 进行度量，我们引述 VOT-2015 中对于 EAO 的具体定义。以一个序列长度为 $T_s$ 帧的跟踪视频为例，跟踪算法在序列首帧进行初始化，并一直跟踪到视频结束。如果跟踪器偏离目标真实位置，则假定它将一直保持偏离，直到序列结束。跟踪器在每一帧与真实目标位置之间的重叠率记作 $\Phi^i$，跟踪失败之后的所有图像帧的重叠率都记为 0，则跟踪器在该视频跟踪中的平均重叠率为：
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
-    \caption{预期平均重叠（EAO）图。跟踪器根据 VOT2016 \cite{Kristan2016TheVO} 的预期平均重叠值从右到左排列。最右边的跟踪器是跟踪性能最好的跟踪器。}
+    \caption{数据集 VOT2016 \cite{Kristan2016TheVO} 中算法的期望平均重叠率（EAO）排序图。}
     \label{fig:vot16}
 \end{figure}
 \begin{equation}
@@ -314,7 +314,7 @@ DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.8\textwidth]{Img/IGCF/got10k/success_plot.png}
-    \caption{在 GOT-10k \cite{GOT-10k} 上的总体性能，按其平均重叠（AO）得分进行排名。}
+    \caption{数据集 GOT-10k \cite{GOT-10k} 中算法的平均重叠率（AO）排序图。}
     \label{fig:IGCF_got10k}
 \end{figure}
 

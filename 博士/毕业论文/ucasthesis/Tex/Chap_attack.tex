@@ -195,14 +195,14 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \begin{table}[t]
 \centering
-\caption{评估基准上的总体攻击结果。}
+\caption{本章提出的算法在数据集 OTB2015、GOT-Val、LaSOT 上的攻击效果。}
 \begin{tabular}{c c c c c}
 \toprule
-\multirow{2}{*}[-2pt]{数据库} & \multirow{2}{*}[-2pt]{评价指标} & 原始图像 & \multicolumn{2}{c}{对抗图像}  \\
+\multirow{2}{*}[-2pt]{数据集} & \multirow{2}{*}[-2pt]{评价指标} & 原始图像 & \multicolumn{2}{c}{对抗图像}  \\
 \cmidrule(lr){3-3} \cmidrule(lr){4-5}
                           &                         & 真实轨迹 & 真实轨迹 & 虚假轨迹     \\ 
 \midrule
-\multirow{2}{*}{OTB-15} 
+\multirow{2}{*}{OTB2015} 
 & AO   & 0.642 & 0.035 & 0.842\\
 & Precision & 0.861 & 0.048 & 0.928\\
 \midrule
@@ -244,7 +244,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \begin{table}[t]
 \centering
-\caption{每项损失对 GOT-Val 的贡献。}
+\caption{不同损失函数对 GOT-Val 数据集跟踪性能的影响。}
 \begin{tabular}{ccccccc} 
 \toprule
 \multirow{2}{*}[-2pt]{分类损失}     & \multirow{2}{*}[-2pt]{质量评估损失} & \multirow{2}{*}[-2pt]{回归损失} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
@@ -278,7 +278,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \begin{table}[t!]
 \centering
-\caption{训练迭代次数对 GOT-Val 的影响。}
+\caption{在 GOT-Val 数据集上验证训练迭代次数攻击效果的影响。}
 \begin{tabular}{@{}llllll@{}}
 \toprule
 \multirow{2}{*}{迭代次数} & \multicolumn{2}{c}{虚假轨迹} & \multicolumn{2}{c}{真实轨迹} & \multirow{2}{*}{SSIM}\\ \cmidrule(lr){2-3} \cmidrule(lr){4-5}
@@ -307,14 +307,14 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \begin{figure}[p]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/txt_visualize.pdf}
-\caption{在 GOT-10k \cite{GOT-10k} 视频目标数据库的验证集中的一些视频上展示了攻击效果。}
+\caption{基于 GOT-10k \cite{GOT-10k} 验证集的对抗攻击效果展示。}
 \end{figure}
 
 \textbf{总体攻击结果} 我们在目标跟踪数据集上测试了针对性攻击方法的性能，并将总体结果收集在表 \ref{tab:attack_benchmark results}中。结果表明，基线跟踪器 SiamFC++ 可以在所有视觉目标跟踪数据集上达到最先进的性能，并且可以实时运行（在 GTX 1080Ti GPU 上约为 58 fps）。但是，这种实时性能的代价是计算量大，导致跟踪系统会占用大部分计算资源，因此有必要开发一种几乎不增加计算成本的攻击方法来欺骗跟踪系统而不会预期争用资源。如表 \ref{tab:attack_benchmark results} 所示，我们的攻击方法可以满足该要求，并通过误导跟踪器遵循预定义的虚假轨迹来有效地欺骗 SiamFC++ 跟踪器。此外，相对于虚假轨迹而言，较高的 AO 和 Precision 得分表明对抗性信息在不引起任何怀疑的情况下执行有效攻击（请参见 \ref{fig:attack_vis}）。
 
 \begin{table}[t]
 \centering
-\caption{在 GOT-Val 验证对抗性信息在不同主干的可迁移性。}
+\caption{在数据集 GOT-Val 上验证对抗性信息在不同主干网络之间的可迁移性。}
 \begin{tabular}{c cc cc cc} 
 \toprule
 \multirow{3}{*}[-6pt]{主干网络} & \multicolumn{2}{c}{原始视频}    & \multicolumn{4}{c}{扰动视频}                                        \\ 
@@ -341,7 +341,7 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 总而言之，所有损失项都是有益的，而分类项比质量评估项更重要。
 
 \begin{table}[t]
-\caption{在 OTB2015 上迁移到不同的跟踪体系结构。}
+\caption{在视觉目标跟踪数据库 OTB2015 上验证对抗性信息在不同跟踪体系结构之间的可迁移性。}
 \centering
 \begin{tabular}{ccccc} 
 \toprule
@@ -365,7 +365,7 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 
 \begin{table}[t]
 \centering
-\caption{关于 OTB2015 上真实/虚假轨迹的精确度得分。}
+\caption{通过在评测库 OTB2015 上的跟踪精确度对比本章提出的攻击算法与相关攻击算法的有效性。}
 \begin{tabular}{@{}ccccccc@{}}
 \toprule
 \multirow{2}{*}[-2pt]{方法} & \multirow{2}{*}[-2pt]{跟踪器} & \multirow{2}{*}[-2pt]{攻击时间（毫秒）} & \multirow{1}{*}[-2pt]{原始视频} && \multicolumn{2}{c}{对抗视频} \\

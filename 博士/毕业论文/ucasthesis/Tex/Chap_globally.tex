@@ -47,7 +47,7 @@
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/globally/SiamRCNN.pdf}
-    \caption{本章所提算法的网络结构示意图。}
+    \caption{本章提出的算法的网络结构示意图。}
     \label{fig:siamrcnn}
 \end{figure}
 
@@ -91,7 +91,7 @@ In addition, two steps of regressions achieve accurate localization even for obj
 \begin{figure}[t]
 \centering
     \includegraphics[width=0.75\textwidth]{Img/globally/success_plot.png}
-    \caption{GOT-10k 的总体性能，按平均重叠（AO）得分进行排名。}
+    \caption{数据集 GOT-10k \cite{GOT-10k} 中算法的平均重叠率（AO）排序图。}
 \end{figure}
 
 \subsection{两阶段跟踪框架}
@@ -112,7 +112,7 @@ In addition, two steps of regressions achieve accurate localization even for obj
   \centering
   \centerline{\includegraphics[width=1.0\textwidth]{Img/globally/UAV20L/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
-\caption{UAV20L 数据集上的成功图和精度图。}
+\caption{本章提出的跟踪算法与相关算法在 UAV20L \cite{mueller2016benchmark} 数据集上的跟踪成功率曲线以及精度曲线展示。}
 \label{fig:globally_uav20l}
 \end{figure}
 
@@ -175,10 +175,10 @@ is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for
 
 \begin{table}[t]
 \centering
-\caption{本章提出的算法在 GOT-10k 测试集上，不同组件的性能。}
+\caption{两阶段跟踪框架以及轨迹预测模块在 GOT-10k \cite{GOT-10k} 测试集上的有效性展示。}
 \begin{tabular}{c c c c c}
 \bottomrule
-ROI head & Motion model & $AO$ & $SR_{0.50}$ & $SR_{0.75}$ \\ 
+两阶段跟踪 & 轨迹预测模块 & AO & $\text{SR}_{0.50}$ & $\text{SR}_{0.75}$ \\ 
 \hline
           &           & 0.410 & 0.486 & 0.162 \\
 \checkmark&           & 0.521 & 0.595 & 0.440 \\
@@ -248,7 +248,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 \begin{table}[t]
 \centering
-\caption{从 GOT-10k 验证集中收集的具有不同属性子集的性能。}
+\caption{基于 GOT-10k \cite{GOT-10k} 验证集的 4 个属性标注的算法跟踪性能对比展示。}
 \begin{tabular}{@{}ccccccc@{}}
 \toprule
 \multirow{2}{*}{属性} & \multicolumn{2}{c}{SiamFC} & \multicolumn{2}{c}{SiamMask} & \multicolumn{2}{c}{本章方法} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} 
@@ -274,7 +274,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/ARC_overlap_OPE_AUC.png}
 	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/CM_overlap_OPE_AUC.png}
 \end{center}
-   \caption{在 UAV20L 上成功绘制带有属性的图 1。在彩色显示屏上观看效果最佳。}
+   \caption{基于评测库 UAV20L \cite{mueller2016benchmark} 的 6 个属性标注的算法跟踪性能对比展示。}
 \label{fig:globally_uav20l_1}
 \end{figure*}
 
@@ -308,7 +308,7 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/SV_overlap_OPE_AUC.png}
 	\includegraphics[width=0.48\textwidth]{Img/globally/UAV20L/VC_overlap_OPE_AUC.png}
 \end{center}
-   \caption{在 UAV20L 上成功绘制带有属性的图 2。在彩色显示屏上观看效果最佳。}
+   \caption{基于评测库 UAV20L \cite{mueller2016benchmark} 的 6 个属性标注的算法跟踪性能对比展示。}
 \label{fig:globally_uav20l_2}
 \end{figure*}
 
@@ -316,7 +316,7 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 \begin{figure}[p!]
     \centering
     \includegraphics[width=0.9\textwidth]{Img/globally/visulization.pdf}
-    \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和 SiamFCv2 \cite{SiamFC} 的比较。示例帧来自 GOT-10k \cite{GOT-10k} 测试集。}
+    \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。}
     \label{fig:gloablly_vis}
 \end{figure}
 \nopagebreak[3]
