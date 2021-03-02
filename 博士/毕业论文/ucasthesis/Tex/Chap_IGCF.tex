@@ -75,7 +75,7 @@ ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算�
   \end{enumerate}
   \State \textbf{更新：}
   \begin{enumerate}[leftmargin=0pt,itemindent=1.5em]
-    \item 使用等式 \ref{eq:h1}至等式 \ref{eq:h3}，根据 $m$ 估计新滤波器 $\tilde{h}$。
+    \item 根据 $m$ 估计新滤波器 $\tilde{h}$。
     \item 使用等式 \ref{eq:lrn}，根据 $h$ 估计学习通道可靠性 $\tilde{w}^{(lrn)}$。
     \item 使用等式 \ref{eq:c} 计算通道可靠性 $\tilde{w}$。
     \item 使用等式 \ref{eq:update1} 和等式 \ref{eq:update2} 更新滤波器 $h_t$ 和通道可靠性 $w_t$。
@@ -84,7 +84,7 @@ ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算�
 \end{algorithm}
 
 \subsection{相关滤波跟踪器}
-相关滤波跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑目标的表观特征：$f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道数。DCF 跟踪器的目标是训练滤波器 $h=\{h_d\}_{d=1:N_c}$，以使特征和滤波器之间的相关性响应 $\tilde{g}$ 拟合所需输出 $g$ ，通常是一个以目标位置为中心的二维高斯函数： 
+相关滤波跟踪器 \cite{Danelljan2014AccurateSE, henriques2014high-speed, Li2014ASA} 已得到广泛研究和使用。具体来说，考虑目标的表观特征：$f=\{f_d\}_{d=1:N_c}$ ，其中 $N_c$ 是目标特征的通道数。DCF 跟踪器的目标是训练滤波器 $h=\{h_d\}_{d=1:N_c}$，以使特征和滤波器之间的相关性响应 $\tilde{g}$ 拟合标签 $g$，通常是一个以目标位置为中心的二维高斯函数： 
 \begin{equation} \label{eq:dcf}
 \tilde{g}=\sum_{d=1}^{N_c}f_d \star h_d \cdot w_d,
 \end{equation}
@@ -161,7 +161,7 @@ InstMask 的输入是一个 160$\times$160$\times$3 图像补丁。它被发送�
 \begin{equation}
 L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
 \end{equation}
-其中 $l_{x,y} \in \{ \pm 1 \}$ 是与对象模板的像素 $(x,y)$ 对应的标签，而 $P_{x,y}$ 是 InstMask 的预测在位置 $(x,y)$。
+其中 $l_{x,y} \in \{ \pm 1 \}$ 是目标的分割模板在位置 $(x,y)$ 上的标签，而 $P_{x,y}$ 是 InstMask 在位置 $(x,y)$ 上的预测。
 
 我们采用 COCO2017 \cite{COCO} 实例分割数据集对 InstMask 进行训练。
 与许多只能预测训练集中出现的类别的分割网络不同，提出的 InstMask 在训练过程中会忽略类别信息，并作为与类别无关的分割网络工作。实际上，InstMask 能够在搜索区域中检测到显著目标。尽管 InstMask 使用仅有 80 个类别的 COCO 数据集 \cite{COCO} 进行训练，但是网络能够对训练集中未出现的目标类别进行分割，如图 \ref{fig:IGSC} 所示。
@@ -178,7 +178,16 @@ InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过�
 
 相反，InstMask 不会在线更新参数。这提高了计算效率，同时避免了跟踪器的漂移。此外，由于使用语义级别而不是像素级别的信息进行分割，因此跟踪结果更加准确。
 
-\subsection{实例引导的自纠正组件} \label{sec:cog}
+测试时，使用阈值 $b$ 根据 $P\in [0, 1]$ 生成模板 $m$：
+\begin{equation}
+m_{x,y} = \left\{ \begin{array}{ll}
+ 1 & \textrm{if $P_{x,y} > b$}\\
+ 0 & \textrm{if $P_{x,y} \le b$}
+ \end{array} \right.
+\end{equation}
+$P$ 是从 InstMask 生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属于目标的概率。
+
+\subsection{实例引导的自校正组件} \label{sec:cog}
 
 \begin{figure*}[t]
     \centering
@@ -190,15 +199,7 @@ InstMask 离线训练。在跟踪过程中，InstMask 仅执行前向传播过�
 InstMask 允许学习更好的滤波器，并有助于纠正不良的跟踪结果。
 在 DCF 模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
 InstMask 的结果是根据从 COCO 数据集中获取的网络参数生成的。但是，由于 InstMask 不会在线更新，因此我们不能仅依靠目标的语义分割模板来产生最终的跟踪结果。
-为了利用两个结果的优点并克服它们的缺点，我们提出了实例引导的自纠正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒形。具体来说，使用硬阈值 $b$ 根据 $P\in [0, 1]$ 生成模板 $m$：
-\begin{equation}
-m_{x,y} = \left\{ \begin{array}{ll}
- 1 & \textrm{if $P_{x,y} > b$}\\
- 0 & \textrm{if $P_{x,y} \le b$}
- \end{array} \right.
-\end{equation}
-$P$ 是从 InstMask 生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属于目标的概率。
-然后从 $m$ 获得目标位置：
+为了利用两个结果的优点并克服它们的缺点，我们提出了实例引导的自纠正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒形。具体而言，利用 $m$ 获得目标的几何中心：
 \begin{equation}
 c_{m} = Centroid(m),
 \end{equation}
@@ -207,7 +208,7 @@ c_{m} = Centroid(m),
 自校正过程可以描述如下：
 \begin{equation}
 p = \left\{ \begin{array}{ll}
- c_{m} & \textrm{if $||c_{m}-c_{dcf}||_2^2 < \beta$}\\
+ c_{m} & \textrm{若 $||c_{m}-c_{dcf}||_2^2 < \beta$}\\
  c_{dcf} + \alpha \cdot (c_{m}-c_{dcf}) & \textrm{其他}
  \end{array} \right.,
 \end{equation}
@@ -225,7 +226,7 @@ p = \left\{ \begin{array}{ll}
 跟踪过程包括两个阶段：目标定位和模型更新。
 在定位阶段，从位置 $p_{t-1}$ 提取图像补丁特征 $f$，与滤波器 $h_{t-1}$ 进行相关计算，并根据通道依赖性得分 $w$ 加权，目标位置 $p_t$ 是相关结果的最大位置（等式 \ref{eq:dcf}）。
 使用本章提出的 InstMask 网络估计分割模板 $m$ (第 \ref{sec:InstMask} 节)。
-分割模板的质心用于校正相关滤波器的预测偏差 (第 \ref{sec:cog} 节)。
+分割模板的几何中心用于校正相关滤波器的预测偏差 (第 \ref{sec:cog} 节)。
 然后新的尺度 $s_t$ 由尺度空间相关滤波器估计（参见 \cite{Danelljan2014AccurateSE}）。
 通道检测可靠性 $\tilde{w}^{(det)}$ 估算如下 \cite{Lukezic2017DiscriminativeCF}:
 \begin{equation} \label{eq:det}
@@ -233,7 +234,9 @@ p = \left\{ \begin{array}{ll}
 \end{equation}
 $\tilde w_d^{(det)}$ 用于稍后计算 $w$ (等式 \ref{eq:c})。$\rho_d^{max2}$ 和 $\rho_d^{max1}$ 分别是通道 $d$ 的相关响应中第二高/第一高的非相邻峰值。
 
-在模型更新阶段，新的滤波器 $\tilde{h}$ 使用模板 $m$ 进行估计。我们使用 \cite{Lukezic2017DiscriminativeCF} 中提出的迭代方法来有效地解决滤波器。令 $l$ 为拉格朗日乘数，$\mu > 0$，$h_m=m \odot h$，$\hat{h}^0 = h_{t-1}$ 和 $\hat{l}^0 = 0$。在每次迭代中，都按照 \cite{Lukezic2017DiscriminativeCF} 中的顺序依次解决以下子问题：
+在模型更新阶段，按照文献 \cite{Lukezic2017DiscriminativeCF} 中提出的迭代方法使用模板 $m$ 来有效地求解新的滤波器 $\tilde{h}$。
+\iffalse
+令 $l$ 为拉格朗日乘数，$\mu > 0$，$h_m=m \odot h$，$\hat{h}^0 = h_{t-1}$ 和 $\hat{l}^0 = 0$。在每次迭代中，依次求解以下子问题：
 \begin{equation} \label{eq:h1}
 \hat{h}_c^{i+1} = \frac{\hat{f} \odot \bar{\hat{g}} +(\mu^i \hat{h}_m^i - \hat{l}^i)}{\bar{\hat{f}} \odot \hat f + \mu^i}
 \end{equation}
@@ -243,13 +246,14 @@ h^{i+1} = \frac{m \odot \mathcal{F}^{-1}[\hat{l}^i + \mu^i\hat{h}_c^{i+1}]}{\fra
 \begin{equation} \label{eq:h3}
 \hat{l}^{i+1} = \hat{l}^i + \mu(\hat{h}_c^{i+1} - \hat{h}^{i+1})
 \end{equation}
+\fi
 然后计算通道可靠性 $\tilde w_d$ \cite{Lukezic2017DiscriminativeCF} 如下，其中包括通道学习可靠性 $\tilde w_d^{(lrn)}$ 和通道检测可靠性 $\tilde w_d^{(det)}$：
 \begin{equation} \label{eq:c}
 \tilde w_d = \tilde w_d^{(lrn)} \cdot \tilde w_d^{(det)},
 \end{equation}
 其中 $\tilde{w}^{(lrn)}$ 表示学习的通道滤波器的最大响应值：
 \begin{equation} \label{eq:lrn}
-\tilde{w}_d^{lrn} = max(f_d * h_d).
+\tilde{w}_d^{lrn} = max(f_d \star h_d).
 \end{equation}
 最后，滤波器和通道可靠性在线更新：\begin{equation} \label{eq:update1}
 h_t = (1 - \eta)h_{t-1} + \eta \tilde{h}
@@ -264,7 +268,7 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2015.png}
-    \caption{VOT2015 的预期平均重叠（EAO）图 \cite{Kristan2015TheVO}.}
+    \caption{预期平均重叠（EAO）图。跟踪器根据 VOT2015 \cite{Kristan2015TheVO} 的预期平均重叠值从右到左排列。最右边的跟踪器是跟踪性能最好的跟踪器。}
     \label{fig:vot15}
 \end{figure}
 
@@ -279,19 +283,18 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 
 我们在三个具有挑战性的目标跟踪数据集上对提出的跟踪器 IGCF 进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。最后，我们对视频目标分割数据集 DAVIS \cite{Perazzi2016} 进行了定性实验。
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
-    \caption{VOT2016 的预期平均重叠（EAO）图 \cite{Kristan2016TheVO}。}
-    \label{fig:vot16}
-\end{figure}
-
-\subsection{对 VOT2015 的评估}
+\subsection{基于数据集 VOT2015 的评测结果分析}
 在本节中，将使用视觉目标跟踪工具包的最新版本进行实验对比。该工具包采用基于目标重置的跟踪性能评估方法。评估算法一旦检测到跟踪器发生错误跟踪（即跟踪器预测和真实目标标签的重叠率为 0），就会在错误帧后的第五帧重新初始化跟踪器。
 %测评性能使用期望平均重叠率（EAO）来度量排序，EAO 指标同时定量反映算法的鲁棒性和准确性。
 VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的视频。该数据集是通过先进的序列选择方法从 300 多个序列中构建的，该序列选择方法优先考虑难以追踪的目标并最大化视觉属性多样性成本函数。
 在 VOT2015 中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（预期平均重叠）。准确性衡量跟踪器预测的边界框与真值边界框的重叠程度。鲁棒性衡量跟踪器在跟踪过程中失去目标（即跟踪失败）的次数。EAO 结合了准确性和鲁棒性来评估跟踪器的整体性能。
 由于本章算法在 VOT 数据集中主要采用 EAO 进行度量，我们引述 VOT-2015 中对于 EAO 的具体定义。以一个序列长度为 $T_s$ 帧的跟踪视频为例，跟踪算法在序列首帧进行初始化，并一直跟踪到视频结束。如果跟踪器偏离目标真实位置，则假定它将一直保持偏离，直到序列结束。跟踪器在每一帧与真实目标位置之间的重叠率记作 $\Phi^i$，跟踪失败之后的所有图像帧的重叠率都记为 0，则跟踪器在该视频跟踪中的平均重叠率为：
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
+    \caption{预期平均重叠（EAO）图。跟踪器根据 VOT2016 \cite{Kristan2016TheVO} 的预期平均重叠值从右到左排列。最右边的跟踪器是跟踪性能最好的跟踪器。}
+    \label{fig:vot16}
+\end{figure}
 \begin{equation}
 \Phi^{T_{s}}=\frac{1}{T_{s}} \sum_{i=1}^{T_{s}} \Phi^{i}
 \end{equation}
@@ -315,13 +318,13 @@ DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征
     \label{fig:IGCF_got10k}
 \end{figure}
 
-\subsection{对 VOT2016 的评估}
+\subsection{基于数据集 VOT2016 的评测结果分析}
 VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性、鲁棒性和 EAO。
 
 我们将所提出的算法与以下跟踪器进行了比较：
 CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了 VOT2016 上 EAO 的性能。与所列出的方法相比，我们的方法以 0.330 的 EAO 得分达到最佳结果。
 
-\subsection{对 GOT-10k 的评估}
+\subsection{基于数据集 GOT-10k 的评测结果分析}
 GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据库。该数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包含了现实世界中的 563 类运动目标和 87 种运动模式。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
@@ -333,11 +336,11 @@ GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框�
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{Img/IGCF/davis.pdf}
-\caption{我们的方法在 DAVIS2016 VAL 数据集中的定性结果。}
+\caption{InstMask 网络在 DAVIS2016 验证集的多个视频的分割结果展示。}
 \label{fig:davis}
 \end{figure}
 
-\subsection{对 DAVIS2016 的评估}
+\subsection{基于数据集 DAVIS2016 的评测结果分析}
 配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，包含常见的视频目标分割挑战，例如遮挡、运动模糊和表观变化等。我们在 DAVIS2016 的验证集上进行了定性实验。可视化结果如图 \ref{fig:davis} 所示。结果表明，提出的 IGCF 可以准确地恢复目标的轮廓，这在一定程度上解释了 IGCF 可以提高跟踪性能的原因。
 
 \section{本章小结}
