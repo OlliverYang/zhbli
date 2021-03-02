@@ -303,7 +303,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \label{tab:attack_iter}
 \end{table}
 
-\subsection{攻击结果评估}
+\subsection{针对孪生跟踪器的攻击效果评估}
 \begin{figure}[p]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/txt_visualize.pdf}
@@ -332,7 +332,7 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 \label{tab:backbone}
 \end{table}
 
-\textbf{消融研究：训练损失的影响} 我们实施了一系列实验来分析和评估每个损失成分的贡献。
+\textbf{训练损失的影响} 我们实施了一系列实验来分析和评估每个损失成分的贡献。
 在表 \ref{tab:attack_loss} 中，我们报告了在 GOT-Val 数据集上的结果，反映了与在等式 \ref{eq:loss} 中用损失项的不同组合训练得到的不同扰动的性能差异。
 当仅利用质量评估损失生成扰动性信息时，跟踪器对于真实轨迹的 AO 值从 0.760 下降至 0.703，说明质量评估损失可使跟踪器的性能发生轻微下降。这是因为利用质量评估损失生成的扰动信息干扰了跟踪器选择最佳目标框的能力。
 然而，跟踪器相对于虚假轨迹的 AO 值仅为 0.044，说明仅使用质量评估损失生成的扰动几乎无法令跟踪器沿指定轨迹生成跟踪框。
@@ -357,7 +357,7 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \label{tab:arch}
 \end{table}
 
-\textbf{消融研究：训练迭代次数的影响} 表 \ref{tab:attack_iter} 表述了算法的迭代次数对攻击效果的影响。可以观察发现随着迭代次数的增加，相对于虚假轨迹的 AO 值明显升高，而相对于真实轨迹的跟踪器明显下降。这说明了本章提出的端到端训练流程的有效性。
+\textbf{训练迭代次数的影响} 表 \ref{tab:attack_iter} 表述了算法的迭代次数对攻击效果的影响。可以观察发现随着迭代次数的增加，相对于虚假轨迹的 AO 值明显升高，而相对于真实轨迹的跟踪器明显下降。这说明了本章提出的端到端训练流程的有效性。
 经过大约 30000 次训练迭代后，所产生的扰动会欺骗 GOT-Val 中的大多数目标。相对于虚假轨迹的 AO 从 0.760 下降到 0.035。
 我们注意到，在训练周期开始时（训练迭代次数小于 2048），AO 的下降速度明显快于后期。这证明了我们的端到端训练方案的快速收敛能力。
 
@@ -380,7 +380,7 @@ Ours & SiamFC++ & 0 & 0.861  & & 0.048&0.928 \\ \bottomrule
 \label{tab:untargeted}
 \end{table}
 
-\subsection{可迁移性分析}
+\subsection{对抗性信息的可迁移性分析}
 
 \textbf{不同主干网络的迁移能力} 为了验证对抗性信息在不同主干网络上的迁移能力，我们将扰动应用于 SiamFC++ 的另外两个不同的主干，即，ShuffleNet \cite{ShuffleNet} 和 AlexNet \cite{AlexNet}。
 实验结果显示在表 \ref{tab:backbone} 中。对于 SiamFC++-AlexNet，相对于真实轨迹的 AO 从 0.72 下降到 0.196。然而，我们的扰动不能很好地推广到 SiamFC++-ShuffleNet，我们推测这是由于 ShuffleNet 中特殊的组卷积和通道混洗操作所致。
@@ -388,7 +388,7 @@ Ours & SiamFC++ & 0 & 0.861  & & 0.048&0.928 \\ \bottomrule
 \textbf{不同跟踪架构的迁移能力} 为了验证对抗性信息在不同跟踪架构上的迁移能力，我们将扰动应用于另外两个基于锚框的最新跟踪器：基于 AlexNet 的 SiamRPN \cite{SiamRPN} 和基于 ResNet 的 SiamRPN++ \cite{SiamRPN++}。
 SiamRPN 使用 RPN 网络在响应图上执行位置回归和目标分类。 SiamRPN++ 在使用 ResNet 主干进行有效训练的基础上，执行逐层和深度聚合，以提高准确性。实验结果显示在表 \ref{tab:arch} 中。在 SiamRPN 中，相对于真实轨迹的 AO 从 0.666 降低到 0.379，而 SiamRPN++ 的性能从 0.676 降低到 0.518。结果表明，即使将生成的扰动应用于基于锚框的跟踪器，我们的对抗性信息也具有很好的可迁移性。
 
-\subsection{与其他方法的比较}
+\subsection{与当前主流对抗攻击方法的比较}
 
 我们将本章提出的孪生网络攻击方法与最新的攻击方法进行了比较，包括基于 AlexNet 的非针对性攻击方法 CSA \cite{CSA}，和其他两种针对性攻击方法：基于 AlexNet 的 FAN \cite{FAN} 和基于 ResNet-50 的 TTP \cite{TTP}。
 我们在表 \ref{tab:untargeted} 中报告相对于真实/虚假轨迹的精度得分。

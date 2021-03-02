@@ -128,17 +128,17 @@ In addition, two steps of regressions achieve accurate localization even for obj
 在第二阶段（即 RoI head）中，区域生成网络生成的每个候选区域，利用 RoI Align \cite{He2018MaskR} 操作提取尺度相同的深度特征
 使用分类层将每个候选区域（region of interest，ROI）分类为特定类别，并使用回归层对边界框位置进行进一步微调。请参阅 \cite{ren2015faster} 了解更多详细信息。
 
-对于目标跟踪任务，特征提取器 $\phi_{1}$ 有两个输入：模板图像 $z$ 和搜索图像 $x$。根据孪生架构的设计，两个输入共享相同的网络参数以提取特征。
-在生成模板特征 $f_{z} = \phi_{1}(z)$ 和搜索特征 $f_{x} = \phi_{1}(x)$ 之后，利用 RoI Align 操作 \cite{He2018MaskR}，根据目标的真实标注框，模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
+对于目标跟踪任务，特征提取器 $\phi_{1}$ 有两个输入：模板图像 $\textbf z$ 和搜索图像 $\textbf x$。根据孪生架构的设计，两个输入共享相同的网络参数以提取特征。
+在生成模板特征 $f_{\textbf z} = \phi_{1}(\textbf z)$ 和搜索特征 $f_{\textbf x} = \phi_{1}(x)$ 之后，利用 RoI Align 操作 \cite{He2018MaskR}，根据目标的真实标注框，模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
 \begin{equation}
-    f_{obj} = \mathcal{R}(b_{obj}, f_{z}),
+    f_{obj} = \mathcal{R}(b_{obj}, f_{\textbf z}),
 \end{equation}
 其中 $\mathcal{R}$ 表示 RoI Align 运算符，而 $b_{obj}$ 是目标的真实边界框。
 接下来，通过逐通道互相关 \cite{SiamRPN++} 操作融合搜索特征和目标特征：
 \begin{equation}
-    f_{corr} = f_{obj} * f_{x},
+    f_{corr} = f_{obj} \star f_{x},
 \end{equation}
-其中 $f_{corr}$ 是融合特征，$*$ 是逐通道互相关算子。
+其中 $f_{corr}$ 是融合特征，$\star$ 是逐通道互相关算子。
 %The use of RPN (region proposal network) is ...
 然后将 $f_{corr}$ 发送到 RPN head 以生成候选目标 $B=\{b^{i}_{roi}\}^{i=1:N}$。
 \iffalse
@@ -151,7 +151,7 @@ In the feature fusion module, object features $f_{obj}$ are obtained by the RoI 
 \end{equation}
 where $\mathcal{R}$ represents the RoIAlign, $\odot$ represents the element-wise multiplication, $b$ represents an RoI in candidate proposals and $\mathcal{X}$ represents the fused feature of $b$.
 \begin{equation}
-    f_{corr} = f_{obj} * f_{x}.
+    f_{corr} = f_{obj} \star f_{x}.
 \end{equation}
 Two 1 $\times$ 1 convolutions with channel dimension 1024 are added on top of the correlation layer to obtain the fusion feature.
 
@@ -289,7 +289,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 本章所提出的时间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
-\subsection{对 GOT-10k 数据集的评估}
+\subsection{基于数据集 GOT-10k 的评测结果分析}
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估所提出的跟踪算法。
 GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表示所有真实边界框和预测边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功进行跟踪的帧占总帧数的百分比。
 
@@ -342,7 +342,7 @@ LO 子集包括验证集中最长的 40 段视频。
 %This result suggests that our two-stage tracker based on ResNet50 is able to handle the appearance changes caused by heavy occlusion.
 在 LO 子集上，与 SiamMask 相比，AO 得分的相对提升为 12.13％。结果表明，全局感知机制可以有效减少视觉目标跟踪算法在跟踪长视频时的累积误差。
 
-\subsection{对 UAV20L 数据集的评估}
+\subsection{基于数据集 UAV20L 数据集的评测结果分析}
 
 UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频数据集。UAV20L 数据库专为长期跟踪而设计，包含 20 个视频，平均长度为 2934 帧。
 遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。

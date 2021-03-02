@@ -371,7 +371,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 %For both training and testing, the size of a template image is 
 % 其实有些对不上。按论文上讲，第一阶段是找到若干候选框。第二阶段是得到唯一结果。实际上是，第一阶段得到若干候选框，第二阶段进一步筛选得到约10个候选框（这才是真正的相似目标），然后按IoU和得分来选择最终结果。
 % For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
-\subsection{对 GOT-10k 数据集的评估}
+\subsection{基于数据集 GOT-10k 的评测结果分析}
 \begin{table}[t]
 \centering
 \caption{将本章提出的方法与其他方法在 GOT-10k 测试集上进行比较。}
@@ -420,7 +420,7 @@ ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分�
 SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以建立真实目标和候选区域之间的对应关系。
 然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
 
-\subsection{对 UAV20L 数据集的评估}
+\subsection{基于数据集 UAV20L 的评测结果分析}
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
 在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框内的像素与真实边界框的边框重叠。
