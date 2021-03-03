@@ -1,5 +1,5 @@
 \chapter{空间信息增强的视觉目标跟踪算法研究}\label{chap:globally}
-在上一章中我们指出，使用语义信息可以增强跟踪器的性能。然而，所提出的语义信息提取网络和目标跟踪网络是单独训练的。最近，孪生网络将特征提取模块和特征匹配模块被设计成一个统一的框架并执行端到端训练，已经取得了出色的跟踪性能。然而，大多数孪生网络跟踪器往往于使用局部搜索机制，目标搜索范围有限，容易造成预测位置的累计误差，从而导致跟踪随时间的漂移。尤其是在长期跟踪情况下，目标频繁进出画面，基于局部搜索机制的孪生网络跟踪器的性能潜力受到较大限制。为了解决这些问题，我们基于 Faster RCNN \cite{ren2015faster} 的两阶段目标检测的思想，提出了一种两阶段孪生网路跟踪器。所提出的跟踪器基于全局感知机制来减少累积误差并提高鲁棒性，该机制可在整个图像平面上感知目标的位置。由于可以在两阶段跟踪框架中使用非常深的网络进行特征学习，因此可以保证特征的判别性。此外，我们还添加了基于卷积神经网络的轨迹预测模块，该模块利用目标的历史运动信息来减轻近似物体的干扰。
+在上一章中我们指出，使用语义信息可以增强跟踪器的性能。然而，所提出的语义信息提取网络和目标跟踪网络是单独训练的。最近，孪生网络将特征提取模块和特征匹配模块设计成一个统一的框架并执行端到端训练，已经取得了出色的跟踪性能。然而，大多数孪生网络跟踪器往往使用局部搜索机制，目标搜索范围有限，容易造成预测位置的累计误差，从而导致跟踪随时间的漂移。尤其是在长期跟踪情况下，目标频繁进出画面，基于局部搜索机制的孪生网络跟踪器的性能潜力受到较大限制。为了解决这些问题，我们基于 Faster RCNN \cite{ren2015faster} 的两阶段目标检测的思想，提出了一种两阶段孪生网路跟踪器。所提出的跟踪器基于全局感知机制来减少累积误差并提高鲁棒性，该机制可在整个图像平面上感知目标的位置。由于可以在两阶段跟踪框架中使用非常深的网络进行特征学习，因此可以保证特征的判别性。此外，我们还添加了基于卷积神经网络的轨迹预测模块，该模块利用目标的历史运动信息来减轻近似物体的干扰。
 本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了基于空间信息增强的跟踪系统的有效性。
 
 \section{引言}
@@ -27,16 +27,16 @@
 在跟踪过程中，所提出的跟踪器始终能够感知整个图像中的目标。
 因此，即使跟踪器由于具有挑战性的目标表观变化而犯了一个错误，一旦目标的表观恢复正常，跟踪器便可以及时检索目标。尤其是在长期跟踪中目标离开画面的情况下，当目标从任何位置重新进入画面时，跟踪器便可以继续工作。
 
-所提出的全局感知机制的另一个优势是，跟踪器可以结合 RoI Align \cite{He2018MaskR} 操作，利用更深的网络进行特征学习，而这对于流行的基于局部搜索机制的 SiamFC \cite{SiamFC} 和 SiamRPN \cite{SiamRPN} 跟踪器来说是难以实现的，因为其网络结构中的填充操作将破坏严格的平移不变性 \cite{SiamRPN++}，因此尽可以使用浅层神经网络进行特征学习。具体来说，在本章提出的跟踪器中，我们将整个模板图像和搜索图像送入相同的主干网络以提取特征，然后根据初始帧的真实标注信息使用 RoI Align 操作从模板特征中提取目标特征。通过逐通道互相关操作使目标特征和搜索图像特征进行融合，以获得融合特征图，该融合特征图被送入后续的跟踪模块以得到最终的跟踪位置。由于该跟踪框架对平移不变性没有任何限制，因此可以使用具有较强特征提取能力的 ResNet \cite{he2016deep} 作为主干网络来提高跟踪器对前景目标与背景噪声之间的判别性。
+所提出的全局感知机制的另一个优势是，跟踪器可以结合 RoI Align \cite{He2018MaskR} 操作，利用更深的网络进行特征学习，而这对于流行的基于局部搜索机制的 SiamFC \cite{SiamFC} 和 SiamRPN \cite{SiamRPN} 跟踪器来说是难以实现的，因为其网络结构中的填充操作将破坏严格的平移不变性 \cite{SiamRPN++}，因此仅可以使用浅层神经网络进行特征学习。在本章提出的跟踪器中，我们将整个模板图像和搜索图像送入相同的主干网络以提取特征，然后根据初始帧的真实标注信息使用 RoI Align 操作从模板特征中提取目标特征。通过逐通道互相关操作将目标特征和搜索图像特征进行融合，以获得融合特征图，该融合特征图被送入后续的跟踪模块以得到最终的跟踪位置。由于该跟踪框架对平移不变性没有任何限制，因此可以使用具有较强特征提取能力的 ResNet \cite{he2016deep} 作为主干网络来提高跟踪器对前景目标与背景噪声之间的判别性。
 
 除了上述全局空间感知机制外，本章还提出了一种轨迹预测模型来减轻近似物体的干扰，以解决端到端训练的孪生网络跟踪器难以区分表观近似目标的问题。与简单设计的手工策略 \cite{SiamFC, SiamRPN} 不同，本章提出的基于卷积神经网络的轨迹预测模型经过端到端训练，可以使用目标的历史轨迹信息和当前帧中的目标表观信息来预测目标在当前帧中的位置分布。
 具体来说，目标的运动模式是在训练阶段从大规模轨迹数据集自动学习的，而不是基于手工制作的特征或规则 \cite{iswanto2017visual}；在测试阶段，我们可以使用任意数量的历史帧位置信息，而不是仅基于上一帧的目标位置进行预测。
 
-综上所述，本章做出以下三个主要贡献。
+综上所述，本章做出了以下三个主要贡献：
 \begin{itemize}
-\item 基于全局感知机制，我们引入了一个两步跟踪管道，该管道使用非常深的网络来减少累积误差并提高鲁棒性。
-\item 提出了一种新颖的统一的端到端卷积神经网络的轨迹预测结构，利用历史轨迹信息和当前帧的出现信息来预测目标位置分布。
-\item 我们在 GOT-10k \cite{GOT-10k} 和UAV20L \cite{mueller2016benchmark} 长期跟踪数据库上优秀的性能证明了本章提出的空间信息增强的孪生跟踪器的有效性。
+\item 基于全局感知机制，我们提出了一个两阶段跟踪框架，可使用深度网络减少累积误差并提高鲁棒性。
+\item 我们提出了一种可端到端训练的基于卷积神经网络的轨迹预测模块，利用历史轨迹信息和当前帧的表观信息预测目标的位置分布。
+\item 我们在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 目标跟踪数据库上进行的大量实验，证明了本章提出的空间信息增强的孪生跟踪器的有效性。
 \end{itemize}
 
 \iffalse
@@ -73,9 +73,9 @@
 
 在本章中，我们采用如下步骤进行视觉目标跟踪任务：首先基于全局感知机制提取候选目标区域，然后使用轨迹预测模块消除近似物体的干扰。通过采用该跟踪流程，我们可以通过设计更精确的候选目标提取模块和更鲁棒的的轨迹预测模型共同提升孪生网络的目标跟踪性能，尤其是长期目标跟踪性能。
 
-总体而言，本章提出了空间信息增强的全局感知系统具有如下贡献：
+总体而言，本章提出了空间信息增强的视觉目标跟踪算法具有如下特点：
 \begin{itemize}
-\item 我们使用整个图像而不是小的图像块作为跟踪器的输入，以为跟踪器提供更丰富的全局空间信息。
+\item 使用整个图像而不是小的图像块作为跟踪器的输入，以为跟踪器提供更丰富的全局空间信息。
 \item 为了更好地感知全局空间信息，本章提出了一个两阶段跟踪框架，该框架能够检测在视觉表观上类似于真实目标的候选目标区域。
 \item 为了消除候选目标区域中近似物体的干扰，本章提出了一个轨迹预测模块，该模块能够通过预测目标在当前帧的位置分布以排除近似物体，获得最终的跟踪结果。
 \end{itemize}
@@ -96,7 +96,7 @@ In addition, two steps of regressions achieve accurate localization even for obj
 
 \subsection{两阶段跟踪框架}
 
-我们基于流行的目标检测架构 Faster RCNN \cite{ren2015faster} 来构建跟踪框架。尽管利用目标检测模块和孪生网络进行视觉目标跟踪并非在本章中首次提出，但本章提出的视觉目标跟踪算法与类似视觉目标跟踪方法 \cite{SiamRPN, Wang2018SiamMask, danelljan2019atom, voigtlaender2019siam} 相比具有优势。与 SiamRPN \cite{SiamRPN}相比，SiamRPN 的网络输入始终是目标位于中心的图像块，而本章提出的跟踪算法的输入是整个图像，这意味着目标可能出现在图像中的任何空间位置。这防止了网络学习到偏向中心位置的错误先验，从而打破了空间不变性约束 \cite{SiamRPN++} 对于网络体系结构设计的限制。因此，可以采用非常深的卷积神经网络（例如ResNet50 \cite{he2016deep}）用于跟踪算法的特征提取器。有关空间不变性玉树和中心位置偏差的详细说明，请参考 \cite{SiamRPN++}。
+我们基于流行的目标检测架构 Faster RCNN \cite{ren2015faster} 来构建跟踪框架。尽管利用目标检测模块和孪生网络进行视觉目标跟踪并非在本章中首次提出，但本章提出的视觉目标跟踪算法与类似视觉目标跟踪方法 \cite{SiamRPN, Wang2018SiamMask, danelljan2019atom, voigtlaender2019siam} 相比具有优势。与 SiamRPN \cite{SiamRPN}相比，SiamRPN 的网络输入始终是目标位于中心的图像块，而本章提出的跟踪算法的输入是整个图像，这意味着目标可能出现在图像中的任何空间位置。这防止了网络学习到偏向中心位置的错误先验，从而打破了空间不变性约束 \cite{SiamRPN++} 对于网络体系结构设计的限制。因此，可以采用更深的卷积神经网络（例如 ResNet50 \cite{he2016deep}）作为跟踪算法的特征提取器。
 %because the input of the network is the entire image, instead of the image patch centered on the target, the target will appear in any poisition in the image, so we do not need the network has strict spatial invariance restriction \cite{SiamRPN++}, so we can use a deeper feature extractor, i.e., resnet50. 
 与 SiamRPN \cite{SiamRPN} 和 SiamMask \cite{Wang2018SiamMask} 相比，本章提出的跟踪算法采用两阶段体系结构。第二阶段（RoI head \cite{ren2015faster}）可以更有效地区分前景和背景。
 与 SiamMask \cite{Wang2018SiamMask} 和 ATOM \cite{danelljan2019atom} 相比，本章的跟踪器可以在整个图像中搜索目标，从而在由于遮挡、运动模糊等原因导致跟踪结果出错后，仍可在目标表观恢复正常时重新跟踪目标。
@@ -123,24 +123,24 @@ In addition, two steps of regressions achieve accurate localization even for obj
 
 %The transplant from a detection task to a tracking task using faster RCNN is straightforward and easy to implement.
 %, which is another advantage of our tracking module. 
-为了描述本章提出的跟踪框架，我们首先简要回顾一下 Faster RCNN。该目标检测网络包括一个特征提取器，其后是两个检测模块：RPN 头和 RoI 头。
-特征提取器 $\phi_{1}$ 是 ResNet50 的变体。第一阶段使用区域生成网络（RPN）在特征提取网络的最后一个特征图上执行滑动窗口操作，在判断每个空间位置是否存在目标的同时，预测这些目标的边界框。
-在第二阶段（即 RoI head）中，区域生成网络生成的每个候选区域，利用 RoI Align \cite{He2018MaskR} 操作提取尺度相同的深度特征
-使用分类层将每个候选区域（region of interest，ROI）分类为特定类别，并使用回归层对边界框位置进行进一步微调。请参阅 \cite{ren2015faster} 了解更多详细信息。
+为了描述本章提出的跟踪框架，我们首先简要回顾一下 Faster RCNN。该目标检测网络包括一个特征提取器，其后是两个检测模块：候选区域生成模块和区域细化模块。
+特征提取器 $\phi_{1}$ 是 ResNet50 的变体。第一阶段（候选区域生成模块）使用区域生成网络（region proposal network，RPN）在特征提取网络的最后一个特征图上执行滑动窗口操作，在判断每个空间位置是否存在目标的同时，预测这些目标的边界框。
+在第二阶段（区域细化模块）中，对于区域生成网络生成的每个候选区域，利用 RoI Align \cite{He2018MaskR} 操作提取尺度相同的深度特征。
+使用分类层将每个候选区域（region of interest，RoI）分类为特定类别，并使用回归层对边界框位置进行进一步微调。
 
 对于目标跟踪任务，特征提取器 $\phi_{1}$ 有两个输入：模板图像 $\textbf z$ 和搜索图像 $\textbf x$。根据孪生架构的设计，两个输入共享相同的网络参数以提取特征。
-在生成模板特征 $f_{\textbf z} = \phi_{1}(\textbf z)$ 和搜索特征 $f_{\textbf x} = \phi_{1}(x)$ 之后，利用 RoI Align 操作 \cite{He2018MaskR}，根据目标的真实标注框，模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
+在生成模板特征 $f_{\textbf z} = \phi_{1}(\textbf z)$ 和搜索特征 $f_{\textbf x} = \phi_{1}(\textbf x)$ 之后，利用 RoI Align 操作 \cite{He2018MaskR}，根据目标的真实标注框，在模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
 \begin{equation}
     f_{obj} = \mathcal{R}(b_{obj}, f_{\textbf z}),
 \end{equation}
 其中 $\mathcal{R}$ 表示 RoI Align 运算符，而 $b_{obj}$ 是目标的真实边界框。
 接下来，通过逐通道互相关 \cite{SiamRPN++} 操作融合搜索特征和目标特征：
 \begin{equation}
-    f_{corr} = f_{obj} \star f_{x},
+    f_{corr} = f_{obj} \star f_{\textbf x},
 \end{equation}
 其中 $f_{corr}$ 是融合特征，$\star$ 是逐通道互相关算子。
 %The use of RPN (region proposal network) is ...
-然后将 $f_{corr}$ 发送到 RPN head 以生成候选目标 $B=\{b^{i}_{roi}\}^{i=1:N}$。
+然后将 $f_{corr}$ 发送到 RPN 以生成候选目标 $B=\{b^{i}_{roi}\}^{i=1:N}$。
 \iffalse
 There are two inputs to the feature extraction module: the template image $z$ and the search image $x$. According to the design of the siamese architecture, the two inputs share the same network parameters to extract features.
 The network structure of the feature extraction module is a variant of ResNet50, which is pretrained on the 1000-class ImageNet classification set. Features of the input images are extracted from the final convolution layer of the 4-th stage. The obtained template features $f_{z} = \phi(z)$ and search features $f_{x} = \phi(x)$ with channel dimension 1024 and stride 16 are sent to the subsequent feature fusion module.
@@ -189,15 +189,15 @@ is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for
 \end{table}
 
 \subsection{轨迹预测模块}
-使用前文提出的的跟踪框架提取到与给定的第一帧模板目标在视觉表观上相似的候选目标区域后，我们利用轨迹预测模块消除近似物体的干扰并获得最终的跟踪结果。
+使用前文提出的跟踪框架提取到与给定的第一帧模板目标在视觉表观上相似的候选目标区域后，我们利用轨迹预测模块消除近似物体的干扰并获得最终的跟踪结果。
 轨迹预测模块以端到端的方式，使用目标的历史轨迹信息和当前帧的表观信息学习目标位置分布，该目标位置分布是一个二维热图，用于度量目标位于每个空间位置的可能性，我们根据该目标位置分布信息重新评估每个候选目标。
 
 \begin{table}[t]
 \centering
 \caption{将本章提出的方法与其他视觉目标跟踪方法在 GOT-10k 测试集上的跟踪结果进行比较。跟踪器按其平均重叠率（AO）排名。}
-\begin{tabular}{l l l l}
+\begin{tabular}{cccc}
 \bottomrule
-Method   &  $AO$   &  $SR_{0.50}$ & $SR_{0.75}$  \\
+Method   &  AO   &  SR$_{0.50}$ & SR$_{0.75}$  \\
 \hline
 Ours &  $\textbf{0.560}^\textbf{1}$ & $\textbf{0.645}^\textbf{1}$  & $\textbf{0.457}^\textbf{1}$  \\
 SiamMask &  0.459&  0.560 &0.205 \\
@@ -215,18 +215,18 @@ ECOhc	 &  0.286&  0.276 &0.096 \\
 \label{table:got}
 \end{table}
 
-令 $H_{t}^{k} = \{h_{t-i}\}_{i=1:k}$ 表示历史轨迹信息，其中 $t$ 是当前帧的索引，$k$ 是历史长度，并且 $h_{j} = \{x_{j}, y_{j}\}$ 是一个二维坐标，表示目标在帧 $j$ 中的位置。
-受姿态估计任务的启发，我们将 $h_{j}$ 表示为二维热图 $m_{j} \in \mathbb R^{h \times w}$，其中二维高斯顶点位于目标位置 $(x_{j}, y_{j})$。
+令 $H_{t}^{k} = \{h_{t-i}\}_{i=1:k}$ 表示历史轨迹信息，其中 $t$ 是当前帧的索引，$k$ 是历史长度，$h_{j} = \{x_{j}, y_{j}\}$ 是一个二维坐标，表示目标在帧 $j$ 中的位置。
+受姿态估计任务的启发，我们将 $h_{j}$ 表示为二维高斯热图 $m_{j} \in \mathbb R^{h \times w}$，其中二维高斯顶点位于目标位置 $(x_{j}, y_{j})$。
 为了对目标的轨迹信息进行建模，我们根据时间顺序将生成的 $k$ 热图进行串接，以获得通道维度为 $k$ 的轨迹张量 $\mathcal{M} \in \mathbb{R}^{k \times h \times w}$：
 \begin{equation}
     \mathcal{M}_{t}^{k} = \mathcal{C}(m_{t-k}, m_{t-k+1}, ..., m_{t-1}),
 \end{equation}
 其中 $\mathcal{C}(\cdot)$ 表示串联操作。
 
-本章提出的轨迹预测模块不仅利用历史轨迹信息进行预测，同时页考虑当前帧的表观信息。
-为此，将当前帧 $\mathcal{I} \in \mathbb{R}^{3 \times h \times w}$ 的 RGB 图像与轨迹张量串接起来，以获得增强的轨迹张量 $\mathcal{N} \in \mathbb{R}^{(3+k) \times h \times w}$，通道尺寸为 $(3+k)$：
+本章提出的轨迹预测模块不仅利用历史轨迹信息进行预测，还同时考虑当前帧的表观信息。
+为此，将当前帧 $I \in \mathbb{R}^{3 \times h \times w}$ 的 RGB 图像与轨迹张量串接起来，以获得增强的轨迹张量 $\mathcal{N} \in \mathbb{R}^{(3+k) \times h \times w}$，通道尺寸为 $3+k$：
 \begin{equation}
-    \mathcal{N}_{t}^{k} = \mathcal{C}(\mathcal{I}_{t}, \mathcal{M}_{t}^{k}).
+    \mathcal{N}_{t}^{k} = \mathcal{C}(I_{t}, \mathcal{M}_{t}^{k}).
 \end{equation}
 假设 $\phi_{2}$ 是基于卷积神经网络的轨迹预测模型，则 $\phi_{2}$ 的输出计算如下：
 \begin{equation}
@@ -244,15 +244,15 @@ The generated $K$ heatmaps are concatenated according to the time order to obtai
 Our motion model not only utilizes the historical trajectory information for prediction, but also considers the appearance information of the current frame.
 To achieve this, the RGB image of the current frame and the trajectory tensor are concatenated to obtain the tensor with channel dimension $(3+K)$. This tensor is sent to the network, and the output of the network is a heatmap reflecting the position distribution of the target in the current frame. The loss function, defined as the mean squared error, is applied for comparing the predicted heatmap and the groundtruth heatmap. The groundtruth heatmap is generated by applying 2D Gaussian with standard deviation of 3 pixels centered on the target position in the current frame. The network structure of our motion model is the same as HRNet. 
 \fi
-这里提供简要说明。HRNet 的第一阶段是高分辨率子网。在此基础上依次添加从高分辨率到低分辨率的子网，以形成更多的阶段。多分辨率子网之间并行连接。通过在整个网络中重复地在并行多分辨率子网中交换信息来进行多尺度融合。我们利用 HRNet 的高分辨率输出来表示目标的位置分布。有关网络结构的详细信息，请参考 \cite{sun2019deep}。
+这里提供简要说明。HRNet 的第一阶段是高分辨率子网。在此基础上依次添加从高分辨率到低分辨率的子网，以形成更多的阶段。多分辨率子网之间并行连接。通过在整个网络中重复地在并行多分辨率子网中交换信息来进行多尺度融合。我们利用 HRNet 的高分辨率输出来表示目标的位置分布。
 
 \begin{table}[t]
 \centering
 \caption{基于 GOT-10k \cite{GOT-10k} 验证集的 4 个属性标注的算法跟踪性能对比展示。}
-\begin{tabular}{@{}ccccccc@{}}
+\begin{tabular}{@{}rcccccc@{}}
 \toprule
 \multirow{2}{*}{属性} & \multicolumn{2}{c}{SiamFC} & \multicolumn{2}{c}{SiamMask} & \multicolumn{2}{c}{本章方法} \\ \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} 
- & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ & $AO$ & $SR_{0.5}$ \\ \midrule
+ & AO & SR$_{0.5}$ & AO & SR$_{0.5}$ & AO & SR$_{0.5}$ \\ \midrule
 快速运动 & 0.472 & 0.538 & 0.526 & 0.608 & 0.639 & 0.715 \\
 遮挡 & 0.411 & 0.447 & 0.494 & 0.559 & 0.585 & 0.659 \\
 图像边界切割 & 0.505 & 0.545 & 0.595 & 0.701 & 0.738 & 0.837 \\
@@ -278,7 +278,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 \label{fig:globally_uav20l_1}
 \end{figure*}
 
-\textbf{网络架构设计}：本章提出的空间信息增强的孪生视觉目标跟踪网络主要有三个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制子网络以及用于边框微调的区域细化子网络。它们的网络结构如图 \ref{fig:siamrcnn} 所示，主干网络基于 ResNet-50 设计，可以为模板图像和搜索区域图像提取深度特征，以提升特征表示能力。
+\textbf{网络架构设计}：本章提出的空间信息增强的孪生视觉目标跟踪网络主要由三个子网络组成，分别是用于共享特征提取的主干网络、用于生成特定目标特征的特征调制子网络以及用于边框微调的区域细化子网络。它们的网络结构如图 \ref{fig:siamrcnn} 所示，主干网络基于 ResNet50 设计，可以为模板图像和搜索区域图像提取深度特征，以提升特征表示能力。
 
 \textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过拟合，离线训练过程在大规模单目标视频跟踪数据库 GOT-10k \cite{GOT-10k} 的训练数据集中训练网络参数。GOT-10k 数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包括 563 类真实运动目标和 87 类运动模式。
 我们执行多尺度训练：目标大小从 $64 \times 64$ 至 $256 \times 256$ 不等。图像大小在跟踪过程中保持不变。
@@ -287,7 +287,7 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 
 本章提出的轨迹预测模块也利用 GOT-10k 训练集进行训练。训练采用的优化器为 Adam 优化器 \cite{kingma2014adam}。初始学习率设置为 $10^{-3}$，并在第 170 轮和 200 轮迭代时分别降至 $10^{-4}$ 和 $10^{-5}$。训练过程在 210 轮迭代后终止。
 
-本章所提出的时间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
+本章所提出的空间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
 \subsection{基于数据集 GOT-10k 的评测结果分析}
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估所提出的跟踪算法。
