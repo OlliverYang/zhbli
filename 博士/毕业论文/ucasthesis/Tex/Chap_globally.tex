@@ -293,11 +293,11 @@ To achieve this, the RGB image of the current frame and the trajectory tensor ar
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估所提出的跟踪算法。
 GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表示所有真实边界框和预测边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功进行跟踪的帧占总帧数的百分比。
 
-\textbf{对比实验}
-为了分析本章提出的两阶段跟踪框架和轨迹预测模块的有效性，我们训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:globally_ablition} 第一行）在我们最终提出的跟踪器中同时剔除了 RoI 头和轨迹预测模块。变体 2（参见表 \ref{table:globally_ablition} 第二行）在我们最终提出的跟踪器中剔除轨迹预测模块，仅保留 RoI 头。表 \ref{table:globally_ablition} 的第三行表示我们最终提出的跟踪器，同时配备有 RoI 头和轨迹预测模块。
+\textbf{创新点有效性验证}
+为了分析本章提出的两阶段跟踪框架和轨迹预测模块的有效性，我们训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:globally_ablition} 第一行）在我们最终提出的跟踪器中同时剔除了区域细化模块和轨迹预测模块。变体 2（参见表 \ref{table:globally_ablition} 第二行）在我们最终提出的跟踪器中剔除了轨迹预测模块，仅保留区域细化模块。表 \ref{table:globally_ablition} 的第三行表示我们最终提出的跟踪器，同时配备有区域细化模块和轨迹预测模块。
 我们在 GOT-10k 测试集上对上述三个跟踪器的性能进行了对比。
-从第一行和第二行中可以看出，通过添加 RoI 头，AO 性能提高了 11.1％。这是因为 RPN 阶段可快速过滤掉大多数背景样本，并且 RoI 头采用固定的前景与背景比率，以在前景与背景之间保持可控的样本平衡。
-第二行和第三行中可以看出，通过添加轨迹预测模块，AO、SR$_{0.50}$ 和 SR$_{0.75}$ 分别增加 3.9\%，5.0\% 和 1.7\%。这是因为所提出的轨迹预测模块可以有效地预测目标的位置分布，从而避免了近似物体的不利干扰。
+从第一行和第二行中可以看出，通过添加区域细化模块，AO 性能提高了 11.1％。这是因为 RPN 阶段可快速过滤掉大多数背景样本，并且区域细化模块采用固定的前景与背景比率，以在前景与背景之间保持可控的样本平衡。
+从第二行和第三行中可以看出，通过添加轨迹预测模块，AO、SR$_{0.50}$ 和 SR$_{0.75}$ 分别增加了 3.9％，5.0％ 和 1.7％。这是因为所提出的轨迹预测模块可以有效地预测目标的位置分布，从而避免了近似物体的不利干扰。
 
 \begin{figure*}[t!]
 \begin{center}
@@ -315,42 +315,42 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 \nopagebreak[3]
 \begin{figure}[p!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Img/globally/visulization.pdf}
+    \includegraphics[width=0.99\textwidth]{Img/globally/visulization.pdf}
     \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。}
     \label{fig:gloablly_vis}
 \end{figure}
 \nopagebreak[3]
 
-\textbf{总体效果}
+\textbf{与其他跟踪算法的比较}
 我们在 GOT-10k 测试集上将本章提出的方法与 8 个跟踪器（包括最新提出的跟踪器）进行了比较。
 与列出的方法相比，我们的方法实现了 0.560 的 AO 得分（表 \ref{table:got}）。
-CSK 是基于 DCF 的典型跟踪器之一，它使用有效的循环矩阵理论导出闭式解，并使用使用几种类型的核进行训练和跟踪。相反，本章提出的跟踪器基于特征提取能力更强的卷积神经网络。因此，本章提出的跟踪器在 AO 得分方面远超 CSK，相对提升为 173.17％，这证明了卷积神经网络出色的特征表示能力以及本章提出的算法的有效性。
-MDNet 具有多个分支，可学习共享层和特定域的层，其中不同的域对应不同的训练序列，每个分支负责二进制分类以识别每个域中的目标。相比之下，本章提出的跟踪器通过对目标模板和搜索区域的特征表示进行互相关操作来学习通用相似度特征图。与 MDNet 相比，本章提出的跟踪器的 AO 得分相对提升为 87.29％，这表明孪生架构和互相关运算在视频跟踪任务中的有效性。
-SiamMask 是最新的跟踪器之一，它是一个孪生跟踪器，并可利用非常深的卷积神经网络进行提取特征。SiamMask 利用区域生成子网来预测目标的位置。
-与 SiamMask \cite{Wang2018SiamMask} 相比，本章提出的两阶段跟踪器是基于全局感知机制设计的，可以减少跟踪过程中的累积误差，另外，轨迹预测模块可抑制近似物体的干扰并提高跟踪的鲁棒性。因此，本章提出的跟踪器在 AO 方面的性能要比 SiamMask 高出 22.00％，体现了所提出的两阶段跟踪框架和轨迹预测模块的有效性。
+CSK \cite{Henriques2012ExploitingTC} 是基于 DCF 的典型跟踪器之一，它使用有效的循环矩阵理论导出闭式解，并使用使用几种类型的核进行训练和跟踪。相反，本章提出的跟踪器基于特征提取能力更强的卷积神经网络。因此，本章提出的跟踪器相比于 CSK 在 AO 得分方面提升了 35.5％，这证明了卷积神经网络出色的特征表示能力以及本章所提算法的有效性。
+MDNet \cite{MDNet} 具有多个分支，可学习共享层和特定域的层，其中不同的域对应不同的训练序列，每个分支负责二进制分类以识别每个域中的目标。相比之下，本章提出的跟踪器通过对目标模板和搜索区域的特征表示进行互相关操作来学习通用相似度。与 MDNet 相比，本章提出的跟踪器的 AO 得分提高了 26.1％，这表明孪生架构和互相关运算在视频跟踪任务中的有效性。
+SiamMask \cite{Wang2018SiamMask} 是最新的跟踪器之一，它是一个孪生跟踪器，并可利用非常深的卷积神经网络进行特征提取。SiamMask 利用区域生成子网来预测目标的位置。
+与 SiamMask 相比，本章提出的两阶段跟踪器是基于全局感知机制设计的，可以减少跟踪过程中的累积误差，另外，轨迹预测模块可抑制近似物体的干扰并提高跟踪的鲁棒性。因此，本章提出的跟踪器在 AO 方面的性能要比 SiamMask 高出 10.1％，体现了所提出的两阶段跟踪框架和轨迹预测模块的有效性。
 
-\textbf{按属性进行的性能分析}
-GOT-10k 训练/验证数据集中的每个视频都带有多个属性，包括：目标可见率、运动速度、视频长度和按图像边界切割。为了分析跟踪器在不同属性下的性能，我们将跟踪器与两个最新的跟踪器（即 SiamFC  \cite{SiamFC} 和 SiamMask \cite{Wang2018SiamMask}）在 GOT-10k 验证集上进行了比较。我们根据属性注释从验证集中收集四个子集：FM（快速运动）子集，OC（遮挡）子集，CU（图像边界切割）子集和 LO（长视频）子集。
+\textbf{基于不同属性的跟踪性能分析}
+GOT-10k 训练/验证数据集中的每个视频都带有多个属性，包括：目标可见率、运动速度、视频长度和图像边界切割。为了分析跟踪器在不同属性下的性能，我们将跟踪器与两个最新的跟踪器（即 SiamFC \cite{SiamFC} 和 SiamMask \cite{Wang2018SiamMask}）在 GOT-10k 验证集上进行了比较。我们根据属性注释从验证集中收集四个子集：FM（快速运动）子集，OC（遮挡）子集，CU（图像边界切割）子集和 LO（长视频）子集。
 FM 子集包括目标运动速度很快的视频。
 OC 子集包括目标经常被遮挡的视频。
 CU 子集包括目标经常被图像边界切割的视频。
 LO 子集包括验证集中最长的 40 段视频。
 表 \ref{table:attribute} 展示了跟踪算法的不同属性下的性能。
-在 FM 子集上，本章提出的方法在 AO 方面的表现优于 SiamMask \cite{Wang2018SiamMask}，相对提升为 21.48\%。
+在 FM 子集上，本章提出的方法在 AO 方面的表现优于 SiamMask \cite{Wang2018SiamMask}，提升为 11.3％。
 %This result suggests that our motion model is capable of modeling challenging motion patterns.
-在 AO 方面，本章提出的算法在 OC 和 CU 子集上的性能分别比 SiamMask 高 18.42％ 和 24.03％。
+在 AO 方面，本章提出的算法在 OC 和 CU 子集上的性能分别比 SiamMask 高 9.1％ 和 14.3％。
 %This result suggests that our two-stage tracker based on ResNet50 is able to handle the appearance changes caused by heavy occlusion.
-在 LO 子集上，与 SiamMask 相比，AO 得分的相对提升为 12.13％。结果表明，全局感知机制可以有效减少视觉目标跟踪算法在跟踪长视频时的累积误差。
+在 LO 子集上，与 SiamMask 相比，本章提出的算法在 AO 得分上的提升为 7.8％。结果表明，全局感知机制可以有效减少视觉目标跟踪算法在跟踪长视频时的累积误差。
 
 \subsection{基于数据集 UAV20L 数据集的评测结果分析}
 
 UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频数据集。UAV20L 数据库专为长期跟踪而设计，包含 20 个视频，平均长度为 2934 帧。
-遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
+遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功率使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
 
-我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:globally_uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的相对 AUC 提升分别为 31.7％ 和 22.7％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的相对性能提升分别为 25.8\% 和 24.4\%。
+我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:globally_uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的 AUC 提升分别为 13.4％ 和 10.3％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的性能提升分别为 15.9％ 和 15.2％。
 
 此外，我们对 UAV20L 进行了基于属性的分析（参见图 \ref{fig:globally_uav20l_1} 和图 \ref{fig:globally_uav20l_2}）。UAV20L 包含常见的视觉跟踪挑战，包括宽高比变化（aspect ration change，
-ARC）、背景混杂（background clutter，BC）、相机运动（camera motion，CM）、快速运动（fast motion，FM）、完全遮挡（Full Occlusion，FOC）、光照变化（illumination variation，IV）、低分辨率（low resolution，LR）、视线外（out-of-view，OV）、部分遮挡（partial occlusion，POC）、相似目标（similar object，SOB）、尺度变化（scale variation，SV）和视点改变（viewpoint change，VC）。
+ARC）、背景混杂（background clutter，BC）、相机运动（camera motion，CM）、快速运动（fast motion，FM）、完全遮挡（full occlusion，FOC）、光照变化（illumination variation，IV）、低分辨率（low resolution，LR）、视线外（out-of-view，OV）、部分遮挡（partial occlusion，POC）、相似目标（similar object，SOB）、尺度变化（scale variation，SV）和视点改变（viewpoint change，VC）。
 与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
 在文献 \cite{SiamRPN} 中，Li 等人提出了同时具有分类分支和回归分支的跟踪框架 SiamRPN。分类分支旨在在搜索图像中确定目标的位置，回归分支旨在优化目标的边框尺寸与长宽比。通过两个分支的合作，SiamRPN 具有较高的跟踪性能。因此，该算法在尺度变化、视点改变等属性上得分较高。尽管如此，SiamRPN 与本文提出的算法仍具有较大差距。比如在完全遮挡属性中，SiamRPN 的成功率仅为 0.192，而本章提出的算法成功率为 0.446。可能的原因是 SiamRPN 基于局部搜索机制进行跟踪，而本章提出的跟踪器采用了全局感知机制和轨迹预测模块，能够在目标再次出现在画面后及时进行继续跟踪。
 
@@ -358,4 +358,4 @@ ARC）、背景混杂（background clutter，BC）、相机运动（camera motio
 In order to perform a more in-depth and detailed analysis of the performance of the trackers, we also report the results on challenging attributes in UAV20L. Fig. \ref{fig:uav20l_attr} lists the success plots of 14 different methods on 12 attributes: ARC (Aspect Ratio Change), BC (Background Clutter), CM (Camera Motion), FM (Fast Motion), FOC (Full Occlusion), IV (Illumination Variation), LR (LR Low Resolution), OV (Out-of-View), POC (Partial Occlusion), SOB (Similar Object), SV (Scale Variation) and VC (Viewpoint Change). We can observe that the AUC of the proposed algorithm perform better than other methods on most challenging attributes, which means our method is more robust than other approaches on various difficult situations.
 \fi
 \section{本章小结}
-在本章中，我们提出了一种空间信息增强的视觉目标跟踪算法，其中包括基于全局感知机制的两阶段跟踪框架和数据驱动的轨迹预测模块。全局感知机制允许跟踪组件减少跟踪过程中的累积误差。跟踪框架使用非常深的网络进行两阶段跟踪，使跟踪器提取的特征更具判别性。轨迹预测模块通过端到端训练，能够从大规模轨迹数据集中学习目标的运动模式。通过基于全局感知机制的两阶段跟踪框架和轨迹预测模块的协同工作，本章所提出的方法可实现较好的跟踪性能。
+在本章中，我们提出了一种空间信息增强的视觉目标跟踪算法，其中包括基于全局感知机制的两阶段跟踪框架和数据驱动的轨迹预测模块。全局感知机制允许跟踪组件减少跟踪过程中的累积误差。跟踪框架使用深度卷积神经网络进行两阶段跟踪，使跟踪器提取的特征更具判别性。轨迹预测模块通过端到端训练，能够从大规模轨迹数据集中学习目标的运动模式。通过基于全局感知机制的两阶段跟踪框架和轨迹预测模块的协同工作，本章所提出的方法可实现较好的跟踪性能。
