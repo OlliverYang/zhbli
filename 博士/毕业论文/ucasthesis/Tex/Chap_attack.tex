@@ -164,7 +164,7 @@ r^{*}=x_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right), \quad b^{*}=y
 \begin{figure*}[t]
 \centering
 \includegraphics[width=1.0\textwidth]{Img/attack/vis_v4.pdf}
-\caption{我们的目标攻击结果遵循预定义的 虚假轨迹（由黄色的目标边界框指示）。}
+\caption{对抗攻击效果展示。所提出的对抗性信息可使孪生跟踪器沿预定义的虚假轨迹（黄色边框）输出跟踪结果。}
 \label{fig:attack_vis}
 \end{figure*}
 
@@ -244,7 +244,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \begin{table}[t]
 \centering
-\caption{不同损失函数对 GOT-Val 数据集跟踪性能的影响。}
+\caption{在 GOT-Val 数据集上分析不同损失函数对跟踪性能的影响。}
 \begin{tabular}{ccccccc} 
 \toprule
 \multirow{2}{*}[-2pt]{分类损失}     & \multirow{2}{*}[-2pt]{质量评估损失} & \multirow{2}{*}[-2pt]{回归损失} & \multicolumn{2}{c}{虚假轨迹}          & \multicolumn{2}{c}{真实轨迹}           \\ 
