@@ -180,7 +180,10 @@ m_{x,y} = \left\{ \begin{array}{ll}
 $P$ 是从 InstMask 生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属于目标的概率。
 
 尽管我们的模型与 CSRDCF \cite{Lukezic2017DiscriminativeCF} 具有相似性，但实现原理却不同。
-在 CSRDCF \cite{Lukezic2017DiscriminativeCF} 中，使用目标和背景的颜色直方图生成分割模板。这种启发式方法具有几个缺点：
+在 
+CSR-DCF 
+\cite{Lukezic2017DiscriminativeCF} 
+中，使用目标和背景的颜色直方图生成分割模板。这种启发式方法具有几个缺点：
 
 \begin{itemize}
 \item 由于仅使用低级像素信息，因此难以准确地分割目标。

@@ -177,12 +177,12 @@ is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for
 \centering
 \caption{两阶段跟踪框架以及轨迹预测模块在 GOT-10k \cite{GOT-10k} 测试集上的有效性展示。}
 \begin{tabular}{c c c c c}
-\bottomrule
+\toprule
 两阶段跟踪 & 轨迹预测模块 & AO & $\text{SR}_{0.50}$ & $\text{SR}_{0.75}$ \\ 
-\hline
-          &           & 0.410 & 0.486 & 0.162 \\
-\checkmark&           & 0.521 & 0.595 & 0.440 \\
-\checkmark&\checkmark & 0.560 & 0.645 & 0.457 \\
+\midrule
+ & & 0.410 & 0.486 & 0.162 \\
+\checkmark & & 0.521 & 0.595 & 0.440 \\
+\checkmark & \checkmark & 0.560 & 0.645 & 0.457 \\
 \bottomrule
 \label{table:globally_ablition}
 \end{tabular}
@@ -315,7 +315,7 @@ GOT-10k 的评价指标包括平均重叠（AO）和成功率（SR）。AO 表�
 \nopagebreak[3]
 \begin{figure}[p!]
     \centering
-    \includegraphics[width=0.99\textwidth]{Img/globally/visulization.pdf}
+    \includegraphics[width=0.98\textwidth]{Img/globally/visulization.pdf}
     \caption{本章提出的跟踪器与主流跟踪器 SiamMask \cite{Wang2018SiamMask} 和 SiamFCv2 \cite{SiamFC} 在 GOT-10k \cite{GOT-10k} 测试集上的跟踪结果对比展示。}
     \label{fig:gloablly_vis}
 \end{figure}
@@ -350,7 +350,9 @@ UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频
 我们将本章提出的方法与 13 个主流跟踪器进行了比较。图 \ref{fig:globally_uav20l} 清楚地表明，本章提出的算法在成功率和精确度得分方面均由于所提出的其他跟踪器。具体来说，在成功图中，我们的跟踪器获得的 AUC 得分为 0.557。与主流方法 PTAV \cite{fan2018parallel} 和 SiamRPN \cite{SiamRPN} 相比，本章提出的跟踪器的 AUC 提升分别为 13.4％ 和 10.3％。在精度图中，本章所提算法的得分为 0.776。与 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel} 相比，本章所提出的跟踪器的性能提升分别为 15.9％ 和 15.2％。
 
 此外，我们对 UAV20L 进行了基于属性的分析（参见图 \ref{fig:globally_uav20l_1} 和图 \ref{fig:globally_uav20l_2}）。UAV20L 包含常见的视觉跟踪挑战，包括宽高比变化（aspect ration change，
-ARC）、背景混杂（background clutter，BC）、相机运动（camera motion，CM）、快速运动（fast motion，FM）、完全遮挡（full occlusion，FOC）、光照变化（illumination variation，IV）、低分辨率（low resolution，LR）、视线外（out-of-view，OV）、部分遮挡（partial occlusion，POC）、相似目标（similar object，SOB）、尺度变化（scale variation，SV）和视点改变（viewpoint change，VC）。
+ARC）、背景混杂（background clutter，BC）、相机运动（camera motion，CM）、快速运动（fast motion，FM）、完全遮挡（full occlusion，FOC）、光照变化
+（
+illumination variation，IV）、低分辨率（low resolution，LR）、视线外（out-of-view，OV）、部分遮挡（partial occlusion，POC）、相似目标（similar object，SOB）、尺度变化（scale variation，SV）和视点改变（viewpoint change，VC）。
 与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
 在文献 \cite{SiamRPN} 中，Li 等人提出了同时具有分类分支和回归分支的跟踪框架 SiamRPN。分类分支旨在在搜索图像中确定目标的位置，回归分支旨在优化目标的边框尺寸与长宽比。通过两个分支的合作，SiamRPN 具有较高的跟踪性能。因此，该算法在尺度变化、视点改变等属性上得分较高。尽管如此，SiamRPN 与本文提出的算法仍具有较大差距。比如在完全遮挡属性中，SiamRPN 的成功率仅为 0.192，而本章提出的算法成功率为 0.446。可能的原因是 SiamRPN 基于局部搜索机制进行跟踪，而本章提出的跟踪器采用了全局感知机制和轨迹预测模块，能够在目标再次出现在画面后及时进行继续跟踪。
 
