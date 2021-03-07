@@ -1,0 +1,12 @@
+python3 main.py \
+-mode train \
+-support 1 \
+-neighbor 50 \
+-save model.pkl \
+-cuda 0 \
+-epoch 100 \
+-bs 4 \
+-dataset shapenetcore_partanno_segmentation_benchmark_v0 \
+-point 1024 \
+-record record.log \
+-interval 1000 \
