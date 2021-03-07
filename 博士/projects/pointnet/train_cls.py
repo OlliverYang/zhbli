@@ -16,6 +16,9 @@ import provider
 import importlib
 import shutil
 
+
+torch.backends.cudnn.enabled = False
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = BASE_DIR
 sys.path.append(os.path.join(ROOT_DIR, 'models'))
@@ -24,7 +27,7 @@ sys.path.append(os.path.join(ROOT_DIR, 'models'))
 def parse_args():
     '''PARAMETERS'''
     parser = argparse.ArgumentParser('PointNet')
-    parser.add_argument('--batch_size', type=int, default=24, help='batch size in training [default: 24]')
+    parser.add_argument('--batch_size', type=int, default=12, help='batch size in training [default: 24]')
     parser.add_argument('--model', default='pointnet_cls', help='model name [default: pointnet_cls]')
     parser.add_argument('--epoch',  default=200, type=int, help='number of epoch in training [default: 200]')
     parser.add_argument('--learning_rate', default=0.001, type=float, help='learning rate in training [default: 0.001]')
