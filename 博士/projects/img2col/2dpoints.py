@@ -44,6 +44,7 @@ def conv(points, kernel):
     # 批次，需要卷积的元素总数，输入点数。
     print('neighbors.shape', neighbors.shape)
     result = kernel @ neighbors[0]
+    result = F.relu(result, inplace=True)
     print('result.shape:', result.shape)  # 4, 16 输出通道是4，共16个点。
     return result
 
@@ -58,7 +59,7 @@ def main():
                            [2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                            [3, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                            [4, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]])
-    # 对应于 kernel_col, out*(in*num) = 4*(2*9) = 4*18
+    # 对应于 kernel_col, out*(in*邻居数) = 4*(2*9) = 4*18
     result1 = conv(points, kernel)
     result2 = conv(points2, kernel)
     if torch.equal(result1[:, -1], result2[:, 0]):  # 注意，一个点对应的输出特征为一列，而不是一行。
