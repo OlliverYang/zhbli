@@ -31,7 +31,7 @@ def indexing_neighbor(tensor: "(bs, vertice_num, dim)", index: "(bs, vertice_num
     return tensor_indexed
 
 
-def conv(points, kernel):
+def conv(points, kernel, bias):
     print('points.shape', points.shape)  # 批次，输入点数，通道数。
     print('kernel.shape:', kernel.shape)
     kernel_size = 3
@@ -43,7 +43,7 @@ def conv(points, kernel):
     neighbors = neighbors.reshape(neighbors.shape[0], -1, neighbors.shape[-1])
     # 批次，需要卷积的元素总数，输入点数。
     print('neighbors.shape', neighbors.shape)
-    result = kernel @ neighbors[0]
+    result = (kernel @ neighbors).transpose(1, 2) + bias
     result = F.relu(result, inplace=True)
     print('result.shape:', result.shape)  # 4, 16 输出通道是4，共16个点。
     return result
@@ -60,8 +60,13 @@ def main():
                            [3, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                            [4, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]])
     # 对应于 kernel_col, out*(in*邻居数) = 4*(2*9) = 4*18
-    result1 = conv(points, kernel)
-    result2 = conv(points2, kernel)
+    in_channel = points.shape[-1]
+    out_channel = kernel.shape[0]
+    support_num = 9
+    assert in_channel * support_num == kernel.shape[-1]
+    bias = torch.rand(out_channel)  # bias 尺寸等于输出通道，经核实是没错的。
+    result1 = conv(points, kernel, bias)
+    result2 = conv(points2, kernel, bias)
     if torch.equal(result1[:, -1], result2[:, 0]):  # 注意，一个点对应的输出特征为一列，而不是一行。
         print('success')
     else:
