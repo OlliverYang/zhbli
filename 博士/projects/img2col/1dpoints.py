@@ -29,12 +29,7 @@ def indexing_neighbor(tensor: "(bs, vertice_num, dim)", index: "(bs, vertice_num
     return tensor_indexed
 
 
-if __name__ == '__main__':
-    points = torch.tensor([[[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15]]])
-    # 16 个点，1*16*1 批次*点数*维数
-    kernel = torch.tensor([[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15, 16, 17, 18]])  # 2*9, 对应于 kernel_col
-    print('points.shape', points.shape)
-    print('kernel.shape:', kernel.shape)
+def conv(points, kernel):
     neighbor_index = get_neighbor_index(points, 9)  # 仅是坐标，不是数值
     neighbors = indexing_neighbor(points, neighbor_index)  # 批次，输入点数，邻居数，通道数。
     # @TODO：需要卷积的元素总数为 邻居数*通道数。哪个在前？
@@ -44,4 +39,20 @@ if __name__ == '__main__':
     print('neighbors.shape', neighbors.shape)
     result = kernel @ neighbors[0]
     print('result.shape:', result.shape)  # 2, 16 输出通道是2，共16个点。
-    print(result)
+    return result
+
+
+def main():
+    points = torch.tensor([[[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15]]])
+    points2 = torch.tensor([[[15], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [0]]])
+    # 16 个点，1*16*1 批次*点数*维数
+    kernel = torch.tensor([[1, 2, 3, 4, 5, 6, 7, 8, 9], [10, 11, 12, 13, 14, 15, 16, 17, 18]])  # 2*9, 对应于 kernel_col
+    print('points.shape', points.shape)
+    print('kernel.shape:', kernel.shape)
+    result1 = conv(points, kernel)
+    result2 = conv(points2, kernel)
+    print(result1, result2)
+
+
+if __name__ == '__main__':
+    main()
