@@ -41,8 +41,12 @@ class Manager():
             self.model.train()
             train_loss = 0
             train_label = LabelContainer()
+            print('dummy')
+            points = torch.rand([2, 1024, 3])
+            print('data dim:', points.shape[1])
+            for i, (_, gt) in enumerate(train_data):
 
-            for i, (points, gt) in enumerate(train_data):
+                gt = torch.tensor([0, 1])
                 points = points.to(self.device)
                 gt = gt.view(-1,).to(self.device)
                 out = self.model(points)
