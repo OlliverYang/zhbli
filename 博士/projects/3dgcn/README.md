@@ -56,8 +56,31 @@ dummy 1024  neighbor=32   pooling_rate=1    epoch   1 step  1000 | avg loss: 0.2
 dummy 1024  neighbor=32   pooling_rate=1    epoch   1 step  1000 | avg loss: 0.40909 | avg acc: 0.82450 重复实验。说明 pooling_rate=1 与删除所有池化层等效。
 dummy 1024  neighbor=32   pooling_rate=2    epoch   1 step  4800 | avg loss: 0.51565 | avg acc: 0.76219 说明池化降低效果。
 dummy 1024  neighbor=32   删除所有池化层。。                                 epoch   1 step  1600 | avg loss: 0.24027 | avg acc: 0.90844
-dummy 1024  neighbor=32   pooling_rate=1    取消减去相对位置，改为级联中心坐标  epoch   1 step   400 | avg loss: 0.34476 | avg acc: 0.94125 性能明显提升。 
-dummy 1024  neighbor=64   太慢，暂时不测。
+dummy 1024  neighbor=32   batch=2   pooling_rate=1    取消减去相对位置 改为级联中心坐标   epoch   1 step   400 | avg loss: 0.34476 | avg acc: 0.94125 性能明显提升。 
+dummy 1024  neighbor=16   batch=16  删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step    50 | avg loss: 0.72597 | avg acc: 0.49625 貌似训练不动。 
+dummy 1024  neighbor=16   batch=4   删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step   400 | avg loss: 0.45724 | avg acc: 0.82875
+                                                                                    epoch   1 step   500 | avg loss: 0.43779 | avg acc: 0.85000
+                                                                                    epoch   1 step   600 | avg loss: 0.43208 | avg acc: 0.84917
+dummy 1024  neighbor=16   batch=2   删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step   400 | avg loss: 0.23224 | avg acc: 0.89250
+                                                                                    epoch   1 step   500 | avg loss: 0.19519 | avg acc: 0.91400
+                                                                                    epoch   1 step   600 | avg loss: 0.16881 | avg acc: 0.92833
+dummy 1024  neighbor=32   batch=2   删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step   200 | avg loss: 0.28339 | avg acc: 0.90250 再次说明邻居32比16好。
+                                                                                    epoch   1 step   300 | avg loss: 0.21954 | avg acc: 0.93500
+                                                                                    epoch   1 step   400 | avg loss: 0.18060 | avg acc: 0.95125
+dummy 1024  neighbor=64   batch=2   删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step   100 | avg loss: 0.36422 | avg acc: 0.91500 说明邻居64比32好。
+                                                                                    epoch   1 step   210 | avg loss: 0.27674 | avg acc: 0.95952
+dummy 1024  neighbor=32   batch=4   删除所有池化层。     取消减去相对位置 改为级联中心坐标   epoch   1 step   100 | avg loss: 0.72168 | avg acc: 0.47500
+                                                                                    epoch   1 step   200 | avg loss: 0.68917 | avg acc: 0.53750
+                                                                                    epoch   1 step   300 | avg loss: 0.64144 | avg acc: 0.62500
+                                                                                    epoch   1 step   400 | avg loss: 0.58483 | avg acc: 0.70375
+                                                                                    epoch   1 step   500 | avg loss: 0.54100 | avg acc: 0.75750
+                                                                                    epoch   1 step   600 | avg loss: 0.49991 | avg acc: 0.79583
+                                                                                                            epoch   1 step   700 | avg loss: 0.45956 | avg acc: 0.81929
+                                                                                                            epoch   1 step  1200 | avg loss: 0.37276 | avg acc: 0.88354
+dummy 1024  neighbor=32   batch=4   删除所有池化层。     取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.33400 | avg acc: 0.87250 性能明显提升。
+                                                                                                            epoch   1 step   200 | avg loss: 0.24841 | avg acc: 0.93000
+
+
 # 测试
 
 # TODO

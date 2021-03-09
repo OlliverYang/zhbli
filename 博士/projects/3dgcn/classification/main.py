@@ -22,7 +22,7 @@ def main():
     parser.add_argument('-load', help= 'Path to load model')
     parser.add_argument('-save', help= 'Path to save model')
     parser.add_argument('-record', help= 'Record file name (e.g. record.log)')
-    parser.add_argument('-interval', type= int, default= 200, help= 'Record interval within an epoch')
+    parser.add_argument('-interval', type= int, default=10, help= 'Record interval within an epoch')
     parser.add_argument('-support', type= int, default= 1, help= 'Support number')
     parser.add_argument('-neighbor', type= int, default= 20, help= 'Neighbor number')
     parser.add_argument('-normal', dest= 'normal', action= 'store_true', help= 'Normalize objects (zero-mean, unit size)')

@@ -111,7 +111,7 @@ class Conv_layer(nn.Module):
         """
         bs, vertice_num, neighbor_num = neighbor_index.size()
         assert neighbor_num == self.neighbor_num
-        neighbor_index = get_neighbor_index(feature_map, neighbor_num)
+        neighbor_index = get_neighbor_index(vertices, neighbor_num)  # 目的：求当前点的邻居点。所谓邻居，指的是空间坐标点的邻居，而不是特征的邻居。
         neighbors = indexing_neighbor(feature_map, neighbor_index)
         neighbors = torch.cat((feature_map.unsqueeze(2), neighbors), 2)  # 把中心点放在邻居点最前面。
         neighbors = neighbors.permute([0, 3, 2, 1])  # 批次，通道数，邻居数，输入点数。
@@ -135,20 +135,8 @@ class Pool_layer(nn.Module):
             vertices_pool: (bs, pool_vertice_num, 3),
             feature_map_pool: (bs, pool_vertice_num, channel_num)
         """
-        """随机选择下采样后的点"""
-        _, vertice_num, _ = vertices.size()
-        pool_num = int(vertice_num / self.pooling_rate)
-        sample_idx = torch.randperm(vertice_num)[:pool_num]
-        vertices = vertices[:, sample_idx, :]  # (bs, pool_num, 3)
-        """随机选择下采样后的点"""
-
-        """选择邻居"""
+        bs, vertice_num, _ = vertices.size()
         neighbor_index = get_neighbor_index(vertices, self.neighbor_num)
-        neighbor_feature = indexing_neighbor(feature_map,
-                                             neighbor_index)  # (bs, vertice_num, neighbor_num, channel_num)
-        pooled_feature = torch.max(neighbor_feature, dim=2)[0]  # (bs, vertice_num, channel_num)
-        """选择邻居"""
-        return vertices, pooled_feature
 
 def test():
     import time
