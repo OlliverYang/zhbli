@@ -79,6 +79,43 @@ dummy 1024  neighbor=32   batch=4   删除所有池化层。     取消减去相
                                                                                                             epoch   1 step  1200 | avg loss: 0.37276 | avg acc: 0.88354
 dummy 1024  neighbor=32   batch=4   删除所有池化层。     取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.33400 | avg acc: 0.87250 性能明显提升。
                                                                                                             epoch   1 step   200 | avg loss: 0.24841 | avg acc: 0.93000
+dummy 1024  neighbor=32   batch=8   删除所有池化层。     取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.62129 | avg acc: 0.63125 如果你想，等了好久，100 次之后才0.63，训练不好了，那你的这种想法就错了。
+                                                                                                            epoch   1 step   200 | avg loss: 0.33445 | avg acc: 0.81563
+                                                                                                            epoch   1 step   300 | avg loss: 0.22585 | avg acc: 0.87708
+                                                                                                            epoch   1 step   400 | avg loss: 0.17110 | avg acc: 0.90781 及格。
+dummy 1024  neighbor=32   batch=8   pooling_rate=2    取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.71845 | avg acc: 0.50000
+                                                                                                            epoch   1 step   200 | avg loss: 0.71167 | avg acc: 0.51250
+                                                                                                            epoch   1 step   300 | avg loss: 0.70944 | avg acc: 0.51708
+                                                                                                            epoch   1 step   400 | avg loss: 0.70706 | avg acc: 0.52063
+                                                                                                            epoch   1 step   500 | avg loss: 0.70255 | avg acc: 0.52675
+                                                                                                            epoch   1 step   600 | avg loss: 0.70212 | avg acc: 0.52958
+                                                                                                            epoch   1 step   700 | avg loss: 0.69918 | avg acc: 0.53482
+                                                                                                            epoch   1 step  2000 | avg loss: 0.28644 | avg acc: 0.82800
+dummy 1024  neighbor=32   batch=8   使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.73268 | avg acc: 0.47625
+                                                                                                            epoch   1 step   200 | avg loss: 0.71625 | avg acc: 0.50875
+                                                                                                            epoch   1 step   400 | avg loss: 0.69033 | avg acc: 0.54406
+                                                                                                            epoch   1 step   800 | avg loss: 0.55156 | avg acc: 0.67000 不如neighbor=16好。
+dummy 1024  neighbor=16   batch=8   使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.70853 | avg acc: 0.53375
+                                                                                                            epoch   1 step   200 | avg loss: 0.67941 | avg acc: 0.56875
+                                                                                                            epoch   1 step   400 | avg loss: 0.48520 | avg acc: 0.74438
+                                                                                                            epoch   1 step   800 | avg loss: 0.25810 | avg acc: 0.87156
+dummy 1024  neighbor=8    batch=8   lr=0.0001   使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.71915 | avg acc: 0.49625
+                                                                                                                        epoch   1 step   200 | avg loss: 0.71478 | avg acc: 0.50687
+                                                                                                                        epoch   1 step   400 | avg loss: 0.71731 | avg acc: 0.50438 前 400 结果几乎没变化
+                                                                                                                        epoch   1 step   800 | avg loss: 0.50396 | avg acc: 0.69125
+                                                                                                                        epoch   1 step  1030 | avg loss: 0.20102 | avg acc: 0.90024 及格。
+dummy 1024  neighbor=16    batch=8   lr=0.001    使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.71866 | avg acc: 0.51125
+                                                                                                                        epoch   1 step   200 | avg loss: 0.72019 | avg acc: 0.50438
+                                                                                                                        epoch   1 step   400 | avg loss: 0.71868 | avg acc: 0.50656 前 400 结果几乎不变。
+dummy 1024  neighbor=16    batch=8   lr=0.001    使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step   100 | avg loss: 0.55596 | avg acc: 0.67625 重复实验
+                                                                                                                        epoch   1 step   200 | avg loss: 0.32152 | avg acc: 0.82688 重复实验的结果，在收敛速度上差别很大。
+                                                                                                                        epoch   1 step   400 | avg loss: 0.16418 | avg acc: 0.91312
+                                                                                                                        epoch   1 step   800 | avg loss: 0.08257 | avg acc: 0.95656 效果非常好。
+dummy 1024  neighbor=16    batch=8   lr=0.0001  使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.72085 | avg acc: 0.46500
+                                                                                                                        epoch   1 step   200 | avg loss: 0.71178 | avg acc: 0.48688
+                                                                                                                        epoch   1 step   400 | avg loss: 0.71048 | avg acc: 0.49531 结果几乎不变。
+
+
 
 
 # 测试

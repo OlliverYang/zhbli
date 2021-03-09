@@ -105,20 +105,26 @@ class Conv_layer(nn.Module):
     def forward(self, 
                 neighbor_index: "(bs, vertice_num, neighbor_index)",
                 vertices: "(bs, vertice_num, 3)",
-                feature_map: "(bs, vertice_num, in_channel)"):
+                feature_map: "(bs, vertice_num, in_channel)",
+                stride=1):
         """
         Return: output feature map: (bs, vertice_num, out_channel)
         """
         bs, vertice_num, neighbor_num = neighbor_index.size()
-        assert neighbor_num == self.neighbor_num
-        neighbor_index = get_neighbor_index(vertices, neighbor_num)  # 目的：求当前点的邻居点。所谓邻居，指的是空间坐标点的邻居，而不是特征的邻居。
         neighbors = indexing_neighbor(feature_map, neighbor_index)
         neighbors = torch.cat((feature_map.unsqueeze(2), neighbors), 2)  # 把中心点放在邻居点最前面。
         neighbors = neighbors.permute([0, 3, 2, 1])  # 批次，通道数，邻居数，输入点数。
         neighbors = neighbors.reshape(neighbors.shape[0], -1, neighbors.shape[-1])
         result = (self.weights @ neighbors).transpose(1, 2) + self.bias
         feature_fuse = F.relu(result, inplace=False)
-        return feature_fuse
+        if stride == 1:
+            return feature_fuse
+        else:
+            pool_num = int(vertice_num / stride)
+            sample_idx = torch.randperm(vertice_num)[:pool_num]
+            vertices_pool = vertices[:, sample_idx, :]  # (bs, pool_num, 3) # 已经检查了该公式的正确性。
+            feature_map_pool = feature_fuse[:, sample_idx, :]  # (bs, pool_num, channel_num)
+            return vertices_pool, feature_map_pool
 
 
 class Pool_layer(nn.Module):
@@ -137,6 +143,16 @@ class Pool_layer(nn.Module):
         """
         bs, vertice_num, _ = vertices.size()
         neighbor_index = get_neighbor_index(vertices, self.neighbor_num)
+        neighbors = indexing_neighbor(feature_map, neighbor_index)
+        neighbors = torch.cat((feature_map.unsqueeze(2), neighbors), 2)  # 把中心点放在邻居点最前面。
+
+        pooled_feature = torch.max(neighbors, dim=2)[0]  # (bs, vertice_num, channel_num)
+
+        pool_num = int(vertice_num / self.pooling_rate)
+        sample_idx = torch.randperm(vertice_num)[:pool_num]
+        vertices_pool = vertices[:, sample_idx, :]  # (bs, pool_num, 3)
+        feature_map_pool = pooled_feature[:, sample_idx, :]  # (bs, pool_num, channel_num)
+        return vertices_pool, feature_map_pool
 
 def test():
     import time
