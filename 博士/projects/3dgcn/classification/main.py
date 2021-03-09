@@ -10,6 +10,24 @@ import sys
 sys.path.append("..")
 from util import Transform
 
+import random
+import numpy as np
+seed = 31415926
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-mode', default= 'train', help= '[train/test]')

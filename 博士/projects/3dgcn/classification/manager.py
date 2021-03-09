@@ -6,6 +6,24 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 
+import random
+import numpy as np
+seed = 31415926
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
+
+
 class Manager():
     def __init__(self, model, args):
         self.args_info = args.__str__()
@@ -41,11 +59,12 @@ class Manager():
             self.model.train()
             train_loss = 0
             train_label = LabelContainer()
-            print('dummy')
-            points = torch.rand([8, 1024, 3])
-            gt = torch.tensor([0,1]*4)
-            print('data dim:', points.shape[1])
-            for i, (_, _) in enumerate(train_data):
+            # print('dummy')
+            # points = torch.rand([64, 1024, 3])
+            # print('data_stamp:', torch.max(points).item(), torch.sum(points).item())
+            # gt = torch.tensor([0,1]*32)
+            # print('data dim:', points.shape[1])
+            for i, (points, gt) in enumerate(train_data):
                 points = points.to(self.device)
                 gt = gt.view(-1,).to(self.device)
                 out = self.model(points)

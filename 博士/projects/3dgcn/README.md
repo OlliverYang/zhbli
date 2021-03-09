@@ -90,7 +90,7 @@ dummy 1024  neighbor=32   batch=8   pooling_rate=2    取消减去相对位置 �
                                                                                                             epoch   1 step   500 | avg loss: 0.70255 | avg acc: 0.52675
                                                                                                             epoch   1 step   600 | avg loss: 0.70212 | avg acc: 0.52958
                                                                                                             epoch   1 step   700 | avg loss: 0.69918 | avg acc: 0.53482
-                                                                                                            epoch   1 step  2000 | avg loss: 0.28644 | avg acc: 0.82800
+                                                                                                            epoch   1 step  2000 | avg loss: 0.28644 | avg acc: 0.82800 加了池化明显不好。
 dummy 1024  neighbor=32   batch=8   使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.73268 | avg acc: 0.47625
                                                                                                             epoch   1 step   200 | avg loss: 0.71625 | avg acc: 0.50875
                                                                                                             epoch   1 step   400 | avg loss: 0.69033 | avg acc: 0.54406
@@ -111,13 +111,59 @@ dummy 1024  neighbor=16    batch=8   lr=0.001    使用步长卷积代池化   �
                                                                                                                         epoch   1 step   200 | avg loss: 0.32152 | avg acc: 0.82688 重复实验的结果，在收敛速度上差别很大。
                                                                                                                         epoch   1 step   400 | avg loss: 0.16418 | avg acc: 0.91312
                                                                                                                         epoch   1 step   800 | avg loss: 0.08257 | avg acc: 0.95656 效果非常好。
+dummy 1024  neighbor=16    batch=8   lr=0.001  无随机性  使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step   100 | avg loss: 0.70383 | avg acc: 0.54375 重复实验。
+                                                                                                                        epoch   1 step   200 | avg loss: 0.68881 | avg acc: 0.55812
+                                                                                                                        epoch   1 step   400 | avg loss: 0.65819 | avg acc: 0.59406
+                                                                                                                        epoch   1 step   800 | avg loss: 0.56377 | avg acc: 0.67063
+                                                                                                                        epoch   1 step  1230 | avg loss: 0.46526 | avg acc: 0.73709 不好。
+dummy 1024  neighbor=16    batch=8   lr=0.0001 无随机性    使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step  1230 | avg loss: 0.41363 | avg acc: 0.74228 不好
+dummy 1024  neighbor=16    batch=8   lr=0.0001 无随机性    删除卷积层         取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step   610 | avg loss: 0.26577 | avg acc: 0.84508 不如0.001好
+dummy 1024  neighbor=16    batch=8   lr=0.001 无随机性     删除卷积层          取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step   610 | avg loss: 0.17386 | avg acc: 0.90717 比0.0001好 data_stamp: 0.9999923706054688
+                                                                                                                                epoch   1 step   750 | avg loss: 0.14143 | avg acc: 0.92450
+
 dummy 1024  neighbor=16    batch=8   lr=0.0001  使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居   epoch   1 step   100 | avg loss: 0.72085 | avg acc: 0.46500
                                                                                                                         epoch   1 step   200 | avg loss: 0.71178 | avg acc: 0.48688
                                                                                                                         epoch   1 step   400 | avg loss: 0.71048 | avg acc: 0.49531 结果几乎不变。
+dummy 1024  neighbor=16    batch=16   lr=0.001  使用步长卷积代池化   取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居  epoch   1 step   100 | avg loss: 0.67735 | avg acc: 0.56437
+                                                                                                                        epoch   1 step   200 | avg loss: 0.63035 | avg acc: 0.62531
+                                                                                                                        epoch   1 step   400 | avg loss: 0.63685 | avg acc: 0.62406
+                                                                                                                        epoch   1 step   800 | avg loss: 0.58070 | avg acc: 0.67000
+                                                                                                                        epoch   1 step  1360 | avg loss: 0.59264 | avg acc: 0.65253
+-------------------------------------------以下略去 dummy 1024 取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居----------------
+neighbor=16 batch=16    lr=0.001 no_pooling 每个block仅一个卷积                    100 | avg loss: 0.60694 | avg acc: 0.65125  data_stamp: 0.9999923706054688 24471.76953125
+                                                                                200 | avg loss: 0.31789 | avg acc: 0.82219
+                                                                                400 | avg loss: 0.15927 | avg acc: 0.91109  结论：效果很理想。
 
+neighbor=16 batch=16    lr=0.001 no_pooling 第一个block4个卷积，其余block1个卷积    100 | avg loss: 0.71675 | avg acc: 0.51438   data_stamp: 0.9999923706054688 24471.76953125
+                                                                                200 | avg loss: 0.69785 | avg acc: 0.53187
+                                                                                400 | avg loss: 0.69891 | avg acc: 0.53734  结论：非常奇怪，增加卷积层反而不好。
 
+neighbor=8  batch=32    lr=0.001    no_pooling 每个block仅一个卷积                 100 | avg loss: 0.48556 | avg acc: 0.71625 data_stamp: 0.9999814033508301 49123.4453125
+                                                                                200 | avg loss: 0.24364 | avg acc: 0.85813
+                                                                                400 | avg loss: 0.12211 | avg acc: 0.92906 结论：效果很理想。
 
+neighbor=4  batch=64    lr=0.001    no_pooling 每个block仅一个卷积                 100 | avg loss: 0.49561 | avg acc: 0.70234  data_stamp: 0.9999972581863403 98198.875
+                                                                                200 | avg loss: 0.24824 | avg acc: 0.85117
+                                                                                400 | avg loss: 0.12428 | avg acc: 0.92559  结论：效果很理想。
+-------------------------------------------以下改为真实数据 略去学习率lr=0.001 取消减去相对位置 改为级联中心坐标   找点的邻居而不是特征的邻居----------------
+neighbor=4  batch=64                no_pooling 每个block仅一个卷积                 100 | avg loss: 3.45500 | avg acc: 0.11406  结论：程序bug死。
 
+neighbor=4  batch=32                no_pooling 每个block仅一个卷积                 100 | avg loss: 3.45630 | avg acc: 0.11281
+                                                                                200 | avg loss: 3.41580 | avg acc: 0.12375
+                                                                                epoch   2 step   100 | avg loss: 3.37902 | avg acc: 0.12375 结论：在acc=12左右就几乎不涨了。
+
+neighbor=4  batch=8                 no_pooling 每个block仅一个卷积                 100 | avg loss: 3.45062 | avg acc: 0.13375
+                                                                                200 | avg loss: 3.45842 | avg acc: 0.11438
+                                                                                400 | avg loss: 3.44299 | avg acc: 0.12219
+                                                                                800 | avg loss: 3.39614 | avg acc: 0.13328  结论：在acc=13左右就几乎不涨了。
+
+neighbor=4  batch=8                 no_pooling  第一个block4个卷积，其余block1个卷积 epoch   1 step   200 | avg loss: 3.48081 | avg acc: 0.10187
+                                                                                epoch   1 step   400 | avg loss: 3.46271 | avg acc: 0.11469 
+                                                                                epoch   1 step   800 | avg loss: 3.40886 | avg acc: 0.12875
+neighbor=4  batch=8                 第一次进行步长卷积   第一个block4个卷积，其余block1个卷积        epoch   1 step   100 | avg loss: 3.45818 | avg acc: 0.11875
+                                                                                            epoch   1 step   200 | avg loss: 3.46502 | avg acc: 0.10625
+                                                                                            epoch   1 step   400 | avg loss: 3.44572 | avg acc: 0.11625
+                                                                                            epoch   1 step   800 | avg loss: 3.40614 | avg acc: 0.12703 结论：进行池化也没啥影响。
 # 测试
 
 # TODO

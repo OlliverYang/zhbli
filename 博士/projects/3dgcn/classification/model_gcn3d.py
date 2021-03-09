@@ -5,6 +5,24 @@ import sys
 sys.path.append("../")
 import gcn3d 
 
+seed = 31415926
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+import random
+import numpy as np
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
+
+
 class GCN3D(nn.Module):
     def __init__(self, support_num: int, neighbor_num: int):
         super().__init__()
@@ -35,7 +53,7 @@ class GCN3D(nn.Module):
             nn.Dropout(0.3),
             nn.BatchNorm1d(256),
             nn.ReLU(inplace= True),
-            nn.Linear(256, 2)
+            nn.Linear(256, 40)
         )
 
     def forward(self,  vertices: "(bs, vertice_num, 3)"):
@@ -52,16 +70,16 @@ class GCN3D(nn.Module):
         neighbor_index = gcn3d.get_neighbor_index(vertices, self.neighbor_num)
 
         fm_2 = self.conv_2(neighbor_index, vertices, fm_1)
-        fm_2 = self.conv_2_2(neighbor_index, vertices, fm_2)
-        fm_2 = self.conv_2_3(neighbor_index, vertices, fm_2)
-        fm_2 = self.conv_2_4(neighbor_index, vertices, fm_2)
+        #fm_2 = self.conv_2_2(neighbor_index, vertices, fm_2)
+        #fm_2 = self.conv_2_3(neighbor_index, vertices, fm_2)
+        #fm_2 = self.conv_2_4(neighbor_index, vertices, fm_2)
         fm_3 = self.conv_3(neighbor_index, vertices, fm_2)
-        fm_3 = self.conv_3_2(neighbor_index, vertices, fm_3)
-        fm_3 = self.conv_3_3(neighbor_index, vertices, fm_3)
-        fm_3 = self.conv_3_4(neighbor_index, vertices, fm_3)
+        #fm_3 = self.conv_3_2(neighbor_index, vertices, fm_3)
+        #fm_3 = self.conv_3_3(neighbor_index, vertices, fm_3)
+        #fm_3 = self.conv_3_4(neighbor_index, vertices, fm_3)
 
-        vertices, fm_3 = self.pool_2(neighbor_index, vertices, fm_3, stride=self.stride)
-        neighbor_index = gcn3d.get_neighbor_index(vertices, self.neighbor_num)
+        #vertices, fm_3 = self.pool_2(neighbor_index, vertices, fm_3, stride=self.stride)
+        #neighbor_index = gcn3d.get_neighbor_index(vertices, self.neighbor_num)
         
         fm_4 = self.conv_4(neighbor_index, vertices, fm_3)
         fm_4 = self.conv_4_2(neighbor_index, vertices, fm_4)
