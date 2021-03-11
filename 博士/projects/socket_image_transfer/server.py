@@ -10,7 +10,7 @@ Created on Fri Dec 13 11:54:19 2019
 @author: hoang
 @description: This server code aims to transfer the files in fileList to client via socket
 """
-print('要想传输成功，必须要ping通ip地址')
+
 import socket
 from os import listdir
 from re import findall
