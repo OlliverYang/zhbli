@@ -8,7 +8,7 @@ Created on Fri Dec 13 13:12:56 2019
 Created on Fri Dec 13 11:54:37 2019
 @author: hoang
 """
-
+print('要想传输成功，必须要ping通ip地址')
 import socket
 def wait_for_acknowledge(client,response):
     """
