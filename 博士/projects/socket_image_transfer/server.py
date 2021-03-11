@@ -36,8 +36,9 @@ fileList = [file for file in listdir() if findall(r'.jpg',file) != []]  #include
 #fileList = ['jihyo.jpg','dami.jpg','uju.jpg']   #images to be sent over to client
 
 #initiate connection    
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_addr = (socket.gethostname(), 2019)  #change here for sending to another machine in LAN
+s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM, 0)
+server_addr = ('2400:dd01:1032:2015:5029:527d:5095:6757', 2019, 0, 0)  #change here for sending to another machine in LAN
+print(server_addr)
 s.bind(server_addr)
 s.listen(5)
 

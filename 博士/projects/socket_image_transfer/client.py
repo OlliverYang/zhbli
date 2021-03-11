@@ -26,9 +26,9 @@ def wait_for_acknowledge(client,response):
     return msg
 
 #initiate connection
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client = socket.socket(socket.AF_INET6, socket.SOCK_STREAM, 0)
 
-server_addr = (socket.gethostname(), 2019)  #change here for sending to another machine in LAN
+server_addr = ('2400:dd01:1032:2015:5029:527d:5095:6757', 2019, 0, 0)  #change here for sending to another machine in LAN
 client.connect(server_addr)
 print(f"Connected to server!")
 
