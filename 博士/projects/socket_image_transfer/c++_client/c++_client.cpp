@@ -1,73 +1,62 @@
-
-#include <winsock2.h>//winsockµÄÍ·ÎÄ¼þ
-#include <ws2tcpip.h>//sockaddr_in6µÄÍ·ÎÄ¼þ
+ï»¿#include <stdio.h>
 #include <iostream>
-using  namespace  std;
+#include <stdlib.h>
+#include <WinSock2.h>
+#include <cv.h>
+#include <highgui.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+using namespace cv;
+using namespace std;
+#pragma comment(lib, "ws2_32.lib")
+#define FRAME_WIDTH         640
+#define FRAME_HEIGHT        480
 
-//Ö¸¶¨¶¯Ì¬¿âµÄlibÎÄ¼þ
-#pragma comment(lib,"ws2_32.lib")
 
-
-//TCP¿Í»§¶Ë
 int main() {
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+	SOCKET sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+	sockaddr_in sockAddr;
+	memset(&sockAddr, 0, sizeof(sockAddr));
+	sockAddr.sin_family = PF_INET;
+	sockAddr.sin_addr.s_addr = inet_addr("172.18.32.31");
+	sockAddr.sin_port = htons(2019);
 
-	//³õÊ¼»¯winsock2.2Ïà¹ØµÄ¶¯Ì¬¿â
-	WSADATA  wd;//»ñÈ¡socketÏà¹ØÐÅÏ¢
-	if (WSAStartup(MAKEWORD(2, 2), &wd) != 0)//0±íÊ¾³É¹¦
+	if (connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR)) < 0)
+		printf("ERROR connecting");
+	else
+		printf("SUCCESS connecting");
+	
+	int IM_HEIGHT, IM_WIDTH, imgSize, n, counter = 0;
+
+	while (true)
 	{
-		cout << "WSAStartup  error:" << WSAGetLastError() << endl;
-		return 0;
+		counter = counter + 1;
+		Mat cameraFeed;
+		if (counter % 2 == 1) {
+			cameraFeed = Mat::ones(FRAME_HEIGHT, FRAME_WIDTH, CV_8UC3);
+		}
+		else
+			cameraFeed = Mat::zeros(FRAME_HEIGHT, FRAME_WIDTH, CV_8UC3);
+		int height = cameraFeed.rows;
+		int width = cameraFeed.cols;
+
+		Mat cropped = Mat(cameraFeed, Rect(width / 2 - width / 7,
+			height / 2 - height / 9,
+			2 * width / 7, 2 * height / 7));
+		cameraFeed = cropped;
+
+		IM_HEIGHT = FRAME_HEIGHT;
+		IM_WIDTH = FRAME_WIDTH;
+
+		resize(cameraFeed, cameraFeed, Size(IM_WIDTH, IM_HEIGHT));
+
+		imgSize = cameraFeed.total()*cameraFeed.elemSize();
+		n = send(sock, (char*)cameraFeed.data, imgSize, 0);
+		if (n < 0) printf("ERROR writing to socket");
 	}
-
-	//1.´´½¨TCP   socket , Á÷Ê½Ì×½Ó×Ö, AF_INET¸ÄÎªAF_INET6
-	SOCKET   s = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
-	if (s == INVALID_SOCKET) {
-		cout << "socket  error:" << WSAGetLastError() << endl;
-		return 0;
-	}
-
-	//2.Á´½Ó·þÎñ¶Ë
-	sockaddr_in6   addr;//²»½¨ÒéÊ¹ÓÃsockaddr£¬½¨ÒéÓÃsockaddr_in
-	memset(&addr, 0, sizeof(sockaddr_in6)); //ÖØµã£¬·ñÔò¾Í10049´íÎó
-	addr.sin6_port = htons(8890);//ÍøÂç×Ö½ÚÐò 
-
-								 //addr.sin6_addr = inet_addr("127.0.0.1");//°ó¶¨Ö¸¶¨µØÖ·£¬ ipv4
-	inet_pton(AF_INET6, "0:0:0:0:0:0:0:1", &addr.sin6_addr);//°ó¶¨Ö¸¶¨µØÖ·£¬ ipv6  ¸ñÊ½ /*"fe80::ce6:3cc:f93a:4203%5",*/
-
-	addr.sin6_family = AF_INET6; //µØÖ·×å
-	int len = sizeof(sockaddr_in6);//½á¹¹´óÐ¡¸Ä±äsizeof(sockaddr_in6)
-
-	if (connect(s, (sockaddr*)&addr, len) == SOCKET_ERROR) {
-		cout << "connect  error:" << WSAGetLastError() << endl;
-		return 0;
-	}
-
-	//3.½ÓÊÜ·¢ËÍÏûÏ¢
-	int  ret = 0;
-	do {
-		//½ÓÊÜ¿Í»§¶ËµÄÏûÏ¢
-		char buf[64] = { '\0' };
-		ret = recv(s, buf, 64, 0);//°ÑflagÖÃ0
-
-		char ipbuf[100] = { 0 };
-		inet_ntop(AF_INET6, (LPVOID)&addr.sin6_addr, ipbuf, 100);
-
-		cout << "recv	" << ipbuf << ":    " << buf << endl;// inet_ntoa×ª»»ÎªIP×Ö·û´®
-		char *str = "I am Client!";
-		//·¢ËÍ
-		ret = send(s, str, strlen(str), 0);
-
-		Sleep(1000);
-	} while (ret != SOCKET_ERROR &&  ret != 0);
-
-
-	//4.¹Ø±ÕÌ×½Ó×Ö
-	closesocket(s);
-
-	//ÇåÀíwinsock»·¾³
-	WSACleanup();
-
-
-	return   0;
+	return 0;
 }
-
