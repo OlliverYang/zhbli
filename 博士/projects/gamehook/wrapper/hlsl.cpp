@@ -563,15 +563,15 @@ struct SHDR {
 	struct Operation {
 		struct Operand {
 			enum Component {
-				X = 1,
-				Y = 2,
-				Z = 4,
-				W = 8,
+				X,
+				Y,
+				Z,
+				W,
 			};
-			uint8_t component_mask = 0; // Bitmask of components used
-			uint8_t type = 0; // Operand type (0: Temp, 1: input, 2: output, 3: indextemp, ..., 7: Resource, 8: CB, ...
-			uint64_t index[3] = { 0,0,0 };
-			uint32_t op_no = 0;
+			uint8_t component_mask; // Bitmask of components used
+			uint8_t type; // Operand type (0: Temp, 1: input, 2: output, 3: indextemp, ..., 7: Resource, 8: CB, ...
+			uint64_t index[3];
+			uint32_t op_no;
 		};
 	protected:
 		template<bool can_edit>

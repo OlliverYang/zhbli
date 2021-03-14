@@ -84,7 +84,7 @@ public:
 	struct Buffer {
 		struct Variable {
 			std::string name, type;
-			uint32_t offset = 0;
+			uint32_t offset;
 		};
 		std::string name;
 		uint32_t bind_point;
