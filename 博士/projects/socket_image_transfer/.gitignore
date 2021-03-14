@@ -10,3 +10,4 @@
 *.filters
 *.idb
 *.vcxproj
+.idea/

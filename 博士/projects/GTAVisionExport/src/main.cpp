@@ -19,6 +19,13 @@
 #include <d3dcompiler.h>
 #include <vector>
 #include <Eigen/Core>
+#include <cv.h>
+#include <highgui.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <stdio.h>
+#include <iostream>
+#include <fstream>
+using namespace cv;
 using Microsoft::WRL::ComPtr;
 using namespace std::experimental::filesystem;
 using namespace std::string_literals;
@@ -96,6 +103,7 @@ int __stdcall DllMain(HMODULE hinstance, DWORD reason, LPVOID lpReserved)
 
 void OnKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
+	int width = 1024, height = 768;
 	if(key == 'L' && !wasDownBefore && !isUpNow)
 	{
 		auto f = fopen("depth.raw", "w");
@@ -107,11 +115,10 @@ void OnKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, 
 		size = export_get_stencil_buffer(&buf);
 		fwrite(buf, 1, size, f);
 		fclose(f);
-		f = fopen("color.raw", "w");
 		size = export_get_color_buffer(&buf);
-		fwrite(buf, 1, size, f);
-		fclose(f);
-
+		Mat image_color(Size(width, height), CV_8UC4, buf, Mat::AUTO_STEP); //注意，这里是四通道
+		cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？
+		imwrite("img.jpg", image_color);
 	}
 
 }

@@ -30,7 +30,7 @@ int main() {
 	else
 		printf("SUCCESS connecting");
 	
-	int IM_HEIGHT, IM_WIDTH, imgSize, n, counter = 0;
+	int IM_HEIGHT, IM_WIDTH, n, counter = 0;
 
 	while (true)
 	{
@@ -40,7 +40,7 @@ int main() {
 			cameraFeed = Mat::ones(FRAME_HEIGHT, FRAME_WIDTH, CV_8UC3);
 		}
 		else
-			cameraFeed = Mat::zeros(FRAME_HEIGHT, FRAME_WIDTH, CV_8UC3);
+			cameraFeed = Mat::zeros(FRAME_HEIGHT, FRAME_WIDTH, CV_8UC1);
 		int height = cameraFeed.rows;
 		int width = cameraFeed.cols;
 
@@ -54,7 +54,7 @@ int main() {
 
 		resize(cameraFeed, cameraFeed, Size(IM_WIDTH, IM_HEIGHT));
 
-		imgSize = cameraFeed.total()*cameraFeed.elemSize();
+		int imgSize = cameraFeed.total()*cameraFeed.elemSize();
 		n = send(sock, (char*)cameraFeed.data, imgSize, 0);
 		if (n < 0) printf("ERROR writing to socket");
 	}
