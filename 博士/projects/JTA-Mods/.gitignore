@@ -1,0 +1,15 @@
+*.user
+*.opendb
+*.db
+*.obj
+*.tlog
+*.idb
+*.pdb
+*.asi
+*.ilk
+*.log
+.vs/
+*.zip
+*.cd
+*.exp
+*.lib
