@@ -50,6 +50,7 @@ def start_server():
         af, socktype, proto, canonname, sa = res
         try:
             s = socket.socket(af, socktype, proto)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 尝试解决 [Errno 98] Address already in use
         except socket.error as msg:
             print(msg)
             s = None
@@ -67,8 +68,10 @@ def start_server():
         print('could not open socket')
         sys.exit(1)
     conn_, addr = s.accept()
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 尝试解决 [Errno 98] Address already in use
+
     print('Connected by', addr)
+    conn_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 尝试解决 [Errno 98] Address already in use
+    conn_.settimeout(3.0)  # 为 recv 设置最大接受时间
     return conn_
 
 
@@ -101,6 +104,7 @@ def get_one_data(conn_):
     while color_size:
         nbytes = conn_.recv(color_size)
         if not nbytes:
+            print('color no nbytes')
             break
         sockData_color += nbytes
         color_size -= len(nbytes)
