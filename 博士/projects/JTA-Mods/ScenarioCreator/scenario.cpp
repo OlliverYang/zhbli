@@ -618,7 +618,7 @@ void ScenarioCreator::stopControl()
 	}
 }
 
-void ScenarioCreator::show_text(std::string caption) {
+void ScenarioCreator::show_text(std::string caption) {//貌似不能更新文字
 	const float lineWidth = 500.0;
 	while (true) {
 		draw_menu_line(caption, lineWidth, mHeight, mHeight * 2, mLeft, mTitle, false, true);
@@ -631,9 +631,10 @@ void ScenarioCreator::generate_car()
 {
 	VEHICLE::SET_ALL_VEHICLE_GENERATORS_ACTIVE();
 	Ped playerPed = PLAYER::PLAYER_PED_ID();
-	Vector3 coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
-	DWORD model = GAMEPLAY::GET_HASH_KEY((char *)"MICHAEL");
-	Vehicle veh = VEHICLE::CREATE_VEHICLE(model, coords.x, coords.y, coords.z, 0.0, 1, 1);
+	//Vector3 coords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0.0, 5.0, 0.0);
+	Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+	DWORD model = GAMEPLAY::GET_HASH_KEY((char *)"ROCKET");
+	Vehicle veh = VEHICLE::CREATE_VEHICLE(model, coords.x, coords.y, coords.z, 1, 0, 0);
 	VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh);
 	std::ostringstream ss;
 	ss << model << ", " << veh;
@@ -683,13 +684,98 @@ void ScenarioCreator::listen_for_keystrokes() {
 
 	//clear log string
 	if (IsKeyJustUp(VK_F11)) {
-		logString[0] = '\0';
+		ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
+		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
+		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
+		//generate_car();
+		int i_zhbli = 0;
+		while (true) {
+			i_zhbli = i_zhbli - 2;
+			int max_health = ENTITY::GET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID());
+			int now_health = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID());
+			std::ostringstream ss;
+			ss << i_zhbli << ", " <<  max_health << ", " << now_health;
+			std::string caption(ss.str());
+			show_text(caption);
+			UI::DISPLAY_HELP_TEXT_THIS_FRAME((char*)caption.c_str(), 0); // 无效 **The bool appears to always be false (if it even is a bool, as it's represented by a zero)**  
+			
+			//UI::_SET_TEXT_ENTRY((char*)caption.c_str());
+			//UI::_DRAW_TEXT(500, 500);//无效
+
+			UI::_SET_TEXT_ENTRY((char*)"STRING");
+			UI::_ADD_TEXT_COMPONENT_STRING((LPSTR)caption.c_str());
+			UI::_DRAW_TEXT(500, 500);
+
+			WAIT(20);
+		}
+
 	}
 
 	//Show MainMenu (with F5)
 	if (IsKeyJustUp(VK_F5)) {
 		while (true){  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
-			WAIT(20);
+			WAIT(200);
+
+			//角色不被通缉
+			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+			//Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect
+			//wantedLevel is an integer value representing 0 to 5 stars even though the game supports the 6th wanted level but no police will appear since no definitions are present for it in the game files
+			//disableNoMission - Disables When Off Mission - appears to always be false
+			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+			//Forces any pending wanted level to be applied to the specified player immediately.  
+			//Call SET_PLAYER_WANTED_LEVEL with the desired wanted level, followed by SET_PLAYER_WANTED_LEVEL_NOW.
+			//Second parameter is unknown(always false).
+
+			//角色血量不下降
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 200);
+			/*
+			health >= 0
+			male ped ~= 100 - 200
+			female ped ~= 0 - 100
+			because something.
+			*/
+			PED::SET_PED_DIES_WHEN_INJURED(PLAYER::PLAYER_PED_ID(), 0);
+			//以上两句无用
+			ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
+			ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
+
+			//车辆血量不下降
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000);
+			/*
+			Returns 1000.0 if the function is unable to get the address of the specified vehicle or if it's not a vehicle.  
+			Minimum: -4000  
+			Maximum: 1000  
+			-4000: Engine is destroyed  
+			0 and below: Engine catches fire and health rapidly declines  
+			300: Engine is smoking and losing functionality  
+			1000: Engine is perfect  
+			*/
+			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000);
+			//1000 is max health. Begins leaking gas at around 650 health
+			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000);
+			// p2 often set to 1000.0 in the decompiled scripts.  
+
+			//是否在车内
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) == FALSE)
+			/*
+			Parameters:
+				ped: The ped to check.
+				atGetIn: true to also consider attempting to enter a vehicle.
+			Returns:
+				Whether or not the ped is currently involved in any vehicle.
+				Returns whether the specified ped is in any vehicle. If atGetIn is set to true, also returns true if the ped is currently in the process of entering a vehicle (a specific stage check for CTaskEnterVehicle).
+			*/
+			{
+			    std::ostringstream ss;
+			    ss << "log.txt";
+			    std::string caption(ss.str());
+				f = fopen(caption.c_str(), "a");
+				fprintf_s(f, "%s", (char*)"NOT IN CAR\n");
+				fclose(f);
+			}
+
 			//保存画面
 			void *buf_color;
 			size = export_get_color_buffer(&buf_color);
@@ -697,7 +783,11 @@ void ScenarioCreator::listen_for_keystrokes() {
 			cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？ important
 			imgSize = image_color.total()*image_color.elemSize();
 			n = send(sock, (char*)image_color.data, imgSize, 0);
-			if (n < 0) printf("ERROR writing to socket");
+			if (n < 0) {
+				f = fopen("log.txt", "a");
+				fprintf_s(f, "%s", (char*)"ERROR writing to socket");
+				fclose(f);
+			}
 
 			char szBuffer[MAXBYTE] = { 0 };
 			recv(sock, szBuffer, MAXBYTE, NULL);
