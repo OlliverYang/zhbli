@@ -14,6 +14,7 @@
 #include <direct.h>
 #include <io.h>
 #include <cmath>
+#include <ctime>
 #include "math.h"
 #include <opencv2/imgproc/imgproc.hpp>
 #pragma comment(lib, "ws2_32.lib")
@@ -679,41 +680,8 @@ void ScenarioCreator::listen_for_keystrokes() {
 		else
 			printf("SUCCESS connecting");
 		/////////////创建 socket//////////////////
-		
-	}
 
-	//clear log string
-	if (IsKeyJustUp(VK_F11)) {
-		ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
-		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
-		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
-		//generate_car();
-		int i_zhbli = 0;
-		while (true) {
-			i_zhbli = i_zhbli - 2;
-			int max_health = ENTITY::GET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID());
-			int now_health = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID());
-			std::ostringstream ss;
-			ss << i_zhbli << ", " <<  max_health << ", " << now_health;
-			std::string caption(ss.str());
-			show_text(caption);
-			UI::DISPLAY_HELP_TEXT_THIS_FRAME((char*)caption.c_str(), 0); // 无效 **The bool appears to always be false (if it even is a bool, as it's represented by a zero)**  
-			
-			//UI::_SET_TEXT_ENTRY((char*)caption.c_str());
-			//UI::_DRAW_TEXT(500, 500);//无效
-
-			UI::_SET_TEXT_ENTRY((char*)"STRING");
-			UI::_ADD_TEXT_COMPONENT_STRING((LPSTR)caption.c_str());
-			UI::_DRAW_TEXT(500, 500);
-
-			WAIT(20);
-		}
-
-	}
-
-	//Show MainMenu (with F5)
-	if (IsKeyJustUp(VK_F5)) {
-		while (true){  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
+		while (true) {  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
 			WAIT(200);
 
 			//角色不被通缉
@@ -744,13 +712,13 @@ void ScenarioCreator::listen_for_keystrokes() {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000);
 			/*
-			Returns 1000.0 if the function is unable to get the address of the specified vehicle or if it's not a vehicle.  
-			Minimum: -4000  
-			Maximum: 1000  
-			-4000: Engine is destroyed  
-			0 and below: Engine catches fire and health rapidly declines  
-			300: Engine is smoking and losing functionality  
-			1000: Engine is perfect  
+			Returns 1000.0 if the function is unable to get the address of the specified vehicle or if it's not a vehicle.
+			Minimum: -4000
+			Maximum: 1000
+			-4000: Engine is destroyed
+			0 and below: Engine catches fire and health rapidly declines
+			300: Engine is smoking and losing functionality
+			1000: Engine is perfect
 			*/
 			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000);
 			//1000 is max health. Begins leaking gas at around 650 health
@@ -759,31 +727,45 @@ void ScenarioCreator::listen_for_keystrokes() {
 
 			//是否在车内
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) == FALSE)
-			/*
-			Parameters:
+				/*
+				Parameters:
 				ped: The ped to check.
 				atGetIn: true to also consider attempting to enter a vehicle.
-			Returns:
+				Returns:
 				Whether or not the ped is currently involved in any vehicle.
 				Returns whether the specified ped is in any vehicle. If atGetIn is set to true, also returns true if the ped is currently in the process of entering a vehicle (a specific stage check for CTaskEnterVehicle).
-			*/
+				*/
 			{
-			    std::ostringstream ss;
-			    ss << "log.txt";
-			    std::string caption(ss.str());
+				// 基于当前系统的当前日期/时间
+				time_t now = time(0);
+				// 把 now 转换为字符串形式
+				char* dt = ctime(&now);
+
+				std::ostringstream ss;
+				ss << "log.txt";
+				std::string caption(ss.str());
 				f = fopen(caption.c_str(), "a");
-				fprintf_s(f, "%s", (char*)"NOT IN CAR\n");
+				fprintf_s(f, "%s", string(dt) + " NOT IN CAR\n");
 				fclose(f);
 			}
 
 			//保存画面
 			void *buf_color;
 			size = export_get_color_buffer(&buf_color);
+			if (size <= 0) {
+				// 基于当前系统的当前日期/时间
+				time_t now = time(0);
+				// 把 now 转换为字符串形式
+				char* dt = ctime(&now);
+				f = fopen("log.txt", "a");
+				fprintf_s(f, "%s", string(dt) + " BUFFER SIZE IS 0\n");
+				fclose(f);
+			}
 			Mat image_color(Size(width, height), CV_8UC4, buf_color, Mat::AUTO_STEP); //注意，这里是四通道
 			cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？ important
 			imgSize = image_color.total()*image_color.elemSize();
 			n = send(sock, (char*)image_color.data, imgSize, 0);
-			if (n < 0) {
+			if (n <= 0) {
 				f = fopen("log.txt", "a");
 				fprintf_s(f, "%s", (char*)"ERROR writing to socket");
 				fclose(f);
@@ -815,6 +797,36 @@ void ScenarioCreator::listen_for_keystrokes() {
 				}
 			}
 		}
+		
+	}
+
+	//clear log string
+	if (IsKeyJustUp(VK_F11)) {
+		ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
+		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
+		ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
+		//generate_car();
+		int i_zhbli = 0;
+		while (true) {
+			i_zhbli = i_zhbli - 2;
+			int max_health = ENTITY::GET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID());
+			int now_health = ENTITY::GET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID());
+			std::ostringstream ss;
+			ss << i_zhbli << ", " <<  max_health << ", " << now_health;
+			std::string caption(ss.str());
+			show_text(caption);
+			UI::DISPLAY_HELP_TEXT_THIS_FRAME((char*)caption.c_str(), 0); // 无效 **The bool appears to always be false (if it even is a bool, as it's represented by a zero)**  
+			
+			//UI::_SET_TEXT_ENTRY((char*)caption.c_str());
+			//UI::_DRAW_TEXT(500, 500);//无效
+
+			UI::_SET_TEXT_ENTRY((char*)"STRING");
+			UI::_ADD_TEXT_COMPONENT_STRING((LPSTR)caption.c_str());
+			UI::_DRAW_TEXT(500, 500);
+
+			WAIT(20);
+		}
+
 	}
 
 	if (menuActive) {
