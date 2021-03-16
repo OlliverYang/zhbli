@@ -1,9 +1,0 @@
-[submodule "simulator/external/bps3D"]
-	path = simulator/external/bps3D
-	url = https://github.com/shacklettbp/bps3D.git
-[submodule "simulator/external/pybind11"]
-	path = simulator/external/pybind11
-	url = https://github.com/pybind/pybind11.git
-[submodule "simulator/external/simdjson"]
-	path = simulator/external/simdjson
-	url = https://github.com/simdjson/simdjson.git
