@@ -16,6 +16,7 @@ import torch.nn.functional as F
 import torchvision.transforms as T
 import os
 import argparse
+import time
 
 
 HOST = '172.18.32.31'  # Symbolic name meaning all available interfaces
@@ -27,14 +28,14 @@ FRAME_HEIGHT = 768
 GPU_ID = 1
 LR = 0.1
 
-os.environ["CUDA_VISIBLE_DEVICES"] = str(GPU_ID)
-
 
 parser = argparse.ArgumentParser(description='GTA5')
 parser.add_argument('--save_dir', type=str, default='/tmp')
 parser.add_argument('--resume', type=int, default=0)
 parser.add_argument('--dummy', type=int, default=0)
+parser.add_argument('--gpu_id', type=str, default='1')
 args = parser.parse_args()
+os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 print(args)
 
 
@@ -71,7 +72,7 @@ def start_server():
 
     print('Connected by', addr)
     conn_.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 尝试解决 [Errno 98] Address already in use
-    conn_.settimeout(3.0)  # 为 recv 设置最大接受时间
+    conn_.settimeout(10.0)  # 为 recv 设置最大接受时间
     return conn_
 
 
@@ -86,12 +87,12 @@ def socketToNumpy(data, sockData):
 
 
 def get_one_data_dummy():
-    img = np.ones((768, 1024, 3), dtype=np.uint8) * 255
-    mask = np.ones((768, 1024), dtype=np.int)
+    img = cv2.imread('/tmp/1.jpg')
+    mask = cv2.imread('/tmp/1.png')[:, :, 0]
     return img, mask
 
 
-def get_one_data(conn_):
+def get_one_data(conn_, old_img, old_mask, old_index):
     color = np.zeros((FRAME_HEIGHT, FRAME_WIDTH, 3), np.uint8)
     color_size = color.size
     mask = np.zeros((FRAME_HEIGHT, FRAME_WIDTH, 1), np.uint8)
@@ -102,7 +103,15 @@ def get_one_data(conn_):
 
     print('receiving color...')
     while color_size:
-        nbytes = conn_.recv(color_size)
+        try:
+            nbytes = conn_.recv(color_size)
+        except Exception as e:
+            localtime = time.asctime(time.localtime(time.time()))
+            print(old_index, localtime, e)
+            cv2.imwrite(os.path.join(args.save_dir, '{}.jpg'.format(old_index)), old_img)
+            cv2.imwrite(os.path.join(args.save_dir, '{}.png'.format(old_index)), old_mask)
+            nbytes = None
+
         if not nbytes:
             print('color no nbytes')
             break
@@ -193,7 +202,7 @@ while True:
             print('dummy data')
             image_np, target_np = get_one_data_dummy()
         else:
-            image_np, target_np = get_one_data(conn)
+            image_np, target_np = get_one_data(conn, image_np, target_np, i)
         target_np[target_np >= NUM_CLASSES] = 0
         if image_np is None:
             save_path = '/tmp/{}.pth'.format(i)
