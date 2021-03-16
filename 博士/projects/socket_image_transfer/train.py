@@ -114,6 +114,7 @@ def get_one_data(conn_, old_img, old_mask, old_index):
 
         if not nbytes:
             print('color no nbytes')
+            result = False
             break
         sockData_color += nbytes
         color_size -= len(nbytes)

@@ -633,8 +633,8 @@ void ScenarioCreator::listen_for_keystrokes() {
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
 			AI::TASK_VEHICLE_DRIVE_WANDER(playerPed, veh, 80.0, 2);  // mode = 2 时横冲直撞。=1时不会。
 			ss << veh;
-			ENTITY::SET_ENTITY_VISIBLE(playerPed, FALSE, true);
-			ENTITY::SET_ENTITY_VISIBLE(veh, FALSE, true);
+			//ENTITY::SET_ENTITY_VISIBLE(playerPed, FALSE, true);
+			//ENTITY::SET_ENTITY_VISIBLE(veh, FALSE, true);
 		}
 		else {
 			ss << "player isn't in a vehicle";
@@ -726,6 +726,8 @@ void ScenarioCreator::listen_for_keystrokes() {
 
 			//保存画面
 			void *buf_color;
+			fprintf_s(f, "%s", (char*)"START export_get_color_buffer ...\t");
+			fflush(f);
 			size = export_get_color_buffer(&buf_color);
 			if (size <= 0) {
 				fprintf_s(f, "%s", (char*)" BUFFER SIZE IS 0\t");
