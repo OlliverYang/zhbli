@@ -23,8 +23,8 @@ double time() {
 	return std::chrono::duration<double>(now.time_since_epoch()).count();
 }
 struct CaptureSettings {
-	int W = 800, H = 600;
-	float fps = 0;
+	int W = 1024, H = 768;
+	float fps = 2;
 	int frame_buffer_size = 10;
 	int info_buffer_size = 1000;
 	std::vector<std::string> targets;
