@@ -1,0 +1,11 @@
+/build
+/simulator/python/bps_sim/*
+!/simulator/python/bps_sim/setup.py
+/simulator/python/bps_pytorch/*
+!/simulator/python/bps_pytorch/setup.py
+/data
+/*egg-info
+/*log
+/tb
+__pycache__
+/textures
