@@ -492,31 +492,6 @@ void showSpeed(std::ofstream& outFile)
 
 ScenarioCreator::ScenarioCreator() {}
 
-void saveFile()
-{
-	std::string fname = "";
-	int stop = 0;
-
-	if (stopCoords)
-		stop = 1;
-
-	fname = fname + std::string(filesPath) + std::string(fileName);
-	f = fopen(fname.c_str(), "w");
-
-	if (camMoving)
-		fprintf_s(f, "%d %f %f %f %d %f %f %f %f %f %f\n", (int)camMoving, A.x, A.y, A.z, stop, B.x, B.y, B.z, C.x, C.y, C.z);
-	else
-		fprintf_s(f, "%d %f %f %f %d %f %f %f\n", (int)camMoving, camCoords.x, camCoords.y, camCoords.z, stop, camRot.x, camRot.y, camRot.z);
-
-	fprintf_s(f, "%f %f %f %f %f %f\n", TP1.x, TP1.y, TP1.z, TP1_rot.x, TP1_rot.y, TP1_rot.z);
-	fprintf_s(f, "%f %f %f %f %f %f\n", TP2.x, TP2.y, TP2.z, TP2_rot.x, TP2_rot.y, TP2_rot.z);
-
-	fprintf_s(f, "%s", logString);
-	fclose(f);
-
-	fname = fname + "  SAVED!";
-	set_status_text(fname);
-}
 
 int readLine(FILE *f, Vector3 *pos)
 {
@@ -681,8 +656,17 @@ void ScenarioCreator::listen_for_keystrokes() {
 			printf("SUCCESS connecting");
 		/////////////创建 socket//////////////////
 
+		f = fopen("log.txt", "a");
 		while (true) {  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
 			WAIT(200);
+
+			//保存时间
+			// 基于当前系统的当前日期/时间
+			time_t now = time(0);
+			// 把 now 转换为字符串形式
+			char* dt = ctime(&now);
+			fprintf_s(f, "%s", dt);
+			fflush(f);
 
 			//角色不被通缉
 			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
@@ -736,39 +720,36 @@ void ScenarioCreator::listen_for_keystrokes() {
 				Returns whether the specified ped is in any vehicle. If atGetIn is set to true, also returns true if the ped is currently in the process of entering a vehicle (a specific stage check for CTaskEnterVehicle).
 				*/
 			{
-				// 基于当前系统的当前日期/时间
-				time_t now = time(0);
-				// 把 now 转换为字符串形式
-				char* dt = ctime(&now);
-
-				std::ostringstream ss;
-				ss << "log.txt";
-				std::string caption(ss.str());
-				f = fopen(caption.c_str(), "a");
-				fprintf_s(f, "%s", string(dt) + " NOT IN CAR\n");
-				fclose(f);
+				fprintf_s(f, "%s", (char*)" NOT IN CAR\t");
+				fflush(f);
 			}
 
 			//保存画面
 			void *buf_color;
 			size = export_get_color_buffer(&buf_color);
 			if (size <= 0) {
-				// 基于当前系统的当前日期/时间
-				time_t now = time(0);
-				// 把 now 转换为字符串形式
-				char* dt = ctime(&now);
-				f = fopen("log.txt", "a");
-				fprintf_s(f, "%s", string(dt) + " BUFFER SIZE IS 0\n");
-				fclose(f);
+				fprintf_s(f, "%s", (char*)" BUFFER SIZE IS 0\t");
+				fflush(f);
+			}
+			else {
+				std::stringstream ss;
+				ss << " BUFFER SIZE IS " << size;
+				fprintf_s(f, "%s", ss.str().c_str());
+				fflush(f);
 			}
 			Mat image_color(Size(width, height), CV_8UC4, buf_color, Mat::AUTO_STEP); //注意，这里是四通道
 			cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？ important
 			imgSize = image_color.total()*image_color.elemSize();
 			n = send(sock, (char*)image_color.data, imgSize, 0);
 			if (n <= 0) {
-				f = fopen("log.txt", "a");
 				fprintf_s(f, "%s", (char*)"ERROR writing to socket");
-				fclose(f);
+				fflush(f);
+			}
+			else {
+				std::stringstream ss1;
+				ss1 << " SOCKET SIZE IS " << n;
+				fprintf_s(f, "%s",ss1.str().c_str());
+				fflush(f);
 			}
 
 			char szBuffer[MAXBYTE] = { 0 };
@@ -796,6 +777,7 @@ void ScenarioCreator::listen_for_keystrokes() {
 					break;
 				}
 			}
+			fprintf_s(f, "%s", (char*)"\n");
 		}
 		
 	}
@@ -2065,69 +2047,6 @@ void ScenarioCreator::walking_peds()
 	}
 }
 
-void ScenarioCreator::loadFile()
-{
-	char fname[50] = "";
-	strcat(fname, filesPath);
-	strcat(fname, fileName);
-	f = fopen(fname, "r");
-	Vector3 cCoords, cRot;
-	Vector3 vTP1, vTP2, vTP1_rot, vTP2_rot;
-	int camMov;
-
-	int stop;
-	fscanf_s(f, "%d ", &camMov);
-	if (camMov == 0)
-		fscanf_s(f, "%f %f %f %d %f %f %f\n", &cCoords.x, &cCoords.y, &cCoords.z, &stop, &cRot.x, &cRot.y, &cRot.z);
-
-	for (int i = 0; i < 10; i++) {
-		Ped p = PED::CREATE_RANDOM_PED(cCoords.x, cCoords.y, cCoords.z);
-		ENTITY::SET_PED_AS_NO_LONGER_NEEDED(&p);
-	}
-
-	fscanf_s(f, "%f %f %f %f %f %f\n", &vTP1.x, &vTP1.y, &vTP1.z, &vTP1_rot.x, &vTP1_rot.y, &vTP1_rot.z);
-	fscanf_s(f, "%f %f %f %f %f %f\n", &vTP2.x, &vTP2.y, &vTP2.z, &vTP2_rot.x, &vTP2_rot.y, &vTP2_rot.z);
-
-	Entity e = PLAYER::PLAYER_PED_ID();
-
-	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP1.x, vTP1.y, vTP1.z, 0, 0, 1);
-	lockCam(vTP1, vTP1_rot);
-	WAIT(10000);
-
-	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP2.x, vTP2.y, vTP2.z, 0, 0, 1);
-	lockCam(vTP2, vTP2_rot);
-	WAIT(10000);
-
-	//ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, -1031.126831, -2726.527344, 14.794693, 0, 0, 1);
-	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, cCoords.x, cCoords.y, cCoords.z, 0, 0, 1);
-
-	fixCoords = cCoords;
-	WAIT(100);
-
-	camLock = false;
-	camLockChange();
-	visible = true;
-	ENTITY::SET_ENTITY_VISIBLE(PLAYER::PLAYER_PED_ID(), FALSE, true);
-	CAM::SET_CAM_ROT(activeCam, cRot.x, cRot.y, cRot.z, 2);
-	CAM::SET_CAM_COORD(activeCam, cCoords.x, cCoords.y, cCoords.z);
-
-	Vector3 pos;
-	while (readLine(f, &pos) >= 0) {
-		spawn_peds(pos, nPeds);
-		update();
-	}
-
-	if (stop == 1)
-		stopCoords = true;
-
-	fclose(f);
-
-	sprintf_s(fname, "\"%s\" LOADED", fileName);
-	set_status_text(fname);
-}
-
-
-
 
 void ScenarioCreator::file_menu()
 {
@@ -2179,34 +2098,6 @@ void ScenarioCreator::file_menu()
 
 		update();
 		// process buttons
-		
-		if (bEnter)
-		{
-			switch (activeLineIndexFile)
-			{
-			case 0:
-				if (nFiles > 0) {
-					set_status_text("Not implemented!");
-					//loadFile();
-				}
-				break;
-			case 1:
-				if (strcmp(fileName, "None") != 0)
-					saveFile();
-				break;
-			case 2:
-				sprintf_s(fileName, "log_%d.txt", nFiles + 1);
-				saveFile();
-				break;
-			case 3:
-				strcpy(logString, "");
-				set_status_text("DATA CLEARED");
-				break;
-			default:
-				break;
-			}
-			waitTime = 200;
-		}
 		if (bBack)
 		{
 			resetMenuCommands();
