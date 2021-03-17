@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import cv2
+import argparse
 
 
 def run_per_frame(video_name, video_path, image_name, gt):
@@ -17,7 +18,14 @@ def run_per_frame(video_name, video_path, image_name, gt):
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         save_path = os.path.join(save_dir, image_name)
-        cv2.imwrite(save_path, img_crop)
+        if os.path.exists(save_path):
+            print('continue', save_path)
+            return
+        if len(img_crop) != 0:
+            cv2.imwrite(save_path, img_crop)
+        else:
+            print('wrong size')
+            cv2.imwrite(frame)
         print(save_path)
     elif phase == 'gen_label':
         save_root = '/home/etvuz/projects/FairMOT/datasets/GOT-10k/labels_with_ids/train'
@@ -60,5 +68,8 @@ def main():
 
 if __name__ == '__main__':
     dataset_root = '/home/etvuz/projects/FairMOT/datasets/GOT-10k/images/train'
-    phase = 'gen_img' # 'crop' or 'gen_label' or 'gen_img'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('phase', help='crop gen_label gen_img')
+    args = parser.parse_args()
+    phase = args.phase
     main()

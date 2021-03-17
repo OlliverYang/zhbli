@@ -11,6 +11,9 @@ import json
 import numpy as np
 import torch
 import copy
+from datasets.dataset.generate_no_overlap_boxes import generate_no_overlap_boxes
+import glob
+import random
 
 from torch.utils.data import Dataset
 from torchvision.transforms import transforms as T
@@ -152,12 +155,9 @@ class LoadImagesAndLabels:  # for training
         label_path = self.label_files[files_index]
         return self.get_data(img_path, label_path)
 
-    def get_data(self, img_path, label_path):
+    def get_data(self, img, label_path, label_patch):
         height = self.height
         width = self.width
-        img = cv2.imread(img_path)  # BGR
-        if img is None:
-            raise ValueError('File corrupt {}'.format(img_path))
         augment_hsv = True
         if self.augment and augment_hsv:
             # SV augmentation by 50%
@@ -186,6 +186,7 @@ class LoadImagesAndLabels:  # for training
         # Load labels
         if os.path.isfile(label_path):
             labels0 = np.loadtxt(label_path, dtype=np.float32).reshape(-1, 6)
+            labels0 = np.concatenate((labels0, label_patch), axis=0)
 
             # Normalized xywh to pixel xyxy format
             labels = labels0.copy()
@@ -233,7 +234,7 @@ class LoadImagesAndLabels:  # for training
         if self.transforms is not None:
             img = self.transforms(img)
 
-        return img, labels, img_path, (h, w)
+        return img, labels, (h, w)
 
     def __len__(self):
         return self.nF  # number of batches
@@ -354,12 +355,18 @@ class JointDataset(LoadImagesAndLabels):  # for training
 
     def __init__(self, opt, root, paths, img_size=(1088, 608), augment=False, transforms=None):
         self.opt = opt
-        dataset_names = paths.keys()
+        self.dataset_names = paths.keys()
         self.img_files = OrderedDict()
         self.label_files = OrderedDict()
         self.tid_num = OrderedDict()
         self.tid_start_index = OrderedDict()
         self.num_classes = 1
+
+        """load patch paths"""
+        if list(self.dataset_names) == ['got10k']:
+            self.patches = sorted(glob.glob('/home/zhbli/Dataset/data2/custom/object_ReID/GOT-10k/train/*/*.jpg'))
+        else:
+            assert False
 
         for ds, path in paths.items():
             with open(path, 'r') as file:
@@ -403,10 +410,44 @@ class JointDataset(LoadImagesAndLabels):  # for training
         print('=' * 80)
         print('dataset summary')
         print(self.tid_num)
+        self.nID = 10000
         print('total # identities:', self.nID)
         print('start index')
         print(self.tid_start_index)
         print('=' * 80)
+
+    def paste_objs(self, img_path, label_path):
+        img = cv2.imread(img_path)
+        img_h, img_w = img.shape[:2]
+        _, _, cx, cy, w, h = np.loadtxt(label_path, delimiter=' ')
+        cx *= img_w
+        w *= img_w
+        cy *= img_h
+        h *= img_h
+        x1 = cx - w / 2
+        x2 = cx + w / 2
+        y1 = cy - h / 2
+        y2 = cy + h / 2
+        boxes_full_cxywh = generate_no_overlap_boxes(img_w, img_h, np.array([[x1,y1,x2,y2]]))
+        patches = random.sample(self.patches, len(boxes_full_cxywh))
+        idxs = np.array([int(var[-19:-13]) for var in patches])
+        for box, patch in zip(boxes_full_cxywh, patches):
+            cx, cy, w, h = [int(var) for var in box]
+            x1 = cx - w // 2
+            y1 = cy - h // 2
+            patch = cv2.resize(cv2.imread(patch), (w,h))
+            img[y1:y1+h, x1:x1+w] = patch
+        #print('debug'); cv2.imwrite('/tmp/00/001.jpg', img)
+        boxes_full_cxywh[:, 0] /= img_w
+        boxes_full_cxywh[:, 1] /= img_h
+        boxes_full_cxywh[:, 2] /= img_w
+        boxes_full_cxywh[:, 3] /= img_h
+        labels = np.stack((np.zeros(len(idxs)), idxs,
+                           boxes_full_cxywh[:, 0],
+                           boxes_full_cxywh[:, 1],
+                           boxes_full_cxywh[:, 2],
+                           boxes_full_cxywh[:, 3]), axis=1)
+        return img, labels
 
     def __getitem__(self, files_index):
 
@@ -418,7 +459,11 @@ class JointDataset(LoadImagesAndLabels):  # for training
         img_path = self.img_files[ds][files_index - start_index]
         label_path = self.label_files[ds][files_index - start_index]
 
-        imgs, labels, img_path, (input_h, input_w) = self.get_data(img_path, label_path)
+        if 'got' in img_path or 'GOT' in img_path:
+            img_np, label = self.paste_objs(img_path, label_path)
+
+        imgs, labels, (input_h, input_w) = self.get_data(img_np, label_path, label)
+
         for i, _ in enumerate(labels):
             if labels[i, 1] > -1:
                 labels[i, 1] += self.tid_start_index[ds]
@@ -483,6 +528,18 @@ class JointDataset(LoadImagesAndLabels):  # for training
 
         ret = {'input': imgs, 'hm': hm, 'reg_mask': reg_mask, 'ind': ind, 'wh': wh, 'reg': reg, 'ids': ids, 'bbox': bbox_xys}
         return ret
+
+    def __getitem_zhbli__(self, files_index):
+        """"""
+        """读入图片"""
+        for i, c in enumerate(self.cds):
+            if files_index >= c:
+                ds = list(self.label_files.keys())[i]
+                start_index = c
+
+        img_path = self.img_files[ds][files_index - start_index]
+
+        """"""
 
 
 class DetDataset(LoadImagesAndLabels):  # for training

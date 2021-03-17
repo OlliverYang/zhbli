@@ -44,6 +44,9 @@ def generate_no_overlap_boxes(img_w, img_h, real_box_xyxy):
     y2 = y2[selected]
 
     """计算右边界"""
+    if len(x2) == 0:
+        print('no patch')
+        return np.array([])
     max_x2 = np.max(x2)
     max_y2 = np.max(y2)
 
