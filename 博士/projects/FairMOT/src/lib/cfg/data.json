@@ -1,13 +1,8 @@
 {
-    "root":"/data/yfzhang/MOT/JDE",
+    "root":"/home/etvuz/projects/FairMOT/datasets",
     "train":
     {
-        "mot17":"./data/mot17.train",
-        "caltech":"./data/caltech.all",
-        "citypersons":"./data/citypersons.train",
-        "cuhksysu":"./data/cuhksysu.train",
-        "prw":"./data/prw.train",
-        "eth":"./data/eth.train"
+        "got10k":"./data/got10k.train"
     },
     "test_emb":
     {
