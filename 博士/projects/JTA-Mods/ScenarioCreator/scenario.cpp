@@ -644,6 +644,14 @@ void ScenarioCreator::listen_for_keystrokes() {
 		WSADATA wsaData;
 		WSAStartup(MAKEWORD(2, 2), &wsaData);
 		sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+		//设置超时
+		int nNetTimeout = 30000; //30秒
+     	//发送时限
+		setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&nNetTimeout, sizeof(int));
+		//接收时限
+		setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&nNetTimeout, sizeof(int));
+
 		sockaddr_in sockAddr;
 		memset(&sockAddr, 0, sizeof(sockAddr));
 		sockAddr.sin_family = PF_INET;
@@ -728,10 +736,11 @@ void ScenarioCreator::listen_for_keystrokes() {
 			void *buf_color;
 			fprintf_s(f, "%s", (char*)"START export_get_color_buffer ...\t");
 			fflush(f);
-			size = export_get_color_buffer(&buf_color);
+			size = export_get_color_buffer(&buf_color, f);
 			if (size <= 0) {
 				fprintf_s(f, "%s", (char*)" BUFFER SIZE IS 0\t");
 				fflush(f);
+				exit(0);
 			}
 			else {
 				std::stringstream ss;
@@ -744,8 +753,9 @@ void ScenarioCreator::listen_for_keystrokes() {
 			imgSize = image_color.total()*image_color.elemSize();
 			n = send(sock, (char*)image_color.data, imgSize, 0);
 			if (n <= 0) {
-				fprintf_s(f, "%s", (char*)"ERROR writing to socket");
+				fprintf_s(f, "%s", (char*)" ERROR writing to socket\t");
 				fflush(f);
+				exit(0);
 			}
 			else {
 				std::stringstream ss1;
@@ -755,7 +765,19 @@ void ScenarioCreator::listen_for_keystrokes() {
 			}
 
 			char szBuffer[MAXBYTE] = { 0 };
-			recv(sock, szBuffer, MAXBYTE, NULL);
+			n = recv(sock, szBuffer, MAXBYTE, NULL);
+			if (n <= 0) {
+				fprintf_s(f, "%s", (char*)" ERROR recv from socket\t");
+				fflush(f);
+				exit(0);
+			}
+			else {
+				std::stringstream ss1;
+				ss1 << " sueecess receive" << n;
+				fprintf_s(f, "%s", ss1.str().c_str());
+				fflush(f);
+			}
+
 			while (true) {
 				if (strcmp(szBuffer, "got_color") == 0) {
 					printf("client received\n");
