@@ -102,6 +102,7 @@ def get_one_data(conn_, old_img, old_mask, old_index):
     result = True
 
     print('receiving color...')
+    nbytes = None
     while color_size:
         try:
             nbytes = conn_.recv(color_size)
@@ -110,7 +111,8 @@ def get_one_data(conn_, old_img, old_mask, old_index):
             print(old_index, localtime, e)
             cv2.imwrite(os.path.join(args.save_dir, '{}.jpg'.format(old_index)), old_img)
             cv2.imwrite(os.path.join(args.save_dir, '{}.png'.format(old_index)), old_mask)
-            nbytes = None
+            print('old image saved, exit')
+            exit(0)
 
         if not nbytes:
             print('color no nbytes')

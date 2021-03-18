@@ -10,8 +10,8 @@ import time
 
 
 NUM_CLASSES = 16  # 若较大，则非常占显存
-GPU_ID = 3
-
+GPU_ID = 2
+ITER_NUM = 19000
 
 def cross_entropy2d(input_, target_, weight=None, size_average=True):
     # input_: (n, c, h, w), target_: (n, h, w)
@@ -58,14 +58,14 @@ def decode_segmap(image_, nc=21):
 
 os.environ["CUDA_VISIBLE_DEVICES"] = str(GPU_ID)
 model = models.segmentation.deeplabv3_resnet50(num_classes=NUM_CLASSES).cuda()
-model.load_state_dict(torch.load('/tmp/5000.pth'))
+model.load_state_dict(torch.load('/tmp/{}.pth'.format(ITER_NUM)))
 model.train()
 print('no')
 
 trf = T.Compose([T.ToTensor(),  # 转换为0~1
                  T.Normalize(mean=[0.485, 0.456, 0.406],
                              std=[0.229, 0.224, 0.225])])
-image_np = cv2.imread('/tmp/1.jpg')
+image_np = cv2.imread('/tmp/{}.jpg'.format(ITER_NUM))
 image = trf(image_np)
 inp = image.unsqueeze(0).cuda()
 inp = torch.cat((inp, inp))
@@ -79,7 +79,7 @@ plt.imshow(rgb)
 plt.axis('off')
 plt.show()
 
-gt = cv2.imread('/tmp/1.png')[:, :, 0]
+gt = cv2.imread('/tmp/{}.png'.format(ITER_NUM))[:, :, 0]
 target = torch.from_numpy(gt).cuda()
 target = target.unsqueeze(0).long()  # 必须为 long 类型，否则计算损失时会报错。
 

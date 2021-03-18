@@ -160,22 +160,71 @@ int getBitsPerPixel(DXGI_FORMAT fmt)
 		return -1;
 	}
 }
-void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* res, vector<unsigned char>& buffer)
+void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* res, vector<unsigned char>& buffer, FILE *f)
 {
+	fprintf_s(f, "%s", (char*)" copyTexToVector START...\t");
+	fflush(f);
+
 	ComPtr<ID3D11Texture2D> tex;
 	HRESULT hr;
 	hr = res->QueryInterface(__uuidof(ID3D11Texture2D), &tex);
 	D3D11_TEXTURE2D_DESC desc;
-	if (hr != S_OK) throw std::system_error(hr, std::system_category());
+	if (hr != S_OK) {
+		fprintf_s(f, "%s", (char*)" HR1 is not ok\t");
+		fflush(f);
+		throw std::system_error(hr, std::system_category());
+	}
+	else
+	{
+		fprintf_s(f, "%s", (char*)" HR1 is ok\t");
+		fflush(f);
+	}
 	tex->GetDesc(&desc);
 	ComPtr<ID3D11Texture2D> tex_copy;
-	CreateTextureIfNeeded(dev, tex.Get(), &tex_copy);
+	
+	fprintf_s(f, "%s", (char*)" START get_tex_pointer...\t");
+	fflush(f);
+	ID3D11Resource *tex_pointer = tex.Get();
+
+	fprintf_s(f, "%s", (char*)" START CreateTextureIfNeeded...\t");
+	fflush(f);
+	CreateTextureIfNeeded(dev, tex_pointer, &tex_copy);
+	
+	fprintf_s(f, "%s", (char*)" START CopyResource...\t");
+	fflush(f);
 	ctx->CopyResource(tex_copy.Get(), tex.Get());
 	D3D11_MAPPED_SUBRESOURCE map;
+	
+	fprintf_s(f, "%s", (char*)" START getBitsPerPixel...\t");
+	fflush(f);
 	auto bpp = getBitsPerPixel(desc.Format);
-	if (bpp == -1) throw std::invalid_argument("unsupported resource type");
-	hr = ctx->Map(tex_copy.Get(), 0, D3D11_MAP_READ, 0, &map);
-	if (hr != S_OK) throw std::system_error(hr, std::system_category());
+	if (bpp == -1) {
+		fprintf_s(f, "%s", (char*)" bpp is not ok\t");
+		fflush(f);
+		throw std::invalid_argument("unsupported resource type");
+	}
+	else
+	{
+		fprintf_s(f, "%s", (char*)" bpp is ok\t");
+		fflush(f);
+	}
+
+	fprintf_s(f, "%s", (char*)" START_get_tex_copy_pointer...\t");
+	fflush(f);
+	ID3D11Resource *tex_copy_pointer = tex_copy.Get();
+
+	fprintf_s(f, "%s", (char*)" START_get_HR2\t");
+	fflush(f);
+	hr = ctx->Map(tex_copy_pointer, 0, D3D11_MAP_READ, 0, &map);
+	if (hr != S_OK) {
+		fprintf_s(f, "%s", (char*)" HR2 is not ok\t");
+		fflush(f);
+		throw std::system_error(hr, std::system_category());
+	}
+	else {
+		fprintf_s(f, "%s", (char*)" HR2 is ok\t");
+		fflush(f);
+	}
 	if (buffer.size() != desc.Height * desc.Width * bpp) buffer = vector<unsigned char>(desc.Height * desc.Width * bpp);
 	for (int y = 0; y < desc.Height; ++y)
 	{
@@ -192,19 +241,10 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	}
 	ctx->Unmap(tex_copy.Get(), 0);
 
+	fprintf_s(f, "%s", (char*)" copyTexToVector FINISHED\t");
+	fflush(f);
 }
-void CopyIfRequested()
-{
-	unique_lock<mutex> lk(copy_mtx);
-	if (request_copy)
-	{
-		unpack_depth(lastDev.Get(), lastCtx.Get(), depthRes.Get(), depthBuf, stencilBuf);
-		copyTexToVector(lastDev.Get(), lastCtx.Get(), colorRes.Get(), colorBuf);
-		request_copy = false;
-		lk.unlock(); //unlock the mutex so that and woken threads don't immediately block on it
-		copy_cv.notify_all();
-	}
-}
+
 void ExtractDepthBuffer(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* res)
 {
 	lastDev = dev;
@@ -247,10 +287,10 @@ extern "C" {
 		*buf = &depthBuf[0];
 		return depthBuf.size();
 	}
-	__declspec(dllexport) int export_get_color_buffer(void** buf)
+	__declspec(dllexport) int export_get_color_buffer(void** buf, FILE *f)
 	{
 		if (lastDev == nullptr || lastCtx == nullptr || colorRes == nullptr) return -2;
-		copyTexToVector(lastDev.Get(), lastCtx.Get(), colorRes.Get(), colorBuf);
+		copyTexToVector(lastDev.Get(), lastCtx.Get(), colorRes.Get(), colorBuf, f);
 		*buf = &colorBuf[0];
 		return colorBuf.size();
 	}
