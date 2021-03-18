@@ -15,7 +15,9 @@ def generate_no_overlap_boxes(img_w, img_h, real_box_xyxy):
     real_box_size = real_w * real_h
     img_size = img_w * img_h
     max_new_box_num = img_size // real_box_size - 1
-    n = np.random.randint(max_new_box_num//4, max_new_box_num//2, 1, dtype=np.int)
+    if max_new_box_num <= 0:
+        return np.array([])
+    n = np.random.randint(max_new_box_num//4, max_new_box_num*2, 1, dtype=np.int)
     n = np.minimum(n, 128)
 
     """生成需要平铺的边框 w h"""
@@ -27,7 +29,10 @@ def generate_no_overlap_boxes(img_w, img_h, real_box_xyxy):
     """对边框进行平铺"""
     positions = rpack.pack(boxes_wh.tolist())  # w, h, ret: x1 y1
     positions = np.array(positions)
-    x1 = positions[:, 0]
+    try:
+        x1 = positions[:, 0]
+    except Exception:
+        return np.array([])
     y1 = positions[:, 1]
 
     """得到边框的xyxy格式"""
@@ -45,7 +50,6 @@ def generate_no_overlap_boxes(img_w, img_h, real_box_xyxy):
 
     """计算右边界"""
     if len(x2) == 0:
-        print('no patch')
         return np.array([])
     max_x2 = np.max(x2)
     max_y2 = np.max(y2)
