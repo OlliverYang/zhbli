@@ -154,12 +154,13 @@ class TrackPairSampler(SamplerBase):
         rng = self._state["rng"]
         len_seq = self._get_len_seq(sequence_data)
         idx = rng.choice(len_seq)
-        data_frame = {k: v[idx] for k, v in sequence_data.items()}
+        data_frame = {k: v[idx] for k, v in sequence_data.items() if k != 'meta'}
         # convert mask path to mask, specical for youtubevos and davis
         if self._hyper_params["target_type"] == "mask":
             if isinstance(data_frame["anno"], list):
                 mask = self._generate_mask_for_vos(data_frame["anno"])
                 data_frame["anno"] = mask
+        data_frame['nlp'] = sequence_data['meta']['nlp']
         return data_frame
 
     def _sample_track_pair_from_sequence(self, sequence_data: Dict,
@@ -182,13 +183,15 @@ class TrackPairSampler(SamplerBase):
         len_seq = self._get_len_seq(sequence_data)
         idx1, idx2 = self._sample_pair_idx_pair_within_max_diff(
             len_seq, max_diff)
-        data1 = {k: v[idx1] for k, v in sequence_data.items()}
-        data2 = {k: v[idx2] for k, v in sequence_data.items()}
+        data1 = {k: v[idx1] for k, v in sequence_data.items() if k != 'meta'}
+        data2 = {k: v[idx2] for k, v in sequence_data.items() if k != 'meta'}
         if isinstance(data1["anno"],
                       list) and self._hyper_params["target_type"] == "mask":
             # convert mask path to mask, specical for youtubevos
             data1["anno"] = self._generate_mask_for_vos(data1["anno"])
             data2["anno"] = self._generate_mask_for_vos(data2["anno"])
+        data1['nlp'] = sequence_data['meta']['nlp']
+        data2['nlp'] = sequence_data['meta']['nlp']
         return data1, data2
 
     def _sample_pair_idx_pair_within_max_diff(self, L, max_diff):

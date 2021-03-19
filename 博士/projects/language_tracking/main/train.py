@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import argparse
 import os.path as osp
 import sys
@@ -70,13 +71,13 @@ if __name__ == '__main__':
         extra={"common_to_all": "default"},
     )
     # backup config
-    logger.info("Load experiment configuration at: %s" % exp_cfg_path)
-    logger.info(
-        "Merged with root_cfg imported from videoanalyst.config.config.cfg")
+    # logger.info("Load experiment configuration at: %s" % exp_cfg_path)
+    # logger.info(
+    #    "Merged with root_cfg imported from videoanalyst.config.config.cfg")
     cfg_bak_file = osp.join(log_dir, "%s_bak.yaml" % task_cfg.exp_name)
     with open(cfg_bak_file, "w") as f:
         f.write(task_cfg.dump())
-    logger.info("Task configuration backed up at %s" % cfg_bak_file)
+    # logger.info("Task configuration backed up at %s" % cfg_bak_file)
     # device config
     if task_cfg.device == "cuda":
         world_size = task_cfg.num_processes

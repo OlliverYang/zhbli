@@ -31,7 +31,7 @@ def build(task: str, cfg: CfgNode, seed: int = 0) -> DataLoader:
 
     if task in ["track", "vos"]:
         # build dummy dataset for purpose of dataset setup (e.g. caching path list)
-        logger.info("Build dummy AdaptorDataset")
+        # logger.info("Build dummy AdaptorDataset")
         dummy_py_dataset = AdaptorDataset(
             task,
             cfg,
@@ -39,15 +39,15 @@ def build(task: str, cfg: CfgNode, seed: int = 0) -> DataLoader:
             nr_image_per_epoch=cfg.nr_image_per_epoch,
             seed=seed,
         )
-        logger.info("Read dummy training sample")
+        # logger.info("Read dummy training sample")
         dummy_sample = dummy_py_dataset[0]  # read dummy sample
         del dummy_py_dataset, dummy_sample
         gc.collect(generation=2)
-        logger.info("Dummy AdaptorDataset destroyed.")
+        # logger.info("Dummy AdaptorDataset destroyed.")
         # get world size in case of DDP
         world_size = dist_utils.get_world_size()
         # build real dataset
-        logger.info("Build real AdaptorDataset")
+        # logger.info("Build real AdaptorDataset")
         py_dataset = AdaptorDataset(task,
                                     cfg,
                                     num_epochs=cfg.num_epochs,

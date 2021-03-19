@@ -48,8 +48,8 @@ class SamplerBase:
         self.datasets = datasets
         for d in datasets:
             dataset_name = type(d).__name__
-            logger.info("Sampler's underlying datasets: {}, length {}".format(
-                dataset_name, len(d)))
+            # logger.info("Sampler's underlying datasets: {}, length {}".format(
+            #     dataset_name, len(d)))
 
     def get_hps(self) -> Dict:
         r"""

@@ -44,8 +44,8 @@ class AdaptorDataset(Dataset):
             self.datapipeline = datapipeline_builder.build(self.task,
                                                            self.cfg,
                                                            seed=seed)
-            logger.info("AdaptorDataset #%d built datapipeline with seed=%d" %
-                        (item, seed))
+            # logger.info("AdaptorDataset #%d built datapipeline with seed=%d" %
+            #             (item, seed))
 
         training_data = self.datapipeline[item]
 

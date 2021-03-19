@@ -65,12 +65,12 @@ class TensorboardLogger(MonitorBase):
         # build at first update
         if self._state["writer"] is None:
             self._build_writer(global_step=global_step)
-            logger.info(
-                "Tensorboard writer built, starts recording from global_step=%d"
-                % global_step, )
-            logger.info(
-                "epoch=%d, max_epoch=%d, iteration=%d, max_iteration=%d" %
-                (epoch, max_epoch, iteration, max_iteration))
+            # logger.info(
+            #     "Tensorboard writer built, starts recording from global_step=%d"
+            #     % global_step, )
+            # logger.info(
+            #     "epoch=%d, max_epoch=%d, iteration=%d, max_iteration=%d" %
+            #     (epoch, max_epoch, iteration, max_iteration))
         writer = self._state["writer"]
 
         # traverse engine_data and put to scalar

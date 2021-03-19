@@ -61,9 +61,9 @@ class RegularTrainer(TrainerBase):
         # parallelism with Data Parallel (DP)
         if len(self._state["devices"]) > 1:
             self._model = nn.DataParallel(self._model, device_ids=devs)
-            logger.info("Use nn.DataParallel for data parallelism")
+            # logger.info("Use nn.DataParallel for data parallelism")
         super(RegularTrainer, self).init_train()
-        logger.info("{} initialized".format(type(self).__name__))
+        # logger.info("{} initialized".format(type(self).__name__))
 
     def train(self):
         if not self._state["initialized"]:

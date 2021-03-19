@@ -65,6 +65,7 @@ class DenseboxTarget(TargetBase):
             ctr_gt=ctr_label,
             box_gt=box_label,
             is_negative_pair=int(is_negative_pair),
+            nlp=data_z['nlp'],
         )
         #training_data = super().__call__(training_data)
 

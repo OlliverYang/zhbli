@@ -32,7 +32,7 @@ class LaSOT(object):
     def __init__(self,
                  root_dir,
                  subset='test',
-                 return_meta=False,
+                 return_meta=True,
                  check_integrity=True,
                  cache_path=None,
                  ignore_cache=False):
@@ -116,7 +116,7 @@ class LaSOT(object):
         # anno = np.loadtxt(self.anno_files[index], delimiter=',')
 
         if self.return_meta:
-            meta = self._fetch_meta(self.seq_dirs[index])
+            # meta = self._fetch_meta(self.seq_dirs[index])
             return img_files, anno, meta
         else:
             return img_files, anno
@@ -139,7 +139,7 @@ class LaSOT(object):
             raise Exception('Dataset not found or corrupted.')
 
     def _fetch_meta(self, seq_dir):
-        seq_dir = os.path.dirname(seq_dir)
+        # seq_dir = os.path.dirname(seq_dir)
         meta = {}
 
         # attributes

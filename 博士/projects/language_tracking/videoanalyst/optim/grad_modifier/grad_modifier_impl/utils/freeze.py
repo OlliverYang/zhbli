@@ -35,8 +35,9 @@ class FreezeStateMonitor:
             for k in self.new_freeze_state.keys():
                 change = (self.old_freeze_state[k] != self.new_freeze_state[k])
                 if change:
-                    logger.info(k, "changed:", self.old_freeze_state[k], "->",
-                                self.new_freeze_state[k])
+                    # logger.info(k, "changed:", self.old_freeze_state[k], "->",
+                    #             self.new_freeze_state[k])
+                    pass
                 any_change = any_change or change
 
 

@@ -59,7 +59,7 @@ class RandomCropTransformer(TransformerBase):
             config=self._hyper_params,
             rng=self._state["rng"])
 
-        sampled_data["data1"] = dict(image=im_z, anno=bbox_z)
-        sampled_data["data2"] = dict(image=im_x, anno=bbox_x)
+        sampled_data["data1"] = dict(image=im_z, anno=bbox_z, nlp=data1['nlp'])
+        sampled_data["data2"] = dict(image=im_x, anno=bbox_x, nlp=data2['nlp'])
 
         return sampled_data

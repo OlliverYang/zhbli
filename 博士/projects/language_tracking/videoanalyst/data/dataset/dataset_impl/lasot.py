@@ -56,10 +56,10 @@ class LaSOTDataset(DatasetBase):
                                        check_integrity=check_integrity)
 
     def __getitem__(self, item: int) -> Dict:
-        img_files, anno = self._state["dataset"][item]
+        img_files, anno, meta = self._state["dataset"][item]
 
         anno = xywh2xyxy(anno)
-        sequence_data = dict(image=img_files, anno=anno)
+        sequence_data = dict(image=img_files, anno=anno, meta=meta)
 
         return sequence_data
 

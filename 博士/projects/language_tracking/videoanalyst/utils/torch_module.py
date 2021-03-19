@@ -17,6 +17,8 @@ default_collate_err_msg_format = (
 
 def move_data_to_device(data_dict: Dict, dev: torch.device):
     for k in data_dict:
+        if k == 'nlp':
+            continue
         data_dict[k] = data_dict[k].to(dev)
 
     return data_dict
@@ -34,7 +36,9 @@ def convert_numpy_to_tensor(raw_data):
     convert numpy array dict or list to torch.Tensor
     """
     elem_type = type(raw_data)
-    if (elem_type.__module__ == "numpy" and elem_type.__name__ != "str_"
+    if elem_type.__name__ == 'str':
+        return raw_data
+    elif (elem_type.__module__ == "numpy" and elem_type.__name__ != "str_"
             and elem_type.__name__ != "string_"):
         return torch.from_numpy(raw_data).float()
     elif isinstance(raw_data, collections.abc.Mapping):
