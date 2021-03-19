@@ -35,7 +35,7 @@ class ModleWithLoss(torch.nn.Module):
     self.loss = loss
   
   def forward(self, batch):
-    outputs = self.model(batch['input'])
+    outputs = self.model(batch)
     loss, loss_stats = self.loss(outputs, batch)
     return outputs[-1], loss, loss_stats
 

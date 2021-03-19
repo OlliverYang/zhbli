@@ -197,6 +197,7 @@ class LoadImagesAndLabels:  # for training
             labels[:, 4] = ratio * w * (labels0[:, 2] + labels0[:, 4] / 2) + padw
             labels[:, 5] = ratio * h * (labels0[:, 3] + labels0[:, 5] / 2) + padh
         else:
+            print('no label')
             labels = np.array([])
 
         # Augment image and labels
@@ -455,7 +456,10 @@ class JointDataset(LoadImagesAndLabels):  # for training
         x2 = cx + w / 2
         y1 = cy - h / 2
         y2 = cy + h / 2
-        boxes_full_cxywh = generate_no_overlap_boxes(img_w, img_h, np.array([[x1,y1,x2,y2]]))
+        try:
+            boxes_full_cxywh = generate_no_overlap_boxes(img_w, img_h, np.array([[x1,y1,x2,y2]]))
+        except Exception:
+            return img, None
         # patches = random.sample(self.patches, len(boxes_full_cxywh))
         selected = random.sample(range(len(self.img_list)), len(boxes_full_cxywh))
         patches = [self.img_list[var] for var in selected]
@@ -472,13 +476,15 @@ class JointDataset(LoadImagesAndLabels):  # for training
             origin_img = cv2.imread(patch)
             patch = origin_img[origin_y1:origin_y2, origin_x1:origin_x2]
             if len(patch) == 0:
-                print('wrong box')
                 patch = origin_img
             try:
                 patch = cv2.resize(patch, (w,h))
             except cv2.error:
                 print('err3')
-            img[y1:y1+h, x1:x1+w] = patch
+            try:
+                img[y1:y1+h, x1:x1+w] = patch
+            except ValueError:
+                print('shape err')
         #print('debug'); cv2.imwrite('/tmp/00/001.jpg', img)
         try:
             boxes_full_cxywh[:, 0] /= img_w
@@ -492,8 +498,8 @@ class JointDataset(LoadImagesAndLabels):  # for training
                            boxes_full_cxywh[:, 1],
                            boxes_full_cxywh[:, 2],
                            boxes_full_cxywh[:, 3]), axis=1)
-        # return img, labels 错 贴上的是负样本
-        return img, None
+        # return img, labels 错 贴上的是负样本。根据标签生成heatmap（不需要负样本）并计算 id loss（需要负样本），计算回归框（不需要负样本）。
+        return img, labels
 
     def __getitem__(self, files_index):
 
@@ -526,6 +532,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
         reg = np.zeros((self.max_objs, 2), dtype=np.float32)
         ind = np.zeros((self.max_objs, ), dtype=np.int64)
         reg_mask = np.zeros((self.max_objs, ), dtype=np.uint8)
+        id_mask = np.zeros((self.max_objs,), dtype=np.uint8)
         ids = np.zeros((self.max_objs, ), dtype=np.int64)
         bbox_xys = np.zeros((self.max_objs, 4), dtype=np.float32)
 
@@ -560,7 +567,8 @@ class JointDataset(LoadImagesAndLabels):  # for training
                 ct = np.array(
                     [bbox[0], bbox[1]], dtype=np.float32)
                 ct_int = ct.astype(np.int32)
-                draw_gaussian(hm[cls_id], ct_int, radius)
+                if k == 0:
+                    draw_gaussian(hm[cls_id], ct_int, radius)
                 if self.opt.ltrb:
                     wh[k] = ct[0] - bbox_amodal[0], ct[1] - bbox_amodal[1], \
                             bbox_amodal[2] - ct[0], bbox_amodal[3] - ct[1]
@@ -568,11 +576,16 @@ class JointDataset(LoadImagesAndLabels):  # for training
                     wh[k] = 1. * w, 1. * h
                 ind[k] = ct_int[1] * output_w + ct_int[0]
                 reg[k] = ct - ct_int
-                reg_mask[k] = 1
+                if k == 0:
+                    reg_mask[k] = 1
+                id_mask[k] = 1
                 ids[k] = label[1]
                 bbox_xys[k] = bbox_xy
 
-        ret = {'input': imgs, 'hm': hm, 'reg_mask': reg_mask, 'ind': ind, 'wh': wh, 'reg': reg, 'ids': ids, 'bbox': bbox_xys}
+        if reg_mask[0] == 0:
+            print('err5')
+
+        ret = {'input': imgs, 'hm': hm, 'reg_mask': reg_mask, 'id_mask': id_mask, 'ind': ind, 'wh': wh, 'reg': reg, 'ids': ids, 'bbox': bbox_xys}
         return ret
 
 

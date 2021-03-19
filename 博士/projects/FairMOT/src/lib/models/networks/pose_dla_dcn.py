@@ -14,6 +14,7 @@ import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
 
 from dcn_v2 import DCN
+from models.utils import _tranpose_and_gather_feat
 
 BN_MOMENTUM = 0.1
 logger = logging.getLogger(__name__)
@@ -443,6 +444,7 @@ class DLASeg(nn.Module):
                             [2 ** i for i in range(self.last_level - self.first_level)])
         
         self.heads = heads
+        self.fuse_change = nn.Conv2d(128, 64, 3, 1, 1)
         for head in self.heads:
             classes = self.heads[head]
             if head_conv > 0:
@@ -467,7 +469,8 @@ class DLASeg(nn.Module):
                 fill_fc_weights(fc)
             self.__setattr__(head, fc)
 
-    def forward(self, x):
+    def forward(self, batch):
+        x = batch['input']
         x = self.base(x)
         x = self.dla_up(x)
 
@@ -477,8 +480,21 @@ class DLASeg(nn.Module):
         self.ida_up(y, 0, len(y))
 
         z = {}
-        for head in self.heads:
+        for head in self.heads:  # hm wh id reg
+            if head == 'hm':
+                continue
             z[head] = self.__getattr__(head)(y[-1])
+
+        """互相关"""
+        id_head = _tranpose_and_gather_feat(z['id'], batch['ind'])
+        # obj_vector = id_head[batch['reg_mask'] > 0]
+        obj_vector = id_head[:, 0, :]
+        fused_feature = z['id'] + obj_vector.unsqueeze(2).unsqueeze(3)
+        fused_feature = self.fuse_change(fused_feature)
+        z['hm'] = self.__getattr__('hm')(fused_feature)  # 输入通道128，输出通道1
+        """互相关"""
+
+        # 注意 z 的顺序?不需要，是字典。
         return [z]
     
 
