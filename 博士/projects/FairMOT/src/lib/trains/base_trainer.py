@@ -7,7 +7,26 @@ import torch
 from progress.bar import Bar
 from models.data_parallel import DataParallel
 from utils.utils import AverageMeter
+import numpy as np
+import cv2
 
+def show_data(batch):
+  """
+  batch['input']: torch.tensor, [b, 3, 608, 1088] 图像
+  batch['hm']: np.ndarray, [b, 1, 152, 272] heatmap, 有几个目标，就有几个高斯峰值。
+  batch['reg_mask']: torch.tensor, [b, 500] 1 表示需要 回归，0表示不需要回归
+  batch['ind']: torch.tensor, [b, 500] 每个目标在 heatmap 中的一维位置
+  batch['wh']: torch.tensor, [b, 500, 4] 目标在 heatmap 上的位置
+  batch['reg']: torch.tensor, [b, 500, 2]
+  batch['ids']: torch.tensor, [b, 500]
+  batch['bbox']: torch.tensor, [b, 500, 4]
+  """
+  heatmap = (batch['hm'][0][0].data.cpu().numpy() * 255).astype(np.uint8)
+  img = (batch['input'][0].data.cpu().numpy().transpose(1,2,0)*255).astype(np.uint8)
+  cv2.imwrite('/tmp/00/heatmap.jpg', heatmap)
+  cv2.imwrite('/tmp/00/img.jpg', img)
+  print('img saved')
+  return
 
 class ModleWithLoss(torch.nn.Module):
   def __init__(self, model, loss):
@@ -69,6 +88,9 @@ class BaseTrainer(object):
           batch[k] = batch[k].to(device=opt.device, non_blocking=True)
 
       output, loss, loss_stats = model_with_loss(batch)
+
+      # show_data(batch)
+
       loss = loss.mean()
       if phase == 'train':
         self.optimizer.zero_grad()

@@ -25,7 +25,7 @@ def run_per_frame(video_name, video_path, image_name, gt):
             cv2.imwrite(save_path, img_crop)
         else:
             print('wrong size')
-            cv2.imwrite(frame)
+            cv2.imwrite(save_path, frame)
         print(save_path)
     elif phase == 'gen_label':
         save_root = '/home/etvuz/projects/FairMOT/datasets/GOT-10k/labels_with_ids/train'
@@ -43,11 +43,11 @@ def run_per_frame(video_name, video_path, image_name, gt):
     elif phase == 'gen_img':
         save_path = '/home/etvuz/projects/FairMOT/src/data/got10k.train'
         with open(save_path, 'a') as f:
-            print(frame_path)
             f.write(frame_path+'\n')
 
 
 def run_per_video(video_name):
+    print(video_name)
     video_path = os.path.join(dataset_root, video_name)
     gt_path = os.path.join(video_path, 'groundtruth.txt')
     gts = np.loadtxt(gt_path, delimiter=',')
