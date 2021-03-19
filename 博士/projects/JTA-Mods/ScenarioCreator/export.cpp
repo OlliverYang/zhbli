@@ -41,6 +41,8 @@ static time_point<high_resolution_clock> last_depth_time;
 static time_point<high_resolution_clock> last_color_time;
 static time_point<high_resolution_clock> last_constant_time;
 
+#define SAFE_RELEASE(x) if( x != NULL ) { x->Release(); x = NULL; }
+
 static void unpack_depth(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* src, vector<unsigned char>& dst, vector<unsigned char>& stencil)
 {
 	HRESULT hr = S_OK;
@@ -137,18 +139,64 @@ void CreateTextureIfNeeded(ID3D11Device* dev, ID3D11Resource* for_res, ComPtr<ID
 	HRESULT hr = S_OK;
 	D3D11_TEXTURE2D_DESC desc = { 0 };
 	hr = for_res->QueryInterface(__uuidof(ID3D11Texture2D), &tex);
-	if (hr != S_OK) throw std::system_error(hr, std::system_category());
+	if (hr != S_OK) {
+		throw std::system_error(hr, std::system_category());
+	}
+
 	tex->GetDesc(&desc);
+
 	if (*tex_target == nullptr)
 	{
 		*tex_target = CreateTexHelper(dev, desc.Format, desc.Width, desc.Height, desc.SampleDesc.Count);
 	}
+
 	D3D11_TEXTURE2D_DESC tex_desc;
 	(*tex_target)->GetDesc(&tex_desc);
 	if (tex_desc.Width != desc.Width || tex_desc.Height != desc.Height)
 	{
 		*tex_target = CreateTexHelper(dev, desc.Format, desc.Width, desc.Height, desc.SampleDesc.Count);
 	}
+}
+
+void CreateTextureIfNeeded1(ID3D11Device* dev, ID3D11Resource* for_res, ComPtr<ID3D11Texture2D>* tex_target, FILE *f)
+{
+	ComPtr<ID3D11Texture2D> tex;
+	HRESULT hr = S_OK;
+	D3D11_TEXTURE2D_DESC desc = { 0 };
+	hr = for_res->QueryInterface(__uuidof(ID3D11Texture2D), &tex);
+	if (hr != S_OK) {
+		fprintf_s(f, "%s", (char*)" Failed QueryInterface\t");
+		fflush(f);
+		throw std::system_error(hr, std::system_category());
+	}
+	else {
+		fprintf_s(f, "%s", (char*)" Success QueryInterface\t");
+		fflush(f);
+	}
+
+	tex->GetDesc(&desc);
+
+
+	fprintf_s(f, "%s", (char*)" Starting CreateTexHelper1\t");
+	fflush(f);
+
+	if (*tex_target == nullptr)
+	{
+		*tex_target = CreateTexHelper(dev, desc.Format, desc.Width, desc.Height, desc.SampleDesc.Count);
+	}
+
+	fprintf_s(f, "%s", (char*)" Starting CreateTexHelper2\t");
+	fflush(f);
+
+	D3D11_TEXTURE2D_DESC tex_desc;
+	(*tex_target)->GetDesc(&tex_desc);
+	if (tex_desc.Width != desc.Width || tex_desc.Height != desc.Height)
+	{
+		*tex_target = CreateTexHelper(dev, desc.Format, desc.Width, desc.Height, desc.SampleDesc.Count);
+	}
+
+	fprintf_s(f, "%s", (char*)" Finish CreateTextureIfNeeded\t");
+	fflush(f);
 }
 int getBitsPerPixel(DXGI_FORMAT fmt)
 {
@@ -160,7 +208,7 @@ int getBitsPerPixel(DXGI_FORMAT fmt)
 		return -1;
 	}
 }
-void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* res, vector<unsigned char>& buffer, FILE *f)
+int copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource* res, vector<unsigned char>& buffer, FILE *f)
 {
 	fprintf_s(f, "%s", (char*)" copyTexToVector START...\t");
 	fflush(f);
@@ -172,7 +220,8 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	if (hr != S_OK) {
 		fprintf_s(f, "%s", (char*)" HR1 is not ok\t");
 		fflush(f);
-		throw std::system_error(hr, std::system_category());
+		//throw std::system_error(hr, std::system_category());
+		return -1;
 	}
 	else
 	{
@@ -186,9 +235,15 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	fflush(f);
 	ID3D11Resource *tex_pointer = tex.Get();
 
+	if (tex_pointer == nullptr) {
+		fprintf_s(f, "%s", (char*)" tex_pointer is null\t");
+		fflush(f);
+		return -1;
+	}
+
 	fprintf_s(f, "%s", (char*)" START CreateTextureIfNeeded...\t");
 	fflush(f);
-	CreateTextureIfNeeded(dev, tex_pointer, &tex_copy);
+	CreateTextureIfNeeded1(dev, tex_pointer, &tex_copy, f);
 	
 	fprintf_s(f, "%s", (char*)" START CopyResource...\t");
 	fflush(f);
@@ -201,7 +256,8 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	if (bpp == -1) {
 		fprintf_s(f, "%s", (char*)" bpp is not ok\t");
 		fflush(f);
-		throw std::invalid_argument("unsupported resource type");
+		//throw std::invalid_argument("unsupported resource type");
+		return -1;
 	}
 	else
 	{
@@ -213,13 +269,20 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	fflush(f);
 	ID3D11Resource *tex_copy_pointer = tex_copy.Get();
 
+	if (tex_copy_pointer == nullptr) {
+		fprintf_s(f, "%s", (char*)" tex_copy_pointer is null\t");
+		fflush(f);
+		return -1;
+	}
+
 	fprintf_s(f, "%s", (char*)" START_get_HR2\t");
 	fflush(f);
 	hr = ctx->Map(tex_copy_pointer, 0, D3D11_MAP_READ, 0, &map);
 	if (hr != S_OK) {
 		fprintf_s(f, "%s", (char*)" HR2 is not ok\t");
 		fflush(f);
-		throw std::system_error(hr, std::system_category());
+		//throw std::system_error(hr, std::system_category());
+		return -1;
 	}
 	else {
 		fprintf_s(f, "%s", (char*)" HR2 is ok\t");
@@ -241,6 +304,8 @@ void copyTexToVector(ID3D11Device* dev, ID3D11DeviceContext* ctx, ID3D11Resource
 	}
 	ctx->Unmap(tex_copy.Get(), 0);
 
+	SAFE_RELEASE(tex_copy_pointer);
+	SAFE_RELEASE(tex_pointer);
 	fprintf_s(f, "%s", (char*)" copyTexToVector FINISHED\t");
 	fflush(f);
 }
@@ -290,7 +355,9 @@ extern "C" {
 	__declspec(dllexport) int export_get_color_buffer(void** buf, FILE *f)
 	{
 		if (lastDev == nullptr || lastCtx == nullptr || colorRes == nullptr) return -2;
-		copyTexToVector(lastDev.Get(), lastCtx.Get(), colorRes.Get(), colorBuf, f);
+		int res = copyTexToVector(lastDev.Get(), lastCtx.Get(), colorRes.Get(), colorBuf, f);
+		if (res == -1)
+			return -1;
 		*buf = &colorBuf[0];
 		return colorBuf.size();
 	}
