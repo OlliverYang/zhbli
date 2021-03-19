@@ -1,3 +1,4 @@
 *.caffemodel
 *.tsv
 /snap
+.idea/
