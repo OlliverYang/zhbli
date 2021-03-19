@@ -640,170 +640,191 @@ void ScenarioCreator::listen_for_keystrokes() {
 			ss << "player isn't in a vehicle";
 		}
 
-		/////////////创建 socket//////////////////
-		WSADATA wsaData;
-		WSAStartup(MAKEWORD(2, 2), &wsaData);
-		sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-		//设置超时
-		int nNetTimeout = 30000; //30秒
-     	//发送时限
-		setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&nNetTimeout, sizeof(int));
-		//接收时限
-		setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&nNetTimeout, sizeof(int));
-
-		sockaddr_in sockAddr;
-		memset(&sockAddr, 0, sizeof(sockAddr));
-		sockAddr.sin_family = PF_INET;
-		sockAddr.sin_addr.s_addr = inet_addr("172.18.32.31");
-		sockAddr.sin_port = htons(2019);
-
-		if (connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR)) < 0)
-			printf("ERROR connecting");
-		else
-			printf("SUCCESS connecting");
-		/////////////创建 socket//////////////////
-
 		f = fopen("log.txt", "a");
-		while (true) {  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
-			WAIT(200);
+		while (true) {
+			WAIT(100);
+			/////////////创建 socket//////////////////
+			WSADATA wsaData;
+			WSAStartup(MAKEWORD(2, 2), &wsaData);
+			sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-			//保存时间
-			// 基于当前系统的当前日期/时间
-			time_t now = time(0);
-			// 把 now 转换为字符串形式
-			char* dt = ctime(&now);
-			fprintf_s(f, "%s", dt);
+			//设置超时
+			int nNetTimeout = 30000; //30秒
+			//发送时限
+			setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&nNetTimeout, sizeof(int));
+			//接收时限
+			setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&nNetTimeout, sizeof(int));
+
+			sockaddr_in sockAddr;
+			memset(&sockAddr, 0, sizeof(sockAddr));
+			sockAddr.sin_family = PF_INET;
+			sockAddr.sin_addr.s_addr = inet_addr("172.18.32.31");
+			sockAddr.sin_port = htons(2019);
+
+			fprintf_s(f, "%s", (char*)" START Connect.\t");
 			fflush(f);
+			WAIT(1);
 
-			//角色不被通缉
-			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
-			//Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect
-			//wantedLevel is an integer value representing 0 to 5 stars even though the game supports the 6th wanted level but no police will appear since no definitions are present for it in the game files
-			//disableNoMission - Disables When Off Mission - appears to always be false
-			PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
-			//Forces any pending wanted level to be applied to the specified player immediately.  
-			//Call SET_PLAYER_WANTED_LEVEL with the desired wanted level, followed by SET_PLAYER_WANTED_LEVEL_NOW.
-			//Second parameter is unknown(always false).
-
-			//角色血量不下降
-			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 200);
-			/*
-			health >= 0
-			male ped ~= 100 - 200
-			female ped ~= 0 - 100
-			because something.
-			*/
-			PED::SET_PED_DIES_WHEN_INJURED(PLAYER::PLAYER_PED_ID(), 0);
-			//以上两句无用
-			ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
-			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
-			ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
-
-			//车辆血量不下降
-			Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
-			VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000);
-			/*
-			Returns 1000.0 if the function is unable to get the address of the specified vehicle or if it's not a vehicle.
-			Minimum: -4000
-			Maximum: 1000
-			-4000: Engine is destroyed
-			0 and below: Engine catches fire and health rapidly declines
-			300: Engine is smoking and losing functionality
-			1000: Engine is perfect
-			*/
-			VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000);
-			//1000 is max health. Begins leaking gas at around 650 health
-			VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000);
-			// p2 often set to 1000.0 in the decompiled scripts.  
-
-			//是否在车内
-			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) == FALSE)
-				/*
-				Parameters:
-				ped: The ped to check.
-				atGetIn: true to also consider attempting to enter a vehicle.
-				Returns:
-				Whether or not the ped is currently involved in any vehicle.
-				Returns whether the specified ped is in any vehicle. If atGetIn is set to true, also returns true if the ped is currently in the process of entering a vehicle (a specific stage check for CTaskEnterVehicle).
-				*/
+			if (connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR)) < 0)
 			{
-				fprintf_s(f, "%s", (char*)" NOT IN CAR\t");
+				fprintf_s(f, "%s", (char*)" Failed Connect.\t");
 				fflush(f);
-			}
-
-			//保存画面
-			void *buf_color;
-			fprintf_s(f, "%s", (char*)"START export_get_color_buffer ...\t");
-			fflush(f);
-			size = export_get_color_buffer(&buf_color, f);
-			if (size <= 0) {
-				fprintf_s(f, "%s", (char*)" BUFFER SIZE IS 0\t");
-				fflush(f);
-				exit(0);
+				continue;
 			}
 			else {
-				std::stringstream ss;
-				ss << " BUFFER SIZE IS " << size;
-				fprintf_s(f, "%s", ss.str().c_str());
+				fprintf_s(f, "%s", (char*)" Success Connect.\t");
 				fflush(f);
 			}
-			Mat image_color(Size(width, height), CV_8UC4, buf_color, Mat::AUTO_STEP); //注意，这里是四通道
-			cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？ important
-			imgSize = image_color.total()*image_color.elemSize();
-			n = send(sock, (char*)image_color.data, imgSize, 0);
-			if (n <= 0) {
-				fprintf_s(f, "%s", (char*)" ERROR writing to socket\t");
-				fflush(f);
-				exit(0);
-			}
-			else {
-				std::stringstream ss1;
-				ss1 << " SOCKET SIZE IS " << n;
-				fprintf_s(f, "%s",ss1.str().c_str());
-				fflush(f);
-			}
+			/////////////创建 socket//////////////////
 
-			char szBuffer[MAXBYTE] = { 0 };
-			n = recv(sock, szBuffer, MAXBYTE, NULL);
-			if (n <= 0) {
-				fprintf_s(f, "%s", (char*)" ERROR recv from socket\t");
-				fflush(f);
-				exit(0);
-			}
-			else {
-				std::stringstream ss1;
-				ss1 << " sueecess receive" << n;
-				fprintf_s(f, "%s", ss1.str().c_str());
-				fflush(f);
-			}
+			while (true) {  // 不能无时间间隔的一直循环。这样的话画面根本动不了。
+				WAIT(200);
 
-			while (true) {
-				if (strcmp(szBuffer, "got_color") == 0) {
-					printf("client received\n");
+				//保存时间
+				// 基于当前系统的当前日期/时间
+				time_t now = time(0);
+				// 把 now 转换为字符串形式
+				char* dt = ctime(&now);
+				fprintf_s(f, "%s", dt);
+				fflush(f);
+
+				//角色不被通缉
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, 0);
+				//Call SET_PLAYER_WANTED_LEVEL_NOW for immediate effect
+				//wantedLevel is an integer value representing 0 to 5 stars even though the game supports the 6th wanted level but no police will appear since no definitions are present for it in the game files
+				//disableNoMission - Disables When Off Mission - appears to always be false
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), 0);
+				//Forces any pending wanted level to be applied to the specified player immediately.  
+				//Call SET_PLAYER_WANTED_LEVEL with the desired wanted level, followed by SET_PLAYER_WANTED_LEVEL_NOW.
+				//Second parameter is unknown(always false).
+
+				//角色血量不下降
+				ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 200);
+				/*
+				health >= 0
+				male ped ~= 100 - 200
+				female ped ~= 0 - 100
+				because something.
+				*/
+				PED::SET_PED_DIES_WHEN_INJURED(PLAYER::PLAYER_PED_ID(), 0);
+				//以上两句无用
+				ENTITY::SET_ENTITY_MAX_HEALTH(PLAYER::PLAYER_PED_ID(), 9999);
+				ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 8888);
+				ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), 0);
+
+				//车辆血量不下降
+				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+				VEHICLE::SET_VEHICLE_ENGINE_HEALTH(veh, 1000);
+				/*
+				Returns 1000.0 if the function is unable to get the address of the specified vehicle or if it's not a vehicle.
+				Minimum: -4000
+				Maximum: 1000
+				-4000: Engine is destroyed
+				0 and below: Engine catches fire and health rapidly declines
+				300: Engine is smoking and losing functionality
+				1000: Engine is perfect
+				*/
+				VEHICLE::SET_VEHICLE_PETROL_TANK_HEALTH(veh, 1000);
+				//1000 is max health. Begins leaking gas at around 650 health
+				VEHICLE::SET_VEHICLE_BODY_HEALTH(veh, 1000);
+				// p2 often set to 1000.0 in the decompiled scripts.  
+
+				//是否在车内
+				if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1) == FALSE)
+					/*
+					Parameters:
+					ped: The ped to check.
+					atGetIn: true to also consider attempting to enter a vehicle.
+					Returns:
+					Whether or not the ped is currently involved in any vehicle.
+					Returns whether the specified ped is in any vehicle. If atGetIn is set to true, also returns true if the ped is currently in the process of entering a vehicle (a specific stage check for CTaskEnterVehicle).
+					*/
+				{
+					fprintf_s(f, "%s", (char*)" NOT IN CAR\t");
+					fflush(f);
+				}
+
+				GAMEPLAY::SET_GAME_PAUSED(TRUE);
+				WAIT(10);
+
+				//保存画面
+				void *buf_color;
+				fprintf_s(f, "%s", (char*)"START export_get_color_buffer ...\t");
+				fflush(f);
+				size = export_get_color_buffer(&buf_color, f);
+				if (size <= 0) {
+					fprintf_s(f, "%s", (char*)" BUFFER SIZE IS 0\t");
+					fflush(f);
+					WAIT(30000);
 					break;
 				}
-			}
-
-			//保存分割模板
-			void* buf;
-			size = export_get_stencil_buffer(&buf);
-			Mat image(Size(width, height), CV_8UC1, buf, Mat::AUTO_STEP); // 写这句话会出错：cvtColor(image, image, CV_GRAY2RGB);
-			imgSize = image.total()*image.elemSize();
-			n = send(sock, (char*)image.data, imgSize, 0);
-			if (n < 0) printf("ERROR writing to socket");
-
-			char szBuffer1[MAXBYTE] = { 0 };
-			recv(sock, szBuffer1, MAXBYTE, NULL);
-			while (true) {
-				if (strcmp(szBuffer1, "got_mask") == 0) {
-					printf("client received\n");
+				else {
+					std::stringstream ss;
+					ss << " BUFFER SIZE IS " << size;
+					fprintf_s(f, "%s", ss.str().c_str());
+					fflush(f);
+				}
+				Mat image_color(Size(width, height), CV_8UC4, buf_color, Mat::AUTO_STEP); //注意，这里是四通道
+				cvtColor(image_color, image_color, CV_RGBA2RGB); //把四通道转为三通道？ important
+				imgSize = image_color.total()*image_color.elemSize();
+				n = send(sock, (char*)image_color.data, imgSize, 0);
+				if (n <= 0) {
+					fprintf_s(f, "%s", (char*)" ERROR writing to socket\t");
+					fflush(f);
+					WAIT(30000);
 					break;
 				}
+				else {
+					std::stringstream ss1;
+					ss1 << " SOCKET SIZE IS " << n;
+					fprintf_s(f, "%s", ss1.str().c_str());
+					fflush(f);
+				}
+
+				char szBuffer[MAXBYTE] = { 0 };
+				n = recv(sock, szBuffer, MAXBYTE, NULL);
+				if (n <= 0) {
+					fprintf_s(f, "%s", (char*)" ERROR recv from socket\t");
+					fflush(f);
+					WAIT(30000);
+					break;
+				}
+				else {
+					std::stringstream ss1;
+					ss1 << " sueecess receive" << n;
+					fprintf_s(f, "%s", ss1.str().c_str());
+					fflush(f);
+				}
+
+				while (true) {
+					if (strcmp(szBuffer, "got_color") == 0) {
+						printf("client received\n");
+						break;
+					}
+				}
+
+				//保存分割模板
+				void* buf;
+				size = export_get_stencil_buffer(&buf);
+				Mat image(Size(width, height), CV_8UC1, buf, Mat::AUTO_STEP); // 写这句话会出错：cvtColor(image, image, CV_GRAY2RGB);
+				imgSize = image.total()*image.elemSize();
+				n = send(sock, (char*)image.data, imgSize, 0);
+				if (n < 0) printf("ERROR writing to socket");
+
+				char szBuffer1[MAXBYTE] = { 0 };
+				recv(sock, szBuffer1, MAXBYTE, NULL);
+				while (true) {
+					if (strcmp(szBuffer1, "got_mask") == 0) {
+						printf("client received\n");
+						break;
+					}
+				}
+				fprintf_s(f, "%s", (char*)"\n");
+
+				WAIT(10);
+				GAMEPLAY::SET_GAME_PAUSED(FALSE);
 			}
-			fprintf_s(f, "%s", (char*)"\n");
-		}
-		
+		}		
 	}
 
 	//clear log string
