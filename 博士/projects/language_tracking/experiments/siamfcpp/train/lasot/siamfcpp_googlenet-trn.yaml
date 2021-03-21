@@ -7,7 +7,7 @@ test:
         name: "Inception3"
         Inception3:
           pretrain_model_path: ""
-          crop_pad: 4
+          crop_pad: 0
           pruned: True
       losses:
         names: []
@@ -15,8 +15,6 @@ test:
         name: "DenseboxHead"
         DenseboxHead:
           total_stride: 8
-          score_size: 19
-          x_size: 303
           num_conv3x3: 2
           head_conv_bn: [False, False]
       task_model:
@@ -55,7 +53,7 @@ train:
       backbone:
         name: "Inception3"
         Inception3:
-          crop_pad: 4
+          crop_pad: 0
           pruned: True
           pretrain_model_path: "models/googlenet/inception_v3_google-1a9a5a14-961cad7697695cca7d9ca4814b17a88d.pth"
       losses:
@@ -77,8 +75,6 @@ train:
         name: "DenseboxHead"
         DenseboxHead:
           total_stride: 8
-          score_size: 17
-          x_size: 289
           num_conv3x3: 2
           head_conv_bn: [False, False]
       task_model:
@@ -90,7 +86,7 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 4  # 256
+      minibatch: &MINIBATCH 2  # 256
       num_workers: 2
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
       pin_memory: false
@@ -125,13 +121,10 @@ train:
         RandomCropTransformer:
           max_scale: 0.3
           max_shift: 0.4
-          x_size: 289
       target:
         name: "DenseboxTarget"
         DenseboxTarget:
           total_stride: 8
-          score_size: 17
-          x_size: 289
           num_conv3x3: 2
     trainer:
       name: "RegularTrainer"
