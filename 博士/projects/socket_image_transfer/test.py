@@ -11,7 +11,7 @@ import time
 
 NUM_CLASSES = 16  # 若较大，则非常占显存
 GPU_ID = 2
-ITER_NUM = 19000
+ITER_NUM = 63000
 
 def cross_entropy2d(input_, target_, weight=None, size_average=True):
     # input_: (n, c, h, w), target_: (n, h, w)
@@ -59,7 +59,7 @@ def decode_segmap(image_, nc=21):
 os.environ["CUDA_VISIBLE_DEVICES"] = str(GPU_ID)
 model = models.segmentation.deeplabv3_resnet50(num_classes=NUM_CLASSES).cuda()
 model.load_state_dict(torch.load('/tmp/{}.pth'.format(ITER_NUM)))
-model.train()
+model.eval()
 print('no')
 
 trf = T.Compose([T.ToTensor(),  # 转换为0~1
