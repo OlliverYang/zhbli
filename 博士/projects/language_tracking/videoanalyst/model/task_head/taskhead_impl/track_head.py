@@ -12,10 +12,10 @@ from videoanalyst.model.task_head.taskhead_base import TRACK_HEADS, VOS_HEADS
 torch.set_printoptions(precision=8)
 
 
-def get_xy_ctr(score_size, score_offset, total_stride):
+def get_xy_ctr(score_size_w, score_size_h, score_offset, total_stride):
     """ generate coordinates on image plane for score map pixels (in torch)
     """
-    batch, fm_height, fm_width = 1, score_size, score_size
+    batch, fm_height, fm_width = 1, score_size_h, score_size_w
 
     y_list = torch.linspace(0., fm_height - 1., fm_height).reshape(
         1, fm_height, 1, 1).repeat(1, 1, fm_width,
@@ -32,10 +32,10 @@ def get_xy_ctr(score_size, score_offset, total_stride):
     return xy_ctr
 
 
-def get_xy_ctr_np(score_size, score_offset, total_stride):
+def get_xy_ctr_np(score_size_w, score_size_h, score_offset, total_stride):
     """ generate coordinates on image plane for score map pixels (in numpy)
     """
-    batch, fm_height, fm_width = 1, score_size, score_size
+    batch, fm_height, fm_width = 1, score_size_h, score_size_w
 
     y_list = np.linspace(0., fm_height - 1.,
                          fm_height).reshape(1, fm_height, 1, 1)
@@ -71,8 +71,6 @@ class DenseboxHead(ModuleBase):
     ---------------
     total_stride: int
         stride in backbone
-    score_size: int
-        final feature map
     x_size: int
         search image size
     num_conv3x3: int
@@ -86,8 +84,6 @@ class DenseboxHead(ModuleBase):
     """
     default_hyper_params = dict(
         total_stride=8,
-        score_size=17,
-        x_size=303,
         num_conv3x3=3,
         head_conv_bn=[False, False, True],
         head_width=256,
@@ -141,16 +137,18 @@ class DenseboxHead(ModuleBase):
         return [cls_score, ctr_score, bbox, cls]
 
     def update_params(self):
-        x_size = self._hyper_params["x_size"]
-        score_size = self._hyper_params["score_size"]
-        total_stride = self._hyper_params["total_stride"]
-        score_offset = (x_size - 1 - (score_size - 1) * total_stride) // 2
-        self._hyper_params["score_offset"] = score_offset
+        IMG_WIDTH = 1024
+        IMG_HEIGHT = 768
+        STRIDE = 8
+        SCORE_MAP_WIDTH = IMG_WIDTH // STRIDE
+        SCORE_MAP_HEIGHT = IMG_HEIGHT // STRIDE
+        SCORE_OFFSET = 0
 
-        self.score_size = self._hyper_params["score_size"]
+        total_stride = self._hyper_params["total_stride"]
+
         self.total_stride = self._hyper_params["total_stride"]
-        self.score_offset = self._hyper_params["score_offset"]
-        ctr = get_xy_ctr_np(self.score_size, self.score_offset,
+        self.score_offset = SCORE_OFFSET
+        ctr = get_xy_ctr_np(SCORE_MAP_WIDTH, SCORE_MAP_HEIGHT, self.score_offset,
                             self.total_stride)
         self.fm_ctr = ctr
         self.fm_ctr.require_grad = False
@@ -170,14 +168,14 @@ class DenseboxHead(ModuleBase):
                                        head_width,
                                        stride=1,
                                        kszie=3,
-                                       pad=0,
+                                       pad=1,
                                        has_bn=head_conv_bn[i])
 
             bbox_conv3x3 = conv_bn_relu(head_width,
                                         head_width,
                                         stride=1,
                                         kszie=3,
-                                        pad=0,
+                                        pad=1,
                                         has_bn=head_conv_bn[i])
             setattr(self, 'cls_p5_conv%d' % (i + 1), cls_conv3x3)
             setattr(self, 'bbox_p5_conv%d' % (i + 1), bbox_conv3x3)

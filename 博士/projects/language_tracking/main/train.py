@@ -45,6 +45,7 @@ def make_parser():
 
 
 if __name__ == '__main__':
+    logger.info("Start training")
     # parsing
     parser = make_parser()
     parsed_args = parser.parse_args()
@@ -88,21 +89,34 @@ if __name__ == '__main__':
         devs = ["cuda:{}".format(i) for i in range(world_size)]
     else:
         devs = ["cpu"]
+
     # build model
+    logger.info("build model")
     model = model_builder.build(task, task_cfg.model)
-    model.set_device(devs[0])
+
+    DEBUG = False
+    if not DEBUG:
+        logger.info('move to GPU')
+        model.set_device(devs[0])
+    else:
+        print('debug')
+
     # load data
+    logger.info("load data")
     with Timer(name="Dataloader building", verbose=True):
         dataloader = dataloader_builder.build(task, task_cfg.data)
+
     # build optimizer
+    logger.info("build optimizer")
     optimizer = optim_builder.build(task, task_cfg.optim, model)
+
     # build trainer
+    logger.info("build trainer")
     trainer = engine_builder.build(task, task_cfg.trainer, "trainer", optimizer,
                                    dataloader)
     trainer.set_device(devs)
     trainer.resume(parsed_args.resume)
     # trainer.init_train()
-    logger.info("Start training")
     while not trainer.is_completed():
         trainer.train()
         trainer.save_snapshot()

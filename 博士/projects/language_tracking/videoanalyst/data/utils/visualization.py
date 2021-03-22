@@ -6,8 +6,7 @@ import numpy as np
 from videoanalyst.pipeline.utils.misc import tensor_to_imarray, tensor_to_numpy
 
 
-def show_img_FCOS(cfg,
-                  training_data,
+def show_img_FCOS(training_data,
                   distractor_boxes_recentered=[],
                   dataset='untitled'):
     r"""
@@ -21,16 +20,49 @@ def show_img_FCOS(cfg,
         training_data["cls_gt"], training_data["ctr_gt"],
         training_data["box_gt"]
     ]
+
+    '''设定超参数'''
+    IM_H = 768
+    IM_W = 1024
+    STRIDE = 8
+    x_size_h = IM_H
+    x_size_w = IM_W
+    score_size_h = IM_H // STRIDE
+    score_size_w = IM_W // STRIDE
+
+    total_stride = STRIDE
+
+    '''得到 gt box'''
+    # cx, cy, w, h = training_data['bbox_x'][0].data.cpu().numpy()
+    # x1 = int(cx - w / 2)
+    # y1 = int(cy - h / 2)
+    # x2 = int(cx + w / 2)
+    # y2 = int(cy + h / 2)
+    box = training_data['bbox_x'][0].data.cpu().numpy()
+    x1, y1, x2, y2 = [int(var) for var in box]
+
+    '''计算 cls_gt'''
+    cls_gt = (training_data['cls_gt'][0].data.cpu().numpy().reshape((score_size_h, score_size_w))*255).astype(np.uint8)  # 12288, 1, 0 or 1
+    cv2.imwrite('/tmp/cls.jpg', cls_gt)
+
+    """读入图片"""
+    show_img = cv2.resize(image_rand_focus, (x_size_w, x_size_h))
+    show_img_h, show_img_w = show_img.shape[:2]
+
+    show_img = cv2.rectangle(show_img, (x1, y1), (x2, y2), (255, 0, 0))
+    cv2.imwrite('/tmp/search_img.jpg', show_img)
+
     gt_datas = [tensor_to_numpy(t) for t in gt_datas]
     gt_target = np.concatenate(gt_datas, axis=-1)
     if gt_target.ndim == 3:
         gt_target = gt_target[0]
 
-    total_stride = cfg.total_stride
-    score_size = cfg.score_size
-    x_size = cfg.x_size
-    cfg.num_conv3x3
-    score_offset = (x_size - 1 - (score_size - 1) * total_stride) // 2
+    """计算 ctr_gt"""
+    cls_gt = (training_data['ctr_gt'][0].data.cpu().numpy().reshape((score_size_h, score_size_w)) * 255).astype(
+        np.uint8)  # 12288, 1, 0 or 1
+    cv2.imwrite('/tmp/ctr.jpg', cls_gt)
+
+    score_offset = 0
 
     color = dict()
     color['pos'] = (0, 0, 255)
@@ -40,13 +72,7 @@ def show_img_FCOS(cfg,
     # to prove the correctness of the gt box and sample point
     gts = gt_target[gt_target[:, 0] == 1, :][:, 2:]
 
-    show_img = cv2.resize(image_rand_focus, (x_size, x_size))
-    show_img_h, show_img_w = show_img.shape[:2]
-
     fm_margin = score_offset
-    pt1 = (int(fm_margin), ) * 2
-    pt2 = (int(x_size - fm_margin), ) * 2
-    cv2.rectangle(show_img, pt1, pt2, (0, 0, 255))
 
     gt_indexes = (gt_target[:, 0] == 1)
     if gt_indexes.any():
@@ -68,8 +94,8 @@ def show_img_FCOS(cfg,
 
     for index in pos_indexes:
         # note that due to ma 's fcos implementation, x and y are switched
-        pos = (score_offset + (index % score_size) * total_stride,
-               score_offset + (index // score_size) * total_stride)
+        pos = (score_offset + (index % score_size_w) * total_stride,
+               score_offset + (index // score_size_h) * total_stride)
         ctr = ctr_gt[index]
         color_pos = tuple(
             (np.array(color['pos']) + ctr * np.array(color['ctr'])).astype(
@@ -78,8 +104,8 @@ def show_img_FCOS(cfg,
 
     for index in neg_indexes:
         # note that due to ma 's fcos implementation, x and y are switched
-        pos = (score_offset + (index % score_size) * total_stride,
-               score_offset + (index // score_size) * total_stride)
+        pos = (score_offset + (index % score_size_w) * total_stride,
+               score_offset + (index // score_size_h) * total_stride)
         ctr = ctr_gt[index]
         color_neg = tuple(
             (np.array(color['neg']) + ctr * np.array(color['ctr'])).astype(
@@ -88,8 +114,8 @@ def show_img_FCOS(cfg,
 
     for index in ign_indexes:
         # note that due to ma 's fcos implementation, x and y are switched
-        pos = (score_offset + (index % score_size) * total_stride,
-               score_offset + (index // score_size) * total_stride)
+        pos = (score_offset + (index % score_size_w) * total_stride,
+               score_offset + (index // score_size_h) * total_stride)
         cv2.circle(show_img, pos, 2, color['ign'], -1)
 
     cv2.putText(show_img, 'pos', (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
@@ -107,5 +133,6 @@ def show_img_FCOS(cfg,
         for box in distractor_boxes_recentered:
             cv2.rectangle(show_img, (int(box[0]), int(box[1])),
                           (int(box[2]), int(box[3])), color['neg'])
-    cv2.imshow('search', show_img)
-    cv2.imshow('target', target_img)
+    cv2.imwrite('/tmp/search.jpg', show_img)
+    cv2.imwrite('/tmp/target.jpg', target_img)
+    return

@@ -39,9 +39,11 @@ class SiamTrack(ModuleBase):
 
     support_phases = ["train", "feature", "track", "freeze_track_fea"]
 
-    def __init__(self, backbone, head, loss=None):
+    def __init__(self, backbone, head, loss=None, sentence_transformer=None, sentence_head=None):
         super(SiamTrack, self).__init__()
         self.basemodel = backbone
+        self.sentence_transformer = sentence_transformer
+        self.sentence_transformer.train()
         self.head = head
         self.loss = loss
         self.trt_fea_model = None
@@ -60,17 +62,23 @@ class SiamTrack(ModuleBase):
     def train_forward(self, training_data):
         target_img = training_data["im_z"]
         search_img = training_data["im_x"]
+        nlp = training_data['nlp']
+
         # backbone feature
-        f_z = self.basemodel(target_img)
         f_x = self.basemodel(search_img)
+        sentence_feature = self.sentence_transformer.encode(nlp, convert_to_numpy=False, convert_to_tensor=True)\
+            .unsqueeze(2).unsqueeze(3)
+
         # feature adjustment
-        c_z_k = self.c_z_k(f_z)
-        r_z_k = self.r_z_k(f_z)
+        c_z_k = self.c_z_k(sentence_feature)
+        r_z_k = self.r_z_k(sentence_feature)
         c_x = self.c_x(f_x)
         r_x = self.r_x(f_x)
+
         # feature matching
         r_out = xcorr_depthwise(r_x, r_z_k)
         c_out = xcorr_depthwise(c_x, c_z_k)
+
         # head
         fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
             c_out, r_out)
@@ -81,6 +89,7 @@ class SiamTrack(ModuleBase):
         )
         if self._hyper_params["corr_fea_output"]:
             predict_data["corr_fea"] = corr_fea
+
         return predict_data
 
     def instance(self, img):
@@ -215,20 +224,20 @@ class SiamTrack(ModuleBase):
         head_width = self._hyper_params['head_width']
 
         # feature adjustment
-        self.r_z_k = conv_bn_relu(head_width,
+        self.r_z_k = conv_bn_relu(768,
                                   head_width,
                                   1,
-                                  3,
+                                  1,
                                   0,
                                   has_relu=False)
-        self.c_z_k = conv_bn_relu(head_width,
+        self.c_z_k = conv_bn_relu(768,
                                   head_width,
                                   1,
-                                  3,
+                                  1,
                                   0,
                                   has_relu=False)
-        self.r_x = conv_bn_relu(head_width, head_width, 1, 3, 0, has_relu=False)
-        self.c_x = conv_bn_relu(head_width, head_width, 1, 3, 0, has_relu=False)
+        self.r_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
+        self.c_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
 
     def _initialize_conv(self, ):
         conv_weight_std = self._hyper_params['conv_weight_std']

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 import copy
 from collections import OrderedDict
-
+from yacs.config import CfgNode as CN
 from loguru import logger
 from tqdm import tqdm
 
@@ -9,7 +9,7 @@ import torch
 from torch import nn
 
 from videoanalyst.utils import Timer, move_data_to_device
-
+from videoanalyst.data.utils.visualization import show_img_FCOS
 from ..trainer_base import TRACK_TRAINERS, TrainerBase
 
 
@@ -87,7 +87,13 @@ class RegularTrainer(TrainerBase):
         for iteration, _ in enumerate(pbar):
             self._state["iteration"] = iteration
             with Timer(name="data", output_dict=time_dict):
-                training_data = next(self._dataloader)
+                DEBUG = True
+                if DEBUG:
+                    print('debug')
+                    if iteration == 0:
+                        training_data = next(self._dataloader)
+                else:
+                    training_data = next(self._dataloader)
             training_data = move_data_to_device(training_data,
                                                 self._state["devices"][0])
 
@@ -122,7 +128,12 @@ class RegularTrainer(TrainerBase):
 
             for monitor in self._monitors:
                 monitor.update(trainer_data)
-            del training_data
+
+            DEBUG1 = True
+            if DEBUG1:
+                show_img_FCOS(training_data)
+            if not DEBUG:
+                del training_data
             print_str = self._state["print_str"]
             pbar.set_description(print_str)
 

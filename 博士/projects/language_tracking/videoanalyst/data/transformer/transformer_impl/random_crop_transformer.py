@@ -1,5 +1,5 @@
 from typing import Dict
-
+import cv2
 from videoanalyst.data.utils.crop_track_pair import crop_track_pair
 
 from ..transformer_base import TRACK_TRANSFORMERS, TransformerBase
@@ -47,6 +47,10 @@ class RandomCropTransformer(TransformerBase):
             input data
             Dict(data1=Dict(image, anno), data2=Dict(image, anno))
         """
+        CROP = False
+        IM_WIDTH = 1024
+        IM_HEIGHT = 768
+
         data1 = sampled_data["data1"]
         data2 = sampled_data["data2"]
         im_temp, bbox_temp = data1["image"], data1["anno"]
@@ -58,6 +62,17 @@ class RandomCropTransformer(TransformerBase):
             bbox_curr,
             config=self._hyper_params,
             rng=self._state["rng"])
+
+        if not CROP:
+            im_h, im_w = im_curr.shape[:2]
+            im_x = cv2.resize(im_curr, (IM_WIDTH, IM_HEIGHT))
+            scale_x = IM_WIDTH / im_w
+            scale_y = IM_HEIGHT / im_h
+            bbox_x = bbox_curr
+            bbox_x[0] *= scale_x
+            bbox_x[1] *= scale_y
+            bbox_x[2] *= scale_x
+            bbox_x[3] *= scale_y
 
         sampled_data["data1"] = dict(image=im_z, anno=bbox_z, nlp=data1['nlp'])
         sampled_data["data2"] = dict(image=im_x, anno=bbox_x, nlp=data2['nlp'])

@@ -4,6 +4,7 @@ from typing import Dict
 
 from ..target_base import TRACK_TARGETS, TargetBase
 from .utils import make_densebox_target
+from videoanalyst.data.utils.visualization import show_img_FCOS
 
 
 @TRACK_TARGETS.register
@@ -45,6 +46,14 @@ class DenseboxTarget(TargetBase):
 
         is_negative_pair = sampled_data["is_negative_pair"]
 
+        DEBUG = False
+        if DEBUG:
+            import cv2
+            print('DEBUG')
+            x1, y1, x2, y2 = [int(var) for var in bbox_x]
+            im_x = cv2.rectangle(im_x, (x1, y1), (x2, y2), (255, 0, 0))
+            cv2.imwrite('/tmp/box.jpg', im_x)
+
         # input tensor
         im_z = im_z.transpose(2, 0, 1)
         im_x = im_x.transpose(2, 0, 1)
@@ -68,5 +77,10 @@ class DenseboxTarget(TargetBase):
             nlp=data_z['nlp'],
         )
         #training_data = super().__call__(training_data)
+
+        # DEBUG = True;
+        # print('debug')
+        # if DEBUG:
+        #     show_img_FCOS(training_data)
 
         return training_data

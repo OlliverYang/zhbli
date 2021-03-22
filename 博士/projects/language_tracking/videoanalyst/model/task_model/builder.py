@@ -13,7 +13,9 @@ def build(task: str,
           cfg: CfgNode,
           backbone: ModuleBase,
           head: ModuleBase,
-          loss: ModuleBase = None):
+          loss: ModuleBase = None,
+          sentence_transformer = None,
+          sentence_head = None):
     r"""
     Builder function.
 
@@ -43,9 +45,10 @@ def build(task: str,
 
     if task == "track":
         name = cfg.name
-        task_module = task_modules[name](backbone, head, loss)
+        task_module = task_modules[name](backbone, head, loss, sentence_transformer, sentence_head)
         hps = task_module.get_hps()
         hps = merge_cfg_into_hps(cfg[name], hps)
+        task_module.set_hps(hps)
         task_module.set_hps(hps)
         task_module.update_params()
         return task_module

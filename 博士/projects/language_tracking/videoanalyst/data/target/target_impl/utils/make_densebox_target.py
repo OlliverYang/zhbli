@@ -1,7 +1,7 @@
 # encoding: utf-8
 import os
 from typing import Dict, Tuple
-
+import cv2
 import numpy as np
 
 import torch
@@ -59,12 +59,21 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
         # previous format
         # shape=(N, 6), order=(class, center-ness, left_offset, top_offset, right_offset, bottom_offset)
     """
-    x_size = config["x_size"]
-    score_size = config["score_size"]
+    DEBUG = False
+    IM_WIDTH = 1024
+    IM_HEIGHT = 768
     total_stride = config["total_stride"]
-    score_offset = config["score_offset"]
+    SCORE_MAP_WIDTH = IM_WIDTH // total_stride
+    SCORE_MAP_HEIGHT = IM_HEIGHT // total_stride
+    score_offset = 0
     eps = 1e-5
-    raw_height, raw_width = x_size, x_size
+    raw_height, raw_width = IM_HEIGHT, IM_WIDTH
+
+    if DEBUG:
+        img_zhbli = np.zeros((IM_HEIGHT, IM_WIDTH))
+        x1, y1, x2, y2 = [int(var) for var in gt_boxes[-1][:4]]
+        img_zhbli[y1:y2, x1:x2] = 255
+        cv2.imwrite('/tmp/img_zhbli.jpg', img_zhbli)
 
     # append class dimension to gt_boxes if ignored
     if gt_boxes.shape[1] == 4:
@@ -92,7 +101,7 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
     # coordinate meshgrid on image, shape=(H. W)
     x_coords = torch.arange(0, raw_width, dtype=torch.int64)  # (W, )
     y_coords = torch.arange(0, raw_height, dtype=torch.int64)  # (H, )
-    y_coords, x_coords = torch.meshgrid(x_coords, y_coords)  # (H, W)
+    y_coords, x_coords = torch.meshgrid(y_coords, x_coords)  # (H, W)
 
     off_l = (x_coords[:, :, np.newaxis, np.newaxis].type(torch.float32) -
              gt_boxes[np.newaxis, np.newaxis, :, 0, np.newaxis])
@@ -124,6 +133,7 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
     center = torch.squeeze(torch.sqrt(torch.abs(center)), dim=3)
     center[:, :, 0] = 0  # mask centerness for dummy box as zero
 
+    """计算 offset"""
     # (H, W, #boxes, 4)
     offset = torch.cat([off_l, off_t, off_r, off_b], dim=3)
     if DUMP_FLAG:
@@ -135,23 +145,28 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
     #   dummy box assigned as 0
     cls = gt_boxes[:, 4]
 
-    fm_height, fm_width = score_size, score_size  # h, w
+    fm_height, fm_width = SCORE_MAP_HEIGHT, SCORE_MAP_WIDTH  # h, w
     fm_offset = score_offset
     stride = total_stride
 
     # coordinate meshgrid on feature map, shape=(h, w)
     x_coords_on_fm = torch.arange(0, fm_width, dtype=torch.int64)  # (w, )
     y_coords_on_fm = torch.arange(0, fm_height, dtype=torch.int64)  # (h, )
-    y_coords_on_fm, x_coords_on_fm = torch.meshgrid(x_coords_on_fm,
-                                                    y_coords_on_fm)  # (h, w)
+    y_coords_on_fm, x_coords_on_fm = torch.meshgrid(y_coords_on_fm,
+                                                    x_coords_on_fm)  # (h, w)
     y_coords_on_fm = y_coords_on_fm.reshape(-1)  # (hxw, ), flattened
     x_coords_on_fm = x_coords_on_fm.reshape(-1)  # (hxw, ), flattened
 
+    """计算 offset_on_fm, 根据 offset 计算"""
     # (hxw, #boxes, 4-d_offset_(l/t/r/b), )
     offset_on_fm = offset[fm_offset + y_coords_on_fm * stride, fm_offset +
                           x_coords_on_fm * stride]  # will reduce dim by 1
+
+    """计算 is_in_boxes，根据 offset_on_fm 计算"""
     # (hxw, #gt_boxes, )
     is_in_boxes = (offset_on_fm > 0).all(dim=2).type(torch.uint8)
+
+    """计算 offset_valid, 根据 is_in_boxes 计算"""
     # (h, w, #gt_boxes, ), boolean
     #   valid mask
     offset_valid = torch.zeros((fm_height, fm_width, boxes_cnt),
@@ -161,6 +176,7 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
         x_coords_on_fm, :] = is_in_boxes  #& is_in_layer  # xy[:, 0], xy[:, 1] reduce dim by 1 to match is_in_boxes.shape & is_in_layer.shape
     offset_valid[:, :, 0] = 0  # h x w x boxes_cnt
 
+    """计算 hit_gt_ind, 根据 offset_valid 进行计算"""
     # (h, w), boolean
     #   index of pixel on feature map
     #     used for indexing on gt_boxes, cls
@@ -181,10 +197,15 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
     gt_boxes_res = gt_boxes_res.reshape(-1, 4)
     # gt_boxes_res_list.append(gt_boxes_res.reshape(-1, 4))
 
+    """为 cls_res 的目标位置赋值为 1, 根据 hit_gt_ind 进行赋值"""
     # (h, w, 1-d_cls_score)
     cls_res = torch.zeros((fm_height, fm_width))
     cls_res[y_coords_on_fm, x_coords_on_fm] = cls[
         hit_gt_ind[y_coords_on_fm, x_coords_on_fm]]
+
+    if DEBUG:
+        cv2.imwrite('/tmp/cls_zhbli.jpg', (cls_res.data.cpu().numpy()*255).astype(np.uint8))
+
     cls_res = cls_res.reshape(-1, 1)
 
     # (h, w, 1-d_centerness)

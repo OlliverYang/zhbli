@@ -11,6 +11,8 @@ from .loss import builder as loss_builder
 from .task_head import builder as head_builder
 from .task_model import builder as task_builder
 
+from videoanalyst.sentence_transformers import SentenceTransformer
+
 
 def build(
         task: str,
@@ -33,10 +35,15 @@ def build(
     """
     if task == "track":
         backbone = backbone_builder.build(task, cfg.backbone)
+
+        logger.info("build sentence_transformer")
+        sentence_transformer = SentenceTransformer('paraphrase-distilroberta-base-v1')
+
         head = head_builder.build(task, cfg.task_head)
         losses = loss_builder.build(task, cfg.losses)
-        task_model = task_builder.build(task, cfg.task_model, backbone, head,
-                                        losses)
+
+        logger.info("build task_model")
+        task_model = task_builder.build(task, cfg.task_model, backbone, head, losses, sentence_transformer)
 
     elif task == "vos":
         gml_extractor = backbone_builder.build(task, cfg.gml_extractor)
