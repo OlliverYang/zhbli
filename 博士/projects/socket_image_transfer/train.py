@@ -109,10 +109,7 @@ def get_one_data(conn_, old_img, old_mask, old_index):
         except Exception as e:
             localtime = time.asctime(time.localtime(time.time()))
             print(old_index, localtime, e)
-            cv2.imwrite(os.path.join(args.save_dir, '{}.jpg'.format(old_index)), old_img)
-            cv2.imwrite(os.path.join(args.save_dir, '{}.png'.format(old_index)), old_mask)
-            print('old image saved, exit')
-            exit(0)
+            return None, None
 
         if not nbytes:
             print('color no nbytes')
@@ -133,7 +130,13 @@ def get_one_data(conn_, old_img, old_mask, old_index):
     print('receiving mask...')
     sockData_mask = b''
     while mask_size:
-        nbytes = conn_.recv(mask_size)
+        try:
+          nbytes = conn_.recv(mask_size)
+        except Exception as e:
+            localtime = time.asctime(time.localtime(time.time()))
+            print(old_index, localtime, e)
+            return None, None
+
         if not nbytes:
             print('no nbytes')
             break
@@ -206,6 +209,11 @@ while True:
             image_np, target_np = get_one_data_dummy()
         else:
             image_np, target_np = get_one_data(conn, image_np, target_np, i)
+            while image_np is None:
+                print('re connect...')
+                conn = start_server()
+                image_np, target_np = get_one_data(conn, image_np, target_np, i)
+
         target_np[target_np >= NUM_CLASSES] = 0
         if image_np is None:
             save_path = '/tmp/{}.pth'.format(i)
