@@ -343,8 +343,8 @@ GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据集。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
 我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
-如图 \ref{fig:got10k}所示，本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所列出的其他跟踪算法。
-在文献 CFNet \cite{Valmadre2017EndtoEndRL} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
+如图 \ref{fig:got10k} 所示，本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所列出的其他跟踪算法。
+在 CFNet \cite{Valmadre2017EndtoEndRL} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
 而本章提出的网络 InstMask 基于 ResNet 设计，具有更多卷积层，可有效提取图像的高层语义信息，因此取得了更好的跟踪性能。
 
 \subsection{基于数据集 DAVIS2016 的评测结果分析}
