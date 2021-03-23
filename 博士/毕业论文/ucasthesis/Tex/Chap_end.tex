@@ -60,7 +60,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 % add adversarial Dropout to enforce the tracker to learn difficult cases. 
 % (We further propose a adversarial training module to enforce the tracker to learn difficult cases. The motivation is that ... This is achieved by computing the adversarial masks based on diversity maximum. This simple form of feature selection improves the discrimination power of the tracker.)
 %Specifically, we calculate the diversity of two Dropouts, and make the loss max to learn the difficult Dropout mask.
-具体而言，首先根据散度最大值预测对抗性 Dropout 模板。
+具体而言，首先根据散度最大化预测对抗性 Dropout 模板。
 然后，我们旨在最大程度地减小随机删除的特征和对抗删除的特征之间的差异。
 %The effect of this module can be interpreted from both the Dropout and from the adversarial training perspectives.
 该模块具有 Dropout 和对抗训练的双重优势：Dropout 使基于孪生网络的视觉目标跟踪器在训练过程中随机断开神经元，以防止目标特征的过拟合；而对抗训练则使基于孪生网络的视觉目标跟踪器学习困难的情况。
@@ -84,7 +84,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 大多数现有的相关滤波跟踪器仅考虑当前帧的表观特征，几乎无法从运动和帧间信息中受益。在诸如部分遮挡和形变之类的挑战中，缺少时间信息会降低跟踪性能。目标跟踪所处理的是视频信息，因此时序信息很重要。
 %以前有很多工作利用时序信息进行目标跟踪。
 在文献 \cite{DeepMotion} 中，Gladh 等人首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动特征对视觉目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视觉目标跟踪。
-该方法虽然利用光流提高了视觉目标跟踪算法的性能，但采用的是在在动作识别任务中预训练的深层光流网络，并没有在视觉目标跟踪任务中进行端到端训练，因此没有获得最佳跟踪效果。
+该方法虽然利用光流提高了视觉目标跟踪算法的性能，但采用的是在动作识别任务中预训练的深层光流网络，并没有在视觉目标跟踪任务中进行端到端训练，因此没有获得最佳跟踪效果。
 为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出在深度学习框架中共同训练光流网络和跟踪网络，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
 
 \section{孪生网络跟踪器的端到端时间聚合}
@@ -147,7 +147,7 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 在时间上相邻的帧可以提供有关目标的更多信息。
 %the video has rich information about the target. 
 因此，我们旨在通过聚合相邻帧的特征来改善每帧中的目标特征。
-相比于三维卷积神经网络，传统的二维卷积卷积神经网络消耗的计算资源相对较少，但无法捕获时间关系。基于三维卷积神经网络的方法可以提取时间维度的特征，但计算量大，因此部署成本高。在本章所设计的跟踪器中，我们引入了一种性能高、速度快的通用时间移位模块（temporal shift module，TSM）\cite{lin2019tsm}。具体来说，该模块可以实现三维卷积神经网络的性能，同时保持二维卷积神经网络的复杂性。时间移位模块沿时间维度移动部分通道，因此可以在相邻帧之间交换信息。该模块可以直接插入二维卷积神经网络中，在不增加计算量和参数量的情况下实现时间建模。具体来说，神经网络中的特征激活可以表示为 $f \in \mathbb R^{N\times C\times T\times H\times W}$，其中 $N$ 是批次大小，$C$ 是通道数，$T$ 是时间维度，$H$ 和 $W$ 是空间分辨率。传统的二维卷积神经网络在不同的时间 $T$ 上独立运行，因此无法进行时间建模。而时间移位模块沿时间维度向前或向后移动通道，使得来自相邻帧的信息在移位后与当前帧混合在一起。
+相比于三维卷积神经网络，传统的二维卷积神经网络消耗的计算资源相对较少，但无法捕获时间关系。基于三维卷积神经网络的方法可以提取时间维度的特征，但计算量大，因此部署成本高。在本章所设计的跟踪器中，我们引入了一种性能高、速度快的通用时间移位模块（temporal shift module，TSM）\cite{lin2019tsm}。具体来说，该模块可以实现三维卷积神经网络的性能，同时保持二维卷积神经网络的复杂性。时间移位模块沿时间维度移动部分通道，因此可以在相邻帧之间交换信息。该模块可以直接插入二维卷积神经网络中，在不增加计算量和参数量的情况下实现时间建模。具体来说，神经网络中的特征激活可以表示为 $f \in \mathbb R^{N\times C\times T\times H\times W}$，其中 $N$ 是批次大小，$C$ 是通道数，$T$ 是时间维度，$H$ 和 $W$ 是空间分辨率。传统的二维卷积神经网络在不同的时间 $T$ 上独立运行，因此无法进行时间建模。而时间移位模块沿时间维度向前或向后移动通道，使得来自相邻帧的信息在移位后与当前帧混合在一起。
 %我们的直觉是：卷积运算由移位和乘法累加组成。我们将时间维度偏移±1，并将乘积从时间维度折叠到通道维度。为了实时了解在线视频，将来的框架不能转移到现在，因此我们使用单向TSM（图1c）进行在线视频理解。
 尽管移位运算不会增加计算量，但仅简单地平移通道信息会带来两个主要的问题：
 \begin{itemize}
@@ -157,7 +157,7 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 
 为了解决这些问题，在文献 \cite{lin2019tsm} 中，Lin 等人提出了两个解决方案：
 \begin{itemize}
-\item 采用局部移位策略：为了有效的时间融合，只移位一小部分通道，而不是移位所有通道。这种策略显着降低了数据移动成本。
+\item 采用局部移位策略：为了有效的时间融合，只移位一小部分通道，而不是移位所有通道。这种策略显著降低了数据移动成本。
 \item 将时间移位模块插入残差分支内，以便保留当前帧的激活，这不会损害二维卷积神经网络的空间特征学习能力。
 \end{itemize}
 % TSM: Temporal Shift Module for Efficient Video Understanding
@@ -235,7 +235,7 @@ The loss function of stage 1 is:
     \centering
     \includegraphics[width=0.75\textwidth]{Img/end/success_plot.png}
     \caption{数据集 GOT-10k \cite{GOT-10k} 中算法的平均重叠率（AO）排序图。}
-    \label{fig:end_uav20l}
+    \label{fig:end_got10k}
 \end{figure}
 
 \iffalse
@@ -259,6 +259,7 @@ The loss function of stage 1 is:
   \centerline{\includegraphics[width=0.99\textwidth]{Img/end/quality_plot_error_OPE_threshold.png}}
 \end{minipage}
 \caption{本章提出的跟踪算法与相关算法在 UAV20L \cite{mueller2016benchmark} 数据集上的跟踪成功率曲线以及精度曲线展示。}
+\label{fig:end_uav20l}
 \end{figure}
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
 在本章种，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别性。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
@@ -268,12 +269,12 @@ The loss function of stage 1 is:
 \begin{equation}
 \begin{split}
     & \mathbf{m}^{adv} = \mathop{\arg\max}\limits_{\mathbf{m}}D[h^{cls}(\mathcal{X} \odot \mathbf{m}^s), h^{cls}(\mathcal{X} \odot \mathbf{m})] \\
-    & 其中~||\mathbf{m}^s - \mathbf{m}|| \leq \delta_e L,
+    & ||\mathbf{m}^s - \mathbf{m}|| \leq \delta_e L,
 \end{split}
 \end{equation}
 其中 $L$ 代表 $\mathbf{m} \in \mathbb R^L$ 的尺寸，
 $\mathbf{m}^s$ 表示随机 Dropout 掩码， $\mathbf{m}^{adv}$ 表示对抗性 Dropout 掩码。
-$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ \cite{lee2019drop} 的扰动幅度。
+$\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ 的扰动幅度 \cite{lee2019drop}。
 %and $\delta_{e}$ is a hyper parameter to control the perturbation magnitude with respect to $m^{s}$ \cite{lee2019drop}
 $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
@@ -281,7 +282,7 @@ $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 %有关详细信息，请参考 \cite{park2018adversarial}。
 %Then, we use the mask to Dropout the feature, then send it to the classifier.
 %We also send the clean feature to the classifier, and wish the loss minimum:
-在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个采用随机 Dropout 掩码 $\mathbf{m}^{s}$ 获得，另一个采用对抗性 Dropout 掩码 $\mathbf{m}^{adv}$ 获得 \cite{lee2019drop}。
+在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个采用随机 Dropout 掩码 $\mathbf{m}^{s}$ 获得，另一个采用对抗性 Dropout 掩码 $\mathbf{m}^{adv}$ 获得 \cite{lee2019drop}：
 \begin{equation}
     \mathcal{L}_{adv} = \mathbb E[D_{KL}[h^{cls}(\mathcal{X} \odot\mathbf{m}^{s})||h^{cls}(\mathcal{X} \odot\mathbf{m}^{adv}))]],
 \end{equation}
@@ -331,7 +332,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
     \label{fig:end_vis}
 \end{figure}
 
-在本章中我们提出的时间信息增强的跟踪算法增强了基于孪生网络的视觉目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于目标的退化特征具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视觉目标跟踪数据集 GOT-10K \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
+在本章中我们提出的时间信息增强的跟踪算法提高了基于孪生网络的视觉目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于退化的目标表观具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视觉目标跟踪数据集 GOT-10K \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
 \subsection{实验设置}
 
 \begin{figure}[t]
@@ -400,6 +401,7 @@ MDNet	 &  0.299&  0.303 &0.099 \\
 %ECOhc	 &  0.286&  0.276 &0.096 \\
 \bottomrule
 \end{tabular}
+\label{table:end_got10k}
 \end{table}
 在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估本章提出的算法。
 % Say something about this dataset.
@@ -421,21 +423,20 @@ GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别
 
 \textbf{与其他跟踪算法的比较}
 我们将本章提出的方法与多个主流跟踪器进行了比较。
-表 \ref{table:got} 中显示了这些跟踪器的性能。
+表 \ref{table:end_got10k} 和图 \ref{fig:end_got10k} 中显示了这些跟踪器的性能。
 与所对比的方法相比，本章提出的方法实现了 0.577 的 AO 值。
 
-ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显着减少 DCF 模型中的参数数量。相比之下，本章提出的跟踪器基于强大的孪生架构。因此，本章提出的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在目标跟踪任务方面的有效性。
+ECO \cite{danelljan2017eco} 是基于 DCF 的最新跟踪器，它引入了分解卷积运算符，可显著减少 DCF 模型中的参数数量。相比之下，本章提出的跟踪器基于强大的孪生架构。因此，本章提出的跟踪器的 AO 得分明显优于 ECO，提高了 26.1％，这表明孪生体系结构在目标跟踪任务方面的有效性。
 SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时在三个任务上训练一个孪生网络，每个任务都对应一种不同的策略，以建立真实目标和候选区域之间的对应关系。
 然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
 
 \subsection{基于数据集 UAV20L 的评测结果分析}
 在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
-在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框内的像素与真实边界框的边框重叠。
+在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框与真实边界框的边框重叠。
 在图 \ref{fig:end_uav20l} 中可以看出，本章提出的算法具有较好的跟踪性能。
-在成功图中，我们的跟踪器获得的 AUC 得分为 0.606。
-在精度图中，我们的跟踪器的得分为 0.804。
-它表明本章提出的跟踪器一些有代表性的最新跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
+在成功图中，我们的跟踪器获得的 AUC 得分为 0.606，
+在精度图中，我们的跟踪器的得分为 0.804，超过了所列出的其他跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
 
 此外，我们在 UAV20L 数据集上进行了基于属性的分析（参见图 \ref{fig:end_uav20l_attr_1} 和图 \ref{fig:end_uav20l_attr_2}）。UAV20L 包含常见的视觉跟踪挑战。其中，宽高比变化（aspect ration change，ARC）表示第一帧中目标的宽高比与至少后续一帧中目标宽高比的比值超出区间 $[0.5, 2]$；背景混杂（background clutter，BC）表示目标附近的背景表观与目标表观近似；相机运动（camera motion，CM）表示相机的突然运动；快速运动（fast motion，FM）表示目标标注框在相邻两帧之间的位移超过 20 像素；完全遮挡（full occlusion，FOC）表示目标被完全遮挡；光照变化（illumination variation，IV）表示目标的光照发生显著变化；低分辨率（low resolution，LR）表示至少有一个真实标注框的分辨率小于 400 像素；视线外（out-of-view，OV）表示目标的某些部分离开视线；部分遮挡（partial occlusion，POC）表示目标被部分遮挡；相似目标（similar object，SOB）表示目标附近有相似形状或相同类型的目标；尺度变化（scale variation，SV）表示目标的初始边界框和至少一个后续边界框的尺度比率超出范围 $[0.5, 2]$；视点改变（viewpoint change，VC）表示视点会显著影响目标表观。
 与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
