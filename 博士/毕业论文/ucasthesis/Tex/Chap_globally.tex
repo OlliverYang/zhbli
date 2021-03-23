@@ -342,7 +342,7 @@ LO 子集包括验证集中最长的 40 段视频。
 %This result suggests that our two-stage tracker based on ResNet50 is able to handle the appearance changes caused by heavy occlusion.
 在 LO 子集上，与 SiamMask 相比，本章提出的算法在 AO 得分上的提升为 7.8％。结果表明，全局感知机制可以有效减少视觉目标跟踪算法在跟踪长视频时的累积误差。
 
-\subsection{基于数据集 UAV20L 数据集的评测结果分析}
+\subsection{基于数据集 UAV20L 的评测结果分析}
 
 UAV20L \cite{mueller2016benchmark} 是从低空鸟瞰视角捕获的航拍视频数据集。UAV20L 数据库专为长期跟踪而设计，包含 20 个视频，平均长度为 2934 帧。
 遵循 OTB50 \cite{OTB} 的评估方法，我们使用精确度和成功率来评估 UAV20L 数据集上跟踪器的性能。精确度反映了指从预测边界框的中心点到真实边界框的中心点的距离。成功率使用预测边界框与真实边界框的边框重叠计算得到。在图 \ref{fig:globally_uav20l} 中，不同跟踪器的性能比较通过精度图和成功图进行可视化。
