@@ -55,9 +55,9 @@
 最近很多研究将对抗性信息的应用扩展到其他领域，如自然语言处理 \cite{generating} 和图像目标检测 \cite{wei2019transferable}。
 可以按照不同的维度将对抗性信息进行分类。
 
-\textbf{不可感知的扰动与对抗性补丁} 不可感知的扰动通常会使每个像素发生少量变化，并且可以使用多种优化策略进行求解，例如 BFGS \cite{intriguing} 和 PGD \cite{PGD}。
-对抗性补丁可以放置在输入图像中的任何位置，以引起网络行为异常，因此常用于通用攻击 \cite{patch}。
-在本章中，我们同时利用不可感知的扰动和对抗性补丁来攻击目标跟踪器，两种不同形式的扰动以端到端的方式共同训练。
+\textbf{不可感知的扰动与对抗补丁} 不可感知的扰动通常会使每个像素发生少量变化，并且可以使用多种优化策略进行求解，例如 BFGS \cite{intriguing} 和 PGD \cite{PGD}。
+对抗补丁可以放置在输入图像中的任何位置，以引起网络行为异常，因此常用于通用攻击 \cite{patch}。
+在本章中，我们同时利用不可感知的扰动和对抗补丁来攻击目标跟踪器，两种不同形式的扰动以端到端的方式共同训练。
 此外，本章提出的对抗性扰动信息在网络域而不是图像域中工作。在网络域设置中，扰动可以取任何值，并且不受图像像素取值范围的约束 \cite{karmon2018lavan}。
 
 \textbf{非针对性攻击与针对性攻击} 在非针对性攻击的情况下，攻击者的目标是使网络预测任何不正确的标签，而不关注标签的具体取值，例如在视觉目标跟踪中使估计的目标位置远离真实目标位置。
@@ -72,7 +72,7 @@ SPARK \cite{SPARK} 通过使用过去帧中的信息计算增量扰动以对孪�
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.75\textwidth]{Img/attack/network_v5.pdf}
-\caption{所提出方法的训练流程。我们旨在为模板图像 $\textbf z$ 训练难以感知的扰动 $\delta$ ，为搜索图像 $\textbf x$ 训练对抗性补丁 $p$ 。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x$ 之后，跟踪器将输出虚假目标而非真实目标的位置和大小。}
+\caption{所提出方法的训练流程。我们旨在为模板图像 $\textbf z$ 训练难以感知的扰动 $\delta$ ，为搜索图像 $\textbf x$ 训练对抗补丁 $p$ 。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x$ 之后，跟踪器将输出虚假目标而非真实目标的位置和大小。}
 \label{fig:net}
 \end{figure}
 
@@ -91,11 +91,11 @@ f_{i}(\textbf z, \textbf x)=\psi_{i}(\phi(\textbf z)) \star \psi_{i}(\phi(\textb
 其中，$\star$ 表示逐通道互相关操作，$\phi(\cdot)$ 表示孪生网络的特征提取器，$\psi_i(\cdot)$ 表示特定于分类或回归任务的层，$i$ 表示特定任务类型（$\mathrm{cls}$ 表示分类任务，$\mathrm{reg}$ 表示回归任务）。$\psi_{\mathrm{cls}}$ 和 $\psi_{\mathrm{reg}}$ 均设计为两个卷积层，用于将通用特征调整到特定于分类/回归任务的特征空间。$\psi_{\mathrm{cls}}$ 和 $\psi_{\mathrm{reg}}$ 所提取的特征具有相同尺寸。
 融合后的特征随后送入子网络中，以无锚的方式预测分类图 $\textbf{C}$，边界框回归图 $\textbf{R}$ 和质量评估图 $\textbf{Q}$。简而言之，$\textbf C$ 编码每个空间位置包含目标的概率，$\textbf R$ 回归目标的边界框，而 $\textbf Q$ 预测目标状态质量评估得分。最后，根据 $\textbf{C}$，$\textbf{R}$ 和 $\textbf{Q}$ 生成目标边界框。
 
-我们的任务是为模板图像 $\textbf z$ 训练不可感知的扰动 $\delta$，为搜索图像 $\textbf x_i$ 训练对抗性补丁 $p$。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x_i$ 之后，跟踪器将输出对抗性补丁而非真实目标的位置和大小（请参见图 \ref{fig:net}）。
+我们的任务是为模板图像 $\textbf z$ 训练不可感知的扰动 $\delta$，为搜索图像 $\textbf x_i$ 训练对抗补丁 $p$。在将 $\delta$ 添加到 $\textbf z$ 并将虚假目标 $p$ 粘贴到 $\textbf x_i$ 之后，跟踪器将输出对抗补丁而非真实目标的位置和大小（请参见图 \ref{fig:net}）。
 $\delta$ 和 $p$ 是通用的（即与视频无关），这意味着扰动一段新的视频仅需将扰动添加/粘贴到模板/搜索图像上，而无需进行梯度优化或网络推断。
 
 \subsection{产生视频无关的对抗扰动}
-在本节中，我们展示如何为孪生跟踪器训练与视频无关的扰动 $(\delta, p)$。在训练的第 $k$ 次迭代中，从训练数据集 $\mathcal V$ 中随机选择一段视频 $V=\{I_i\}_1^T$。假设第 $k$ 次迭代的模板扰动是 $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$，而对抗性补丁是 $p_k \in \mathbb{R}^{128\times 128\times 3}$。我们首先从 $V$ 中随机选择两帧 $I_t, I_s$。
+在本节中，我们展示如何为孪生跟踪器训练与视频无关的扰动 $(\delta, p)$。在训练的第 $k$ 次迭代中，从训练数据集 $\mathcal V$ 中随机选择一段视频 $V=\{I_i\}_1^T$。假设第 $k$ 次迭代的模板扰动是 $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$，对抗补丁是 $p_k \in \mathbb{R}^{128\times 128\times 3}$。我们首先从 $V$ 中随机选择两帧 $I_t, I_s$。
 干净的模板图像 $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ 是根据 $I_t$ 和 $b^{gt}_t$ 生成的，扰动后的模板图像为：
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_k.
@@ -271,7 +271,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 我们使用 Pytorch 进行算法实现，并使用三个 GTX 1080Ti GPU 训练扰动。
 我们采用 COCO \cite{COCO}、ILSVRC-VID \cite{VID} 数据集，以及 GOT-10k \cite{GOT-10k} 与 LaSOT \cite{LaSOT} 的训练集作为训练数据。
 以 96 个图像的批次大小（每个GPU 32个图像）迭代进行 32768 次训练。
-用于生成模板扰动的学习率 $\epsilon_1$ 设置为 0.1，而对抗性补丁的学习率为 $\epsilon_2 = 0.5$。
+用于生成模板扰动的学习率 $\epsilon_1$ 设置为 0.1，用于生成对抗补丁的学习率为 $\epsilon_2 = 0.5$。
 我们按照 SiamFC++ 的方法生成训练样本。
 在训练和在线跟踪阶段，SiamFC++ 跟踪网络模型
 %\footnote{由 SiamFC++ 的作者使用 GOT-10k 训练集进行训练，可以从 \url{https://drive.google.com/file/d/1BevcIEZr_kgyFjhxayOFw08DFl2u5Zi7/view} 中下载。}
