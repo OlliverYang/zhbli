@@ -50,7 +50,7 @@ CSK 跟踪器 \cite{Henriques2012ExploitingTC} 通过采用图像子窗口的循
 在过去的几年中，深度学习 \cite{Goodfellow2015DeepL} 在许多研究领域都取得了显著成功，尤其是在计算机视觉 \cite{Matiz2019InductiveCP, Zhu2019RotatedCR, Xiao2019DenseSE}，语音识别 \cite{Kim2016JointCB, Liu2019AttentionGD} 和自然语言处理 \cite{Vinyals2014GrammarAA, Yousfi2017ContributionOR} 等领域。一些跟踪器已经证明了深度学习的性能优势。
 
 大多数基于 DCF 的跟踪器仅限于使用单分辨率特征图，从而极大地限制了其潜力。为了解决此问题，CCOT 跟踪器 \cite{CCOT} 学习连续卷积滤波器以融合以不同分辨率获得的特征图。这将为目标生成连续域置信度图。除了多分辨率融合之外，连续域学习公式还可以实现精确的亚像素定位。
-ECO 跟踪器 \cite{Danelljan2017ECOEC} 在 DCF 公式中引入分解卷积算子训练样本分布的紧凑生成模型，并采用保守的模型更新策略。ECO 使用了 CNN 特征，同时减轻了计算开销。CF2 跟踪器 \cite{Ma2015HierarchicalCF} 自适应地学习每个卷积层上的相关滤波器，以对目标表观进行编码，并使用每一层的相关响应来推断目标位置。
+ECO 跟踪器 \cite{danelljan2017eco} 在 DCF 公式中引入分解卷积算子训练样本分布的紧凑生成模型，并采用保守的模型更新策略。ECO 使用了 CNN 特征，同时减轻了计算开销。CF2 跟踪器 \cite{Ma2015HierarchicalCF} 自适应地学习每个卷积层上的相关滤波器，以对目标表观进行编码，并使用每一层的相关响应来推断目标位置。
 
 在文献 \cite{GOTURN} 中，Held 等人提出了一种离线训练的神经网络来进行目标跟踪，使用简单的前馈网络，而无需在线训练。该网络可感知目标运动与表观之间的一般关系，并可用于跟踪未出现在训练集中的新目标。
 最近，一系列跟踪器（例如 SiamFC \cite{SiamFC}、SiamRPN \cite{SiamRPN}、DasiamRPN \cite{zhu2018distractor} 和 SiamMask \cite{Wang2018SiamMask}）使用孪生网络来学习搜索图像和模板图像之间的相似性。它们在跟踪速度和准确性之间取得了良好的平衡。SiamMask 是在一个端到端学习框架中同时执行跟踪和分割的首次尝试。尽管在准确性和鲁棒性方面都具有良好的性能，但是上述大多数跟踪器都具有很高的特征提取计算开销，因此不适合于低功耗平台。例如，SiamMask 算法在 Intel E5-2620 CPU 平台上的运行速度仅为 1 帧每秒。
@@ -342,7 +342,7 @@ GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据集。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
-我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{Danelljan2017ECOEC}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
+我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{danelljan2017eco}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
 如图 \ref{fig:got10k} 所示，本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所列出的其他跟踪算法。
 在 CFNet \cite{Valmadre2017EndtoEndRL} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
 而本章提出的网络 InstMask 基于 ResNet 设计，具有更多卷积层，可有效提取图像的高层语义信息，因此取得了更好的跟踪性能。
