@@ -198,19 +198,19 @@ is the cross entropy loss and $L_{reg}^{*}$ is the standard smooth $L1$ loss for
 \caption{将本章提出的方法与其他视觉目标跟踪方法在 GOT-10k 测试集上的跟踪结果进行比较。跟踪器按其平均重叠率（AO）排名。}
 \begin{tabular}{cccc}
 \bottomrule
-Method   &  AO   &  SR$_{0.50}$ & SR$_{0.75}$  \\
+跟踪器   &  AO   &  SR$_{0.50}$ & SR$_{0.75}$  \\
 \hline
-Ours &  $\textbf{0.560}^\textbf{1}$ & $\textbf{0.645}^\textbf{1}$  & $\textbf{0.457}^\textbf{1}$  \\
-SiamMask &  0.459&  0.560 &0.205 \\
-SiamFCv2 &  0.374&  0.404 &0.144 \\
-SiamFC   &  0.348&  0.353 &0.098 \\
-GOTURN	 &  0.347&  0.375 &0.124 \\
-CCOT	 &  0.325&  0.328 &0.107 \\
-ECO	     &  0.316&  0.309 &0.111 \\
-CF2	     &  0.315&  0.297 &0.088 \\
-MDNet	 &  0.299&  0.303 &0.099 \\
-CFNetc2	 &  0.293&  0.265 &0.087 \\
-ECOhc	 &  0.286&  0.276 &0.096 \\
+本章算法 &  $\textbf{0.560}^\textbf{1}$ & $\textbf{0.645}^\textbf{1}$  & $\textbf{0.457}^\textbf{1}$  \\
+SiamMask \cite{Wang2018SiamMask}  &  0.459&  0.560 &0.205 \\
+SiamFCv2 \cite{valmadre2017end} &  0.374&  0.404 &0.144 \\
+SiamFC \cite{SiamFC} &  0.348&  0.353 &0.098 \\
+GOTURN	\cite{GOTURN} &  0.347&  0.375 &0.124 \\
+CCOT	 \cite{CCOT} &  0.325&  0.328 &0.107 \\
+ECO \cite{danelljan2017eco} &  0.316&  0.309 &0.111 \\
+CF2	\cite{CF2} &  0.315&  0.297 &0.088 \\
+MDNet \cite{MDNet} &  0.299&  0.303 &0.099 \\
+CFNetc2 \cite{valmadre2017end} &  0.293&  0.265 &0.087 \\
+ECOhc \cite{danelljan2017eco} &  0.286&  0.276 &0.096 \\
 \bottomrule
 \end{tabular}
 \label{table:got}
