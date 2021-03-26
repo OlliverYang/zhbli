@@ -62,12 +62,10 @@ class SiamTrack(ModuleBase):
     def train_forward(self, training_data):
         target_img = training_data["im_z"]
         search_img = training_data["im_x"]
-        nlp = training_data['nlp']
 
         # backbone feature
         f_x = self.basemodel(search_img)
-        sentence_feature = self.sentence_transformer.encode(nlp, convert_to_numpy=False, convert_to_tensor=True)\
-            .unsqueeze(2).unsqueeze(3)
+        sentence_feature = training_data["sentence_feature"]
 
         # feature adjustment
         c_z_k = self.c_z_k(sentence_feature)

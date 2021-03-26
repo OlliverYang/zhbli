@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import argparse
 import os.path as osp
 import sys
-
+import numpy as np
 import cv2
 from loguru import logger
-
+import random
 import torch
 
 from videoanalyst.config.config import cfg as root_cfg
@@ -17,6 +15,21 @@ from videoanalyst.engine import builder as engine_builder
 from videoanalyst.model import builder as model_builder
 from videoanalyst.optim import builder as optim_builder
 from videoanalyst.utils import Timer, ensure_dir
+
+seed = 31415926
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
 
 cv2.setNumThreads(1)
 
@@ -45,7 +58,6 @@ def make_parser():
 
 
 if __name__ == '__main__':
-    logger.info("Start training")
     # parsing
     parser = make_parser()
     parsed_args = parser.parse_args()

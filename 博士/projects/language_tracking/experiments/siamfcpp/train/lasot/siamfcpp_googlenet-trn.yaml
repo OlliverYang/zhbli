@@ -48,7 +48,7 @@ train:
   track:
     exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot"
     exp_save: &TRAIN_SAVE "snapshots"
-    num_processes: 1
+    num_processes: 3
     model:
       backbone:
         name: "Inception3"
@@ -86,8 +86,8 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 2  # 256
-      num_workers: 2
+      minibatch: &MINIBATCH 9  # 256
+      num_workers: 4
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
       pin_memory: false
       datapipeline:
@@ -95,7 +95,7 @@ train:
       sampler:
         name: "TrackPairSampler"
         TrackPairSampler:
-          negative_pair_ratio: 0.33
+          negative_pair_ratio: 0.00
         submodules:
           dataset:
             names: ["LaSOTDataset",]  # (GOT10kDataset|LaSOTDataset)

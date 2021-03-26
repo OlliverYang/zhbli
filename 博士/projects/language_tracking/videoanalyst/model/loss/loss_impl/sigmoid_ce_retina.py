@@ -85,6 +85,7 @@ class SigmoidCrossEntropyRetina(ModuleBase):
 
         positive_mask = (label > 0).type(torch.Tensor).to(pred.device)
 
+        """将分类损失，回归损失做均衡"""
         loss = loss.sum() / torch.max(positive_mask.sum(),
                                       self.t_one) * self._hyper_params["weight"]
         extra = dict()
