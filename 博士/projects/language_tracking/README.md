@@ -1,9 +1,17 @@
 # 训练
+export PYTHONPATH=/home/etvuz/projects/language_tracking
 
 cd language_tracking
-train.py -cfg experiments/siamfcpp/train/lasot/siamfcpp_googlenet-trn.yaml
+python main/train.py -cfg experiments/siamfcpp/train/lasot/siamfcpp_googlenet-trn.yaml
+
+# 测试
+
+cd language_tracking
+python main/test.py -cfg experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot.yaml
 
 # TODO
+
+测试时，eval 了吗？应该是了。
 
 改为全图输入
 
@@ -121,3 +129,8 @@ epoch 17, lr: 2.2e-03, cls: 0.027, ctr: 0.007, reg: 0.376, iou: 0.887, data: 9.4
 epoch 18, lr: 5.5e-04, cls: 0.027, ctr: 0.008, reg: 0.401, iou: 0.879, data: 7.3e-05, fwd: 4.2e-01, bwd: 2.7e-01, optim: 4.2e-01,  max mem: 8317.0M: 100%|████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:32<00:00,  1.17s/it]
 2021-03-27 04:16:03.320 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-18.pkl
 epoch 19, lr: 1.0e-06, cls: 0.025, ctr: 0.007, reg: 0.386, iou: 0.885, data: 2.1e-05, fwd: 4.2e-01, bwd: 2.4e-01, optim: 4.0e-01,  max mem: 8317.0M: 100%|████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:35<00:00,  1.18s/it]
+2021-03-27 04:46:40.961 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl
+2021-03-27 04:46:42.037 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/final_model.pkl
+
+## 实验获得成功。
+"success_score": 0.44, "precision_score": 0.43, "normalized_precision_score": 0.47, "success_rate": 0.51,

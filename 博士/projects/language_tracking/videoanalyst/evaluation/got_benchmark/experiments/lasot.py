@@ -63,7 +63,7 @@ class ExperimentLaSOT(ExperimentOTB):
 
             performance.update({name: {'overall': {}, 'seq_wise': {}}})
 
-            for s, (_, anno) in enumerate(self.dataset):
+            for s, (_, anno, meta) in enumerate(self.dataset):
                 seq_name = self.dataset.seq_names[s]
                 record_file = os.path.join(self.result_dir, name,
                                            '%s.txt' % seq_name)
