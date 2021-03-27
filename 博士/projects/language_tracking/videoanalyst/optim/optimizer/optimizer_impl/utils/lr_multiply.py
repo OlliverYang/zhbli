@@ -86,10 +86,6 @@ def divide_into_param_groups(module, compiled_regexes):
         for param_name, param in module.named_parameters():
             if (compiled_regex.search(param_name) is not None):
                 param_groups[ith]['params'].append(param)
-                if ith == 1:
-                    print(param_name)
-            # else:
-            #     print(ith, param_name)
     return param_groups
 
 

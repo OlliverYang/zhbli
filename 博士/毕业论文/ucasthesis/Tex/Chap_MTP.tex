@@ -17,7 +17,7 @@
 \end{figure}
 \fi
 
-在本章中，我们表明视觉目标跟踪中具有挑战性的模型自适应任务可以通过简单地在孪生网络中操纵模板图像的像素来实现。给定一个视觉目标跟踪器，本章提出的算法使用第一帧中的目标真实标注框，仅在几次梯度下降迭代中修改模板像素。对于不包含在离线训练集中的目标，我们认为对模板图像像素进行微小修改可以改善离线训练的孪生网络的预测结果。我们使用对抗样本生成方法来实现此目的，因为对抗样本生成方法通常用于略微修改输入图像，从而对网络的预测结果产生影响。我们与对抗性样本生成的目的不同，因为后者旨在使网络预测变得更差，而我们希望孪生网络的预测更好。本章提出的模型自适应方法可以与各种孪生跟踪器（如 SiamFC ++ \cite{SiamFC++}）集成。在利用自适应信息提高跟踪性能的同时，孪生网络的参数保持不变，以保留离线训练的嵌入空间的表示能力。我们在 4 个视觉目标跟踪基准数据集上进行了全面的实验：VOT2018 \cite{kristan2018sixth}、TrackingNet \cite{muller2018trackingnet}、GOT-10k \cite{GOT-10k} 和 OTB2015 \cite{OTB}。本章提出的目标跟踪算法取得了较好的跟踪性能，同时以超过 80 FPS 的速度运行（见图 \ref{fig:MTP_vis}）。
+在本章中，我们表明视觉目标跟踪中具有挑战性的模型自适应任务可以通过简单地在孪生网络中操纵模板图像的像素来实现。给定一个视觉目标跟踪器，本章提出的算法使用第一帧中的目标真实标注框，仅在几次梯度下降迭代中修改模板像素。对于不包含在离线训练集中的目标，我们认为对模板图像像素进行微小修改可以改善离线训练的孪生网络的预测结果。我们使用对抗样本生成方法来实现此目的，因为对抗样本生成方法通常用于略微修改输入图像，从而对网络的预测结果产生影响。我们与对抗性样本生成的目的不同，因为后者旨在使网络预测变得更差，而我们希望孪生网络的预测更好。本章提出的模型自适应方法可以与各种孪生跟踪器（如 SiamFC++ \cite{SiamFC++}）集成。在利用自适应信息提高跟踪性能的同时，孪生网络的参数保持不变，以保留离线训练的嵌入空间的表示能力。我们在 4 个视觉目标跟踪基准数据集上进行了全面的实验：VOT2018 \cite{kristan2018sixth}、TrackingNet \cite{muller2018trackingnet}、GOT-10k \cite{GOT-10k} 和 OTB2015 \cite{OTB2015}。本章提出的目标跟踪算法取得了较好的跟踪性能，同时以超过 80 FPS 的速度运行（见图 \ref{fig:MTP_vis}）。
 \section{相关工作}
 模型更新是传统目标跟踪算法中的重要一环。然而，主流的孪生跟踪器通常采用离线训练的网络而不进行模型更新。由于没有在线学习，这些方法往往难以应对目标的表观变化和近似物体的干扰。
 % UpdateNet
@@ -115,12 +115,19 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
 \caption{本章提出的跟踪算法与相关算法在视觉目标跟踪数据库 OTB2015 上的评测结果。跟踪器速度在 NVIDIA RTX 2080Ti GPU 上进行测试。}
 \setlength{\tabcolsep}{3pt}
 \begin{center}
-\begin{tabular}{r c c c c c c}
+\begin{tabular}{c c c c c c c}
 \toprule
-Trackers & ECO & MDNet & SiamRPN++ & ATOM & SiamFC++\_G & 本章算法 \\
+跟踪器 & 
+\begin{tabular}{c} ECO  \\ \cite{danelljan2017eco} \end{tabular} &
+\begin{tabular}{c} MDNet \\ \cite{MDNet} \end{tabular} &
+\begin{tabular}{c} SiamRPN++ \\ \cite{SiamRPN++} \end{tabular} &
+\begin{tabular}{c} ATOM \\ \cite{danelljan2019atom} \end{tabular} &
+\begin{tabular}{c} SiamFC++ \\ \cite{SiamFC++} \end{tabular} &
+本章算法 \\
+%跟踪器 & ECO \cite{danelljan2017eco} & MDNet \cite{MDNet} & SiamRPN++ \cite{SiamRPN++} & ATOM \cite{danelljan2019atom} & SiamFC++\_G \cite{SiamFC++} & 本章算法 \\
 \midrule
 成功率 & 70.0 & 67.8  & 69.6      & 66.9      & 68.3       & 69.7 \\
-跟踪速度（FPS）     & 8    & 1     & 35        & 30       & 90         & 82  \\
+速度（FPS）     & 8    & 1     & 35        & 30       & 90         & 82  \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -130,36 +137,36 @@ Trackers & ECO & MDNet & SiamRPN++ & ATOM & SiamFC++\_G & 本章算法 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{跟踪框架}
-所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times289\times 289}$。
+所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据文献 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times289\times 289}$。
 然后，将 $\textbf z_0$ 和 $\textbf x_0$ 发送到 SiamFC++ 网络以获得第一帧的跟踪预测。SiamFC++ \cite{SiamFC++} 中的跟踪损失计算如下：
 \begin{equation}
     L = L_{\text{cls}} + L_{\text{quality}} + L_{\text{reg}},
 \end{equation}
-其中 $L_{\text{cls}}$ 是焦点损失 \cite{focal}。$L_{\text{quality}}$ 是用于质量评估的二进制交叉熵（BCE）损失。$L_{reg}$ 是边框回归的 IoU 损失 \cite{yu2016unitbox}。根据公式 \ref{equ:adaptaion}，相对于模板 $\textbf z_0$ 的梯度用于生成 $\textbf z_1$。通过应用少数几次迭代可以获得更新的模板 $\textbf z'$（公式 \ref{equ:adaptaion}）。请注意，模板图像仅使用给定序列的第一帧进行更新，并在整个跟踪过程中保持固定以确保稳定性。
+其中 $L_{\text{cls}}$ 是焦点损失 \cite{focal}。$L_{\text{quality}}$ 是用于质量评估的二进制交叉熵（BCE）损失。$L_{\text{reg}}$ 是边框回归的 IoU 损失 \cite{yu2016unitbox}。根据公式 \ref{equ:adaptaion}，相对于模板 $\textbf z_0$ 的梯度用于生成 $\textbf z_1$。通过应用少数几次迭代可以获得更新的模板 $\textbf z'$（公式 \ref{equ:adaptaion}）。请注意，模板图像仅使用给定序列的第一帧进行更新，并在整个跟踪过程中保持固定以确保稳定性。
 后续跟踪过程与 SiamFC++ 相同。
 
 \section{实验评估与分析}
 \begin{table}[t]
-\caption{本章提出的算法在数据集 OTB2015、VOT2018、GOT-10k、TrackingNet 上的评测结果。}
+\caption{本章提出的算法在数据集 OTB2015 \cite{OTB2015}、VOT2018 \cite{kristan2018sixth}、GOT-10k \cite{GOT-10k}、TrackingNet \cite{muller2018trackingnet} 上的评测结果。}
 \begin{center}
 \begin{tabular}{c cc c}
 \toprule
 跟踪器 & 评价指标 & 基线方法 & 本章方法\\
 \midrule
-\multirow{1}{*}{OTB2015} 
+\multirow{1}{*}{OTB2015 \cite{OTB2015}} 
 & Success & 68.3 & 69.7\\
 \midrule
-\multirow{3}{*}{VOT2018}
+\multirow{3}{*}{VOT2018 \cite{kristan2018sixth}}
 & A   & 0.587 & 0.591 \\
 & R   & 0.183 & 0.187 \\
 & EAO & 0.426 & 0.438 \\
 \midrule
-\multirow{3}{*}{GOT-10k} 
+\multirow{3}{*}{GOT-10k \cite{GOT-10k}} 
 & SR\textsubscript{0.50} &  0.737 & 0.748 \\
 & SR\textsubscript{0.75} & 0.464 & 0.475 \\
 & AO & 0.607 & 0.617 \\
 \midrule
-\multirow{3}{*}{TrackingNet} 
+\multirow{3}{*}{TrackingNet \cite{muller2018trackingnet}} 
 & Prec.       & 70.5 & 70.6 \\
 & Norm. Prec. & 80.0 & 81.7 \\
 & Succ.       & 75.4 & 74.9 \\
@@ -231,7 +238,7 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{与主流跟踪器的比较}
 
-在本节中，我们将本章提出的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 种序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视觉目标跟踪数据集。它们在训练和测试集中涵盖了的各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪其对目标类别的泛化能力。
+在本节中，我们将本章提出的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB2015}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB2015} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 种序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视觉目标跟踪数据集。它们在训练和测试集中涵盖了各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪器对目标类别的泛化能力。
 
 \iffalse
 \begin{figure*}[p]
@@ -345,7 +352,7 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 
 \textbf{OTB2015} 我们使用成功率来评估跟踪器在 OTB2015 上的性能。成功率取决于预测边界框和真实边界框的交并比。我们将本章提出的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为 16。结果显示在表 \ref{table:otb} 中。在成功率方面，我们的跟踪器比在线跟踪器 ATOM 高出 2.8％，这证明了我们方法的强大模型自适应能力。
 
-\textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标）——期望平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
+\textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标——期望平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
 
 \textbf{GOT-10k} 我们将平均重叠（AO）分数用作 GOT-10k \cite{GOT-10k} 的性能指标。我们将本章提出的方法与 CF2 \cite{CF2}，ECO \cite{danelljan2017eco}，CCOT \cite{CCOT}，GOTURN \cite{GOTURN}，SiamFC \cite{SiamFC}，SiamFCv2 \cite{valmadre2017end}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++
 \_GoogLeNet \cite{SiamFC++} 在该数据库上进行比较。模板更新的迭代次数设置为 2。在图 \ref{fig:got10k} 中可以发现，与列出的跟踪器相比，本章提出的算法具有更好的跟踪性能。
@@ -356,16 +363,16 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 \caption{本章提出的跟踪算法与相关算法在 TrackingNet \cite{muller2018trackingnet} 测试集上的评测结果。}
 \begin{tabular}{l c c c}
 \toprule
-Method   &  精确度   &  标准化精确度 & 成功率  \\
+跟踪器   &  精确度   &  标准化精确度 & 成功率  \\
 \midrule
 本章算法  &  70.6&  81.7 &74.9 \\
-SiamFC++\_GoogLeNet & 70.5 & 80.0 & 75.4 \\
-SiamFC++\_AlexNet  & 64.6 & 75.8 & 71.2 \\
-ATOM              & 64.8 & 77.1 & 70.3 \\
-SiamRPN++&  69.4 & 80.0 &73.3 \\
-MDNet	 &  56.5&  70.5 &60.6 \\
-ECO	 &  49.2&  61.8 &55.4 \\
-SiamFC	 &  51.8&  65.2 &55.9 \\
+SiamFC++\_GoogLeNet \cite{SiamFC++} & 70.5 & 80.0 & 75.4 \\
+SiamFC++\_AlexNet \cite{SiamFC++} & 64.6 & 75.8 & 71.2 \\
+ATOM \cite{danelljan2019atom} & 64.8 & 77.1 & 70.3 \\
+SiamRPN++ \cite{SiamRPN++} &  69.4 & 80.0 &73.3 \\
+MDNet \cite{MDNet} &  56.5&  70.5 &60.6 \\
+ECO	\cite{danelljan2017eco} &  49.2&  61.8 &55.4 \\
+SiamFC \cite{SiamFC} &  51.8&  65.2 &55.9 \\
 \bottomrule
 \end{tabular}
 \label{tabel:trackingnet}
@@ -386,7 +393,7 @@ GoogLeNet \cite{SiamFC++} 进行比较。模板更新的迭代次数设置为 32
 \toprule
 \multicolumn{3}{c}{噪声系数} & \multicolumn{2}{c}{成功率得分} \\
 \cmidrule(lr){1-3} \cmidrule(lr){4-5}
-$\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_GoogLeNet & 本章算法  \\
+$\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_GoogLeNet \cite{SiamFC++} & 本章算法  \\
 \midrule
 0.57  &	1.6	 & 0.93	& 67.3    & 69.5 \\
 %0.82  & 1.1  & 0.82 & 65.9    & 67.2 \\
@@ -436,4 +443,6 @@ To verify the contribution of the proposed model adaptation method, we compare o
 
 %%%%%%%%%%%%%%%%%%%%
 \section{本章小结}
-在本章中，我们提出了一种用于孪生跟踪器的新型模型自适应方法，可实现高速准确的跟踪。我们表明，在视觉目标跟踪中具有挑战性的模型适应任务可以使用第一帧中的目标真实标注框，通过简单地操纵模板图像的像素来实现。我们的模型自适应方法是可插拔的，因为它不会改变基本跟踪器的总体架构。在四个目标跟踪基准上的大量实验结果证明了所提出的模型自适应方法的有效性。
+在本章中，我们提出通过操纵模板图像像素以进行自适应信息增强的孪生网络视觉目标跟踪算法，对基于孪生网络的视觉目标跟踪算法在模型初始自适应方面进行改进优化。根据物体第一帧中的损失，对模板图像进行反向传播和微小更新，从而提高对特定物体的自适应能力。我们不仅有效利用了特定物体的表观信息来增强模型的判别能力，而且不修改跟踪算法的模型参数，因此没有模型过拟合的风险。
+我们的模型自适应方法是可插拔的，因为它不会改变基线跟踪器的总体架构。
+我们在目前比较流行的视频跟踪标准评测库上对通过操纵模板图像像素以进行模型自适应的算法的有效性进行了评估，实验表明该模型自适应方法能够大幅度提升孪生网络跟踪器的性能。

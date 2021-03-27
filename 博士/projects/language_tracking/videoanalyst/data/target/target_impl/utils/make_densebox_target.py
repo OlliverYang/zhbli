@@ -60,8 +60,8 @@ def make_densebox_target(gt_boxes: np.array, config: Dict) -> Tuple:
         # shape=(N, 6), order=(class, center-ness, left_offset, top_offset, right_offset, bottom_offset)
     """
     DEBUG = False
-    IM_WIDTH = 1024
-    IM_HEIGHT = 768
+    IM_WIDTH = 256
+    IM_HEIGHT = 256
     total_stride = config["total_stride"]
     SCORE_MAP_WIDTH = IM_WIDTH // total_stride
     SCORE_MAP_HEIGHT = IM_HEIGHT // total_stride

@@ -1,3 +1,4 @@
+import os
 from model import SimpleNet
 import torchvision.transforms as T
 import cv2
@@ -5,12 +6,16 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
+from sigmoid_ce_retina import SigmoidCrossEntropyRetina
 
 
-LR = 0.001
-NUM_CLASSES = 16  # 若较大，则非常占显存
-IMG_SIZE = 256
-ITER = 1600
+LR = 0.01
+NUM_CLASSES = 1  # 若较大，则非常占显存
+IMG_SIZE = 1024
+ITER = 256
+GPU_ID = '3'
+
+os.environ['CUDA_VISIBLE_DEVICES'] = GPU_ID
 
 
 def decode_segmap(image_, nc=21):
@@ -52,7 +57,7 @@ def cross_entropy2d(input_, target_, weight=None, size_average=True):
     target_ = target_[mask]
     loss_ = F.nll_loss(log_p, target_, weight=weight, reduction='sum')
     if size_average:
-        loss_ /= mask.data.sum()
+        loss_ /= mask.data.sum().float()
     return loss_
 
 
@@ -63,32 +68,39 @@ def train():
                                 momentum=0.9,
                                 weight_decay=1e-4)
 
+    criteria = SigmoidCrossEntropyRetina()
+
     trf = T.Compose([T.ToTensor(),  # 转换为0~1
                      T.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])])
-    image_np = cv2.imread('/tmp/1.jpg')
+    image_np = cv2.imread('./1.jpg')
     image_np = cv2.resize(image_np, (IMG_SIZE, IMG_SIZE))
     image = trf(image_np)
     inp = image.unsqueeze(0).cuda()
 
-    gt = cv2.imread('/tmp/1.png')[:, :, 0]
+    gt = cv2.imread('./1.png')
     gt = cv2.resize(gt, (IMG_SIZE, IMG_SIZE))
-    gt[gt >= NUM_CLASSES] = 0
+    gt = gt[:, :, 0] + gt[:, :, 1] + gt[:, :, 2]
+    gt[gt != 0] = 1
     target = torch.from_numpy(gt).cuda()
     target = target.unsqueeze(0).long()  # 必须为 long 类型，否则计算损失时会报错。
 
     for i in range(ITER+1):
         out = model(inp)
-        loss = cross_entropy2d(out, target, size_average=True)
+        # loss = cross_entropy2d(out, target, size_average=True)
+        loss = criteria.forward(out, target)
         print(i, loss.item())
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
 
-    om = torch.argmax(out.squeeze(), dim=0).detach().cpu().numpy()
-    rgb = decode_segmap(om)
-    plt.imshow(rgb)
+    om = out[0][0].data.cpu().numpy()
+    om[om>=0] = 255
+    om[om<0] = 0
+    om = om.astype(np.uint8)
+    # rgb = decode_segmap(om)
+    plt.imshow(om)
     plt.axis('off')
     plt.show()
 

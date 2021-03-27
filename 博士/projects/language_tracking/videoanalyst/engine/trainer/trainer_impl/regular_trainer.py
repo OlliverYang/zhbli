@@ -87,9 +87,10 @@ class RegularTrainer(TrainerBase):
         for iteration, _ in enumerate(pbar):
             self._state["iteration"] = iteration
             with Timer(name="data", output_dict=time_dict):
-                DEBUG = True
+                DEBUG = False
+                DEBUG1 = False
                 if DEBUG:
-                    print('debug')
+                    print(' debug', iteration)
                     if iteration == 0:
                         training_data = next(self._dataloader)
                 else:
@@ -102,6 +103,19 @@ class RegularTrainer(TrainerBase):
 
             # forward propagation
             with Timer(name="fwd", output_dict=time_dict):
+
+                """计算句子特征"""
+                nlp = training_data['nlp']
+                if len(self._state["devices"]) > 1:
+                    sentence_feature = self._model.module.sentence_transformer.encode(
+                        nlp, convert_to_numpy=False, convert_to_tensor=True,
+                        normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                else:
+                    sentence_feature = self._model.sentence_transformer.encode(
+                        nlp, convert_to_numpy=False, convert_to_tensor=True,
+                        normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                training_data['sentence_feature'] = sentence_feature
+
                 predict_data = self._model(training_data)
                 training_losses, extras = OrderedDict(), OrderedDict()
                 for loss_name, loss in self._losses.items():
@@ -129,7 +143,6 @@ class RegularTrainer(TrainerBase):
             for monitor in self._monitors:
                 monitor.update(trainer_data)
 
-            DEBUG1 = True
             if DEBUG1:
                 show_img_FCOS(training_data)
             if not DEBUG:

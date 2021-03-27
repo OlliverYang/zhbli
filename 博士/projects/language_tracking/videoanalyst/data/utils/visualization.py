@@ -22,13 +22,13 @@ def show_img_FCOS(training_data,
     ]
 
     '''设定超参数'''
-    IM_H = 768
-    IM_W = 1024
+    IM_HEIGHT = 256
+    IM_WIDTH = 256
     STRIDE = 8
-    x_size_h = IM_H
-    x_size_w = IM_W
-    score_size_h = IM_H // STRIDE
-    score_size_w = IM_W // STRIDE
+    x_size_h = IM_HEIGHT
+    x_size_w = IM_WIDTH
+    score_size_h = IM_HEIGHT // STRIDE
+    score_size_w = IM_WIDTH // STRIDE
 
     total_stride = STRIDE
 
@@ -76,7 +76,6 @@ def show_img_FCOS(training_data,
 
     gt_indexes = (gt_target[:, 0] == 1)
     if gt_indexes.any():
-        print('gt_indexes.size', gt_indexes.size)
         gt = gt_target[gt_indexes, :][0, 2:]
         cv2.rectangle(show_img, (int(gt[0]), int(gt[1])),
                       (int(gt[2]), int(gt[3])), color['pos'])
@@ -92,30 +91,36 @@ def show_img_FCOS(training_data,
     neg_cls_gt = (gt_target[:, 0] == 0)
     neg_indexes = np.argsort(neg_cls_gt)[len(gt_target) - np.sum(neg_cls_gt):]
 
-    for index in pos_indexes:
+    '''画正样本点'''
+    for index in pos_indexes:  # 遍历 ctr 特征图的每个位置
+
+        """将特征图的位置转化为原始图像的位置"""
         # note that due to ma 's fcos implementation, x and y are switched
         pos = (score_offset + (index % score_size_w) * total_stride,
-               score_offset + (index // score_size_h) * total_stride)
-        ctr = ctr_gt[index]
+               score_offset + (index // score_size_w) * total_stride)  # x, y。原始代码公式很明显是错的。因为原来用的是正方形，错误没有显现。
+
+        ctr = ctr_gt[index]  # 0 到 1 的值
         color_pos = tuple(
             (np.array(color['pos']) + ctr * np.array(color['ctr'])).astype(
                 np.uint8).tolist())
         cv2.circle(show_img, pos, 2, color_pos, -1)
 
+    '''画负样本点'''
     for index in neg_indexes:
         # note that due to ma 's fcos implementation, x and y are switched
         pos = (score_offset + (index % score_size_w) * total_stride,
-               score_offset + (index // score_size_h) * total_stride)
+               score_offset + (index // score_size_w) * total_stride)
         ctr = ctr_gt[index]
         color_neg = tuple(
             (np.array(color['neg']) + ctr * np.array(color['ctr'])).astype(
                 np.uint8).tolist())
         cv2.circle(show_img, pos, 2, color_neg, -1)
 
+    '''画忽略的点'''
     for index in ign_indexes:
         # note that due to ma 's fcos implementation, x and y are switched
         pos = (score_offset + (index % score_size_w) * total_stride,
-               score_offset + (index // score_size_h) * total_stride)
+               score_offset + (index // score_size_w) * total_stride)
         cv2.circle(show_img, pos, 2, color['ign'], -1)
 
     cv2.putText(show_img, 'pos', (20, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5,

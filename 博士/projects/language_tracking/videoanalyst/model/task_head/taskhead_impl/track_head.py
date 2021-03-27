@@ -137,8 +137,8 @@ class DenseboxHead(ModuleBase):
         return [cls_score, ctr_score, bbox, cls]
 
     def update_params(self):
-        IMG_WIDTH = 1024
-        IMG_HEIGHT = 768
+        IMG_WIDTH = 256
+        IMG_HEIGHT = 256
         STRIDE = 8
         SCORE_MAP_WIDTH = IMG_WIDTH // STRIDE
         SCORE_MAP_HEIGHT = IMG_HEIGHT // STRIDE
