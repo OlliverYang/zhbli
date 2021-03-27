@@ -1,5 +1,5 @@
 {
-    "root":"/data/yfzhang/MOT/JDE",
+    "root":"/home/etvuz/projects/reid_tracker/datasets/MOT/JDE",
     "train":
     {
         "mot17":"./data/mot16.train"
