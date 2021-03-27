@@ -425,6 +425,32 @@ class Interpolate(nn.Module):
         return x
 
 
+def xcorr_depthwise(x, kernel):
+    r"""
+    Depthwise cross correlation. e.g. used for template matching in Siamese tracking network
+
+    Arguments
+    ---------
+    x: torch.Tensor
+        feature_x (e.g. search region feature in SOT)
+    kernel: torch.Tensor
+        feature_z (e.g. template feature in SOT)
+
+    Returns
+    -------
+    torch.Tensor
+        cross-correlation result
+    """
+    batch = int(kernel.size(0))
+    channel = int(kernel.size(1))
+    x = x.reshape(1, int(batch * channel), int(x.size(2)), int(x.size(3)))
+    kernel = kernel.reshape(batch * channel, 1, int(kernel.size(2)),
+                         int(kernel.size(3)))
+    out = F.conv2d(x, kernel, groups=batch * channel)
+    out = out.reshape(batch, channel, int(out.size(2)), int(out.size(3)))
+    return out
+
+
 class DLASeg(nn.Module):
     def __init__(self, base_name, heads, pretrained, down_ratio, final_kernel,
                  last_level, head_conv, out_channel=0):
@@ -489,7 +515,8 @@ class DLASeg(nn.Module):
         id_head = _tranpose_and_gather_feat(z['id'], batch['ind'])
         # obj_vector = id_head[batch['reg_mask'] > 0]
         obj_vector = id_head[:, 0, :]
-        fused_feature = z['id'] + obj_vector.unsqueeze(2).unsqueeze(3)
+        fused_feature = xcorr_depthwise(z['id'], obj_vector.unsqueeze(2).unsqueeze(3))
+        # fused_feature = z['id'] + obj_vector.unsqueeze(2).unsqueeze(3) 不能用加法，得用互相关。
         fused_feature = self.fuse_change(fused_feature)
         z['hm'] = self.__getattr__('hm')(fused_feature)  # 输入通道128，输出通道1
         """互相关"""

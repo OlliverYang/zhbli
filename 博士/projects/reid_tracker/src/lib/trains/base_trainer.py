@@ -10,21 +10,30 @@ from utils.utils import AverageMeter
 import numpy as np
 import cv2
 
-def show_data(batch):
+def show_data(batch, output):
   """
   batch['input']: torch.tensor, [b, 3, 608, 1088] 图像
-  batch['hm']: np.ndarray, [b, 1, 152, 272] heatmap, 有几个目标，就有几个高斯峰值。
+  batch['hm']: np.ndarray, [b, 1, 152, 272] heatmap, 有几个目标，就有几个高斯峰值。0~1
   batch['reg_mask']: torch.tensor, [b, 500] 1 表示需要 回归，0表示不需要回归
   batch['ind']: torch.tensor, [b, 500] 每个目标在 heatmap 中的一维位置
   batch['wh']: torch.tensor, [b, 500, 4] 目标在 heatmap 上的位置
   batch['reg']: torch.tensor, [b, 500, 2]
   batch['ids']: torch.tensor, [b, 500]
   batch['bbox']: torch.tensor, [b, 500, 4]
+  -------------
+  output['wh']: torch.tensor, [b, 4, 152, 272], float
+  output['id']: torch.tensor, [b, 128, 152, 272], float
+  output['reg']: torch.tensor, [b, 2, 152, 272], float
+  output['hm']: torch.tensor, [b, 1, 152, 272], 0~1
   """
   heatmap = (batch['hm'][0][0].data.cpu().numpy() * 255).astype(np.uint8)
   img = (batch['input'][0].data.cpu().numpy().transpose(1,2,0)*255).astype(np.uint8)
-  cv2.imwrite('/tmp/00/heatmap.jpg', heatmap)
-  cv2.imwrite('/tmp/00/img.jpg', img)
+  cv2.imwrite('/tmp/heatmap_gt.jpg', heatmap)
+  cv2.imwrite('/tmp/img.jpg', img)
+
+  heatmap_pred = (output['hm'][0][0].data.cpu().numpy() * 255).astype(np.uint8)
+  cv2.imwrite('/tmp/heatmap_pred.jpg', heatmap_pred)
+
   print('img saved')
   return
 
@@ -87,36 +96,42 @@ class BaseTrainer(object):
         if k != 'meta':
           batch[k] = batch[k].to(device=opt.device, non_blocking=True)
 
-      output, loss, loss_stats = model_with_loss(batch)
+      DEBUG = True
+      print('debug')
+      while True:
+        print(iter_id, end=' ')
+        output, loss, loss_stats = model_with_loss(batch)
 
-      # show_data(batch)
+        show_data(batch, output)
+        if not DEBUG:
+          loss = loss.mean()
+        elif DEBUG:
+          loss = loss_stats['hm_loss'].mean()
+        if phase == 'train':
+          self.optimizer.zero_grad()
+          loss.backward()
+          self.optimizer.step()
+        batch_time.update(time.time() - end)
+        end = time.time()
 
-      loss = loss.mean()
-      if phase == 'train':
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-      batch_time.update(time.time() - end)
-      end = time.time()
+        Bar.suffix = '{phase}: [{0}][{1}/{2}]|Tot: {total:} |ETA: {eta:} '.format(
+          epoch, iter_id, num_iters, phase=phase,
+          total=bar.elapsed_td, eta=bar.eta_td)
+        for l in avg_loss_stats:
+          avg_loss_stats[l].update(
+            loss_stats[l].mean().item(), batch['input'].size(0))
+          Bar.suffix = Bar.suffix + '|{} {:.4f} '.format(l, avg_loss_stats[l].avg)
+        if not opt.hide_data_time:
+          Bar.suffix = Bar.suffix + '|Data {dt.val:.3f}s({dt.avg:.3f}s) ' \
+            '|Net {bt.avg:.3f}s'.format(dt=data_time, bt=batch_time)
+        if opt.print_iter > 0:
+          if iter_id % opt.print_iter == 0:
+            print('{}/{}| {}'.format(opt.task, opt.exp_id, Bar.suffix))
+        else:
+          bar.next()
 
-      Bar.suffix = '{phase}: [{0}][{1}/{2}]|Tot: {total:} |ETA: {eta:} '.format(
-        epoch, iter_id, num_iters, phase=phase,
-        total=bar.elapsed_td, eta=bar.eta_td)
-      for l in avg_loss_stats:
-        avg_loss_stats[l].update(
-          loss_stats[l].mean().item(), batch['input'].size(0))
-        Bar.suffix = Bar.suffix + '|{} {:.4f} '.format(l, avg_loss_stats[l].avg)
-      if not opt.hide_data_time:
-        Bar.suffix = Bar.suffix + '|Data {dt.val:.3f}s({dt.avg:.3f}s) ' \
-          '|Net {bt.avg:.3f}s'.format(dt=data_time, bt=batch_time)
-      if opt.print_iter > 0:
-        if iter_id % opt.print_iter == 0:
-          print('{}/{}| {}'.format(opt.task, opt.exp_id, Bar.suffix)) 
-      else:
-        bar.next()
-      
-      if opt.test:
-        self.save_result(output, batch, results)
+        if opt.test:
+          self.save_result(output, batch, results)
       del output, loss, loss_stats, batch
     
     bar.finish()

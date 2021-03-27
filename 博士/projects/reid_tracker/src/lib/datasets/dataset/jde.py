@@ -474,6 +474,8 @@ class JointDataset(LoadImagesAndLabels):  # for training
             origin_x2 = origin_x1 + origin_w
             origin_y2 = origin_y1 + origin_h
             origin_img = cv2.imread(patch)
+            if origin_img is None:
+                print('err2.5')
             patch = origin_img[origin_y1:origin_y2, origin_x1:origin_x2]
             if len(patch) == 0:
                 patch = origin_img

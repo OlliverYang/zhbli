@@ -3,9 +3,9 @@ from __future__ import division
 from __future__ import print_function
 
 import _init_paths
-
+import numpy as np
 import os
-
+import random
 import json
 import torch
 import torch.utils.data
@@ -16,6 +16,22 @@ from models.data_parallel import DataParallel
 from logger import Logger
 from datasets.dataset_factory import get_dataset
 from trains.train_factory import train_factory
+
+
+seed = 3141592
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
 
 
 def main(opt):
