@@ -2,12 +2,11 @@ import torch
 import torch.nn.functional as F
 
 
-NUM_CLASSES = 16  # 若较大，则非常占显存
+NUM_CLASSES = 1  # 若较大，则非常占显存
 OUT_CHANNEL = 64
 KERNEL_SIZE = 3
 DILATION = 1
 PADDING = (DILATION*(KERNEL_SIZE-1) + 1)//2
-print(PADDING)
 
 class SimpleNet(torch.nn.Module):
     def __init__(self):
