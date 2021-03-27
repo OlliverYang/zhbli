@@ -48,8 +48,8 @@ class RandomCropTransformer(TransformerBase):
             Dict(data1=Dict(image, anno), data2=Dict(image, anno))
         """
         CROP = False
-        IM_WIDTH = 1024
-        IM_HEIGHT = 768
+        IM_WIDTH = 256
+        IM_HEIGHT = 256
 
         data1 = sampled_data["data1"]
         data2 = sampled_data["data2"]

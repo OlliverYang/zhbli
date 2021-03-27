@@ -48,7 +48,7 @@ train:
   track:
     exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot"
     exp_save: &TRAIN_SAVE "snapshots"
-    num_processes: 3
+    num_processes: 1
     model:
       backbone:
         name: "Inception3"
@@ -62,15 +62,15 @@ train:
                 "IOULoss",]
         SigmoidCrossEntropyRetina:
           name: "cls"
-          weight: 1.0
+          weight: 0.1
           alpha: 0.75
           gamma: 2.0
         SigmoidCrossEntropyCenterness:
           name: "ctr"
-          weight: 1.0
+          weight: 0.1
         IOULoss:
           name: "reg"
-          weight: 3.0
+          weight: 40.0
       task_head:
         name: "DenseboxHead"
         DenseboxHead:
@@ -86,8 +86,8 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 96  # 256
-      num_workers: 16
+      minibatch: &MINIBATCH 2  # 256
+      num_workers: 4
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
       pin_memory: false
       datapipeline:

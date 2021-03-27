@@ -114,16 +114,13 @@ if __name__ == '__main__':
         print('debug')
 
     # load data
-    logger.info("load data")
     with Timer(name="Dataloader building", verbose=True):
         dataloader = dataloader_builder.build(task, task_cfg.data)
 
     # build optimizer
-    logger.info("build optimizer")
     optimizer = optim_builder.build(task, task_cfg.optim, model)
 
     # build trainer
-    logger.info("build trainer")
     trainer = engine_builder.build(task, task_cfg.trainer, "trainer", optimizer,
                                    dataloader)
     trainer.set_device(devs)

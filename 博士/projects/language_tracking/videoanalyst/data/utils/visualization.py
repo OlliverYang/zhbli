@@ -22,13 +22,13 @@ def show_img_FCOS(training_data,
     ]
 
     '''设定超参数'''
-    IM_H = 768
-    IM_W = 1024
+    IM_HEIGHT = 256
+    IM_WIDTH = 256
     STRIDE = 8
-    x_size_h = IM_H
-    x_size_w = IM_W
-    score_size_h = IM_H // STRIDE
-    score_size_w = IM_W // STRIDE
+    x_size_h = IM_HEIGHT
+    x_size_w = IM_WIDTH
+    score_size_h = IM_HEIGHT // STRIDE
+    score_size_w = IM_WIDTH // STRIDE
 
     total_stride = STRIDE
 

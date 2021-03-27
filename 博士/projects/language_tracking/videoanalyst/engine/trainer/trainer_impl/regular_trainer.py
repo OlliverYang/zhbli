@@ -103,11 +103,17 @@ class RegularTrainer(TrainerBase):
 
             # forward propagation
             with Timer(name="fwd", output_dict=time_dict):
+
                 """计算句子特征"""
                 nlp = training_data['nlp']
-                sentence_feature = self._model.module.sentence_transformer.encode(
-                    nlp, convert_to_numpy=False, convert_to_tensor=True,
-                    normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                if len(self._state["devices"]) > 1:
+                    sentence_feature = self._model.module.sentence_transformer.encode(
+                        nlp, convert_to_numpy=False, convert_to_tensor=True,
+                        normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                else:
+                    sentence_feature = self._model.sentence_transformer.encode(
+                        nlp, convert_to_numpy=False, convert_to_tensor=True,
+                        normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
                 training_data['sentence_feature'] = sentence_feature
 
                 predict_data = self._model(training_data)
