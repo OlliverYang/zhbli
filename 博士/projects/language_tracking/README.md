@@ -90,6 +90,10 @@ epoch 0, lr: 1.4e-04, cls: 0.174, ctr: 0.015, reg: 6.111, iou: 0.862, data: 3.5e
 
 # 训练结果
 
+## 相关参数
+
+batch_size = 96, 3 卡。
+
 epoch 0, lr: 8.0e-02, cls: 0.121, ctr: 0.036, reg: 1.559, iou: 0.618, data: 8.7e-05, fwd: 4.3e-01, bwd: 1.3e-01, optim: 3.8e-01,  max mem: 8250.6M: 100%|█████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:48<00:00,  1.18s/it]
 2021-03-26 18:31:27.240 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-0.pkl
 epoch 1, lr: 7.9e-02, cls: 0.082, ctr: 0.025, reg: 1.224, iou: 0.682, data: 7.6e-05, fwd: 4.4e-01, bwd: 1.5e-01, optim: 3.7e-01,  max mem: 8250.6M: 100%|█████████████████████████████████████████████████████████████████████████████████| 1562/1562 [29:06<00:00,  1.12s/it]
