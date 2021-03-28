@@ -1,9 +1,17 @@
 # 训练
+export PYTHONPATH=/home/etvuz/projects/language_tracking
 
 cd language_tracking
-train.py -cfg experiments/siamfcpp/train/lasot/siamfcpp_googlenet-trn.yaml
+python main/train.py -cfg experiments/siamfcpp/train/lasot/siamfcpp_googlenet-trn.yaml
+
+# 测试
+
+cd language_tracking
+python main/test.py -cfg experiments/siamfcpp/test/lasot/siamfcpp_googlenet-lasot.yaml
 
 # TODO
+
+测试时，eval 了吗？应该是了。
 
 改为全图输入
 
@@ -82,6 +90,10 @@ epoch 0, lr: 1.4e-04, cls: 0.174, ctr: 0.015, reg: 6.111, iou: 0.862, data: 3.5e
 
 # 训练结果
 
+## 相关参数
+
+batch_size = 96, 3 卡。
+
 epoch 0, lr: 8.0e-02, cls: 0.121, ctr: 0.036, reg: 1.559, iou: 0.618, data: 8.7e-05, fwd: 4.3e-01, bwd: 1.3e-01, optim: 3.8e-01,  max mem: 8250.6M: 100%|█████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:48<00:00,  1.18s/it]
 2021-03-26 18:31:27.240 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-0.pkl
 epoch 1, lr: 7.9e-02, cls: 0.082, ctr: 0.025, reg: 1.224, iou: 0.682, data: 7.6e-05, fwd: 4.4e-01, bwd: 1.5e-01, optim: 3.7e-01,  max mem: 8250.6M: 100%|█████████████████████████████████████████████████████████████████████████████████| 1562/1562 [29:06<00:00,  1.12s/it]
@@ -121,3 +133,55 @@ epoch 17, lr: 2.2e-03, cls: 0.027, ctr: 0.007, reg: 0.376, iou: 0.887, data: 9.4
 epoch 18, lr: 5.5e-04, cls: 0.027, ctr: 0.008, reg: 0.401, iou: 0.879, data: 7.3e-05, fwd: 4.2e-01, bwd: 2.7e-01, optim: 4.2e-01,  max mem: 8317.0M: 100%|████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:32<00:00,  1.17s/it]
 2021-03-27 04:16:03.320 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-18.pkl
 epoch 19, lr: 1.0e-06, cls: 0.025, ctr: 0.007, reg: 0.386, iou: 0.885, data: 2.1e-05, fwd: 4.2e-01, bwd: 2.4e-01, optim: 4.0e-01,  max mem: 8317.0M: 100%|████████████████████████████████████████████████████████████████████████████████| 1562/1562 [30:35<00:00,  1.18s/it]
+2021-03-27 04:46:40.961 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl
+2021-03-27 04:46:42.037 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/final_model.pkl
+
+## 实验获得成功。
+"success_score": 0.44, "precision_score": 0.43, "normalized_precision_score": 0.47, "success_rate": 0.51
+
+# 训练跟踪部分
+
+epoch 0, lr: 8.0e-02, cls: 0.153, ctr: 0.037, reg: 1.911, iou: 0.558, data: 1.6e-04, fwd: 3.8e-01, bwd: 1.3e-01, optim: 3.3e-01,  ma
+2021-03-27 17:19:32.661 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-0.pklepoch 1, lr: 7.9e-02, cls: 0.116, ctr: 0.029, reg: 2.433, iou: 0.470, data: 7.4e-05, fwd: 4.2e-01, bwd: 1.5e-01, optim: 3.5e-01,  ma
+2021-03-27 17:56:33.584 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-1.pkl
+epoch 2, lr: 7.8e-02, cls: 0.113, ctr: 0.034, reg: 1.241, iou: 0.680, data: 7.5e-05, fwd: 3.8e-01, bwd: 3.3e-01, optim: 1.5e-01,  ma
+2021-03-27 18:33:27.932 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-2.pkl
+epoch 3, lr: 7.5e-02, cls: 0.079, ctr: 0.023, reg: 1.421, iou: 0.642, data: 2.3e-03, fwd: 3.8e-01, bwd: 1.3e-01, optim: 3.5e-01,  ma
+2021-03-27 19:10:16.253 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-3.pkl
+epoch 4, lr: 7.2e-02, cls: 0.074, ctr: 0.019, reg: 1.339, iou: 0.653, data: 1.1e-03, fwd: 3.8e-01, bwd: 1.4e-01, optim: 3.4e-01,  ma
+2021-03-27 19:47:08.469 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-4.pkl
+epoch 5, lr: 6.7e-02, cls: 0.108, ctr: 0.031, reg: 1.310, iou: 0.664, data: 1.3e-03, fwd: 3.9e-01, bwd: 1.3e-01, optim: 3.6e-01,  ma
+2021-03-27 20:24:01.906 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-5.pkl
+epoch 6, lr: 6.2e-02, cls: 0.071, ctr: 0.018, reg: 0.865, iou: 0.765, data: 7.0e-05, fwd: 3.8e-01, bwd: 1.4e-01, optim: 3.3e-01,  ma
+2021-03-27 21:00:57.784 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-6.pkl
+epoch 7, lr: 5.6e-02, cls: 0.070, ctr: 0.020, reg: 1.310, iou: 0.659, data: 1.7e-03, fwd: 3.9e-01, bwd: 1.3e-01, optim: 3.8e-01,  ma
+2021-03-27 21:37:54.565 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-7.pkl
+epoch 8, lr: 5.0e-02, cls: 0.069, ctr: 0.017, reg: 1.110, iou: 0.713, data: 1.2e-03, fwd: 3.9e-01, bwd: 1.3e-01, optim: 3.8e-01,  ma
+2021-03-27 22:14:56.636 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-8.pkl
+epoch 9, lr: 4.3e-02, cls: 0.056, ctr: 0.018, reg: 0.844, iou: 0.768, data: 2.9e-03, fwd: 4.1e-01, bwd: 1.5e-01, optim: 3.6e-01,  ma
+2021-03-27 22:51:44.396 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-9.pkl
+epoch 10, lr: 3.7e-02, cls: 0.051, ctr: 0.015, reg: 0.773, iou: 0.781, data: 1.6e-03, fwd: 4.1e-01, bwd: 3.2e-01, optim: 3.8e-01,  m
+2021-03-27 23:36:19.524 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-10.pkl
+epoch 11, lr: 3.0e-02, cls: 0.049, ctr: 0.010, reg: 0.751, iou: 0.789, data: 1.1e-03, fwd: 4.0e-01, bwd: 3.0e-01, optim: 3.9e-01,  m
+2021-03-28 00:20:53.175 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-11.pkl
+epoch 12, lr: 2.4e-02, cls: 0.050, ctr: 0.011, reg: 0.551, iou: 0.844, data: 1.6e-03, fwd: 4.1e-01, bwd: 3.4e-01, optim: 3.6e-01,  m
+2021-03-28 01:05:25.082 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-12.pkl
+epoch 13, lr: 1.8e-02, cls: 0.041, ctr: 0.011, reg: 0.464, iou: 0.866, data: 1.2e-03, fwd: 5.1e-01, bwd: 3.0e-01, optim: 3.6e-01,  m
+2021-03-28 01:49:58.438 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-13.pkl
+epoch 14, lr: 1.3e-02, cls: 0.055, ctr: 0.017, reg: 0.568, iou: 0.845, data: 1.3e-03, fwd: 4.0e-01, bwd: 3.2e-01, optim: 3.9e-01,  m
+2021-03-28 02:34:29.827 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-14.pkl
+epoch 15, lr: 8.4e-03, cls: 0.039, ctr: 0.009, reg: 0.387, iou: 0.886, data: 1.2e-03, fwd: 4.3e-01, bwd: 3.3e-01, optim: 3.8e-01,  m
+2021-03-28 03:19:00.424 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-15.pkl
+epoch 16, lr: 4.8e-03, cls: 0.033, ctr: 0.006, reg: 0.350, iou: 0.895, data: 1.4e-03, fwd: 4.2e-01, bwd: 3.3e-01, optim: 3.8e-01,  m
+2021-03-28 04:03:32.495 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-16.pkl
+epoch 17, lr: 2.2e-03, cls: 0.036, ctr: 0.008, reg: 0.356, iou: 0.895, data: 1.2e-03, fwd: 4.1e-01, bwd: 3.1e-01, optim: 3.8e-01,  m
+2021-03-28 04:48:02.129 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-17.pkl
+epoch 18, lr: 5.5e-04, cls: 0.033, ctr: 0.009, reg: 0.386, iou: 0.887, data: 1.1e-03, fwd: 4.0e-01, bwd: 3.2e-01, optim: 3.5e-01,  m
+2021-03-28 05:32:33.538 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-18.pkl
+epoch 19, lr: 1.0e-06, cls: 0.035, ctr: 0.008, reg: 0.383, iou: 0.888, data: 1.4e-03, fwd: 3.8e-01, bwd: 3.0e-01, optim: 3.6e-01,  m
+2021-03-28 06:17:00.024 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl
+2021-03-28 06:17:01.104 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/final_model.pkl
+
+## 实验结果
+
+"success_score": 0.44787510864688007, "precision_score": 0.4363740975316133, "normalized_precision_score": 0.4791411810497288

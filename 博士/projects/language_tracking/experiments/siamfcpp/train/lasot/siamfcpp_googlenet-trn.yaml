@@ -1,54 +1,8 @@
-test:
-  track:
-    exp_name: &TEST_NAME "siamfcpp_googlenet-lasot"
-    exp_save: &TEST_SAVE "logs"
-    model:
-      backbone:
-        name: "Inception3"
-        Inception3:
-          pretrain_model_path: ""
-          crop_pad: 0
-          pruned: True
-      losses:
-        names: []
-      task_head:
-        name: "DenseboxHead"
-        DenseboxHead:
-          total_stride: 8
-          num_conv3x3: 2
-          head_conv_bn: [False, False]
-      task_model:
-        name: "SiamTrack"
-        SiamTrack:
-          pretrain_model_path: "snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl"
-    pipeline:
-      name: "SiamFCppTracker"
-      SiamFCppTracker:
-        test_lr: 0.52
-        window_influence: 0.21
-        penalty_k: 0.04
-        num_conv3x3: 2
-    tester:
-      names: ["LaSOTTester",] # (VOTTester|GOT10kTester|LaSOTTester)
-      VOTTester:
-        exp_name: *TEST_NAME
-        exp_save: *TEST_SAVE
-        device_num: 1
-        dataset_names: ["VOT2018"]
-      GOT10kTester:
-        exp_name: *TEST_NAME
-        exp_save: *TEST_SAVE
-        subsets: ["val", "test"]  # (val|test)
-      LaSOTTester:
-        exp_name: *TEST_NAME
-        exp_save: *TEST_SAVE
-        subsets: ["test"]  # (train_test|test)
-        device_num: 4
 train:
   track:
     exp_name: &TRAIN_NAME "siamfcpp_googlenet-lasot"
     exp_save: &TRAIN_SAVE "snapshots"
-    num_processes: 3
+    num_processes: 2
     model:
       backbone:
         name: "Inception3"
@@ -86,7 +40,7 @@ train:
       exp_name: *TRAIN_NAME
       exp_save: *TRAIN_SAVE
       num_epochs: &NUM_EPOCHS 20
-      minibatch: &MINIBATCH 96  # 256
+      minibatch: &MINIBATCH 64  # 256
       num_workers: 16
       nr_image_per_epoch: &NR_IMAGE_PER_EPOCH 150000
       pin_memory: false

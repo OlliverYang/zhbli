@@ -1,0 +1,15 @@
+{
+    "root":"/home/etvuz/projects/FairMOT/datasets",
+    "train":
+    {
+        "got10k":"./data/got10k.train"
+    },
+    "test_emb":
+    {
+        "mot15":"./data/mot15.val"
+    },
+    "test":
+    {
+        "mot15":"./data/mot15.val"
+    }
+}

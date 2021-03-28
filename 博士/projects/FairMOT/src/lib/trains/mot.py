@@ -55,9 +55,9 @@ class MotLoss(torch.nn.Module):
 
             if opt.id_weight > 0:
                 id_head = _tranpose_and_gather_feat(output['id'], batch['ind'])
-                id_head = id_head[batch['id_mask'] > 0].contiguous()
+                id_head = id_head[batch['reg_mask'] > 0].contiguous()
                 id_head = self.emb_scale * F.normalize(id_head)
-                id_target = batch['ids'][batch['id_mask'] > 0]
+                id_target = batch['ids'][batch['reg_mask'] > 0]
 
                 id_output = self.classifier(id_head).contiguous()
                 id_loss += self.IDLoss(id_output, id_target)

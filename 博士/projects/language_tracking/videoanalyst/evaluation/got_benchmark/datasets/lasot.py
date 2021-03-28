@@ -5,7 +5,7 @@ import json
 import os
 import pickle
 from typing import Dict
-
+import random
 import numpy as np
 from loguru import logger
 from tqdm import tqdm
@@ -82,6 +82,11 @@ class LaSOT(object):
             for k, _ in LaSOT.data_dict[subset].items()
         ]
         self.seq_names = sorted(self.seq_names)
+
+        """打乱，因为可以让不同机器均匀跳过测过的视频"""
+        print('suffle datasets')
+        random.shuffle(self.seq_names)
+
         self.seq_datas = {
             k: v
             for subset in self.subset

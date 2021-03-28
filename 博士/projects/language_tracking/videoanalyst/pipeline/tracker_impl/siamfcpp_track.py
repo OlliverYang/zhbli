@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*
 
 from copy import deepcopy
-
+import cv2
 import numpy as np
 
 import torch
@@ -99,6 +99,7 @@ class SiamFCppTracker(PipelineBase):
     def set_device(self, device):
         self.device = device
         self._model = self._model.to(device)
+        return
 
     def update_params(self):
         hps = self._hyper_params
@@ -110,7 +111,7 @@ class SiamFCppTracker(PipelineBase):
             (hps['score_size'] - 1) * hps['total_stride']) // 2
         self._hyper_params = hps
 
-    def feature(self, im: np.array, target_pos, target_sz, avg_chans=None):
+    def feature(self, im: np.array, target_pos, target_sz, avg_chans=None, nlp=None):
         """Extract feature
 
         Parameters
@@ -147,11 +148,22 @@ class SiamFCppTracker(PipelineBase):
         phase = self._hyper_params['phase_init']
         with torch.no_grad():
             data = imarray_to_tensor(im_z_crop).to(self.device)
-            features = self._model(data, phase=phase)
 
-        return features, im_z_crop, avg_chans
+            USE_SENTENCE = False
 
-    def init(self, im, state):
+            if USE_SENTENCE:
+                """获得语言特征"""
+                sentence_feature = self._model.sentence_transformer.encode(
+                    [nlp], convert_to_numpy=False, convert_to_tensor=True, device=self.device,
+                    normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                c_z_k = self._model.c_z_k(sentence_feature)
+                r_z_k = self._model.r_z_k(sentence_feature)
+                return (c_z_k, r_z_k), im_z_crop, avg_chans
+            else:
+                features = self._model(data, phase=phase)
+                return features, im_z_crop, avg_chans
+
+    def init(self, im, state, nlp=None):
         r"""Initialize tracker
             Internal target state representation: self._state['state'] = (target_pos, target_sz)
         
@@ -170,7 +182,7 @@ class SiamFCppTracker(PipelineBase):
         self._state['im_w'] = im.shape[1]
 
         # extract template feature
-        features, im_z_crop, avg_chans = self.feature(im, target_pos, target_sz)
+        features, im_z_crop, avg_chans = self.feature(im, target_pos, target_sz, None, nlp)
 
         score_size = self._hyper_params['score_size']
         if self._hyper_params['windowing'] == 'cosine':
@@ -208,17 +220,11 @@ class SiamFCppTracker(PipelineBase):
         x_size = self._hyper_params['x_size']
         context_amount = self._hyper_params['context_amount']
         phase_track = self._hyper_params['phase_track']
-        im_x_crop, scale_x = get_crop(
-            im_x,
-            target_pos,
-            target_sz,
-            z_size,
-            x_size=x_size,
-            avg_chans=avg_chans,
-            context_amount=context_amount,
-            func_get_subwindow=get_subwindow_tracking,
-        )
-        self._state["scale_x"] = deepcopy(scale_x)
+
+        IM_WIDTH = 256
+        IM_HEIGHT = 256
+
+        im_x_crop = cv2.resize(im_x, (IM_WIDTH, IM_HEIGHT))
         with torch.no_grad():
             score, box, cls, ctr, extra = self._model(
                 imarray_to_tensor(im_x_crop).to(self.device),
@@ -228,6 +234,15 @@ class SiamFCppTracker(PipelineBase):
             self._state["corr_fea"] = extra["corr_fea"]
 
         box = tensor_to_numpy(box[0])
+
+        """由缩放后的坐标转变为缩放前的坐标"""
+        scale_x = im_x.shape[1] / IM_WIDTH
+        scale_y = im_x.shape[0] / IM_HEIGHT
+        box[:, 0] *= scale_x
+        box[:, 1] *= scale_y
+        box[:, 2] *= scale_x
+        box[:, 3] *= scale_y
+
         score = tensor_to_numpy(score[0])[:, 0]
         cls = tensor_to_numpy(cls[0])
         ctr = tensor_to_numpy(ctr[0])
@@ -235,11 +250,13 @@ class SiamFCppTracker(PipelineBase):
 
         # score post-processing
         best_pscore_id, pscore, penalty = self._postprocess_score(
-            score, box_wh, target_sz, scale_x)
+            score, box_wh, target_sz, None)
+
         # box post-processing
-        new_target_pos, new_target_sz = self._postprocess_box(
-            best_pscore_id, score, box_wh, target_pos, target_sz, scale_x,
-            x_size, penalty)
+        box_wh = box_wh[best_pscore_id, :]
+        new_target_pos = box_wh[:2]
+        new_target_sz = box_wh[2:]
+        # 返回的是中心点，绝对值
 
         if self.debug:
             box = self._cvt_box_crop2frame(box_wh, target_pos, x_size, scale_x)
@@ -295,7 +312,7 @@ class SiamFCppTracker(PipelineBase):
                                            target_pos_prior,
                                            target_sz_prior,
                                            features,
-                                           update_state=True)
+                                           update_state=True)  # 返回的是中心点，绝对值。
 
         # save underlying state
         # self.state['target_pos'], self.state['target_sz'] = target_pos, target_sz
@@ -322,38 +339,10 @@ class SiamFCppTracker(PipelineBase):
             pscore: (HW, ), penalized score
             penalty: (HW, ), penalty due to scale/ratio change
         """
-        def change(r):
-            return np.maximum(r, 1. / r)
-
-        def sz(w, h):
-            pad = (w + h) * 0.5
-            sz2 = (w + pad) * (h + pad)
-            return np.sqrt(sz2)
-
-        def sz_wh(wh):
-            pad = (wh[0] + wh[1]) * 0.5
-            sz2 = (wh[0] + pad) * (wh[1] + pad)
-            return np.sqrt(sz2)
-
-        # size penalty
-        penalty_k = self._hyper_params['penalty_k']
-        target_sz_in_crop = target_sz * scale_x
-        s_c = change(
-            sz(box_wh[:, 2], box_wh[:, 3]) /
-            (sz_wh(target_sz_in_crop)))  # scale penalty
-        r_c = change((target_sz_in_crop[0] / target_sz_in_crop[1]) /
-                     (box_wh[:, 2] / box_wh[:, 3]))  # ratio penalty
-        penalty = np.exp(-(r_c * s_c - 1) * penalty_k)
-        pscore = penalty * score
-
-        # ipdb.set_trace()
-        # cos window (motion model)
-        window_influence = self._hyper_params['window_influence']
-        pscore = pscore * (
-            1 - window_influence) + self._state['window'] * window_influence
+        pscore = score
         best_pscore_id = np.argmax(pscore)
 
-        return best_pscore_id, pscore, penalty
+        return best_pscore_id, pscore, None
 
     def _postprocess_box(self, best_pscore_id, score, box_wh, target_pos,
                          target_sz, scale_x, x_size, penalty):
@@ -361,7 +350,7 @@ class SiamFCppTracker(PipelineBase):
         Perform SiameseRPN-based tracker's post-processing of box
         :param score: (HW, ), score prediction
         :param box_wh: (HW, 4), cxywh, bbox prediction (format changed)
-        :param target_pos: (2, ) previous position (x & y)
+        :param target_pos: (2, ) previous position (x & y) 中心点
         :param target_sz: (2, ) previous state (w & h)
         :param scale_x: scale of cropped patch of current frame
         :param x_size: size of cropped patch
@@ -370,7 +359,7 @@ class SiamFCppTracker(PipelineBase):
             new_target_pos: (2, ), new target position
             new_target_sz: (2, ), new target size
         """
-        pred_in_crop = box_wh[best_pscore_id, :] / np.float32(scale_x)
+        pred_in_crop = box_wh[best_pscore_id, :]   # cxywh
         # about np.float32(scale_x)
         # attention!, this casting is done implicitly
         # which can influence final EAO heavily given a model & a set of hyper-parameters
@@ -386,7 +375,7 @@ class SiamFCppTracker(PipelineBase):
         new_target_pos = np.array([res_x, res_y])
         new_target_sz = np.array([res_w, res_h])
 
-        return new_target_pos, new_target_sz
+        return new_target_pos, new_target_sz  # 返回的是中心点，绝对值
 
     def _restrict_box(self, target_pos, target_sz):
         r"""

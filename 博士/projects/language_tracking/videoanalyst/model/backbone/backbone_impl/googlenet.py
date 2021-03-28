@@ -35,7 +35,7 @@ class Inception3(ModuleBase):
     """
     default_hyper_params = dict(
         pretrain_model_path="",
-        crop_pad=4,
+        crop_pad=0,
         pruned=True,
     )
 

@@ -39,8 +39,9 @@ class LaSOTTester(TesterBase):
     def update_params(self):
         # set device state
         num_gpu = self._hyper_params["device_num"]
-        if num_gpu > 0:
-            all_devs = [torch.device("cuda:%d" % i) for i in range(num_gpu)]
+        if num_gpu % 4 == 0:
+            all_devs = [torch.device("cuda:%d" % i) for i in range(4)]
+            all_devs = all_devs * (num_gpu // 4)
         else:
             all_devs = [torch.device("cpu")]
         self._state["all_devs"] = all_devs
@@ -61,13 +62,14 @@ class LaSOTTester(TesterBase):
             experiment = ExperimentLaSOT(root_dir,
                                          subset=subset,
                                          result_dir=result_dir,
-                                         report_dir=report_dir)
+                                         report_dir=report_dir,
+                                         return_meta=True)
             # single worker
             if nr_devs == 1:
                 dev = all_devs[0]
                 self._pipeline.set_device(dev)
                 pipeline_tracker = PipelineTracker(tracker_name, self._pipeline)
-                experiment.run(pipeline_tracker)
+                experiment.run(pipeline_tracker, overwrite_result=False)
             # multi-worker
             else:
                 procs = []
@@ -111,8 +113,9 @@ class LaSOTTester(TesterBase):
         experiment = ExperimentLaSOT(root_dir,
                                      subset=subset,
                                      result_dir=result_dir,
-                                     report_dir=report_dir)
-        experiment.run(pipeline_tracker, slicing_quantile=slicing_quantile)
+                                     report_dir=report_dir,
+                                     return_meta=True)
+        experiment.run(pipeline_tracker, slicing_quantile=slicing_quantile, overwrite_result=False)
         logger.debug("Worker ends: slice {} at {}".format(
             slicing_quantile, dev))
 

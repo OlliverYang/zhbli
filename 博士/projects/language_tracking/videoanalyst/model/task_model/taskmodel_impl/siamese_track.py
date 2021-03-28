@@ -11,7 +11,7 @@ from videoanalyst.model.task_model.taskmodel_base import (TRACK_TASKMODELS,
                                                           VOS_TASKMODELS)
 
 torch.set_printoptions(precision=8)
-
+USE_SENTENCE = False
 
 @TRACK_TASKMODELS.register
 @VOS_TASKMODELS.register
@@ -65,11 +65,19 @@ class SiamTrack(ModuleBase):
 
         # backbone feature
         f_x = self.basemodel(search_img)
-        sentence_feature = training_data["sentence_feature"]
 
-        # feature adjustment
-        c_z_k = self.c_z_k(sentence_feature)
-        r_z_k = self.r_z_k(sentence_feature)
+        if USE_SENTENCE:
+            sentence_feature = training_data["sentence_feature"]
+            # feature adjustment
+            c_z_k = self.c_z_k(sentence_feature)
+            r_z_k = self.r_z_k(sentence_feature)
+        else:
+            f_z = self.basemodel(target_img)
+            c_z_k = self.c_z_k(f_z)
+            r_z_k = self.r_z_k(f_z)
+            c_z_k = torch.nn.functional.adaptive_avg_pool2d(c_z_k, (1,1))
+            r_z_k = torch.nn.functional.adaptive_avg_pool2d(r_z_k, (1,1))
+
         c_x = self.c_x(f_x)
         r_x = self.r_x(f_x)
 
@@ -141,6 +149,8 @@ class SiamTrack(ModuleBase):
                 # template as kernel
                 c_z_k = self.c_z_k(f_z)
                 r_z_k = self.r_z_k(f_z)
+                c_z_k = torch.nn.functional.adaptive_avg_pool2d(c_z_k, (1, 1))
+                r_z_k = torch.nn.functional.adaptive_avg_pool2d(r_z_k, (1, 1))
                 # output
                 out_list = [c_z_k, r_z_k]
         # used for template feature extraction (trt mode)
@@ -222,18 +232,13 @@ class SiamTrack(ModuleBase):
         head_width = self._hyper_params['head_width']
 
         # feature adjustment
-        self.r_z_k = conv_bn_relu(768,
-                                  head_width,
-                                  1,
-                                  1,
-                                  0,
-                                  has_relu=False)
-        self.c_z_k = conv_bn_relu(768,
-                                  head_width,
-                                  1,
-                                  1,
-                                  0,
-                                  has_relu=False)
+        if USE_SENTENCE:
+            self.r_z_k = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
+            self.c_z_k = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
+        else:
+            self.r_z_k = conv_bn_relu(head_width, head_width, 1, 1, 0, has_relu=False)
+            self.c_z_k = conv_bn_relu(head_width, head_width, 1, 1, 0, has_relu=False)
+
         self.r_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
         self.c_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
 

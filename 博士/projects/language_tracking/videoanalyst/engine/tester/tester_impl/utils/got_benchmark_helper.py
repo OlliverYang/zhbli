@@ -30,7 +30,7 @@ class PipelineTracker(object):
         self.is_deterministic = is_deterministic
         self.pipeline = pipeline
 
-    def init(self, image: np.array, box):
+    def init(self, image: np.array, box, nlp=None):
         """Initialize pipeline tracker
         
         Parameters
@@ -41,7 +41,7 @@ class PipelineTracker(object):
             tracking bbox on the first frame
             formate: (x, y, w, h)
         """
-        self.pipeline.init(image, box)
+        self.pipeline.init(image, box, nlp)
 
     def update(self, image: np.array):
         """Perform tracking
@@ -59,7 +59,7 @@ class PipelineTracker(object):
         """
         return self.pipeline.update(image)
 
-    def track(self, img_files: List, box, visualize: bool = False):
+    def track(self, img_files: List, box, visualize: bool = False, nlp=None):
         """Perform tracking on a given video sequence
         
         Parameters
@@ -89,12 +89,13 @@ class PipelineTracker(object):
 
             start_time = time.time()
             if f == 0:
-                self.init(image, box)
+                self.init(image, box, nlp)
             else:
                 boxes[f, :] = self.update(image)
             times[f] = time.time() - start_time
 
             if visualize:
+                print('vis')
                 show_frame(image, boxes[f, :])
 
         return boxes, times

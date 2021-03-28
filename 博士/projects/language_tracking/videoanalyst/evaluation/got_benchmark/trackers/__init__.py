@@ -13,13 +13,13 @@ class Tracker(object):
         self.name = name
         self.is_deterministic = is_deterministic
 
-    def init(self, image, box):
+    def init(self, image, box, nlp=None):
         raise NotImplementedError()
 
     def update(self, image):
         raise NotImplementedError()
 
-    def track(self, img_files, box, visualize=False):
+    def track(self, img_files, box, visualize=False, nlp=None):
         frame_num = len(img_files)
         boxes = np.zeros((frame_num, 4))
         boxes[0] = box
@@ -32,7 +32,7 @@ class Tracker(object):
 
             start_time = time.time()
             if f == 0:
-                self.init(image, box)
+                self.init(image, box, nlp)
             else:
                 boxes[f, :] = self.update(image)
             times[f] = time.time() - start_time

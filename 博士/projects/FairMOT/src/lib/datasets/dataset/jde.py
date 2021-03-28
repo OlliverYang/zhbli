@@ -11,10 +11,6 @@ import json
 import numpy as np
 import torch
 import copy
-from datasets.dataset.generate_no_overlap_boxes import generate_no_overlap_boxes
-import glob
-import random
-import pickle
 
 from torch.utils.data import Dataset
 from torchvision.transforms import transforms as T
@@ -156,9 +152,12 @@ class LoadImagesAndLabels:  # for training
         label_path = self.label_files[files_index]
         return self.get_data(img_path, label_path)
 
-    def get_data(self, img, label_path, label_patch):
+    def get_data(self, img_path, label_path):
         height = self.height
         width = self.width
+        img = cv2.imread(img_path)  # BGR
+        if img is None:
+            raise ValueError('File corrupt {}'.format(img_path))
         augment_hsv = True
         if self.augment and augment_hsv:
             # SV augmentation by 50%
@@ -187,8 +186,6 @@ class LoadImagesAndLabels:  # for training
         # Load labels
         if os.path.isfile(label_path):
             labels0 = np.loadtxt(label_path, dtype=np.float32).reshape(-1, 6)
-            if label_patch is not None:
-                labels0 = np.concatenate((labels0, label_patch), axis=0)
 
             # Normalized xywh to pixel xyxy format
             labels = labels0.copy()
@@ -197,7 +194,6 @@ class LoadImagesAndLabels:  # for training
             labels[:, 4] = ratio * w * (labels0[:, 2] + labels0[:, 4] / 2) + padw
             labels[:, 5] = ratio * h * (labels0[:, 3] + labels0[:, 5] / 2) + padh
         else:
-            print('no label')
             labels = np.array([])
 
         # Augment image and labels
@@ -237,7 +233,7 @@ class LoadImagesAndLabels:  # for training
         if self.transforms is not None:
             img = self.transforms(img)
 
-        return img, labels, (h, w)
+        return img, labels, img_path, (h, w)
 
     def __len__(self):
         return self.nF  # number of batches
@@ -358,74 +354,43 @@ class JointDataset(LoadImagesAndLabels):  # for training
 
     def __init__(self, opt, root, paths, img_size=(1088, 608), augment=False, transforms=None):
         self.opt = opt
-        self.dataset_names = paths.keys()
+        dataset_names = paths.keys()
         self.img_files = OrderedDict()
         self.label_files = OrderedDict()
         self.tid_num = OrderedDict()
         self.tid_start_index = OrderedDict()
         self.num_classes = 1
 
-        """load patch paths"""
-        if list(self.dataset_names) == ['got10k']:
-            self.patches = glob.glob('/home/zhbli/Dataset/data2/custom/object_ReID/GOT-10k/train/*/*.jpg')
-            print('loading pkl...')
-            with open('/home/zhbli/Dataset/data2/got10k/train.pkl', 'rb') as f:
-                self.data_json = pickle.load(f)
-                self.img_list = []
-                self.anno_list = []
-                for video_name in self.data_json:
-                    video_dict = self.data_json[video_name]
-                    img_paths = video_dict['img_files']
-                    anno = video_dict['anno']
-                    for img_path, anno in zip(img_paths, anno):
-                        self.img_list.append(img_path)
-                        self.anno_list.append(anno)
-            print('loaded pkl.')
-            # self.patches = sorted(glob.glob('/home/zhbli/Dataset/data2/got10k/train/*/*.jpg'))
-        else:
-            assert False
-
         for ds, path in paths.items():
             with open(path, 'r') as file:
-                if ds == 'got10k':
-                    print('get img files...')
-                    self.img_files[ds] = glob.glob('/home/etvuz/projects/FairMOT/datasets/GOT-10k/images/train/*/*.jpg')
-                    self.nID = 10000
-                    print('get label files')
-                    self.label_files[ds] = [
-                        x.replace('images', 'labels_with_ids').replace('.png', '.txt').replace('.jpg', '.txt')
-                        for x in self.img_files[ds]]
-                    self.tid_num[ds] = 10000
-                    self.tid_start_index[ds] = 0
+                self.img_files[ds] = file.readlines()
+                self.img_files[ds] = [osp.join(root, x.strip()) for x in self.img_files[ds]]
+                self.img_files[ds] = list(filter(lambda x: len(x) > 0, self.img_files[ds]))
+
+            self.label_files[ds] = [
+                x.replace('images', 'labels_with_ids').replace('.png', '.txt').replace('.jpg', '.txt')
+                for x in self.img_files[ds]]
+
+        for ds, label_paths in self.label_files.items():
+            max_index = -1
+            for lp in label_paths:
+                lb = np.loadtxt(lp)
+                if len(lb) < 1:
+                    continue
+                if len(lb.shape) < 2:
+                    img_max = lb[1]
                 else:
-                    self.img_files[ds] = file.readlines()
-                    self.img_files[ds] = [osp.join(root, x.strip()) for x in self.img_files[ds]]
-                    self.img_files[ds] = list(filter(lambda x: len(x) > 0, self.img_files[ds]))
+                    img_max = np.max(lb[:, 1])
+                if img_max > max_index:
+                    max_index = img_max
+            self.tid_num[ds] = max_index + 1
 
-                    self.label_files[ds] = [
-                        x.replace('images', 'labels_with_ids').replace('.png', '.txt').replace('.jpg', '.txt')
-                        for x in self.img_files[ds]]
+        last_index = 0
+        for i, (k, v) in enumerate(self.tid_num.items()):
+            self.tid_start_index[k] = last_index
+            last_index += v
 
-                    for ds, label_paths in self.label_files.items():
-                        max_index = -1
-                        for lp in label_paths:
-                            lb = np.loadtxt(lp)
-                            if len(lb) < 1:
-                                continue
-                            if len(lb.shape) < 2:
-                                img_max = lb[1]
-                            else:
-                                img_max = np.max(lb[:, 1])
-                            if img_max > max_index:
-                                max_index = img_max
-                        self.tid_num[ds] = max_index + 1
-
-                    last_index = 0
-                    for i, (k, v) in enumerate(self.tid_num.items()):
-                        self.tid_start_index[k] = last_index
-                        last_index += v
-
-                    self.nID = int(last_index + 1)
+        self.nID = int(last_index + 1)
         self.nds = [len(x) for x in self.img_files.values()]
         self.cds = [sum(self.nds[:i]) for i in range(len(self.nds))]
         self.nF = sum(self.nds)
@@ -438,68 +403,10 @@ class JointDataset(LoadImagesAndLabels):  # for training
         print('=' * 80)
         print('dataset summary')
         print(self.tid_num)
-
         print('total # identities:', self.nID)
         print('start index')
         print(self.tid_start_index)
         print('=' * 80)
-
-    def paste_objs(self, img_path, label_path):
-        img = cv2.imread(img_path)
-        img_h, img_w = img.shape[:2]
-        _, _, cx, cy, w, h = np.loadtxt(label_path, delimiter=' ')
-        cx *= img_w
-        w *= img_w
-        cy *= img_h
-        h *= img_h
-        x1 = cx - w / 2
-        x2 = cx + w / 2
-        y1 = cy - h / 2
-        y2 = cy + h / 2
-        try:
-            boxes_full_cxywh = generate_no_overlap_boxes(img_w, img_h, np.array([[x1,y1,x2,y2]]))
-        except Exception:
-            return img, None
-        # patches = random.sample(self.patches, len(boxes_full_cxywh))
-        selected = random.sample(range(len(self.img_list)), len(boxes_full_cxywh))
-        patches = [self.img_list[var] for var in selected]
-        annos_xywh = [self.anno_list[var] for var in selected]
-
-        idxs = np.array([int(var[-19:-13]) for var in patches])
-        for box, patch, anno in zip(boxes_full_cxywh, patches, annos_xywh):
-            cx, cy, w, h = [int(var) for var in box]
-            x1 = cx - w // 2
-            y1 = cy - h // 2
-            origin_x1, origin_y1, origin_w, origin_h = [int(var) for var in anno]
-            origin_x2 = origin_x1 + origin_w
-            origin_y2 = origin_y1 + origin_h
-            origin_img = cv2.imread(patch)
-            patch = origin_img[origin_y1:origin_y2, origin_x1:origin_x2]
-            if len(patch) == 0:
-                patch = origin_img
-            try:
-                patch = cv2.resize(patch, (w,h))
-            except cv2.error:
-                print('err3')
-            try:
-                img[y1:y1+h, x1:x1+w] = patch
-            except ValueError:
-                print('shape err')
-        #print('debug'); cv2.imwrite('/tmp/00/001.jpg', img)
-        try:
-            boxes_full_cxywh[:, 0] /= img_w
-        except IndexError:
-            return img, None
-        boxes_full_cxywh[:, 1] /= img_h
-        boxes_full_cxywh[:, 2] /= img_w
-        boxes_full_cxywh[:, 3] /= img_h
-        labels = np.stack((np.zeros(len(idxs)), idxs,
-                           boxes_full_cxywh[:, 0],
-                           boxes_full_cxywh[:, 1],
-                           boxes_full_cxywh[:, 2],
-                           boxes_full_cxywh[:, 3]), axis=1)
-        # return img, labels 错 贴上的是负样本。根据标签生成heatmap（不需要负样本）并计算 id loss（需要负样本），计算回归框（不需要负样本）。
-        return img, labels
 
     def __getitem__(self, files_index):
 
@@ -511,11 +418,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
         img_path = self.img_files[ds][files_index - start_index]
         label_path = self.label_files[ds][files_index - start_index]
 
-        if 'got' in img_path or 'GOT' in img_path:
-            img_np, label = self.paste_objs(img_path, label_path)
-
-        imgs, labels, (input_h, input_w) = self.get_data(img_np, label_path, label)
-
+        imgs, labels, img_path, (input_h, input_w) = self.get_data(img_path, label_path)
         for i, _ in enumerate(labels):
             if labels[i, 1] > -1:
                 labels[i, 1] += self.tid_start_index[ds]
@@ -532,7 +435,6 @@ class JointDataset(LoadImagesAndLabels):  # for training
         reg = np.zeros((self.max_objs, 2), dtype=np.float32)
         ind = np.zeros((self.max_objs, ), dtype=np.int64)
         reg_mask = np.zeros((self.max_objs, ), dtype=np.uint8)
-        id_mask = np.zeros((self.max_objs,), dtype=np.uint8)
         ids = np.zeros((self.max_objs, ), dtype=np.int64)
         bbox_xys = np.zeros((self.max_objs, 4), dtype=np.float32)
 
@@ -567,8 +469,7 @@ class JointDataset(LoadImagesAndLabels):  # for training
                 ct = np.array(
                     [bbox[0], bbox[1]], dtype=np.float32)
                 ct_int = ct.astype(np.int32)
-                if k == 0:
-                    draw_gaussian(hm[cls_id], ct_int, radius)
+                draw_gaussian(hm[cls_id], ct_int, radius)
                 if self.opt.ltrb:
                     wh[k] = ct[0] - bbox_amodal[0], ct[1] - bbox_amodal[1], \
                             bbox_amodal[2] - ct[0], bbox_amodal[3] - ct[1]
@@ -576,16 +477,11 @@ class JointDataset(LoadImagesAndLabels):  # for training
                     wh[k] = 1. * w, 1. * h
                 ind[k] = ct_int[1] * output_w + ct_int[0]
                 reg[k] = ct - ct_int
-                if k == 0:
-                    reg_mask[k] = 1
-                id_mask[k] = 1
+                reg_mask[k] = 1
                 ids[k] = label[1]
                 bbox_xys[k] = bbox_xy
 
-        if reg_mask[0] == 0:
-            print('err5')
-
-        ret = {'input': imgs, 'hm': hm, 'reg_mask': reg_mask, 'id_mask': id_mask, 'ind': ind, 'wh': wh, 'reg': reg, 'ids': ids, 'bbox': bbox_xys}
+        ret = {'input': imgs, 'hm': hm, 'reg_mask': reg_mask, 'ind': ind, 'wh': wh, 'reg': reg, 'ids': ids, 'bbox': bbox_xys}
         return ret
 
 

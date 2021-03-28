@@ -1,0 +1,2727 @@
+{
+  "homepage": "http://data.votchallenge.net/", 
+  "name": "VOT19 RGBD Challenge", 
+  "sequences": [
+    {
+      "annotations": {
+        "checksum": "69abd10160c4e6e5bcbb47701748e527b6d140f9", 
+        "compressed": 55872, 
+        "uid": "b75942e07d34d1bfcb2a6ad43356fae17ee0d24cbc751f57397a9513108abaa38b11d919ef90df1e9b69ab21a24a7243f733a2aaabc54e77ff763838365be2ae", 
+        "uncompressed": 54222, 
+        "url": "https://zenodo.org/record/2640900/files/backpack_blue.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "93ce318025e934332f9c05a672276f15b72706f2", 
+          "compressed": 27504367, 
+          "pattern": "%08d.jpg", 
+          "uid": "439d503cda4f211b329fc7b68ac3f927b331ef1fca279f587aa66178700e033357df49f5d45d26f9294c54624dba7322443972c51e7736d6350a7b32de348bc0", 
+          "uncompressed": 27462325, 
+          "url": "https://zenodo.org/record/2640900/files/439d503cda4f211b329fc7b68ac3f927b331ef1fca279f587aa66178700e033357df49f5d45d26f9294c54624dba7322443972c51e7736d6350a7b32de348bc0.zip"
+        }, 
+        "depth": {
+          "checksum": "e39c8e2c3eff9a73708d9d57d4e0d5f2f9efac3e", 
+          "compressed": 86451774, 
+          "pattern": "%08d.png", 
+          "uid": "2cdebe12296da127102870970aa76b136daf54c9ec179728da613b045158a834859f2a2290cc0b8eb2189733d6a3410e69875782fe3626bb8269d95ac5078678", 
+          "uncompressed": 86409732, 
+          "url": "https://zenodo.org/record/2640900/files/2cdebe12296da127102870970aa76b136daf54c9ec179728da613b045158a834859f2a2290cc0b8eb2189733d6a3410e69875782fe3626bb8269d95ac5078678.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1001, 
+      "name": "backpack_blue", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/backpack_blue.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "d21d9b14c984bc9cd4aea89de478df92219c765a", 
+        "compressed": 90190, 
+        "uid": "7eada6827c8b15972fe5d907b38f79de92ba159945a93cfd98a91c361e4af982f4669e6ad5b417d76adcb2948598e50f3cd2982696d6a508cafb907f0987835b", 
+        "uncompressed": 88540, 
+        "url": "https://zenodo.org/record/2640900/files/backpack_robotarm_lab_occ.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "142fdf824f6a7d458938ee88754007db9f7ad4b7", 
+          "compressed": 23081932, 
+          "pattern": "%08d.jpg", 
+          "uid": "12abef3fa88691ddf1adfc3adbcaa9fdfeffb909a75410606c5986fc33a1fb2e40b83ead9df674858abae38b49c49d679997667d187e4223845d04fa35c5a100", 
+          "uncompressed": 23012506, 
+          "url": "https://zenodo.org/record/2640900/files/12abef3fa88691ddf1adfc3adbcaa9fdfeffb909a75410606c5986fc33a1fb2e40b83ead9df674858abae38b49c49d679997667d187e4223845d04fa35c5a100.zip"
+        }, 
+        "depth": {
+          "checksum": "0161fae77c5d209a8e0962814698903d10ac2b39", 
+          "compressed": 75342284, 
+          "pattern": "%08d.png", 
+          "uid": "d9681ac6631d94436ed843515e9204fddf8ad6522cbe4a2c965bd1d31a320939682da677c4c7a7291999179dc4a3a3cda246ea010664285f39fbf4167deccb67", 
+          "uncompressed": 75272858, 
+          "url": "https://zenodo.org/record/2640900/files/d9681ac6631d94436ed843515e9204fddf8ad6522cbe4a2c965bd1d31a320939682da677c4c7a7291999179dc4a3a3cda246ea010664285f39fbf4167deccb67.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1653, 
+      "name": "backpack_robotarm_lab_occ", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/backpack_robotarm_lab_occ.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "591d7d91051f602119667560df4734a1afb59aa1", 
+        "compressed": 77531, 
+        "uid": "a2f40dbc9bc06bc5a0ed646eb1a49c505ddb57ffef6d52457e2204ae53cde4081779b2a4c8b4adc470db90db75f2123792549d708905464fe8714a4ece5d8083", 
+        "uncompressed": 75881, 
+        "url": "https://zenodo.org/record/2640900/files/backpack_room_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "852108cd8b7a09824f06bab4a6ece765ebba68f0", 
+          "compressed": 30876331, 
+          "pattern": "%08d.jpg", 
+          "uid": "8c4511cb31d17e5b4b02085d6ede4ee27cb61fd6aff6f74c3eca48e152ef25c3c55816a4a1f80dce522ea87d938e4e880a9883405adebeeda8fb5027e1c6bb21", 
+          "uncompressed": 30818245, 
+          "url": "https://zenodo.org/record/2640900/files/8c4511cb31d17e5b4b02085d6ede4ee27cb61fd6aff6f74c3eca48e152ef25c3c55816a4a1f80dce522ea87d938e4e880a9883405adebeeda8fb5027e1c6bb21.zip"
+        }, 
+        "depth": {
+          "checksum": "d52dd770a408032ad5afc79a91efe6043f6d8fc2", 
+          "compressed": 179325298, 
+          "pattern": "%08d.png", 
+          "uid": "af9f081b0cd48cd32ab58f187a652ba93ba1032ff34f8ffc5301daeb131f7ef35fd823ea347e7ad31d52e229ba329ea4acbfd596363200ccd15d40d49cdeb3a3", 
+          "uncompressed": 179267212, 
+          "url": "https://zenodo.org/record/2640900/files/af9f081b0cd48cd32ab58f187a652ba93ba1032ff34f8ffc5301daeb131f7ef35fd823ea347e7ad31d52e229ba329ea4acbfd596363200ccd15d40d49cdeb3a3.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1383, 
+      "name": "backpack_room_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/backpack_room_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "17e758659e5f8cdeae3a1942289edee2c0adf9e2", 
+        "compressed": 129612, 
+        "uid": "a6c30fd8431ef8a501583a5a6b09a1f91360362f4a80b06479b036680d210add77a14beb033fddc357ebfc81f54be6d0c9b63ee0ee15b49054dec75e7fdfd3c6", 
+        "uncompressed": 127962, 
+        "url": "https://zenodo.org/record/2640900/files/bag_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "c3c880e63568c0664802b41e1cf8c04be0d6196f", 
+          "compressed": 139696769, 
+          "pattern": "%08d.jpg", 
+          "uid": "1c8bcdb6c43fd2cd0aa3e47b47b8e4ab3960141aafc081eca26603c5a59d216238e49894a5e027cfb6165772b02806900fb3b0a7b1842cebe6a1cebcae764476", 
+          "uncompressed": 139598489, 
+          "url": "https://zenodo.org/record/2640900/files/1c8bcdb6c43fd2cd0aa3e47b47b8e4ab3960141aafc081eca26603c5a59d216238e49894a5e027cfb6165772b02806900fb3b0a7b1842cebe6a1cebcae764476.zip"
+        }, 
+        "depth": {
+          "checksum": "be5b4fa4ebce6257eee6b9768d43d75d1f63e3aa", 
+          "compressed": 1214268301, 
+          "pattern": "%08d.png", 
+          "uid": "f99d581f82ed29fd6c76de30b61ceee4f4c738be63fae056da541875643126312a701cda83009b1c25792d84ce557a0607a5866b6593d85d68e743fe1629ff28", 
+          "uncompressed": 1214170021, 
+          "url": "https://zenodo.org/record/2640900/files/f99d581f82ed29fd6c76de30b61ceee4f4c738be63fae056da541875643126312a701cda83009b1c25792d84ce557a0607a5866b6593d85d68e743fe1629ff28.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 2340, 
+      "name": "bag_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bag_outside.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "8f6e9c6150d1c922ad8a29dd5ed2c651d1f8d3bb", 
+        "compressed": 85849, 
+        "uid": "926e74ffe9494764e6c9aa4659f3db254da35c2c096fa549c025ee7ef6e3b112d28482563db26c253fa3c5982c251ea38128a31754e37dc3211b8c091669d24a", 
+        "uncompressed": 84199, 
+        "url": "https://zenodo.org/record/2640900/files/bicycle2_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "c66ebde85e2049cab16860437c3115ae7e0de92c", 
+          "compressed": 47194036, 
+          "pattern": "%08d.jpg", 
+          "uid": "93c8913a4063335d9af692682c7103ca0b2e402b4856d351a36997a9cdb0b734ba44d84cf7ffdd783921856a58a68c03f6b3104bfb5fb46f7b57f5e619614e34", 
+          "uncompressed": 47126626, 
+          "url": "https://zenodo.org/record/2640900/files/93c8913a4063335d9af692682c7103ca0b2e402b4856d351a36997a9cdb0b734ba44d84cf7ffdd783921856a58a68c03f6b3104bfb5fb46f7b57f5e619614e34.zip"
+        }, 
+        "depth": {
+          "checksum": "d3fe3df5e59de5d2dfad3bc879de378308943fb8", 
+          "compressed": 428761018, 
+          "pattern": "%08d.png", 
+          "uid": "1ce9f097cc988f69958c027a4cd2f332a33e87f9a675d3544086d75b9a1f0b5eb41f3c50b81fd16ce32d4d36a9dbbae1a27d8199752fd2b67d4d355b4fb83a5a", 
+          "uncompressed": 428693608, 
+          "url": "https://zenodo.org/record/2640900/files/1ce9f097cc988f69958c027a4cd2f332a33e87f9a675d3544086d75b9a1f0b5eb41f3c50b81fd16ce32d4d36a9dbbae1a27d8199752fd2b67d4d355b4fb83a5a.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1605, 
+      "name": "bicycle2_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bicycle2_outside.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "1fe3af2bab2afe460375ab04102085414d76a7ef", 
+        "compressed": 77854, 
+        "uid": "d111e94b91b0afc414e9cfa9d5d3274e105453451d73a5eac18450c2cc258bbde4d4bc06d894f2cbd0c80923fd8ef92e6a4929a6c0c75603d330abedb17615af", 
+        "uncompressed": 76204, 
+        "url": "https://zenodo.org/record/2640900/files/bicycle_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "40af18727e918a8d1d27030d2f6948a5832d3534", 
+          "compressed": 55643717, 
+          "pattern": "%08d.jpg", 
+          "uid": "a962dc22929314c8e4066576877da838d764022ea1ba3117407cd8e6dbd62fc102b3ab4e5b346dfadeb1fda82b71403a4d4a4f6e0d4d27638fc06a03c186bb15", 
+          "uncompressed": 55586051, 
+          "url": "https://zenodo.org/record/2640900/files/a962dc22929314c8e4066576877da838d764022ea1ba3117407cd8e6dbd62fc102b3ab4e5b346dfadeb1fda82b71403a4d4a4f6e0d4d27638fc06a03c186bb15.zip"
+        }, 
+        "depth": {
+          "checksum": "8ed84b657bb938e053dc88c1810ea228b3feec3c", 
+          "compressed": 503176984, 
+          "pattern": "%08d.png", 
+          "uid": "9071b7aafdd5d4d663f2d89d6926b3dbd2d611f2711e16b224f9e93f6b6b7ea58439a42fce411409bf26c5616c2e715508084a6b9f0424c066cc25f862daa8d9", 
+          "uncompressed": 503119318, 
+          "url": "https://zenodo.org/record/2640900/files/9071b7aafdd5d4d663f2d89d6926b3dbd2d611f2711e16b224f9e93f6b6b7ea58439a42fce411409bf26c5616c2e715508084a6b9f0424c066cc25f862daa8d9.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1373, 
+      "name": "bicycle_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bicycle_outside.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "d5d14fc3fc4fcd4c799815d446a84dfeaddde58a", 
+        "compressed": 48971, 
+        "uid": "9fc8b2fd1a89af0819b69c5a5cce84405480a20c3b15be605082392db2dab5b84aeca3c3cc45389d3589b7a2947440e93f938c3fdb13ca9e4c6a2e088dc389a9", 
+        "uncompressed": 47321, 
+        "url": "https://zenodo.org/record/2640900/files/bottle_box.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "fa263f4207f0848b85caaacac16939faa6aa624e", 
+          "compressed": 32089032, 
+          "pattern": "%08d.jpg", 
+          "uid": "73244c8e1ceb80f30ecbbee7fe6b36c30c2ea51fed64e092a8564bb0d316fc996bf0ad68389a77ff68cdd6891fdd03f5f1545aecb59919f29eae0697951836f0", 
+          "uncompressed": 32049132, 
+          "url": "https://zenodo.org/record/2640900/files/73244c8e1ceb80f30ecbbee7fe6b36c30c2ea51fed64e092a8564bb0d316fc996bf0ad68389a77ff68cdd6891fdd03f5f1545aecb59919f29eae0697951836f0.zip"
+        }, 
+        "depth": {
+          "checksum": "a17a3fea42dda09bea9d81bab1b725e36ff1ffea", 
+          "compressed": 111014455, 
+          "pattern": "%08d.png", 
+          "uid": "ded58c565acd06c377ba9c0927b475c84005cd3b87baeb1e2832429ec75ccc8a18a751c06964cbe40f222d5ee3ce59d687766fdf463d9facdd85e812620bc984", 
+          "uncompressed": 110974555, 
+          "url": "https://zenodo.org/record/2640900/files/ded58c565acd06c377ba9c0927b475c84005cd3b87baeb1e2832429ec75ccc8a18a751c06964cbe40f222d5ee3ce59d687766fdf463d9facdd85e812620bc984.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 950, 
+      "name": "bottle_box", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bottle_box.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "04fc800b5e879b8dba2897b8f6798e0f82dac749", 
+        "compressed": 69224, 
+        "uid": "1c4293666d2619942d1bda2ae2099ee13ed470ace170e5ed3f17bfc2d7d83d6f82c9fda03742e78fbbf37af0d05600b88f964499acee1a572939f7589ced154e", 
+        "uncompressed": 67574, 
+        "url": "https://zenodo.org/record/2640900/files/bottle_room_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "a2d4c725e201b5daa0e8cff7649accc8a4416c12", 
+          "compressed": 26664304, 
+          "pattern": "%08d.jpg", 
+          "uid": "ff6da4dc92c26f56fe2927bcc6bc64756b805a8543f4eadc7a51549743b6ab03216ccf8e733592d00e84c8e2458cabb990d2dc4c65c29d526412831808350dda", 
+          "uncompressed": 26611678, 
+          "url": "https://zenodo.org/record/2640900/files/ff6da4dc92c26f56fe2927bcc6bc64756b805a8543f4eadc7a51549743b6ab03216ccf8e733592d00e84c8e2458cabb990d2dc4c65c29d526412831808350dda.zip"
+        }, 
+        "depth": {
+          "checksum": "3d039613dbcc14ee7a9882019b673f4fa220cada", 
+          "compressed": 159146663, 
+          "pattern": "%08d.png", 
+          "uid": "ef93200ae46cf441e0875481e74ceae5d33952f9f4cb854d960fda2ddae2547d48ac7c2aa43db4e7038a80366048fc2e6608bfcade0c93747945c26a4ab4fe11", 
+          "uncompressed": 159094037, 
+          "url": "https://zenodo.org/record/2640900/files/ef93200ae46cf441e0875481e74ceae5d33952f9f4cb854d960fda2ddae2547d48ac7c2aa43db4e7038a80366048fc2e6608bfcade0c93747945c26a4ab4fe11.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1253, 
+      "name": "bottle_room_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bottle_room_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "bd2bc714c0d76379388b55573434124e938ef700", 
+        "compressed": 83411, 
+        "uid": "2762eb0f25e120dbc6c132171878974d50d67ca19997cd3bb34813aafa72e9583700f762ef9d39dcc2c189a3b0680d0dcbf5cb65a6bacbd4881d5373fd186427", 
+        "uncompressed": 81761, 
+        "url": "https://zenodo.org/record/2640900/files/bottle_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "6c11d0149864115f0570de1693e11aa68f33c174", 
+          "compressed": 76339974, 
+          "pattern": "%08d.jpg", 
+          "uid": "c8bb15788ce1a44362fe751f842ed8a0e2a10e9b5f72d68615099b1b830522152af98d9203a952a81de016170923bbe9f8201bbecedb0946d44190bd0bc4618c", 
+          "uncompressed": 76276050, 
+          "url": "https://zenodo.org/record/2640900/files/c8bb15788ce1a44362fe751f842ed8a0e2a10e9b5f72d68615099b1b830522152af98d9203a952a81de016170923bbe9f8201bbecedb0946d44190bd0bc4618c.zip"
+        }, 
+        "depth": {
+          "checksum": "d5e1d83e48c80d02dc4c237cb440b6e43e53c4a2", 
+          "compressed": 435962150, 
+          "pattern": "%08d.png", 
+          "uid": "3a820c71930dab4af6d4867d1fcae78e802e8f07f0fbee05e775a95adfde8c65b48c613a223d4db3489d7b62f32825a17b4dc345dad56200351bffed25807645", 
+          "uncompressed": 435898226, 
+          "url": "https://zenodo.org/record/2640900/files/3a820c71930dab4af6d4867d1fcae78e802e8f07f0fbee05e775a95adfde8c65b48c613a223d4db3489d7b62f32825a17b4dc345dad56200351bffed25807645.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1522, 
+      "name": "bottle_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/bottle_room_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "12f23c19fc9e15f5eb7f946823b26e1b35faa6f3", 
+        "compressed": 140656, 
+        "uid": "5538491ddf155c5ae1adc5525eb92f16fdd1a7109922b3635f7b7a574213c39fc5d12340c3dc8dc5943674c82d2956e6ef20a0141d8000e854ecf0c76a2c2aeb", 
+        "uncompressed": 139006, 
+        "url": "https://zenodo.org/record/2640900/files/box1_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b82110f02d780587f644ddb47291418b594b25b6", 
+          "compressed": 156271048, 
+          "pattern": "%08d.jpg", 
+          "uid": "dfa761ac79aea9020d4b9041687ec11114ffcf77790845124700796f5405f205cff3eb51bacd3570964e09831474ee83c3f030d9cdfb08cbc79263eee7bf3e47", 
+          "uncompressed": 156166006, 
+          "url": "https://zenodo.org/record/2640900/files/dfa761ac79aea9020d4b9041687ec11114ffcf77790845124700796f5405f205cff3eb51bacd3570964e09831474ee83c3f030d9cdfb08cbc79263eee7bf3e47.zip"
+        }, 
+        "depth": {
+          "checksum": "a0e916b333ed3f0ccfdffc49f2f3aa249e713517", 
+          "compressed": 1240755045, 
+          "pattern": "%08d.png", 
+          "uid": "e00ea5c701f4dd55b187b1787d9c87ab12822f0973ec670f0f474d0d5dcbcfcdcb65442f2eb01209ae2e2e0be44c17f15d0f1ffc604c011a58b5d218fa5606e7", 
+          "uncompressed": 1240650003, 
+          "url": "https://zenodo.org/record/2640900/files/e00ea5c701f4dd55b187b1787d9c87ab12822f0973ec670f0f474d0d5dcbcfcdcb65442f2eb01209ae2e2e0be44c17f15d0f1ffc604c011a58b5d218fa5606e7.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 2501, 
+      "name": "box1_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box1_outside.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "c09040218865bebca87a01ed5077a619e7d95499", 
+        "compressed": 64074, 
+        "uid": "a0313a352711b6c976f4c1e65a680cd888ea9d2eb32c05b2f4635c2b9197d830f88ccbfa4165d37baebb29d6e75f7d773717e5da285ce2c43dbb43b242b731a2", 
+        "uncompressed": 62424, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b06f86036712f713e47b8da3d0dc8badb5b9e3b2", 
+          "compressed": 33302421, 
+          "pattern": "%08d.jpg", 
+          "uid": "7d7fc4dbb13cba5547d0a0327cea5ab139e1da5855d0c650ba7f09d59af8a376e78ee5afeabacd57d1d723a62d898a228329376dc1c12c902d0c25575fb56775", 
+          "uncompressed": 33253491, 
+          "url": "https://zenodo.org/record/2640900/files/7d7fc4dbb13cba5547d0a0327cea5ab139e1da5855d0c650ba7f09d59af8a376e78ee5afeabacd57d1d723a62d898a228329376dc1c12c902d0c25575fb56775.zip"
+        }, 
+        "depth": {
+          "checksum": "a9f0c6f0c46d2a425819d4b17542815411a56623", 
+          "compressed": 201756014, 
+          "pattern": "%08d.png", 
+          "uid": "de0633409a8d10e93dbba1afebb712f2b3258b218c6db89f6a60353f6533628afafa6683d8033c35e5833678d3b03f382bfa4284859019a0d3e7852a0fee14dc", 
+          "uncompressed": 201707084, 
+          "url": "https://zenodo.org/record/2640900/files/de0633409a8d10e93dbba1afebb712f2b3258b218c6db89f6a60353f6533628afafa6683d8033c35e5833678d3b03f382bfa4284859019a0d3e7852a0fee14dc.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1165, 
+      "name": "box_darkroom_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "98b8c7634d81b662082c3195f02aa91d3390b802", 
+        "compressed": 48839, 
+        "uid": "7bf8eede46e3350cf4d6b01291b76ef33571ac71863d9507d50a432e5424dd60d96e94dd7a12dc44ca1b7bf7829e7d74adaada3c02547a114d5d47adae1fe562", 
+        "uncompressed": 47189, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_10.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "a7790aa6827fdb3f2d1fade7bfa4d84c689a6f4d", 
+          "compressed": 11407283, 
+          "pattern": "%08d.jpg", 
+          "uid": "dea7253fce61d4af67952df1e56bde2763e70a341eff195f29add36327ca6aea210fd1fff56c431086acd83a2fffbabb4cde25c415ea8773c4f1075b6a6c8a49", 
+          "uncompressed": 11370617, 
+          "url": "https://zenodo.org/record/2640900/files/dea7253fce61d4af67952df1e56bde2763e70a341eff195f29add36327ca6aea210fd1fff56c431086acd83a2fffbabb4cde25c415ea8773c4f1075b6a6c8a49.zip"
+        }, 
+        "depth": {
+          "checksum": "02621c62dabc74a76319e093e5aa39ddffe3daa9", 
+          "compressed": 98635269, 
+          "pattern": "%08d.png", 
+          "uid": "fc1fad53164c567597380dd644bedd0e32cd499120e56aeb2eb603f932982d32557a760cb725fea35e0ef3a1038ebc4246fccb7d6225a83e143d0e319d862b9a", 
+          "uncompressed": 98598603, 
+          "url": "https://zenodo.org/record/2640900/files/fc1fad53164c567597380dd644bedd0e32cd499120e56aeb2eb603f932982d32557a760cb725fea35e0ef3a1038ebc4246fccb7d6225a83e143d0e319d862b9a.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 873, 
+      "name": "box_darkroom_noocc_10", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_10.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "6aedf2173cceeee262f6006404ce4feafae632cf", 
+        "compressed": 47451, 
+        "uid": "c124a0fa48ffba8b2576ff35ffd471679d9d6a680ce13a23397947b830488af9c6363a0a1392ed0418275660468fdaf282ea1c20b7450958f0bbb6c2c10ccf24", 
+        "uncompressed": 45801, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_2.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "44acdd55db9f13dc1a425de64a169a52579e9af5", 
+          "compressed": 17993259, 
+          "pattern": "%08d.jpg", 
+          "uid": "bbff74635fb1068496f3fd10ce84c7dc0734734d4c9af87b7df38c4d294ddda71efb629372e1cf167c19cbe86234e3ed4859180625707e9d0a8e9aabcd60e57b", 
+          "uncompressed": 17957559, 
+          "url": "https://zenodo.org/record/2640900/files/bbff74635fb1068496f3fd10ce84c7dc0734734d4c9af87b7df38c4d294ddda71efb629372e1cf167c19cbe86234e3ed4859180625707e9d0a8e9aabcd60e57b.zip"
+        }, 
+        "depth": {
+          "checksum": "3777eaf0a1c00dfa147a32e96d5442ec0a0f7384", 
+          "compressed": 110079529, 
+          "pattern": "%08d.png", 
+          "uid": "17fa6be03a23af5761e1e178a947cf7aa7bd8994752753215debe241cd89ee7e05fa4b130c0a3ce6f651d965d89bc96bc72e33d2a874af45c36d23a881ecc269", 
+          "uncompressed": 110043829, 
+          "url": "https://zenodo.org/record/2640900/files/17fa6be03a23af5761e1e178a947cf7aa7bd8994752753215debe241cd89ee7e05fa4b130c0a3ce6f651d965d89bc96bc72e33d2a874af45c36d23a881ecc269.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 850, 
+      "name": "box_darkroom_noocc_2", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_2.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "77b483979a34599036d9cd7a4756be5de5e0a008", 
+        "compressed": 103057, 
+        "uid": "bd278eac4c8448fb0d6d6582d04662b8ca587bfc587f11fe31ed9d30e0d0cc2dab2906e1f05f94285cc2b7ad6404e7df59721e143f37acb5eb3442a26cb89177", 
+        "uncompressed": 101407, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_3.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "01e868ae8d847c29ed60b9f9a6f197b2c894866f", 
+          "compressed": 37109445, 
+          "pattern": "%08d.jpg", 
+          "uid": "1eadb8890dfda004ec000f65802f0e76bb4e4a338c58e7b87d50cf39ec1cf81e8767f46bb17b4c48dbc7e1b71dcabda08af7c3248f2f723c320f033fdd97ca82", 
+          "uncompressed": 37031031, 
+          "url": "https://zenodo.org/record/2640900/files/1eadb8890dfda004ec000f65802f0e76bb4e4a338c58e7b87d50cf39ec1cf81e8767f46bb17b4c48dbc7e1b71dcabda08af7c3248f2f723c320f033fdd97ca82.zip"
+        }, 
+        "depth": {
+          "checksum": "daefa0ba0143cad64450f572a1add6cf31a4fd23", 
+          "compressed": 245635655, 
+          "pattern": "%08d.png", 
+          "uid": "9eb19c392ffb81ccea733ac340e38d129f93cf3e0001d64c61f0d7c6e1b135d9099c582bb6039267c7604f7bef44415d3f1d35b4eb4adc1ac8479c2e2290b695", 
+          "uncompressed": 245557241, 
+          "url": "https://zenodo.org/record/2640900/files/9eb19c392ffb81ccea733ac340e38d129f93cf3e0001d64c61f0d7c6e1b135d9099c582bb6039267c7604f7bef44415d3f1d35b4eb4adc1ac8479c2e2290b695.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1867, 
+      "name": "box_darkroom_noocc_3", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_3.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "4b9bae48842459fa7e59d78494066c912959c6f7", 
+        "compressed": 68825, 
+        "uid": "563e1439ba8d6794d4bebcf6a6d11e49c2e83c5e47b0c8f48d191ae5d955af73b8a5b8867a9745b45b34eb341ff1a428ef61da7bb510945b6a147be46cd764f8", 
+        "uncompressed": 67175, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_4.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "0935f3923fb90071ef4708d6348fe6f6bc5277c5", 
+          "compressed": 47881052, 
+          "pattern": "%08d.jpg", 
+          "uid": "6ef3b749fb9bc3bb89408d82c3ea176d8fbf4213375a6c1d38f4b5c6e5dab4ba912f52dcce49ccc3136bf420388ff3feb4b810eb44a4f6e2e1a79129708b9119", 
+          "uncompressed": 47828048, 
+          "url": "https://zenodo.org/record/2640900/files/6ef3b749fb9bc3bb89408d82c3ea176d8fbf4213375a6c1d38f4b5c6e5dab4ba912f52dcce49ccc3136bf420388ff3feb4b810eb44a4f6e2e1a79129708b9119.zip"
+        }, 
+        "depth": {
+          "checksum": "f0b1738590f59a7364edadab30f882817d4413aa", 
+          "compressed": 319553269, 
+          "pattern": "%08d.png", 
+          "uid": "fb6f7340f8732cddff032aa54f2d5e232c8306aca237226a510b8a18232f3ed51a1801438eb459792fe6b8bc117aa9c681cf656207748bf32a48b80183d1aae6", 
+          "uncompressed": 319500265, 
+          "url": "https://zenodo.org/record/2640900/files/fb6f7340f8732cddff032aa54f2d5e232c8306aca237226a510b8a18232f3ed51a1801438eb459792fe6b8bc117aa9c681cf656207748bf32a48b80183d1aae6.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1262, 
+      "name": "box_darkroom_noocc_4", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_4.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "c62446a97e03595d6500056de5827857d1472486", 
+        "compressed": 122695, 
+        "uid": "4cccddc69a512f7d797c8dd2a57da70cc641a816d7070b6606332c5d354d5e2e6ec6477d71459b2cca162a017b0053a9c1d88c2bd1c59a4d191f133546b70621", 
+        "uncompressed": 121045, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_5.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b0a7b496b92156e1e3f7db314ea46a455a550e94", 
+          "compressed": 84611398, 
+          "pattern": "%08d.jpg", 
+          "uid": "1420c3156888edb5abc992f6c4193dd435a38e3db96e3d7b5bb59ffea316e9001f78dc747d8c12d2010c4a2e14d433187151004753bbb3bad3677ff25c9e93e9", 
+          "uncompressed": 84517276, 
+          "url": "https://zenodo.org/record/2640900/files/1420c3156888edb5abc992f6c4193dd435a38e3db96e3d7b5bb59ffea316e9001f78dc747d8c12d2010c4a2e14d433187151004753bbb3bad3677ff25c9e93e9.zip"
+        }, 
+        "depth": {
+          "checksum": "2677780b1e166a5d044cc599281409125550c343", 
+          "compressed": 568155801, 
+          "pattern": "%08d.png", 
+          "uid": "39df25a12636165f6ee033709fc377cbbe5321eb5f2f65f717090b468ab54735881e5dd049c19e74f11709b524d2ef9b1096fa78d3f6926e0216a5fca2ce786f", 
+          "uncompressed": 568061679, 
+          "url": "https://zenodo.org/record/2640900/files/39df25a12636165f6ee033709fc377cbbe5321eb5f2f65f717090b468ab54735881e5dd049c19e74f11709b524d2ef9b1096fa78d3f6926e0216a5fca2ce786f.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 2241, 
+      "name": "box_darkroom_noocc_5", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_5.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "4c87b18660514961fe1daf0663beab4c607de1ea", 
+        "compressed": 60059, 
+        "uid": "5ae2eb389976651cd7092eb46e7b2cc63044492fe8a061f3e6030af7fe7a330b3a6d455beea7cd47388b54ca4dc70813579264be658a13af341b3b14a7f02bd7", 
+        "uncompressed": 58409, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_6.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "0f0588bc7663a78e4957bdb4c537b1e17addb24f", 
+          "compressed": 14316519, 
+          "pattern": "%08d.jpg", 
+          "uid": "c1a247db1adcd0f67539444149a3b9350a9918850f637072c89e5ce8c0654360dd1bb3786eef93ad2f51332a322ae82e2ed2e94d4680b60a9db7d4986e23cfc6", 
+          "uncompressed": 14271117, 
+          "url": "https://zenodo.org/record/2640900/files/c1a247db1adcd0f67539444149a3b9350a9918850f637072c89e5ce8c0654360dd1bb3786eef93ad2f51332a322ae82e2ed2e94d4680b60a9db7d4986e23cfc6.zip"
+        }, 
+        "depth": {
+          "checksum": "410f2329396332d221e5a7eabbc6c0c7aefd58c6", 
+          "compressed": 118872101, 
+          "pattern": "%08d.png", 
+          "uid": "77e4a7ed29ff1d158c1b32c5870dd770f1945c02f34b552a475303d2768302759159fada1b98b1035d522bd0853cf31a78d4a12b4cc26339ca4b61177d00592d", 
+          "uncompressed": 118826699, 
+          "url": "https://zenodo.org/record/2640900/files/77e4a7ed29ff1d158c1b32c5870dd770f1945c02f34b552a475303d2768302759159fada1b98b1035d522bd0853cf31a78d4a12b4cc26339ca4b61177d00592d.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1081, 
+      "name": "box_darkroom_noocc_6", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_6.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "1d77093f8d62e112bf73c5504142bfc3ce56ab21", 
+        "compressed": 39809, 
+        "uid": "4443cfdd34c50d8e11cca3fd171335873f7fd014404b54bbb498855e644d22321d0bbe2189756bb8eea318f1e034c4c53cd2d0d458e1217db105e3f2f54f7c5e", 
+        "uncompressed": 38159, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_7.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "9f32b6d8be54a4c591247839c5a969a8bd4e8a2b", 
+          "compressed": 9452761, 
+          "pattern": "%08d.jpg", 
+          "uid": "a956dad3fe67cbac5d4cb6e108bc2d0c6566da92c86c7ad8c46be482c1d4a64a14276180dff5042f868c03978b244319d1c5bf470763e3d9a2bf7ee3103bacf2", 
+          "uncompressed": 9423277, 
+          "url": "https://zenodo.org/record/2640900/files/a956dad3fe67cbac5d4cb6e108bc2d0c6566da92c86c7ad8c46be482c1d4a64a14276180dff5042f868c03978b244319d1c5bf470763e3d9a2bf7ee3103bacf2.zip"
+        }, 
+        "depth": {
+          "checksum": "2042f7f93b912475aa25f0d51d5249f71bcf8a2f", 
+          "compressed": 78949838, 
+          "pattern": "%08d.png", 
+          "uid": "ef2ea3be1f4416ce8a37c307531e2b009b9c37b189494d499f8b3e80fbebe316aadd0026df6ad2b16f7e29808ac0a4b92f75ccf32b5162283d6dc5bca62e7fd8", 
+          "uncompressed": 78920354, 
+          "url": "https://zenodo.org/record/2640900/files/ef2ea3be1f4416ce8a37c307531e2b009b9c37b189494d499f8b3e80fbebe316aadd0026df6ad2b16f7e29808ac0a4b92f75ccf32b5162283d6dc5bca62e7fd8.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 702, 
+      "name": "box_darkroom_noocc_7", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_7.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "4c724c7fad510a8a6696e8a554d04a166f152be5", 
+        "compressed": 48142, 
+        "uid": "c1ce7de55b2e418635db09688ab8a91c33f959f9e8bd85fb980103a725de8dec841e6caf92ca3ae707ac84509299e5df27b6c9f5129f44a9c3950a2c0884ac93", 
+        "uncompressed": 46492, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_8.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "0fb0e756db9535505fb2b830c45581b068865b5d", 
+          "compressed": 21506455, 
+          "pattern": "%08d.jpg", 
+          "uid": "71f52158d4a8abde74d5ab52eea41714febba45e699bc84f7855feb3abec2dd1b5b931ae8ebbf7e2e8cfbf30c59b33620975dba4a8cbdb450d2758f13460ce70", 
+          "uncompressed": 21470209, 
+          "url": "https://zenodo.org/record/2640900/files/71f52158d4a8abde74d5ab52eea41714febba45e699bc84f7855feb3abec2dd1b5b931ae8ebbf7e2e8cfbf30c59b33620975dba4a8cbdb450d2758f13460ce70.zip"
+        }, 
+        "depth": {
+          "checksum": "e0c8cce41335aa19bfe3e50e33479a29346df367", 
+          "compressed": 185989148, 
+          "pattern": "%08d.png", 
+          "uid": "3ce265e850dac5ed99e65a3ad0b2e7cce9a4947d52eb8202bdfb154298a569719d416ff13756d2893a025da5bd5a90d978705c0b8f25b10034cab7686b858822", 
+          "uncompressed": 185952902, 
+          "url": "https://zenodo.org/record/2640900/files/3ce265e850dac5ed99e65a3ad0b2e7cce9a4947d52eb8202bdfb154298a569719d416ff13756d2893a025da5bd5a90d978705c0b8f25b10034cab7686b858822.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 863, 
+      "name": "box_darkroom_noocc_8", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_8.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "0ae3d838debb9bf3f3422425e0fde2590824918d", 
+        "compressed": 41590, 
+        "uid": "489ab81661a50706d9bfb855dec102a2df32cd4c228a99e6dac7ca32d95437fd395670a8e67b896e9fb33493e84ad00c75a462d35c714399e2e00cfc4ac2dbc0", 
+        "uncompressed": 39940, 
+        "url": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_9.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "7aefacc6c257f7a6fc70539a29a68f4e1a58b75d", 
+          "compressed": 13038954, 
+          "pattern": "%08d.jpg", 
+          "uid": "24529cafcaa7083c38f53edeb0fae8b6a5a0a24cff643631b77ab51853886b2794220d13e451ca52c7eac6fe8f5d131badcc66a7bdb249f55778de07e13ad6f8", 
+          "uncompressed": 13007118, 
+          "url": "https://zenodo.org/record/2640900/files/24529cafcaa7083c38f53edeb0fae8b6a5a0a24cff643631b77ab51853886b2794220d13e451ca52c7eac6fe8f5d131badcc66a7bdb249f55778de07e13ad6f8.zip"
+        }, 
+        "depth": {
+          "checksum": "bb22b28755932673a652656d5eb559620d18d418", 
+          "compressed": 113542159, 
+          "pattern": "%08d.png", 
+          "uid": "859f3d0b55b56439a7262dc2807d1e5fbb3db04d49b29e61ebd741b7dbe56a5ac7c20eae60b4e466b60819e9300023d21d31053595a93e87acf0d618e2eedf5b", 
+          "uncompressed": 113510323, 
+          "url": "https://zenodo.org/record/2640900/files/859f3d0b55b56439a7262dc2807d1e5fbb3db04d49b29e61ebd741b7dbe56a5ac7c20eae60b4e466b60819e9300023d21d31053595a93e87acf0d618e2eedf5b.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 758, 
+      "name": "box_darkroom_noocc_9", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_darkroom_noocc_9.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "e953f64416bb30b353711e04f1fdc787302032c4", 
+        "compressed": 60428, 
+        "uid": "66ed554cfa17cc316e3e6f9641d5dea4d4d414fe54fbae8a67cc87d9a6f7ca02b259c9829384f17739c79d85fe91c0ae4c7d980832fc486d58a260b351448148", 
+        "uncompressed": 58778, 
+        "url": "https://zenodo.org/record/2640900/files/box_humans_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "fc89a14b1f4086beddcaf020243f508471957d28", 
+          "compressed": 33973310, 
+          "pattern": "%08d.jpg", 
+          "uid": "eae342414a5f3d38139880f6ae447e1906ab3e5044c382e2153e1842e7aeeeb7a39291333f43cf88550642a00110af8d1aaf9b8e60c181fd9c4d45b5874f0678", 
+          "uncompressed": 33927194, 
+          "url": "https://zenodo.org/record/2640900/files/eae342414a5f3d38139880f6ae447e1906ab3e5044c382e2153e1842e7aeeeb7a39291333f43cf88550642a00110af8d1aaf9b8e60c181fd9c4d45b5874f0678.zip"
+        }, 
+        "depth": {
+          "checksum": "1cf7de5154fe568cb1556eb76b6ea9258bcaf159", 
+          "compressed": 210432387, 
+          "pattern": "%08d.png", 
+          "uid": "6437b13e8f7cae715fa20a92f8378e41ef65fa2f60fafa14dbc481cbb61edae40b2a8e5bb4510bcb00ac681bdc31af3c1c1316f4535a1af98d015e1ac4d26bb7", 
+          "uncompressed": 210386271, 
+          "url": "https://zenodo.org/record/2640900/files/6437b13e8f7cae715fa20a92f8378e41ef65fa2f60fafa14dbc481cbb61edae40b2a8e5bb4510bcb00ac681bdc31af3c1c1316f4535a1af98d015e1ac4d26bb7.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1098, 
+      "name": "box_humans_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_humans_room_occ_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "b056158ca40650dbfaa575f3fa895bc2b27a779f", 
+        "compressed": 52237, 
+        "uid": "d573986df277bb65ea7630d657dbd5034ffe89c5120bbc7b5b528c13ad734e28a298c4bee9e804a64ef3760e8fcdeaae6cd6978c519c07fd51f29f636b28d446", 
+        "uncompressed": 50587, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "1d00a44e905c933f7a4d785fd1a2482e1f33544d", 
+          "compressed": 117833345, 
+          "pattern": "%08d.jpg", 
+          "uid": "c8dd827f58999293939bfcb41b03dd57af46f3b3aca4504fd5724e4a30c687a69e3bc42b91823931fa34b89b552f9ccc66311a325daf1f7921afdefc977d2cf0", 
+          "uncompressed": 117793361, 
+          "url": "https://zenodo.org/record/2640900/files/c8dd827f58999293939bfcb41b03dd57af46f3b3aca4504fd5724e4a30c687a69e3bc42b91823931fa34b89b552f9ccc66311a325daf1f7921afdefc977d2cf0.zip"
+        }, 
+        "depth": {
+          "checksum": "c318f70ee59d48098689b87c1a97a8b31a0fe540", 
+          "compressed": 802345353, 
+          "pattern": "%08d.png", 
+          "uid": "722f54b745d7faeabb85e44acfe585062a328534a24b521233fce92e0aead2a7ee6437b2ed3d11d627f6634144688de765629d7dfbdcb9a7079bbb27ab67ec7d", 
+          "uncompressed": 802305369, 
+          "url": "https://zenodo.org/record/2640900/files/722f54b745d7faeabb85e44acfe585062a328534a24b521233fce92e0aead2a7ee6437b2ed3d11d627f6634144688de765629d7dfbdcb9a7079bbb27ab67ec7d.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 1080, 
+      "length": 952, 
+      "name": "box_room_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_1.png", 
+      "width": 1920
+    }, 
+    {
+      "annotations": {
+        "checksum": "8d2381415fdc2f2842cd8d7fa59c46fff84be3bc", 
+        "compressed": 23855, 
+        "uid": "a582490b61c824f257601ea42ec3ee074af71e2eef409eb51e6f8bef796f7b5d848afdcdacb44afb7f49edfd2066d3cf36365224fdcaf32a2218d257d847a51f", 
+        "uncompressed": 22205, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_2.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "57b80f4f7737b6e1ef3604265d1e320020edf5ee", 
+          "compressed": 9049705, 
+          "pattern": "%08d.jpg", 
+          "uid": "0923e9bd2cd99c69d3de368b5f125a46095026fb540feb4eccdfa42cd4f00584809cd8a3dcd382c58da019c4c29262ffad9634745799982bd1cc9dd1c9213f38", 
+          "uncompressed": 9032653, 
+          "url": "https://zenodo.org/record/2640900/files/0923e9bd2cd99c69d3de368b5f125a46095026fb540feb4eccdfa42cd4f00584809cd8a3dcd382c58da019c4c29262ffad9634745799982bd1cc9dd1c9213f38.zip"
+        }, 
+        "depth": {
+          "checksum": "e834f07325280e1caf733efaae5fb31f652b39eb", 
+          "compressed": 53181862, 
+          "pattern": "%08d.png", 
+          "uid": "66adbc3821821951a2934212f534e9b6502699a18168cec4496fbd68e8f4e575c8056ecf7e54688437ed4d12efec5f65118cdb5bab729413cd5b4e273d990359", 
+          "uncompressed": 53164810, 
+          "url": "https://zenodo.org/record/2640900/files/66adbc3821821951a2934212f534e9b6502699a18168cec4496fbd68e8f4e575c8056ecf7e54688437ed4d12efec5f65118cdb5bab729413cd5b4e273d990359.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 406, 
+      "name": "box_room_noocc_2", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_2.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "eea764d224ce9b597ce48e8f7af4769367ff0ac6", 
+        "compressed": 64145, 
+        "uid": "56564d4bc71c1969db475458382e1b30c1c999ccc9ca3c460fb46b731799e4bfa397f89995f5e2a3ff8c6978c8dc44f1f93e7aa44e3a5756444c56ee18c14da4", 
+        "uncompressed": 62495, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_3.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "a39d3effde58f67c98d52101f2c6e2e4c69d00d8", 
+          "compressed": 25612505, 
+          "pattern": "%08d.jpg", 
+          "uid": "238153df53ac96bd4ca1e56ec550cd4cd4854570e6b8fb6c8dc9d2f08e1eec08478f6b7299cc1d117fca6956c667121e05c1313738a512a9ac04696ca29808e7", 
+          "uncompressed": 25564499, 
+          "url": "https://zenodo.org/record/2640900/files/238153df53ac96bd4ca1e56ec550cd4cd4854570e6b8fb6c8dc9d2f08e1eec08478f6b7299cc1d117fca6956c667121e05c1313738a512a9ac04696ca29808e7.zip"
+        }, 
+        "depth": {
+          "checksum": "3a11ce2a3ba82a6fb11d958f18755b6d893e191a", 
+          "compressed": 147409821, 
+          "pattern": "%08d.png", 
+          "uid": "3931fc8a7dab9f5e01b60cb698f8207ac42c94d0d5ce9bf1f37d09ffa9426fa42b9eb25aa57c5483cc07058f293d1efe28dad4ca36ab40a37921fb79895fa813", 
+          "uncompressed": 147361815, 
+          "url": "https://zenodo.org/record/2640900/files/3931fc8a7dab9f5e01b60cb698f8207ac42c94d0d5ce9bf1f37d09ffa9426fa42b9eb25aa57c5483cc07058f293d1efe28dad4ca36ab40a37921fb79895fa813.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1143, 
+      "name": "box_room_noocc_3", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_3.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "b0afe3d6e7cc6e294e4e5b1c3d5a877f32737aa4", 
+        "compressed": 69601, 
+        "uid": "f7f4800cf4231832de103a21f43da18cd5df13a873a67f2db865ebbf9567e71b6aa8e27680f76d5cbe3260236f8e8f8014966447b0771ebe8e910e77779818e2", 
+        "uncompressed": 67951, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_4.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "1c3c5d1a0da87aef53ec0bd77e8c481144957f7c", 
+          "compressed": 37699678, 
+          "pattern": "%08d.jpg", 
+          "uid": "5620733e93fc1b2dd5566033e1e046ea1dba48f1efee7da5084a4ea1989db48739415e6e940469d767d49530e58c787470b00a9d130498ea034b688388bdb826", 
+          "uncompressed": 37646506, 
+          "url": "https://zenodo.org/record/2640900/files/5620733e93fc1b2dd5566033e1e046ea1dba48f1efee7da5084a4ea1989db48739415e6e940469d767d49530e58c787470b00a9d130498ea034b688388bdb826.zip"
+        }, 
+        "depth": {
+          "checksum": "95a095fb7a6a4c5847d633fadf4849a58fb2ee1e", 
+          "compressed": 220605678, 
+          "pattern": "%08d.png", 
+          "uid": "f5cd5f6052217edffe9b1b9f3bd5f955fa55333fa6d71e29be48a12f672cb8eafdca01a4cd6712e9e7a059093cb5b9cbc47c2f71199e7995c91c505993aafb27", 
+          "uncompressed": 220552506, 
+          "url": "https://zenodo.org/record/2640900/files/f5cd5f6052217edffe9b1b9f3bd5f955fa55333fa6d71e29be48a12f672cb8eafdca01a4cd6712e9e7a059093cb5b9cbc47c2f71199e7995c91c505993aafb27.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1266, 
+      "name": "box_room_noocc_4", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_4.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "11c0e5f8668622b6f33ac886c5ebc4a9614db6e0", 
+        "compressed": 73482, 
+        "uid": "c4c22ee3095657173980e6077575c014f44a74888cec6088bff1b409f06ae41c274bb127b2da8f58397a34ee17864d946617ad37c30ede3d53badb887fb7b975", 
+        "uncompressed": 71832, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_5.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "8d8bc28c174d71917dd13c55d477929134e3f0ac", 
+          "compressed": 29117096, 
+          "pattern": "%08d.jpg", 
+          "uid": "86b0463988e5d83497db9986a0eb40833313d7541a22694dcce17324095812f587730cc5d34a03054f701bc6233d286b61d0f990574d3ab834bceca3b88a6ed6", 
+          "uncompressed": 29061698, 
+          "url": "https://zenodo.org/record/2640900/files/86b0463988e5d83497db9986a0eb40833313d7541a22694dcce17324095812f587730cc5d34a03054f701bc6233d286b61d0f990574d3ab834bceca3b88a6ed6.zip"
+        }, 
+        "depth": {
+          "checksum": "099ad2f06434a4f3492c53b1bf95138b5eba1918", 
+          "compressed": 169825030, 
+          "pattern": "%08d.png", 
+          "uid": "18b93ac27a6eec52181c45cd448af715e0d3b09f98dab7e689087f9fb0f17f1efde51df132c550483320935e60a987ab7e776e37e2c66653b49fdb101f73a8f1", 
+          "uncompressed": 169769632, 
+          "url": "https://zenodo.org/record/2640900/files/18b93ac27a6eec52181c45cd448af715e0d3b09f98dab7e689087f9fb0f17f1efde51df132c550483320935e60a987ab7e776e37e2c66653b49fdb101f73a8f1.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1319, 
+      "name": "box_room_noocc_5", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_5.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "0c9b1ce4f3ebfec6a7b40a7141182db139b407b5", 
+        "compressed": 62995, 
+        "uid": "5bad595d4cf24a65adf95344f45643d5a4d5c32922923906c871b06807d8528d90d40a2b8cd3062afe343d661b82ba8c80f4a7a1b1d137b2fcf13b77ecab601e", 
+        "uncompressed": 61345, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_6.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "eee857fd193493628ae1b716b29637ec6dc3449b", 
+          "compressed": 24107728, 
+          "pattern": "%08d.jpg", 
+          "uid": "a3b553cc947e13edb2534b91c10f3b43d9839af27456f788b713ab9044c1943d1f121720481dd301150cb389e5353569f7097ef61eccce47d373315a76366a5e", 
+          "uncompressed": 24060352, 
+          "url": "https://zenodo.org/record/2640900/files/a3b553cc947e13edb2534b91c10f3b43d9839af27456f788b713ab9044c1943d1f121720481dd301150cb389e5353569f7097ef61eccce47d373315a76366a5e.zip"
+        }, 
+        "depth": {
+          "checksum": "29a6f9de09081dcff4796313250b904a135a5317", 
+          "compressed": 146135911, 
+          "pattern": "%08d.png", 
+          "uid": "656d0a133724fe16fdac66e5f823e7b4b57e9916a8fc19a84eeb0777c54c2857138f11692605748d86ca5e750ccf981c513070422c41f4d60d7436fc720aa51d", 
+          "uncompressed": 146088535, 
+          "url": "https://zenodo.org/record/2640900/files/656d0a133724fe16fdac66e5f823e7b4b57e9916a8fc19a84eeb0777c54c2857138f11692605748d86ca5e750ccf981c513070422c41f4d60d7436fc720aa51d.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1128, 
+      "name": "box_room_noocc_6", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_6.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "86175b5c0944b4f6a3c9ff9753d20b10d1dcadfa", 
+        "compressed": 75916, 
+        "uid": "faac745ef7aa9d9e5fc92e3b314196c4dd7e6be67d72cb414b3557364d7afba3f06e362f1d179c1ba3836dfc2dfed4910244f2b3d194f6a5d66f139a93312846", 
+        "uncompressed": 74266, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_7.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "4410bf6e584f2e92a8aa7cc54be86cacd8df7aad", 
+          "compressed": 28302073, 
+          "pattern": "%08d.jpg", 
+          "uid": "614c314184a88f8b01dd2069909ba2397223596f385767475047d8dde4211ee30c05ecfbc73a83e480a7e33b538bd3d17ade9af4b79d12c8f0ffed57a3435311", 
+          "uncompressed": 28245247, 
+          "url": "https://zenodo.org/record/2640900/files/614c314184a88f8b01dd2069909ba2397223596f385767475047d8dde4211ee30c05ecfbc73a83e480a7e33b538bd3d17ade9af4b79d12c8f0ffed57a3435311.zip"
+        }, 
+        "depth": {
+          "checksum": "073ae88c00c3fc91677f5538747b577f0c3a10c5", 
+          "compressed": 175104700, 
+          "pattern": "%08d.png", 
+          "uid": "9eaf4e97a84ea3a8b8d5f07eacb5fb93f44f2ccc7a099bfdef13af166657396b71808939e53b5de2614346af47aa1a350b2e4ac772d371869f1a42d9ff2d46bc", 
+          "uncompressed": 175047874, 
+          "url": "https://zenodo.org/record/2640900/files/9eaf4e97a84ea3a8b8d5f07eacb5fb93f44f2ccc7a099bfdef13af166657396b71808939e53b5de2614346af47aa1a350b2e4ac772d371869f1a42d9ff2d46bc.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1353, 
+      "name": "box_room_noocc_7", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_7.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "3a02bd75c52c62db4f7060130b3b18ab4941578b", 
+        "compressed": 58292, 
+        "uid": "ba1a9a5d905ea262efa1a841c04943a203ad6b78ba6c239b81c2f65c3c4625021c879b52ece76cff05a489176adc5b2628433fa56e8a4a61e33529f572555598", 
+        "uncompressed": 56642, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_8.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "38935488bfb6d26db4537b03bae08fdbcc248363", 
+          "compressed": 29657053, 
+          "pattern": "%08d.jpg", 
+          "uid": "de987888d1f1fc8bbeec2667a72a6219d526453d072e03a90e1f038c97b0878479318b0afe22d7f28e539d01e4a8f7998458d9a42c100beb437a7e053d19eef2", 
+          "uncompressed": 29612617, 
+          "url": "https://zenodo.org/record/2640900/files/de987888d1f1fc8bbeec2667a72a6219d526453d072e03a90e1f038c97b0878479318b0afe22d7f28e539d01e4a8f7998458d9a42c100beb437a7e053d19eef2.zip"
+        }, 
+        "depth": {
+          "checksum": "3167e4623781ac4a78ffa4c5f4d70d2df99b893e", 
+          "compressed": 185195593, 
+          "pattern": "%08d.png", 
+          "uid": "03da60ff31b27480fa5a6798b494a580df9a9e331baf899c095e3804f9e2c9d3f3394a339074a1795e9d72d99e559f1fa0bd36deaee8514d0c9815c661f891ca", 
+          "uncompressed": 185151157, 
+          "url": "https://zenodo.org/record/2640900/files/03da60ff31b27480fa5a6798b494a580df9a9e331baf899c095e3804f9e2c9d3f3394a339074a1795e9d72d99e559f1fa0bd36deaee8514d0c9815c661f891ca.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1058, 
+      "name": "box_room_noocc_8", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_8.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "2381791699701c979d43e9c81901e7ae9960021b", 
+        "compressed": 74247, 
+        "uid": "e1d7d6b7090b36da0fe0daf298fbcc4664f2f7bd6389a4dac4833823668e6c1ebe9a82940f0cf4a112f76c1fd1c6af8588f9a249387ff04a6fdb4a2cf0a19636", 
+        "uncompressed": 72597, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_noocc_9.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b19650ab6c25147b6f1f4e19fdd12ad77b34bf40", 
+          "compressed": 54445706, 
+          "pattern": "%08d.jpg", 
+          "uid": "aaff220132a5453d307dd7ba2ed98da2b53627c032e02f43289b75ad1be5486abb0015b5b9d63d4c70bb91c3a22f2a51d23d22e9fb2b2227af3f1743e8a00687", 
+          "uncompressed": 54387914, 
+          "url": "https://zenodo.org/record/2640900/files/aaff220132a5453d307dd7ba2ed98da2b53627c032e02f43289b75ad1be5486abb0015b5b9d63d4c70bb91c3a22f2a51d23d22e9fb2b2227af3f1743e8a00687.zip"
+        }, 
+        "depth": {
+          "checksum": "7989cf03778d02f56a4d262a377d865cdcccab58", 
+          "compressed": 357799452, 
+          "pattern": "%08d.png", 
+          "uid": "9e9cb61d6471cf017dd92c1c852e4e94b0e54d1f63fa79cdf59d826cf88bae4b7f3b005ce34fcdbe91c5cb86252410d7b38fa96533d16ecc8d186760f54aa4ad", 
+          "uncompressed": 357741660, 
+          "url": "https://zenodo.org/record/2640900/files/9e9cb61d6471cf017dd92c1c852e4e94b0e54d1f63fa79cdf59d826cf88bae4b7f3b005ce34fcdbe91c5cb86252410d7b38fa96533d16ecc8d186760f54aa4ad.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1376, 
+      "name": "box_room_noocc_9", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_noocc_9.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "3611c698ff1189464e05ddb457b0bb0f6315ea62", 
+        "compressed": 98383, 
+        "uid": "67a1fa4b4c194323552429e66d13d50ad705d46c538cb932679d04b390844c09f5d4a9f743cd086fcb3a96038995b8a268d7ff903aa3513784a980a3ad1f2e7c", 
+        "uncompressed": 96733, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "c678be3e14a983af9f464fd5d3fefd39788b93c3", 
+          "compressed": 296170177, 
+          "pattern": "%08d.jpg", 
+          "uid": "0b4f0cff7a6c42cf400405729fd632810d81c84ea720e58f28aaf7bc53d81607a255fd82b66e72c15b9ac621c93918f291d0700e00757c3819dea791615b5a67", 
+          "uncompressed": 296092183, 
+          "url": "https://zenodo.org/record/2640900/files/0b4f0cff7a6c42cf400405729fd632810d81c84ea720e58f28aaf7bc53d81607a255fd82b66e72c15b9ac621c93918f291d0700e00757c3819dea791615b5a67.zip"
+        }, 
+        "depth": {
+          "checksum": "b16862f6bf2b901da39b26cd0ed106ff784d6aba", 
+          "compressed": 1760208274, 
+          "pattern": "%08d.png", 
+          "uid": "9989c358f959d9e4b403bcf14c66984024688e922289c8b1654c635b6d05c6c583a2d90c6f2a8d181f77de733fb525b736a4533357a4bf4fab841d6551341f58", 
+          "uncompressed": 1760130280, 
+          "url": "https://zenodo.org/record/2640900/files/9989c358f959d9e4b403bcf14c66984024688e922289c8b1654c635b6d05c6c583a2d90c6f2a8d181f77de733fb525b736a4533357a4bf4fab841d6551341f58.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 1080, 
+      "length": 1857, 
+      "name": "box_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_occ_1.png", 
+      "width": 1920
+    }, 
+    {
+      "annotations": {
+        "checksum": "97a33d3d9d283fcd59b2831299fc706057090212", 
+        "compressed": 77248, 
+        "uid": "ff51cbba52089aeb27a98d0a5992821cbe93e4916e8437adb6696fdab7a74ebab01830530325054431dd209dfe499bd565afae094d1c777f0ab47dcad90ead92", 
+        "uncompressed": 75598, 
+        "url": "https://zenodo.org/record/2640900/files/box_room_occ_2.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "f84e1fbb25ba02bde95cef71c3a491c1fd203568", 
+          "compressed": 49422412, 
+          "pattern": "%08d.jpg", 
+          "uid": "f6b5f977b610f34fc713fad2bc866a4ec2d5647ff3ebc9a5feef1a6396979bb449703ddb6cd0b276ee8c35f2255fd888fbaa6e714402101c09ce5aefdef7d5ab", 
+          "uncompressed": 49361638, 
+          "url": "https://zenodo.org/record/2640900/files/f6b5f977b610f34fc713fad2bc866a4ec2d5647ff3ebc9a5feef1a6396979bb449703ddb6cd0b276ee8c35f2255fd888fbaa6e714402101c09ce5aefdef7d5ab.zip"
+        }, 
+        "depth": {
+          "checksum": "96ba8765e30b2c06dae882d684abcbf119ca7f7c", 
+          "compressed": 281837365, 
+          "pattern": "%08d.png", 
+          "uid": "82825e5373d28e047e8a68e49ebfcc05715acfa477a10357989165de054d99a706f84c7207b5f10e5d07453c8ddf1b51cf06ad7870147eb23a80727f2a28d4ae", 
+          "uncompressed": 281776591, 
+          "url": "https://zenodo.org/record/2640900/files/82825e5373d28e047e8a68e49ebfcc05715acfa477a10357989165de054d99a706f84c7207b5f10e5d07453c8ddf1b51cf06ad7870147eb23a80727f2a28d4ae.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1447, 
+      "name": "box_room_occ_2", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/box_room_occ_2.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "8eff9acd7c840240ac4eda11ab032dcb10d4e3f0", 
+        "compressed": 61045, 
+        "uid": "7fbae0ec3aded8160ed1b163bbfd3dc52db81af7968bfe75830a152c23f5575bd317a6486f2711c5d3a34402832453196fc86abc0b8efc2852e8f89a54fc4405", 
+        "uncompressed": 59395, 
+        "url": "https://zenodo.org/record/2640900/files/boxes_backpack_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "a96f8db1a9e2b6b9e34a54ddadeb30447ffd8db0", 
+          "compressed": 36038543, 
+          "pattern": "%08d.jpg", 
+          "uid": "72e6cbf199f45dc98e2bb17ba62af021e89062457fb245c421f5bf3d985b1aeec73c6a300ab1929919117e27cfde65aae6f32071b815cdb106db331aed2c1454", 
+          "uncompressed": 35990957, 
+          "url": "https://zenodo.org/record/2640900/files/72e6cbf199f45dc98e2bb17ba62af021e89062457fb245c421f5bf3d985b1aeec73c6a300ab1929919117e27cfde65aae6f32071b815cdb106db331aed2c1454.zip"
+        }, 
+        "depth": {
+          "checksum": "67f42b4662ebb40cc427e3f21b37cd25cd758411", 
+          "compressed": 212116804, 
+          "pattern": "%08d.png", 
+          "uid": "2ea9bdc77e4eb6b68254d0fd9d83712b030b574a90d064f42745fb306fe8971568630346c22294a139ec426be5c84648aa825396151d328fe2558a3210b81df4", 
+          "uncompressed": 212069218, 
+          "url": "https://zenodo.org/record/2640900/files/2ea9bdc77e4eb6b68254d0fd9d83712b030b574a90d064f42745fb306fe8971568630346c22294a139ec426be5c84648aa825396151d328fe2558a3210b81df4.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1133, 
+      "name": "boxes_backpack_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/boxes_backpack_room_occ_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "6437ef350da5ee458c51855d379d7368c3f88f49", 
+        "compressed": 122010, 
+        "uid": "cc642f0807b451dc70e711418b97748b162ec9e8eac2a467cd6722f33503f4e1aabf1281b47561253701e6310588718dc55599c4c079d79ad0cebf72cd172e2e", 
+        "uncompressed": 120360, 
+        "url": "https://zenodo.org/record/2640900/files/boxes_humans_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "784f92160c63c9c4a4c651395ec7a6372f5c77f5", 
+          "compressed": 80934618, 
+          "pattern": "%08d.jpg", 
+          "uid": "ecf33a1eb58c0051372af623887cbc4af2acb59ee7232bf48504378898127fb60e066d7cc3e5c140d354143ff680ed9927573ef34564363ccf942474c9e78e3d", 
+          "uncompressed": 80837556, 
+          "url": "https://zenodo.org/record/2640900/files/ecf33a1eb58c0051372af623887cbc4af2acb59ee7232bf48504378898127fb60e066d7cc3e5c140d354143ff680ed9927573ef34564363ccf942474c9e78e3d.zip"
+        }, 
+        "depth": {
+          "checksum": "6149939018de3294f83be051979b261089a70446", 
+          "compressed": 459166943, 
+          "pattern": "%08d.png", 
+          "uid": "bcaa2bbb8e07ca4c1566e52acaabdb020d9cf6ad650da04b4f3a057dfd32509fa4b69f512d13236db60c752cbfb2f399fde5709c50bdf32d47ccef489fb44c7c", 
+          "uncompressed": 459069881, 
+          "url": "https://zenodo.org/record/2640900/files/bcaa2bbb8e07ca4c1566e52acaabdb020d9cf6ad650da04b4f3a057dfd32509fa4b69f512d13236db60c752cbfb2f399fde5709c50bdf32d47ccef489fb44c7c.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 2311, 
+      "name": "boxes_humans_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/boxes_humans_room_occ_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "7da6da5e5996605764cfc4f441f0c0e0694cfe71", 
+        "compressed": 69350, 
+        "uid": "1c2bc131a5ea14e39d5ccb0c7ac24001eb762d17f853628d70c927e32c8af1402032cd4081d0e1c519c80aee6bb0f55aeb7f3be5bfdd137a96173072799063f8", 
+        "uncompressed": 67700, 
+        "url": "https://zenodo.org/record/2640900/files/boxes_office_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "d65f6439d2858791b846ad1e81f1eaae6adaf770", 
+          "compressed": 35996596, 
+          "pattern": "%08d.jpg", 
+          "uid": "9f9ec24132c103ebbdabca1bac62bcb8386dbfb759bd96004252676a3db8959021eedf080c5c1b76f1450053984a9df9c5c3e87c9506cb909b1f7f37f2ebe342", 
+          "uncompressed": 35943424, 
+          "url": "https://zenodo.org/record/2640900/files/9f9ec24132c103ebbdabca1bac62bcb8386dbfb759bd96004252676a3db8959021eedf080c5c1b76f1450053984a9df9c5c3e87c9506cb909b1f7f37f2ebe342.zip"
+        }, 
+        "depth": {
+          "checksum": "52da2f276d547616e6c28f66949a91b25d5ebc0f", 
+          "compressed": 177156667, 
+          "pattern": "%08d.png", 
+          "uid": "84247c34d66f1a17facd1478fbd2f1ef669f21a0d47a0f527ad79b0dda6b07c96a26058b36001e68947b6867e1d2bd86d8a4695895716f68f445b37de40947c6", 
+          "uncompressed": 177103495, 
+          "url": "https://zenodo.org/record/2640900/files/84247c34d66f1a17facd1478fbd2f1ef669f21a0d47a0f527ad79b0dda6b07c96a26058b36001e68947b6867e1d2bd86d8a4695895716f68f445b37de40947c6.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1266, 
+      "name": "boxes_office_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/boxes_office_occ_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "8aa1782f91d74acd95a33e17f6f72accd13ec1a7", 
+        "compressed": 70912, 
+        "uid": "e2367c4088375d8aa1faf89e768230e7645aa204ff56f548218547b63bfe1a2f2919fad83c6140e9b843de65adce9186fdaefd3fd35e410e842977651062af03", 
+        "uncompressed": 69262, 
+        "url": "https://zenodo.org/record/2640900/files/boxes_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "43c5c1723416fd78530e703145d54a3f5004edef", 
+          "compressed": 61584387, 
+          "pattern": "%08d.jpg", 
+          "uid": "99d61a6b2c97cb5ec0cd2cdc33ba3b33cec4e457e0a8ae427ad00dce7fe4ec401ae05a94123a8aa6f5cd3c54587e57d71531426e2f69083e8c326b0a5e17c7f1", 
+          "uncompressed": 61529997, 
+          "url": "https://zenodo.org/record/2640900/files/99d61a6b2c97cb5ec0cd2cdc33ba3b33cec4e457e0a8ae427ad00dce7fe4ec401ae05a94123a8aa6f5cd3c54587e57d71531426e2f69083e8c326b0a5e17c7f1.zip"
+        }, 
+        "depth": {
+          "checksum": "491f777d1b949baa1faaf4e86864e1558c7cda6e", 
+          "compressed": 371665910, 
+          "pattern": "%08d.png", 
+          "uid": "44d44c00b7d88af6ff463c8947eba4002141968b639bf203a78dbea2d3a95b1ecc374371395a65cdce33d5374cd40e944f686c032a4ec8079907e35c1c1e17e7", 
+          "uncompressed": 371611520, 
+          "url": "https://zenodo.org/record/2640900/files/44d44c00b7d88af6ff463c8947eba4002141968b639bf203a78dbea2d3a95b1ecc374371395a65cdce33d5374cd40e944f686c032a4ec8079907e35c1c1e17e7.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1295, 
+      "name": "boxes_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/boxes_room_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "bc1266522a9e0f959cade791942d713fb94a28b2", 
+        "compressed": 54571, 
+        "uid": "695342e404d8bd5f0faee6a69b3033ce8fe3eac1938c5d31a8c9e23f5157cb5b9ddfbf771d9dd28e59e4fdf08b06edd3b0fb331dc3f46891d917e3693f7c1e25", 
+        "uncompressed": 52921, 
+        "url": "https://zenodo.org/record/2640900/files/cart_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "5879a842f27561164100b4991cd74faba6f77c43", 
+          "compressed": 157074165, 
+          "pattern": "%08d.jpg", 
+          "uid": "4a5fb5c052433e8b33e8abbc1f859b2eb2cb81b6ab872f4045a1f0b1a846d649a79d73efa7bf5257c15f22e12b55c9ef74d870c5c3598a4300fb3c74b28a484d", 
+          "uncompressed": 157032207, 
+          "url": "https://zenodo.org/record/2640900/files/4a5fb5c052433e8b33e8abbc1f859b2eb2cb81b6ab872f4045a1f0b1a846d649a79d73efa7bf5257c15f22e12b55c9ef74d870c5c3598a4300fb3c74b28a484d.zip"
+        }, 
+        "depth": {
+          "checksum": "24edf91c8620c12cfedda13f8fdbcb38e3c22579", 
+          "compressed": 940515722, 
+          "pattern": "%08d.png", 
+          "uid": "0e70ce1c32121c816956cb608e80844b5538c454e7703151cabe122d6d4deeeb6341ceaa91388425ffbb80de414c04b647259a23c9b766869b7d1425c699dcd0", 
+          "uncompressed": 940473764, 
+          "url": "https://zenodo.org/record/2640900/files/0e70ce1c32121c816956cb608e80844b5538c454e7703151cabe122d6d4deeeb6341ceaa91388425ffbb80de414c04b647259a23c9b766869b7d1425c699dcd0.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 1080, 
+      "length": 999, 
+      "name": "cart_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/cart_room_occ_1.png", 
+      "width": 1920
+    }, 
+    {
+      "annotations": {
+        "checksum": "0e68efc2626f0a78d0db9a6683305c3c3e75118f", 
+        "compressed": 48055, 
+        "uid": "81b7adffc080e19f6d0ea97acd47412d7dcc41b1989d68e32500adebf460179abc19abc0b333f25ad8ff9168bad7591b91ed3743faeccd68c6d94ec1fef6e081", 
+        "uncompressed": 46405, 
+        "url": "https://zenodo.org/record/2640900/files/cartman.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "866b6a6cba98020d1be9519678c2a11274a7a82b", 
+          "compressed": 33342981, 
+          "pattern": "%08d.jpg", 
+          "uid": "8ee73b39bc821fde6478245b006f69f5be481799838e2df7ff3747c262dd931455c6dce679d2de37306bdf286abd3ef895ba302a2753aa85bd835e624437189a", 
+          "uncompressed": 33305223, 
+          "url": "https://zenodo.org/record/2640900/files/8ee73b39bc821fde6478245b006f69f5be481799838e2df7ff3747c262dd931455c6dce679d2de37306bdf286abd3ef895ba302a2753aa85bd835e624437189a.zip"
+        }, 
+        "depth": {
+          "checksum": "a434cf79c59f9eec37975905c90305c6165a18ab", 
+          "compressed": 109080533, 
+          "pattern": "%08d.png", 
+          "uid": "7ceb80cf2758e7c2ef53a340f8fc961da00292ad7a7f96cb11c6b7d2f225368eef1eb33035184d13f01594c0bf40ab782093c25fc707a4a4cd4051d39a262ca9", 
+          "uncompressed": 109042775, 
+          "url": "https://zenodo.org/record/2640900/files/7ceb80cf2758e7c2ef53a340f8fc961da00292ad7a7f96cb11c6b7d2f225368eef1eb33035184d13f01594c0bf40ab782093c25fc707a4a4cd4051d39a262ca9.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 899, 
+      "name": "cartman", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/cartman.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "a8adc0e412b6c094252dcb5e0bb51c7c9930dcf8", 
+        "compressed": 113744, 
+        "uid": "1b2db6d278d48f406b7c5ef9af5964715b0ab1fb94707cf5f0ae104bf24ba78300056841295f346eca6ee8781c25b41ab0b885a3657e9234a22edf8b10242f75", 
+        "uncompressed": 112094, 
+        "url": "https://zenodo.org/record/2640900/files/cartman_robotarm_lab_noocc.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "de828a6bcb98a91318bd52030e36e293f1bc3683", 
+          "compressed": 26634133, 
+          "pattern": "%08d.jpg", 
+          "uid": "59c1ed343aa7dc161eb24c4dc8bbf84722ea44f59128adbc07a40a15942a916666ca385b2ddd1d5d0a5c8bb2be418959df0842c6b733d0816295ce03289d7f84", 
+          "uncompressed": 26547697, 
+          "url": "https://zenodo.org/record/2640900/files/59c1ed343aa7dc161eb24c4dc8bbf84722ea44f59128adbc07a40a15942a916666ca385b2ddd1d5d0a5c8bb2be418959df0842c6b733d0816295ce03289d7f84.zip"
+        }, 
+        "depth": {
+          "checksum": "eebeb9ff8a3b434a00d227de7041a488df9f7dbd", 
+          "compressed": 60178481, 
+          "pattern": "%08d.png", 
+          "uid": "d2e9e555641897489a810cf49a25e1bf1cba71277b0cb165a1d8eccd5665e087f4a3aef9e375822ba4bd6cc8e548280c2ed3b5da94f3cf5dd5ffebcabc760a20", 
+          "uncompressed": 60092045, 
+          "url": "https://zenodo.org/record/2640900/files/d2e9e555641897489a810cf49a25e1bf1cba71277b0cb165a1d8eccd5665e087f4a3aef9e375822ba4bd6cc8e548280c2ed3b5da94f3cf5dd5ffebcabc760a20.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 2058, 
+      "name": "cartman_robotarm_lab_noocc", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/cartman_robotarm_lab_noocc.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "66f2e60e804b9e785fb246d504ff38f8d82cc7ea", 
+        "compressed": 50552, 
+        "uid": "3f8011c9ce00022fdeff851b405d1365ffa1afdb2842621938fe021676ddf04ae50b96c203a6b77d4fc4076948cbcf9de4b1d4551b5be2ac2ffbd5c0330d4c4b", 
+        "uncompressed": 48902, 
+        "url": "https://zenodo.org/record/2640900/files/case.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "20dfb943c52ab936efe122ae9727d2a44857ed80", 
+          "compressed": 35361901, 
+          "pattern": "%08d.jpg", 
+          "uid": "ad3e6349c38e4cb2e1def9fdd5e7bd96e1576d4b4125622a3e3eccaf2f5dfdf9c4baa358fc78972ca1339521b39893ab98d3f910031a429060ef6edbe8a83259", 
+          "uncompressed": 35321581, 
+          "url": "https://zenodo.org/record/2640900/files/ad3e6349c38e4cb2e1def9fdd5e7bd96e1576d4b4125622a3e3eccaf2f5dfdf9c4baa358fc78972ca1339521b39893ab98d3f910031a429060ef6edbe8a83259.zip"
+        }, 
+        "depth": {
+          "checksum": "444778a589bae0ed7e8098b1659d11ca3d4532a3", 
+          "compressed": 117647616, 
+          "pattern": "%08d.png", 
+          "uid": "6cfa70359552c581adb8d219fc1c1b0621ad4baf174eb4db775c0aecc0c9824e24c69194750d067b6ed60ac5b7ab3d44213de8073fe2ec114c84de1315b2e512", 
+          "uncompressed": 117607296, 
+          "url": "https://zenodo.org/record/2640900/files/6cfa70359552c581adb8d219fc1c1b0621ad4baf174eb4db775c0aecc0c9824e24c69194750d067b6ed60ac5b7ab3d44213de8073fe2ec114c84de1315b2e512.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 960, 
+      "name": "case", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/case.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "b6bcf34602a387c67fe120510fc422cc56bea5c1", 
+        "compressed": 90898, 
+        "uid": "9dd199d9d9e568053dbc020f2a3330ea9972a006397d0208d7a3fbf690c4d34c160ac45da1ea3870c9305575ac9c6e72fc46350a2fb87670e0f7449ba4e58e50", 
+        "uncompressed": 89248, 
+        "url": "https://zenodo.org/record/2640900/files/container_room_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "ec48731a2fd077e7bd09d93c914154e49493d5e0", 
+          "compressed": 39264705, 
+          "pattern": "%08d.jpg", 
+          "uid": "2a642e7bef4071a2ebadae23fcb6cf5a2754223fa891c2c260c323438ea8896712c3a4b51133e8f1b84342ca03b36d83b756003ccb0e53ffc1fb08da4685b788", 
+          "uncompressed": 39195657, 
+          "url": "https://zenodo.org/record/2640900/files/2a642e7bef4071a2ebadae23fcb6cf5a2754223fa891c2c260c323438ea8896712c3a4b51133e8f1b84342ca03b36d83b756003ccb0e53ffc1fb08da4685b788.zip"
+        }, 
+        "depth": {
+          "checksum": "6bb2fb00508124753455166c16f448fb4f2cd793", 
+          "compressed": 238530259, 
+          "pattern": "%08d.png", 
+          "uid": "ba776819b88ff65da5c0b9cd69fe0c4c83af8847bd38b75fc62570cdb168ccbab26014688f43d1221d7642a94a3481d72e857faaa06fe56e25be7cb2594570c5", 
+          "uncompressed": 238461211, 
+          "url": "https://zenodo.org/record/2640900/files/ba776819b88ff65da5c0b9cd69fe0c4c83af8847bd38b75fc62570cdb168ccbab26014688f43d1221d7642a94a3481d72e857faaa06fe56e25be7cb2594570c5.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1644, 
+      "name": "container_room_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/container_room_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "663561e0a026adb8cc857bb5645876484267a159", 
+        "compressed": 58208, 
+        "uid": "18e8173b9180db0061d67278cb5cb2b696c8a00596723ffbf404f445c87fb60c0c0ca003d77021bcef1083979487e761afc0db833d3c9c3a00deca41f54cb109", 
+        "uncompressed": 56558, 
+        "url": "https://zenodo.org/record/2640900/files/dog_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "85263e4caa12bd29b967f89f94b84525a726d6e5", 
+          "compressed": 40702165, 
+          "pattern": "%08d.jpg", 
+          "uid": "b1772133cf0cf60cb01e3362175303e77412e1921621834346a86baec980ac826087cc94759bb5fce032f0bb51f3d635a6f471f90498f4cbe5f9cb15268e2b64", 
+          "uncompressed": 40657855, 
+          "url": "https://zenodo.org/record/2640900/files/b1772133cf0cf60cb01e3362175303e77412e1921621834346a86baec980ac826087cc94759bb5fce032f0bb51f3d635a6f471f90498f4cbe5f9cb15268e2b64.zip"
+        }, 
+        "depth": {
+          "checksum": "ab38efc71ddf2d51af4130b2f98466162bc8d4a7", 
+          "compressed": 392289574, 
+          "pattern": "%08d.png", 
+          "uid": "0a5de6da57fde15a60da4c1c40d5e00ab464bf25810a6a442bbbb385d7f985a8d626749048aaf87d6544653c399ebd389cee42b1f1afbd18163c0797134cd526", 
+          "uncompressed": 392245264, 
+          "url": "https://zenodo.org/record/2640900/files/0a5de6da57fde15a60da4c1c40d5e00ab464bf25810a6a442bbbb385d7f985a8d626749048aaf87d6544653c399ebd389cee42b1f1afbd18163c0797134cd526.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1055, 
+      "name": "dog_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/dog_outside.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "e4cafd54be2a110c8f74cb6d755a311aa4b66f98", 
+        "compressed": 29436, 
+        "uid": "4758bbe50ac74dba52e29a3ebaa862a38309a6a953c0edc6d82a68ee27c30dacd27bc8ee650541060b2c4e9d2c3a6752f392ebbc606540f563674d8603c8e284", 
+        "uncompressed": 27786, 
+        "url": "https://zenodo.org/record/2640900/files/human_entry_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "84d0d733762bb86b443c43a3e39e7f40246f4b5e", 
+          "compressed": 14125926, 
+          "pattern": "%08d.jpg", 
+          "uid": "8ce2df50fe6410e72715a717658f7085b8739b3d3633c9981cfb3c699d50782c6bcf1165c9926848a08288584ed8700e7ebe02f01ce8c78882c93b8ee8010bc7", 
+          "uncompressed": 14103582, 
+          "url": "https://zenodo.org/record/2640900/files/8ce2df50fe6410e72715a717658f7085b8739b3d3633c9981cfb3c699d50782c6bcf1165c9926848a08288584ed8700e7ebe02f01ce8c78882c93b8ee8010bc7.zip"
+        }, 
+        "depth": {
+          "checksum": "a6f4e16e71ae3a20bcb1566cc448cf22109e2d61", 
+          "compressed": 22344935, 
+          "pattern": "%08d.png", 
+          "uid": "3f30f4f25e50f20bf3438ab056d7c46fca09043e96b0e0261f8285a7f6133d7aa5445bf8a7aee06af90a5d0374ae23abe9721a9b07086920b5aaeec853b0208a", 
+          "uncompressed": 22322591, 
+          "url": "https://zenodo.org/record/2640900/files/3f30f4f25e50f20bf3438ab056d7c46fca09043e96b0e0261f8285a7f6133d7aa5445bf8a7aee06af90a5d0374ae23abe9721a9b07086920b5aaeec853b0208a.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 532, 
+      "name": "human_entry_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/human_entry_occ_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "e81849a0ed71d1a266e4d5d3764c648fe3d1267e", 
+        "compressed": 35534, 
+        "uid": "b6222c7fc0222207acd2edfb2fd0fe640f87c01467f2f5a2e2e5a8bb828ad569b42962092d5f86a989557b08dd056217cdd7f51ef5a3394181eebc6f4a58f515", 
+        "uncompressed": 33884, 
+        "url": "https://zenodo.org/record/2640900/files/human_entry_occ_2.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "1dd65bd1cf5085d498c2d6a79e21ed34602037e7", 
+          "compressed": 25535223, 
+          "pattern": "%08d.jpg", 
+          "uid": "3cbc26b48eb34d247b3d71ff34645d3711eb09cdd27dd9a2c09e082f8c3ad037572f73e2a247bcb4ab34e96fb1d46fc2b548b5586f2dec0978c5098a393478ad", 
+          "uncompressed": 25507461, 
+          "url": "https://zenodo.org/record/2640900/files/3cbc26b48eb34d247b3d71ff34645d3711eb09cdd27dd9a2c09e082f8c3ad037572f73e2a247bcb4ab34e96fb1d46fc2b548b5586f2dec0978c5098a393478ad.zip"
+        }, 
+        "depth": {
+          "checksum": "6272f75c0f8db2fca343c5fb37fa459b00ce296b", 
+          "compressed": 39365100, 
+          "pattern": "%08d.png", 
+          "uid": "36548504f686680aae182d894a451ab751351fd8b8b4dd8fafe67430b426a286c0e0433e01297010ffa485d8d566dadf2dbfa064f7be3f8944d35db9cef53127", 
+          "uncompressed": 39337338, 
+          "url": "https://zenodo.org/record/2640900/files/36548504f686680aae182d894a451ab751351fd8b8b4dd8fafe67430b426a286c0e0433e01297010ffa485d8d566dadf2dbfa064f7be3f8944d35db9cef53127.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 661, 
+      "name": "human_entry_occ_2", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/human_entry_occ_2.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "7afbbb8d564203b40b18d9ee7fd1ab8b253d2ae6", 
+        "compressed": 61158, 
+        "uid": "b419e80e5b4da36d27fa8bf554e87eedc31379ee8fba88aa93e23d98b26fa1047ace5f9df11a5e31a802a71ca71da0b018c1c14e3f40ce7030524f424052a664", 
+        "uncompressed": 59508, 
+        "url": "https://zenodo.org/record/2640900/files/humans_corridor_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "366080e6c955759b74ceeb34574b25a96a3980c2", 
+          "compressed": 23190811, 
+          "pattern": "%08d.jpg", 
+          "uid": "22ce2632714ec7b4bc78713f0b172417c55897a7fbe8098877d7cd601015f45ae5b400f6238ca30d9607cf0d30fa9499e3581e9a3aaa3b52a157a728d28eeacd", 
+          "uncompressed": 23140705, 
+          "url": "https://zenodo.org/record/2640900/files/22ce2632714ec7b4bc78713f0b172417c55897a7fbe8098877d7cd601015f45ae5b400f6238ca30d9607cf0d30fa9499e3581e9a3aaa3b52a157a728d28eeacd.zip"
+        }, 
+        "depth": {
+          "checksum": "78e211ebc58c9df48d46ac1d8637eaf354ecccd4", 
+          "compressed": 116290694, 
+          "pattern": "%08d.png", 
+          "uid": "4fbc44543f734a1c91bd22493f5048b6e0ea5ba64bd14136efb790d4f673fcdc9fc12f4651b8f1c81fc9185f4ad24fa79eba0fede247889eae8ed077c4f8dba2", 
+          "uncompressed": 116240588, 
+          "url": "https://zenodo.org/record/2640900/files/4fbc44543f734a1c91bd22493f5048b6e0ea5ba64bd14136efb790d4f673fcdc9fc12f4651b8f1c81fc9185f4ad24fa79eba0fede247889eae8ed077c4f8dba2.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1193, 
+      "name": "humans_corridor_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_corridor_occ_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "bf861399a46154323628fa44d0cdd8982200b7de", 
+        "compressed": 68640, 
+        "uid": "c55d02d4b10dba7fb9ed6399650ae55fdd1693a3df949fe3142d2b2097ef6d3ac7a9896d385be2f597589030102690ebfef6e10d4c7ed788c2a7273c71eea29d", 
+        "uncompressed": 66990, 
+        "url": "https://zenodo.org/record/2640900/files/humans_corridor_occ_2_A.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "db549a74af24c6c221688b005dbaab989e766194", 
+          "compressed": 48422910, 
+          "pattern": "%08d.jpg", 
+          "uid": "7a1a9d8a488486a4d39ded91bfc2b4e5a0891a28c4cc075ffdd85f6cecc90a7ffb4066a6f166442244aad010639ee4f7f417fd704e275492e01591c334656e19", 
+          "uncompressed": 48365790, 
+          "url": "https://zenodo.org/record/2640900/files/7a1a9d8a488486a4d39ded91bfc2b4e5a0891a28c4cc075ffdd85f6cecc90a7ffb4066a6f166442244aad010639ee4f7f417fd704e275492e01591c334656e19.zip"
+        }, 
+        "depth": {
+          "checksum": "b7e59debf64f4c0344579d56cb8a7e2c0a1c66a3", 
+          "compressed": 268436807, 
+          "pattern": "%08d.png", 
+          "uid": "617b14b6fb3e80ddfa4b042a2375b2b07b6edb12856ec2de0b75e2a48fc3a5560c2d65fd97e8bc946de6aaa49b1deae748a7aae1ea07b3b00f8171aed8e52dab", 
+          "uncompressed": 268379687, 
+          "url": "https://zenodo.org/record/2640900/files/617b14b6fb3e80ddfa4b042a2375b2b07b6edb12856ec2de0b75e2a48fc3a5560c2d65fd97e8bc946de6aaa49b1deae748a7aae1ea07b3b00f8171aed8e52dab.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1360, 
+      "name": "humans_corridor_occ_2_A", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_corridor_occ_2_A.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "5568cc2fd22e4e0ea59cff7582aac927dfafa188", 
+        "compressed": 70698, 
+        "uid": "b5202ff5b192ee633d93891180f4b83c6fe40c36382ab93fef6df9f2361d9e1fc8677daab10ef432b031fa24e1c7250463e95446f161de9d726f5107178c236f", 
+        "uncompressed": 69048, 
+        "url": "https://zenodo.org/record/2640900/files/humans_corridor_occ_2_B.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "f1aa7566bee1ef4432d3fe5dacf618de2623a99d", 
+          "compressed": 48422910, 
+          "pattern": "%08d.jpg", 
+          "uid": "7a1a9d8a488486a4d39ded91bfc2b4e5a0891a28c4cc075ffdd85f6cecc90a7ffb4066a6f166442244aad010639ee4f7f417fd704e275492e01591c334656e19", 
+          "uncompressed": 48365790, 
+          "url": "https://zenodo.org/record/2640900/files/7a1a9d8a488486a4d39ded91bfc2b4e5a0891a28c4cc075ffdd85f6cecc90a7ffb4066a6f166442244aad010639ee4f7f417fd704e275492e01591c334656e19.zip"
+        }, 
+        "depth": {
+          "checksum": "f85dc6ce93e96a9649621312b348ea0765fce04b", 
+          "compressed": 268436807, 
+          "pattern": "%08d.png", 
+          "uid": "617b14b6fb3e80ddfa4b042a2375b2b07b6edb12856ec2de0b75e2a48fc3a5560c2d65fd97e8bc946de6aaa49b1deae748a7aae1ea07b3b00f8171aed8e52dab", 
+          "uncompressed": 268379687, 
+          "url": "https://zenodo.org/record/2640900/files/617b14b6fb3e80ddfa4b042a2375b2b07b6edb12856ec2de0b75e2a48fc3a5560c2d65fd97e8bc946de6aaa49b1deae748a7aae1ea07b3b00f8171aed8e52dab.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1360, 
+      "name": "humans_corridor_occ_2_B", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_corridor_occ_2_B.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "c0f800f371ff99bd3c06826ac291145893488e85", 
+        "compressed": 74347, 
+        "uid": "bda0cf1a047ae196274973943d8f663bb6ddb85f83eb30bcee92769fdec32e9f56c3055d99f9af0c7c2ffcd50b69e3da985bd2890577b77d5c5629e9c86e9a9d", 
+        "uncompressed": 72697, 
+        "url": "https://zenodo.org/record/2640900/files/humans_longcorridor_staricase_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "45b45759128880796f9152c0c49f0c5db14360dc", 
+          "compressed": 49736631, 
+          "pattern": "%08d.jpg", 
+          "uid": "1befd728cb106fdb720303f8b1b3a82ad0574a02b8e79393d8bc6eeeec107c6038b37425fe7f42ce37ee5fc59bbcaff6fc8c5d52669e5f6f9e06bd63d7061f01", 
+          "uncompressed": 49676319, 
+          "url": "https://zenodo.org/record/2640900/files/1befd728cb106fdb720303f8b1b3a82ad0574a02b8e79393d8bc6eeeec107c6038b37425fe7f42ce37ee5fc59bbcaff6fc8c5d52669e5f6f9e06bd63d7061f01.zip"
+        }, 
+        "depth": {
+          "checksum": "fa2a14e82b8a3b78441e7a35c72ee51c69d52a41", 
+          "compressed": 260985485, 
+          "pattern": "%08d.png", 
+          "uid": "fb8d5ac9954d10cae0f426b66d27b134c4ff57d0cc8f24ffe21423826fc933a507c7578d7b86e4cf5e46f31481b281e7552b0f8ba2dc9cf2b75951ca762cb9ad", 
+          "uncompressed": 260925173, 
+          "url": "https://zenodo.org/record/2640900/files/fb8d5ac9954d10cae0f426b66d27b134c4ff57d0cc8f24ffe21423826fc933a507c7578d7b86e4cf5e46f31481b281e7552b0f8ba2dc9cf2b75951ca762cb9ad.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1436, 
+      "name": "humans_longcorridor_staricase_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_longcorridor_staricase_occ_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "de03fda88bb6a88a6cd1a9d0d7b3a7a7107f2520", 
+        "compressed": 83718, 
+        "uid": "2e6929aeb13f84df5da98226060d63342fc704e90288fea3bdf66f563c1934acdc25873a0832ae2df87bdcc00ca4782123fd14c0d915af6cbb3677b20e7e9f40", 
+        "uncompressed": 82068, 
+        "url": "https://zenodo.org/record/2640900/files/humans_shirts_room_occ_1_A.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "c366d7034d5a6672189f69fa249dfe9b22f7b91e", 
+          "compressed": 78485001, 
+          "pattern": "%08d.jpg", 
+          "uid": "8f32539365393ee9a1e6288878a143630f1a8cdc6398799c3c61e35687cebd121ffaa848b4767f434c6fd52dbbfc64f4c8ee0d5980f5c8c8077514430d30776f", 
+          "uncompressed": 78420615, 
+          "url": "https://zenodo.org/record/2640900/files/8f32539365393ee9a1e6288878a143630f1a8cdc6398799c3c61e35687cebd121ffaa848b4767f434c6fd52dbbfc64f4c8ee0d5980f5c8c8077514430d30776f.zip"
+        }, 
+        "depth": {
+          "checksum": "b12bed23bde7f93de055e020efea1074f5097bb8", 
+          "compressed": 443376323, 
+          "pattern": "%08d.png", 
+          "uid": "1e40915a6f4a2f823b857cc9cc0221e02bcab3cdba0b9e023dc2da96aeda2c45cfd91bb234cd310b1db9eb093699ea5eee8879be076a063a946db1927761f241", 
+          "uncompressed": 443311937, 
+          "url": "https://zenodo.org/record/2640900/files/1e40915a6f4a2f823b857cc9cc0221e02bcab3cdba0b9e023dc2da96aeda2c45cfd91bb234cd310b1db9eb093699ea5eee8879be076a063a946db1927761f241.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1533, 
+      "name": "humans_shirts_room_occ_1_A", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_shirts_room_occ_1_A.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "89cbc3c26fbac2eb9d2c6255624bb097abf83dad", 
+        "compressed": 76462, 
+        "uid": "e9b4a0e05befabdd83c2d6fc25c1dc2857e67eba873d1fdf7d6968f1a48c66590a178c8743840b999d529ebc622c21c86c09bc841fde563fb5e4a1368d059f1d", 
+        "uncompressed": 74812, 
+        "url": "https://zenodo.org/record/2640900/files/humans_shirts_room_occ_1_B.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "3ab1f7108849e775cc89bb1073316a78f6c0eaa5", 
+          "compressed": 51367777, 
+          "pattern": "%08d.jpg", 
+          "uid": "fb0130c60abbb6fa32ba35d1f1ca3ad88e316eb94d53a5dd564a347ac8f47b0bf8bec43d359f034e8d5a57eae9bd1c1ad561a1c0a732be281a335e2bed501ead", 
+          "uncompressed": 51307717, 
+          "url": "https://zenodo.org/record/2640900/files/fb0130c60abbb6fa32ba35d1f1ca3ad88e316eb94d53a5dd564a347ac8f47b0bf8bec43d359f034e8d5a57eae9bd1c1ad561a1c0a732be281a335e2bed501ead.zip"
+        }, 
+        "depth": {
+          "checksum": "f1b18d8f9c3dff11448beb254c56701e1fbb22aa", 
+          "compressed": 278401110, 
+          "pattern": "%08d.png", 
+          "uid": "95bbd07bf9a26f9d3008d16c028e82c155fbb9f719037713600ff627ed4f0b525ff01481e37c764a9edb90dffb82254486203b252d1cf9e2b18784bd315918af", 
+          "uncompressed": 278341050, 
+          "url": "https://zenodo.org/record/2640900/files/95bbd07bf9a26f9d3008d16c028e82c155fbb9f719037713600ff627ed4f0b525ff01481e37c764a9edb90dffb82254486203b252d1cf9e2b18784bd315918af.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1430, 
+      "name": "humans_shirts_room_occ_1_B", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/humans_shirts_room_occ_1_B.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "57185e44ddb5dae7b8f2050794d9b6b145100ff2", 
+        "compressed": 49017, 
+        "uid": "f23248e287fba006c74048a9ae35db76afd804b98a60dd9c6bbe6167e79ac747ed090d9f7ca995e7d074f9796c1a687863b3b510ed2c8805cb2c0079bb7e6317", 
+        "uncompressed": 47367, 
+        "url": "https://zenodo.org/record/2640900/files/jug.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "269aeb66f0b99d3f70ba3cf17abe535e4b1d694d", 
+          "compressed": 24407581, 
+          "pattern": "%08d.jpg", 
+          "uid": "b496dd3b0940f506e7a0d088852891acdfc9e6b88bccd0808275cc613bc5aac8d697c95271f16ce68392024f4b3d4f90c294bd76d4ebaac66d7b1fc95a397de5", 
+          "uncompressed": 24370873, 
+          "url": "https://zenodo.org/record/2640900/files/b496dd3b0940f506e7a0d088852891acdfc9e6b88bccd0808275cc613bc5aac8d697c95271f16ce68392024f4b3d4f90c294bd76d4ebaac66d7b1fc95a397de5.zip"
+        }, 
+        "depth": {
+          "checksum": "8e9fe0515cc5e36b0ae471d0994cfc01aac46409", 
+          "compressed": 79332493, 
+          "pattern": "%08d.png", 
+          "uid": "f18d7dfcd0473a3ea46a7a56cdb0e488245081e312ad37cf77168f41107c1c02d8bae33916ed5c9c14e88d21792b65476133a5d960471ac276f4f8bc169e401b", 
+          "uncompressed": 79295785, 
+          "url": "https://zenodo.org/record/2640900/files/f18d7dfcd0473a3ea46a7a56cdb0e488245081e312ad37cf77168f41107c1c02d8bae33916ed5c9c14e88d21792b65476133a5d960471ac276f4f8bc169e401b.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 874, 
+      "name": "jug", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/jug.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "75207dd51c9a0e5365bb17c326a96398cf22f0a2", 
+        "compressed": 48106, 
+        "uid": "94f2e0cd7d430cbd30806efb9bd20c8d8af6d2af0bba05061099486db4e0b2e2f03dfc6a6a3727ac27e87a7798a68df525b1988ce356034b1a028cb8739d03b2", 
+        "uncompressed": 46456, 
+        "url": "https://zenodo.org/record/2640900/files/mug_ankara.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "18f9ce6091eb62c52cbe0a55b0cc1cd3af25204f", 
+          "compressed": 35009781, 
+          "pattern": "%08d.jpg", 
+          "uid": "b28f8f0f98367e5ca4ca467425dbf41d6f960f02292c3f1cce8f33c11ce7f8a69bd4be37611e50963e576e6b25bcd1e41ceb9e99067dc2bf8ae3535266ceba70", 
+          "uncompressed": 34970553, 
+          "url": "https://zenodo.org/record/2640900/files/b28f8f0f98367e5ca4ca467425dbf41d6f960f02292c3f1cce8f33c11ce7f8a69bd4be37611e50963e576e6b25bcd1e41ceb9e99067dc2bf8ae3535266ceba70.zip"
+        }, 
+        "depth": {
+          "checksum": "51a8ad71bb5f82435facec4bfe5d25cf9be97b23", 
+          "compressed": 110952575, 
+          "pattern": "%08d.png", 
+          "uid": "481a5107aa6ecd2863a3ce8a55d7c930c72697cc6ea952c21de484f942c831924f7e677f41a847017c80e4fb5a8ed2f3f977ccbea84a424912e9b2fdb8efc2de", 
+          "uncompressed": 110913347, 
+          "url": "https://zenodo.org/record/2640900/files/481a5107aa6ecd2863a3ce8a55d7c930c72697cc6ea952c21de484f942c831924f7e677f41a847017c80e4fb5a8ed2f3f977ccbea84a424912e9b2fdb8efc2de.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 934, 
+      "name": "mug_ankara", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/mug_ankara.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "2dc4c325f116867b87dcfc0d9bc4bcca241b9516", 
+        "compressed": 53040, 
+        "uid": "7216bca64288d39a02f0c95ab8fa7150d99f893c716b930bb799fdb0368e3646d8646764772b53b7467ec93135caab8504013cf22e9e60a867a2422666bc10e5", 
+        "uncompressed": 51390, 
+        "url": "https://zenodo.org/record/2640900/files/mug_gs.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "2f4db4b6b7a8b1edc99984e860089755989ac398", 
+          "compressed": 38809760, 
+          "pattern": "%08d.jpg", 
+          "uid": "2ed202b4fdbf57fd5844a548ff043025015314401e07a1f871ddc5f8942e7941620caf299d55bfe0f8d3ae7fc3b9ca131c03860634f06ec40c676cebaf63fc14", 
+          "uncompressed": 38766542, 
+          "url": "https://zenodo.org/record/2640900/files/2ed202b4fdbf57fd5844a548ff043025015314401e07a1f871ddc5f8942e7941620caf299d55bfe0f8d3ae7fc3b9ca131c03860634f06ec40c676cebaf63fc14.zip"
+        }, 
+        "depth": {
+          "checksum": "f961ae9b9ae3d80097f39905f94903381107cd22", 
+          "compressed": 124330798, 
+          "pattern": "%08d.png", 
+          "uid": "9404f88ef6c0817be20e3db94f9263b9863320a1bb1b7f055f3b257fb681e14a7d088405f5a556af2dbd9c76d4a2cd1295b82fd59aa27863e1f53697d06fd9c2", 
+          "uncompressed": 124287580, 
+          "url": "https://zenodo.org/record/2640900/files/9404f88ef6c0817be20e3db94f9263b9863320a1bb1b7f055f3b257fb681e14a7d088405f5a556af2dbd9c76d4a2cd1295b82fd59aa27863e1f53697d06fd9c2.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1029, 
+      "name": "mug_gs", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/mug_gs.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "47dd2cd1330735dcd488bf9fdab1cce743d3da5d", 
+        "compressed": 48041, 
+        "uid": "d336959f695321dc0532983a2c531207374ff525c3af0648327c9a13e22ea874997f6990bf8c34eab0a20e2224c69c25d3d520b6d79b85039a7eb69fb0d74db3", 
+        "uncompressed": 46391, 
+        "url": "https://zenodo.org/record/2640900/files/paperpunch.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "8c3741d9d6f582eaac34b48a5850ce2961897c0d", 
+          "compressed": 23395793, 
+          "pattern": "%08d.jpg", 
+          "uid": "b4639ccbc9ce1512569ae319dd9db60674a8c52e132504e02258a82ea4ceae425aa32887d7b5a5e54914f2cc92154058a6fc2bab05a5f0e34cfc30231d24fa4e", 
+          "uncompressed": 23359715, 
+          "url": "https://zenodo.org/record/2640900/files/b4639ccbc9ce1512569ae319dd9db60674a8c52e132504e02258a82ea4ceae425aa32887d7b5a5e54914f2cc92154058a6fc2bab05a5f0e34cfc30231d24fa4e.zip"
+        }, 
+        "depth": {
+          "checksum": "5355074c243975287adf72b8776ba6faaf52a0d1", 
+          "compressed": 76708225, 
+          "pattern": "%08d.png", 
+          "uid": "19d88b023e9dcd8b0e0faed07207f121de32d8734f6fafdc851c61021b23f990693229e44d98207c6b4e7885aa00d664080e41907796139d75d93f198946a79a", 
+          "uncompressed": 76672147, 
+          "url": "https://zenodo.org/record/2640900/files/19d88b023e9dcd8b0e0faed07207f121de32d8734f6fafdc851c61021b23f990693229e44d98207c6b4e7885aa00d664080e41907796139d75d93f198946a79a.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 859, 
+      "name": "paperpunch", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/paperpunch.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "ca2313372de91a2b11ac256c72396a08f2567ddb", 
+        "compressed": 93410, 
+        "uid": "4ea9ff28405966d700d75b4344c294fd6ba9d354af350396c0f8195ce4a4e8660d60522f1f86040c916e0b2363563277d6276098389411ea338549b9d60d785d", 
+        "uncompressed": 91760, 
+        "url": "https://zenodo.org/record/2640900/files/person_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "bfa6b746853627b584ec59c1e7192e070ee284a9", 
+          "compressed": 49572504, 
+          "pattern": "%08d.jpg", 
+          "uid": "579027762eb501e73218876f6e71847ddb6f272534a9338cb7ac0d5a00967523af6e1d15f390097e8dd6fc95dcf48083b4b4d67a58130b25cb61f0973cb3472c", 
+          "uncompressed": 49499928, 
+          "url": "https://zenodo.org/record/2640900/files/579027762eb501e73218876f6e71847ddb6f272534a9338cb7ac0d5a00967523af6e1d15f390097e8dd6fc95dcf48083b4b4d67a58130b25cb61f0973cb3472c.zip"
+        }, 
+        "depth": {
+          "checksum": "ab7c6e55df00f10f2ac0686a64989a1508992e83", 
+          "compressed": 455957978, 
+          "pattern": "%08d.png", 
+          "uid": "46964422c61686c4880778c297b2bdf6a421e0b357088b8fda403a1d8c2cf7c5967b08d6d6d173c946f342fd90ea90de2d44bf0f00a4ee2ac49af192c23304e3", 
+          "uncompressed": 455885402, 
+          "url": "https://zenodo.org/record/2640900/files/46964422c61686c4880778c297b2bdf6a421e0b357088b8fda403a1d8c2cf7c5967b08d6d6d173c946f342fd90ea90de2d44bf0f00a4ee2ac49af192c23304e3.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1728, 
+      "name": "person_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/person_outside.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "ef18cacd076ba58e82d7e42f7f180fbab451d6a3", 
+        "compressed": 43419, 
+        "uid": "5658974c6f640729adb36008ea46486b6f548da2bc1d3b6b7a88bc50f4204b254c765a867d9b28f4d44a49611ce4e02fa388819ed2a7b7ad608cc601764dfd46", 
+        "uncompressed": 41769, 
+        "url": "https://zenodo.org/record/2640900/files/robot_corridor_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "6e95c4e02e4f6960faedc281f5b77b4b0246cd8f", 
+          "compressed": 18646276, 
+          "pattern": "%08d.jpg", 
+          "uid": "59ab04de467ce2b75bbdb9f370e89a5529bc4519cfc33b4715ea09a9bc46dd05a1520585da42f5385c893a5d500410c6fe58bfe537f37d65beaeeec122afb5bb", 
+          "uncompressed": 18612718, 
+          "url": "https://zenodo.org/record/2640900/files/59ab04de467ce2b75bbdb9f370e89a5529bc4519cfc33b4715ea09a9bc46dd05a1520585da42f5385c893a5d500410c6fe58bfe537f37d65beaeeec122afb5bb.zip"
+        }, 
+        "depth": {
+          "checksum": "9d2d4f9725d7387aab9b77a56b793e8c78f34737", 
+          "compressed": 122691496, 
+          "pattern": "%08d.png", 
+          "uid": "93329df482743554e755357a7a507903ed24cb068676bc005f9b5c2ae515cb67995a7cb0353fbab0b7754321e6ce5f19d35ed2a1ff05ae114dabb676615b80ac", 
+          "uncompressed": 122657938, 
+          "url": "https://zenodo.org/record/2640900/files/93329df482743554e755357a7a507903ed24cb068676bc005f9b5c2ae515cb67995a7cb0353fbab0b7754321e6ce5f19d35ed2a1ff05ae114dabb676615b80ac.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 799, 
+      "name": "robot_corridor_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_corridor_noocc_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "4c027761e43dbce49f55fc2065a41123699082e2", 
+        "compressed": 97660, 
+        "uid": "5177f46ba28f6538da6c5d06bc4adeacdd06efe3add79e1a88485a613994b98ec7feec3555030fd388f28b12b49c4f28568df1d2eaa91a00d2e777d47d5c18c6", 
+        "uncompressed": 96010, 
+        "url": "https://zenodo.org/record/2640900/files/robot_corridor_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "25556d9d0e85a1e22c2d8ed905344eb5d2f811c9", 
+          "compressed": 63936379, 
+          "pattern": "%08d.jpg", 
+          "uid": "a9ffbd40bf59986561a8710164adbe8aaee474650e1d1aaa266cd5d95e5de5889729d8e4eccd8aeb3486c0659e3d87ba9efc9b15e294c7efc0370c82877da2ee", 
+          "uncompressed": 63859981, 
+          "url": "https://zenodo.org/record/2640900/files/a9ffbd40bf59986561a8710164adbe8aaee474650e1d1aaa266cd5d95e5de5889729d8e4eccd8aeb3486c0659e3d87ba9efc9b15e294c7efc0370c82877da2ee.zip"
+        }, 
+        "depth": {
+          "checksum": "225bd204c160772dcb12351ffb0e8b2a5267181e", 
+          "compressed": 438711519, 
+          "pattern": "%08d.png", 
+          "uid": "2207e7ec53378b3b1186c9292268ad026afc3f9bc826e287d97832fb713da7eed8331578f4aa3f3f55b3f3e2667ff728dc9712215604ff04f4cbe3940d033c46", 
+          "uncompressed": 438635121, 
+          "url": "https://zenodo.org/record/2640900/files/2207e7ec53378b3b1186c9292268ad026afc3f9bc826e287d97832fb713da7eed8331578f4aa3f3f55b3f3e2667ff728dc9712215604ff04f4cbe3940d033c46.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1819, 
+      "name": "robot_corridor_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_corridor_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "7e7ce36ade56957b69ed198ff0aa1196b2b05d10", 
+        "compressed": 50830, 
+        "uid": "ba08598f4563bfe8e751922c745cee6310162dbcfe93dad47428b5d14c44be0f9e2881c22aa1b0d8cfe098e3d7ff1d9fd86fd34bd994b2b1e476d584641c33db", 
+        "uncompressed": 49180, 
+        "url": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_1_A.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "ec9d9ca84f4bf44627f226f3159ae871030d1ede", 
+          "compressed": 21809863, 
+          "pattern": "%08d.jpg", 
+          "uid": "48e541363f0b56325cdb1de163d683f8551e03c9de4e0cd9ebb785a1d4fb30f2370dd010bda9e9f6c8ae2429875bbbd9c51a9ebfc83593a1bbc1b5d6004e2d58", 
+          "uncompressed": 21771979, 
+          "url": "https://zenodo.org/record/2640900/files/48e541363f0b56325cdb1de163d683f8551e03c9de4e0cd9ebb785a1d4fb30f2370dd010bda9e9f6c8ae2429875bbbd9c51a9ebfc83593a1bbc1b5d6004e2d58.zip"
+        }, 
+        "depth": {
+          "checksum": "4b25775827a484344e81e47d2e9a3b2745cc2dff", 
+          "compressed": 150440680, 
+          "pattern": "%08d.png", 
+          "uid": "2d76f62194c03f81e4ef98b73bef415195a924ab2fbb69ea56103c40cbed9d53c0ede746078333bdf3a694dcbc3247c1a2ef87df78a537c77a593b8edc70bc7d", 
+          "uncompressed": 150402796, 
+          "url": "https://zenodo.org/record/2640900/files/2d76f62194c03f81e4ef98b73bef415195a924ab2fbb69ea56103c40cbed9d53c0ede746078333bdf3a694dcbc3247c1a2ef87df78a537c77a593b8edc70bc7d.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 902, 
+      "name": "robot_human_corridor_noocc_1_A", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_1_A.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "fabba72016d4f5a03fa0f4250e13b53ea11d3ac9", 
+        "compressed": 50713, 
+        "uid": "8db3e228efd497d9224e803f72b9c507568d6bb285a1b9b0c3122550da2f456e14baca1f54fb81c39701f3c795cc590c81a4d1b26a9b768c93db468605199614", 
+        "uncompressed": 49063, 
+        "url": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_1_B.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "51b189fca16a896b6d78cf9ab2bd24aee79afaa4", 
+          "compressed": 16120228, 
+          "pattern": "%08d.jpg", 
+          "uid": "9c35a3e93cd5bfbb56021c2d1279b7f3ba5e48eae15e5f01eb797541c962685349d4ba119d949bcd04981f09cb9cfd0f6b89d5c0542f6975c093cc75a9ed8a17", 
+          "uncompressed": 16082344, 
+          "url": "https://zenodo.org/record/2640900/files/9c35a3e93cd5bfbb56021c2d1279b7f3ba5e48eae15e5f01eb797541c962685349d4ba119d949bcd04981f09cb9cfd0f6b89d5c0542f6975c093cc75a9ed8a17.zip"
+        }, 
+        "depth": {
+          "checksum": "82d80d13e33541fd09c6851e59ffae4e909d4e54", 
+          "compressed": 112143603, 
+          "pattern": "%08d.png", 
+          "uid": "f97e1381348145c2c05c10ad6c66e19a37f5f35849ab234c979cc9b17e648548bfdc6dc1fa7a6ee3536a1081e32d976a0f0bb8887669f179a16e0687c660ca79", 
+          "uncompressed": 112105719, 
+          "url": "https://zenodo.org/record/2640900/files/f97e1381348145c2c05c10ad6c66e19a37f5f35849ab234c979cc9b17e648548bfdc6dc1fa7a6ee3536a1081e32d976a0f0bb8887669f179a16e0687c660ca79.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 902, 
+      "name": "robot_human_corridor_noocc_1_B", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_1_B.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "5717ccebd7cb01051794291c7242cf6795f7f41d", 
+        "compressed": 59022, 
+        "uid": "bf79016674e54fe6d450d1c3a9d1db582732dbdd41994975152ecda9ce28a8a350e5bd0008895719179846cd50badba6a5923d2e1c01ffdd2ce564a77a16cb45", 
+        "uncompressed": 57372, 
+        "url": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_2.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "1df52b55de9089f07ff896f2d99a5f53a94288f7", 
+          "compressed": 18863306, 
+          "pattern": "%08d.jpg", 
+          "uid": "a235deb12b2529ed0008c7736f530b249e6c813be7008944485e8f7ddde59b57f377b8fdf6602842792df3f02f0c4cfc5f73aa95af711b39cc802489109d5e4a", 
+          "uncompressed": 18818576, 
+          "url": "https://zenodo.org/record/2640900/files/a235deb12b2529ed0008c7736f530b249e6c813be7008944485e8f7ddde59b57f377b8fdf6602842792df3f02f0c4cfc5f73aa95af711b39cc802489109d5e4a.zip"
+        }, 
+        "depth": {
+          "checksum": "70b08700596ef1b8b505189ac1fd88a0459c280b", 
+          "compressed": 126087755, 
+          "pattern": "%08d.png", 
+          "uid": "7498509716e87f9a49c831c65fe65087358b4f8d5187fca1bd8a92d05d99f7b51c735d8390a1212b3b6cdacb880707a5b096b5562a3166d3ff59ddb482c61f4d", 
+          "uncompressed": 126043025, 
+          "url": "https://zenodo.org/record/2640900/files/7498509716e87f9a49c831c65fe65087358b4f8d5187fca1bd8a92d05d99f7b51c735d8390a1212b3b6cdacb880707a5b096b5562a3166d3ff59ddb482c61f4d.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1065, 
+      "name": "robot_human_corridor_noocc_2", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_2.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "c28c3346bf2e4298ef3aaab7ec2ce9c5516e6f6d", 
+        "compressed": 91455, 
+        "uid": "3253a9ee5bf626bd1ab2f7d3ca2a29423ff70a87966cfdbd5cb30229057dc8aaec229dcc655a920b31d009b4ed06733b66d38665d974bffaf7a0763b257bd108", 
+        "uncompressed": 89805, 
+        "url": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_3_A.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "8e39b27b8c976a8a80a5425f46f80ac4d89a6d8a", 
+          "compressed": 59917921, 
+          "pattern": "%08d.jpg", 
+          "uid": "26968d51c9c38827f89d25518a0a547fb7988f01ba8ebc5430acbfc18ccd8707c15052c3cd627da9edcc98372f9a309d0d82217a4bb8a70010e1b7244ec872b4", 
+          "uncompressed": 59847403, 
+          "url": "https://zenodo.org/record/2640900/files/26968d51c9c38827f89d25518a0a547fb7988f01ba8ebc5430acbfc18ccd8707c15052c3cd627da9edcc98372f9a309d0d82217a4bb8a70010e1b7244ec872b4.zip"
+        }, 
+        "depth": {
+          "checksum": "f241f0e7e4887550cb3be2a147974c9ed04cc102", 
+          "compressed": 409952919, 
+          "pattern": "%08d.png", 
+          "uid": "94a8fa1e0f503db3beb50801d6aac51fca488bbb1b7c69e3a2ba24b9f4be93b9489de4d7d4a8b37135d41abcfc3c2d7f45fad60738056dc1fd92af352ac3682a", 
+          "uncompressed": 409882401, 
+          "url": "https://zenodo.org/record/2640900/files/94a8fa1e0f503db3beb50801d6aac51fca488bbb1b7c69e3a2ba24b9f4be93b9489de4d7d4a8b37135d41abcfc3c2d7f45fad60738056dc1fd92af352ac3682a.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1679, 
+      "name": "robot_human_corridor_noocc_3_A", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_3_A.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "612f324935cf8df9d2970ddd86f68a8ed3188abf", 
+        "compressed": 62144, 
+        "uid": "696349ad8ee900f1ec09d9c2f9a0a8c3e4049035a668ec40e11b3009b63db10b6f70a6b3534967f696caec0c7457ac02501f077aafcd88deb8e7a2685009fa6e", 
+        "uncompressed": 60494, 
+        "url": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_3_B.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "1ed400c88ff75bcc9b24227c1ddc71d2aaade46d", 
+          "compressed": 27173267, 
+          "pattern": "%08d.jpg", 
+          "uid": "51a14a648af47de92df5d31b1cc4901be93e229561fa37c5ed37bcd3af6d6229df9b64925544278204bfa20396932cb80b7e49ed51a297e19d4b0e21f5648d3c", 
+          "uncompressed": 27125639, 
+          "url": "https://zenodo.org/record/2640900/files/51a14a648af47de92df5d31b1cc4901be93e229561fa37c5ed37bcd3af6d6229df9b64925544278204bfa20396932cb80b7e49ed51a297e19d4b0e21f5648d3c.zip"
+        }, 
+        "depth": {
+          "checksum": "ea20c1113e000169391a84dfdc34dfdc72e03a26", 
+          "compressed": 185288632, 
+          "pattern": "%08d.png", 
+          "uid": "c2aba86e68fec23c0033c5887b2f9f9ed9264b055e15d40a0a9c562a0817e2733966b62621bc137c6bee813f6f705f5af7f6eb8535aa585c06df0878ce6dee11", 
+          "uncompressed": 185241004, 
+          "url": "https://zenodo.org/record/2640900/files/c2aba86e68fec23c0033c5887b2f9f9ed9264b055e15d40a0a9c562a0817e2733966b62621bc137c6bee813f6f705f5af7f6eb8535aa585c06df0878ce6dee11.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1134, 
+      "name": "robot_human_corridor_noocc_3_B", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_human_corridor_noocc_3_B.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "2a6ec996e3524fe6c1bb8ee762ccceb8867d35be", 
+        "compressed": 90893, 
+        "uid": "3c375bd299c18efdaccb6de9c605a3b4b0698e46e7395bd8c6d2e2c8652f959362570385a8434f716a748c88d997eccb6820653bb38b930a63a2b71af6e15e72", 
+        "uncompressed": 89243, 
+        "url": "https://zenodo.org/record/2640900/files/robot_lab_occ.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "dec80f8d641113ac45c11a8f8f8d94fafe9f18a2", 
+          "compressed": 24540725, 
+          "pattern": "%08d.jpg", 
+          "uid": "95333c5ba2a6ffec431ee0d22e53da810e42d766b97ace30af6436c091cf5cf44664f00bf569251fb0cd33a062f973a59257a236bc259c06e2fb8de49be09689", 
+          "uncompressed": 24471719, 
+          "url": "https://zenodo.org/record/2640900/files/95333c5ba2a6ffec431ee0d22e53da810e42d766b97ace30af6436c091cf5cf44664f00bf569251fb0cd33a062f973a59257a236bc259c06e2fb8de49be09689.zip"
+        }, 
+        "depth": {
+          "checksum": "642f1efa6312043846466d7a5592dc86d9efb461", 
+          "compressed": 62151912, 
+          "pattern": "%08d.png", 
+          "uid": "a0e27eb6990650c690b57fd2b3f94a3c251e7c117abebc116e12c12479463f16075261ea6d314299d95a3aef204096452dc32510f1f9f970aad18a6d0bc8425f", 
+          "uncompressed": 62082906, 
+          "url": "https://zenodo.org/record/2640900/files/a0e27eb6990650c690b57fd2b3f94a3c251e7c117abebc116e12c12479463f16075261ea6d314299d95a3aef204096452dc32510f1f9f970aad18a6d0bc8425f.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1643, 
+      "name": "robot_lab_occ", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/robot_lab_occ.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "496579565d8e68eed7fe7b228e8ee78757f96514", 
+        "compressed": 52725, 
+        "uid": "6c3f610abe322047e3bc9380c27fa8de2174817c8f86cfbdc303420fb108bfc4a22ff9b335952983fc67121e8949806b3061091149308ee4f37ee51fe206d308", 
+        "uncompressed": 51075, 
+        "url": "https://zenodo.org/record/2640900/files/teapot.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "d63878171fb0957fc9c10549236ec8289ba66cfe", 
+          "compressed": 28191269, 
+          "pattern": "%08d.jpg", 
+          "uid": "f5380cd8fa4be9df1ab81c56fdb541a09d54e7675865db1fb3e133df522c6328e770b455bd4d93df4ff6d5366d6070f60822cdf3d2e9f1e0ba263bfa706a145d", 
+          "uncompressed": 28151369, 
+          "url": "https://zenodo.org/record/2640900/files/f5380cd8fa4be9df1ab81c56fdb541a09d54e7675865db1fb3e133df522c6328e770b455bd4d93df4ff6d5366d6070f60822cdf3d2e9f1e0ba263bfa706a145d.zip"
+        }, 
+        "depth": {
+          "checksum": "0a95dde14e862287fccede5834ea364ea2ff67ab", 
+          "compressed": 83672827, 
+          "pattern": "%08d.png", 
+          "uid": "debb7e80a35b7230429fa53b07e3f99664fde3b38f1cc1943ee866fb1c1488c520d510e0196b262a517cbe35eebfd2b2ee18779d5cd20057b529b4a496f2bbee", 
+          "uncompressed": 83632927, 
+          "url": "https://zenodo.org/record/2640900/files/debb7e80a35b7230429fa53b07e3f99664fde3b38f1cc1943ee866fb1c1488c520d510e0196b262a517cbe35eebfd2b2ee18779d5cd20057b529b4a496f2bbee.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 950, 
+      "name": "teapot", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/teapot.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "95151ce1c34eec19763955fe405f0131fe96d351", 
+        "compressed": 36426, 
+        "uid": "1dbb580045f3ad039f26562e2e32df3681c5f6435df84debd552ca37885f1fcbb7f692616243028b803cb7f3c9dcb508fb3f69e0b693b7e5e3c888b05c2af726", 
+        "uncompressed": 34776, 
+        "url": "https://zenodo.org/record/2640900/files/tennis_ball.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "9e797f3008e0bdc8a2a91110e1e32aeaa7092d59", 
+          "compressed": 37845100, 
+          "pattern": "%08d.jpg", 
+          "uid": "182fec2269601d272d1c846fea8edc6ab367c7a577d6e347715673c40ab296769c64075ebc193983541412d0646d3019e9bcce68358b5acbba8ccbe8d8188016", 
+          "uncompressed": 37815406, 
+          "url": "https://zenodo.org/record/2640900/files/182fec2269601d272d1c846fea8edc6ab367c7a577d6e347715673c40ab296769c64075ebc193983541412d0646d3019e9bcce68358b5acbba8ccbe8d8188016.zip"
+        }, 
+        "depth": {
+          "checksum": "91fc475fc17c7cf94adafbdc969071ab35f004fd", 
+          "compressed": 123346639, 
+          "pattern": "%08d.png", 
+          "uid": "681483886c70694c9c171ecbe4331ff634eb680931612a71e751bb37cfbddbca00c455a7bd495b21355d67d9aca99dd539e97d0688a76975fb353998f6d9f15e", 
+          "uncompressed": 123316945, 
+          "url": "https://zenodo.org/record/2640900/files/681483886c70694c9c171ecbe4331ff634eb680931612a71e751bb37cfbddbca00c455a7bd495b21355d67d9aca99dd539e97d0688a76975fb353998f6d9f15e.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 707, 
+      "name": "tennis_ball", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/tennis_ball.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "bdad520034d86b796cfbfebfae521a26672c1841", 
+        "compressed": 54774, 
+        "uid": "29eac8bd8caa319c77cfcaf15ec54511e2739b77d0d01e9d9dfce0ba526df076d653b813043982483ae1dfb6ceec2e9470442a8a89c494fb7ad4b2f7637f4df8", 
+        "uncompressed": 53124, 
+        "url": "https://zenodo.org/record/2640900/files/thermos_office_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "767a95b517f7ccf07937310a17fbe769bcd41715", 
+          "compressed": 26851026, 
+          "pattern": "%08d.jpg", 
+          "uid": "abf72286cc44a228135c102bec026de7879a0d65bd75191b964302163b23cf7a5a05caa6cecdf17a11cc6b32b1638aa24dd73c470d81f28e461209c9f1a9cb5f", 
+          "uncompressed": 26810244, 
+          "url": "https://zenodo.org/record/2640900/files/abf72286cc44a228135c102bec026de7879a0d65bd75191b964302163b23cf7a5a05caa6cecdf17a11cc6b32b1638aa24dd73c470d81f28e461209c9f1a9cb5f.zip"
+        }, 
+        "depth": {
+          "checksum": "4d7d8fbe76feee46ce0addad9114d5fa0d247365", 
+          "compressed": 134038796, 
+          "pattern": "%08d.png", 
+          "uid": "0028f9246c990012315170ad62f604db4713b0fbf078a550145ee5a00d187248b868a9439c4b11f758a93f43b13d6fa1d649b33952e6cad4b48b22a138bec837", 
+          "uncompressed": 133998014, 
+          "url": "https://zenodo.org/record/2640900/files/0028f9246c990012315170ad62f604db4713b0fbf078a550145ee5a00d187248b868a9439c4b11f758a93f43b13d6fa1d649b33952e6cad4b48b22a138bec837.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 971, 
+      "name": "thermos_office_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/thermos_office_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "82ab4df46ba5c6d31d16c0f5693ffc819ac763cc", 
+        "compressed": 78956, 
+        "uid": "78bfd1c8c8efd2cdd274e7948ee6dec8f640a967124db92712db0d8f95ab04dd812897abbf14a24e5c1fac579a68d16ed9ae4e009ada0f0ac445b14f9e7960a5", 
+        "uncompressed": 77306, 
+        "url": "https://zenodo.org/record/2640900/files/thermos_office_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "f3efc26235af6d4a1393163ff13c73b8d5fb6da8", 
+          "compressed": 76715500, 
+          "pattern": "%08d.jpg", 
+          "uid": "8868ca1920adc659bfe54d8f0952835908e4eda478dd19b6da7e7f0df11fde5f54e2bb1963e674a404ca175d39fc9b5b582ae383e65f6a363d6e9f0d6e90e546", 
+          "uncompressed": 76656238, 
+          "url": "https://zenodo.org/record/2640900/files/8868ca1920adc659bfe54d8f0952835908e4eda478dd19b6da7e7f0df11fde5f54e2bb1963e674a404ca175d39fc9b5b582ae383e65f6a363d6e9f0d6e90e546.zip"
+        }, 
+        "depth": {
+          "checksum": "106518c0e975340573bbce4a69d7582fd4641e30", 
+          "compressed": 387895929, 
+          "pattern": "%08d.png", 
+          "uid": "7a1a80fc272a7687e7769b3190ecd0ed2769d357734d216d73093c3a75469a029809fcf8d629d475086c985c482875b47d485c83ca2a7eab5e3a2bd1b038b7aa", 
+          "uncompressed": 387836667, 
+          "url": "https://zenodo.org/record/2640900/files/7a1a80fc272a7687e7769b3190ecd0ed2769d357734d216d73093c3a75469a029809fcf8d629d475086c985c482875b47d485c83ca2a7eab5e3a2bd1b038b7aa.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1411, 
+      "name": "thermos_office_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/thermos_office_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "af3ae8e369c7c8eb504f85dc4359805bffe393da", 
+        "compressed": 54832, 
+        "uid": "65bb6b2514728079a1be61a7fdc1bb5a994ed7e8df90d2029e5752dbfbed2d93f64150e134dd1ef7700f421f6f79a9f44316fbb24a39e4dc5cfa1e08997c1c4d", 
+        "uncompressed": 53182, 
+        "url": "https://zenodo.org/record/2640900/files/toy_office_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "e4dbc6deaa21684722fc8fc17a10ea8be840b40a", 
+          "compressed": 28363175, 
+          "pattern": "%08d.jpg", 
+          "uid": "3bc3a8df43fbfd1d07bdd02ff7f36066c1535c1a3c61545f946e530984e16d0a77e0230d1f7bea5e538486ffcab71a9f905b7b86c0e1e17b48ac176fb573a4cd", 
+          "uncompressed": 28321763, 
+          "url": "https://zenodo.org/record/2640900/files/3bc3a8df43fbfd1d07bdd02ff7f36066c1535c1a3c61545f946e530984e16d0a77e0230d1f7bea5e538486ffcab71a9f905b7b86c0e1e17b48ac176fb573a4cd.zip"
+        }, 
+        "depth": {
+          "checksum": "5f87424b614736de4f3e7d68d780c3d3d4c6f2a3", 
+          "compressed": 136591883, 
+          "pattern": "%08d.png", 
+          "uid": "b027beebbc7e4e2b6b47a6913f93c472257d0fbb96f1c90911f8feafc88adfdcb56fd1f15783f36328342bbbbce15f1235eb48640385d46298804409011e914c", 
+          "uncompressed": 136550471, 
+          "url": "https://zenodo.org/record/2640900/files/b027beebbc7e4e2b6b47a6913f93c472257d0fbb96f1c90911f8feafc88adfdcb56fd1f15783f36328342bbbbce15f1235eb48640385d46298804409011e914c.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 986, 
+      "name": "toy_office_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/toy_office_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "2b9167dd926a54a71288f970808af1d97c0d4544", 
+        "compressed": 45557, 
+        "uid": "8da8f0d0e647827beeeb4f3ee0d73e870bbea4777833d43e3617613c7ac52460b80dfe253e2b7933f00a135aa83869e61345162982372dc091903762ae053352", 
+        "uncompressed": 43907, 
+        "url": "https://zenodo.org/record/2640900/files/toy_office_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "0c8c8bce476fd90e97d466394a4409b4ec77c588", 
+          "compressed": 48149458, 
+          "pattern": "%08d.jpg", 
+          "uid": "57a568782e40aa70f428c3738cde26c0580a54cb82e7c36fa42c6edfa32bfad45ae37d7c5133fd3592f97f9824ab87e946b753ad766bfbd2595451960fb20aa6", 
+          "uncompressed": 48113674, 
+          "url": "https://zenodo.org/record/2640900/files/57a568782e40aa70f428c3738cde26c0580a54cb82e7c36fa42c6edfa32bfad45ae37d7c5133fd3592f97f9824ab87e946b753ad766bfbd2595451960fb20aa6.zip"
+        }, 
+        "depth": {
+          "checksum": "417e72cbbbf925e5668dce14111b3a1d1d38de7d", 
+          "compressed": 235368922, 
+          "pattern": "%08d.png", 
+          "uid": "0045423a914b49073ab9d99a6e517969641adf01bb5678129176ee79da60517fb8ccc0f838ae55de23103ce0e0899bad607019745e619fce3a6f49e8cf1fba9e", 
+          "uncompressed": 235333138, 
+          "url": "https://zenodo.org/record/2640900/files/0045423a914b49073ab9d99a6e517969641adf01bb5678129176ee79da60517fb8ccc0f838ae55de23103ce0e0899bad607019745e619fce3a6f49e8cf1fba9e.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 852, 
+      "name": "toy_office_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/toy_office_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "f36896efbe0fb3e128f43b85af094bd2263b7378", 
+        "compressed": 69105, 
+        "uid": "5af0b3a732e0ee6731c997527c051c47f0ac8118110e104beaf89791435a69c035e4be0d5565c50fb1bf9605a2f76d928b69a8b42c72a8fdebe3fae92161f0c7", 
+        "uncompressed": 67455, 
+        "url": "https://zenodo.org/record/2640900/files/trashcan_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "a7379571f74f1b3b192557010fbe375e0c0d3ea0", 
+          "compressed": 42065605, 
+          "pattern": "%08d.jpg", 
+          "uid": "da1e2a291a14d4636322f237063c12dd27d9259d5454da56c3383ad7f447339ad1c2ea2e1fcf733c763df1d76c14b528f9bbef993c7cc5baff1fc7558ad2ad8a", 
+          "uncompressed": 42010795, 
+          "url": "https://zenodo.org/record/2640900/files/da1e2a291a14d4636322f237063c12dd27d9259d5454da56c3383ad7f447339ad1c2ea2e1fcf733c763df1d76c14b528f9bbef993c7cc5baff1fc7558ad2ad8a.zip"
+        }, 
+        "depth": {
+          "checksum": "e6d06ddb7c6c87a3af52d7184bbd45d9e55ce730", 
+          "compressed": 251152897, 
+          "pattern": "%08d.png", 
+          "uid": "677c7dec1e319884406c862b2dad86743da7a24873cf541221cd4dd565202f42716dde0c68b9766c3f8423adf0fbda6f02532f91e78ad2ec16e605a879d047a0", 
+          "uncompressed": 251098087, 
+          "url": "https://zenodo.org/record/2640900/files/677c7dec1e319884406c862b2dad86743da7a24873cf541221cd4dd565202f42716dde0c68b9766c3f8423adf0fbda6f02532f91e78ad2ec16e605a879d047a0.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1305, 
+      "name": "trashcan_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trashcan_room_occ_1.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "072a488f93f7ca51d800546e10049bbf9f103c63", 
+        "compressed": 45849, 
+        "uid": "038ec6831aa11001775573002552e157a3245bba586e92e4259153bd933c1ced922eb1aa0250a36d4ec0df640a3a3af1245915ccba3d0f9a1e0822593400b5d0", 
+        "uncompressed": 44199, 
+        "url": "https://zenodo.org/record/2640900/files/trashcans_room_occ_1_A.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "7b5e39c53b1f652db41f085a70980b8070275f48", 
+          "compressed": 40871266, 
+          "pattern": "%08d.jpg", 
+          "uid": "ba5fb823cff6cedc152b67c964de0e4782ca5697e2b3df4bd54e8c34e18d16c9d713bb17848fc547d8e2cc1e1ecbabd4864b0915159576df01cc32295099da1d", 
+          "uncompressed": 40835692, 
+          "url": "https://zenodo.org/record/2640900/files/ba5fb823cff6cedc152b67c964de0e4782ca5697e2b3df4bd54e8c34e18d16c9d713bb17848fc547d8e2cc1e1ecbabd4864b0915159576df01cc32295099da1d.zip"
+        }, 
+        "depth": {
+          "checksum": "acfe9833f6d438603bf8546ed0819311bbf4f335", 
+          "compressed": 252333684, 
+          "pattern": "%08d.png", 
+          "uid": "ed88b5a4d37ab353383ce8fec83c0cabab14bf92f0907d081f3f898b84b3a6f258faf12fcbbfc08c370be1f4de1168948d52b61971fe15d86aa6d4aae80160a8", 
+          "uncompressed": 252298110, 
+          "url": "https://zenodo.org/record/2640900/files/ed88b5a4d37ab353383ce8fec83c0cabab14bf92f0907d081f3f898b84b3a6f258faf12fcbbfc08c370be1f4de1168948d52b61971fe15d86aa6d4aae80160a8.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 847, 
+      "name": "trashcans_room_occ_1_A", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trashcans_room_occ_1_A.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "b044e5d7520b1d1db7c5df3d12c8fd3f09839f49", 
+        "compressed": 51884, 
+        "uid": "101c662f47b18ca2f60b3147facc34ce3024d6acad99ffb2d4869b43c10d2718aacdc3e296ec395abd0f4e4720b6d29c15f673b5d0593ecbdcf67177a7e561d9", 
+        "uncompressed": 50234, 
+        "url": "https://zenodo.org/record/2640900/files/trashcans_room_occ_1_B.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b058ff3ad60ae74f51190a4d0bda8f8bbb302b45", 
+          "compressed": 45376466, 
+          "pattern": "%08d.jpg", 
+          "uid": "5c43f69cf0f84d81f7d4c2211fd09fbf646b65556d1d7356a01c5187187dd76b3bcef6c8a12ef13f7bf4880cd94f0c445e22186e8d104839949e50b103e7cce7", 
+          "uncompressed": 45336818, 
+          "url": "https://zenodo.org/record/2640900/files/5c43f69cf0f84d81f7d4c2211fd09fbf646b65556d1d7356a01c5187187dd76b3bcef6c8a12ef13f7bf4880cd94f0c445e22186e8d104839949e50b103e7cce7.zip"
+        }, 
+        "depth": {
+          "checksum": "dd87f6d5f3dc5b28ace3a49cb3b1e7981d87ed59", 
+          "compressed": 280639729, 
+          "pattern": "%08d.png", 
+          "uid": "208a96794b2bf29a238c063b3d4f2ecba0ed58796f53f883a4b796b0e72a5b2e2fa7af94e0a65cb01a2e49434da821b40eee8a3fc06b98b02731e0f5ffe3a3e4", 
+          "uncompressed": 280600081, 
+          "url": "https://zenodo.org/record/2640900/files/208a96794b2bf29a238c063b3d4f2ecba0ed58796f53f883a4b796b0e72a5b2e2fa7af94e0a65cb01a2e49434da821b40eee8a3fc06b98b02731e0f5ffe3a3e4.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 944, 
+      "name": "trashcans_room_occ_1_B", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trashcans_room_occ_1_B.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "8c46d0c933e76f7f27f9051baa0e58124c24d776", 
+        "compressed": 112944, 
+        "uid": "6f1811118b206280caf0a85af3fcc430bb9f15aa5c6a019d67d7a26f45c9e736fbcd286b68e8847ac0952e489e0b18c86f68ff360adb891188408b9fdcced3cd", 
+        "uncompressed": 111294, 
+        "url": "https://zenodo.org/record/2640900/files/trendNetBag_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "2aaa0d2b07b77cb5785a682f15f28797aa4613f7", 
+          "compressed": 124589075, 
+          "pattern": "%08d.jpg", 
+          "uid": "5579273761c89913456660b1cd0dbe5759de6b5479aaeaab248e03218c8eb838540cbbbfcbf7750354de03a0942bdb4cf7984236591a8fbdd0948cdf6272be78", 
+          "uncompressed": 124500665, 
+          "url": "https://zenodo.org/record/2640900/files/5579273761c89913456660b1cd0dbe5759de6b5479aaeaab248e03218c8eb838540cbbbfcbf7750354de03a0942bdb4cf7984236591a8fbdd0948cdf6272be78.zip"
+        }, 
+        "depth": {
+          "checksum": "164f3db44d27606cceb8eaf92c313f34ec4fc27b", 
+          "compressed": 1099160823, 
+          "pattern": "%08d.png", 
+          "uid": "d37e4d703136bc9de05c0be5f97dd297f3a78d918a332acf340769ada00606f72c8310bbc76ae664029f7b77060724bf09c08f01273ff5b27f137400669bef4b", 
+          "uncompressed": 1099072413, 
+          "url": "https://zenodo.org/record/2640900/files/d37e4d703136bc9de05c0be5f97dd297f3a78d918a332acf340769ada00606f72c8310bbc76ae664029f7b77060724bf09c08f01273ff5b27f137400669bef4b.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 2105, 
+      "name": "trendNetBag_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trendNetBag_outside.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "50f9d9a2e6c8c1d7cf0b9dca7323bbb80b98d4ce", 
+        "compressed": 101067, 
+        "uid": "af3ffd363606e0ff870d40f5b69aa0308f62a7136f310922b008ae17eaba23fb5511b5f655098eb89a14f2998fc96aa12a13a77d582fe62cb9757ba74a32f1d6", 
+        "uncompressed": 99417, 
+        "url": "https://zenodo.org/record/2640900/files/trendNet_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "dad6655f17245531767dff2b06b9483f9ae1e418", 
+          "compressed": 109057709, 
+          "pattern": "%08d.jpg", 
+          "uid": "5a5e50b054d3ad7b1a45e86f964e6a8b7b208038acd3c974d007252886e47c6be21e66baa253bbe12362118d7c8c6c139691138985ed4299e832a616d7c7d507", 
+          "uncompressed": 108981353, 
+          "url": "https://zenodo.org/record/2640900/files/5a5e50b054d3ad7b1a45e86f964e6a8b7b208038acd3c974d007252886e47c6be21e66baa253bbe12362118d7c8c6c139691138985ed4299e832a616d7c7d507.zip"
+        }, 
+        "depth": {
+          "checksum": "a799458875e0b1dbea5b1046c4f4166e7fcfa194", 
+          "compressed": 949616940, 
+          "pattern": "%08d.png", 
+          "uid": "e8c17ba54809e061bb51af172dca00b51c9bf833a50cd1546adab4315bbac318dc5701e3cf1ada8e544e3c1dfc719beed0b8e5e1c4407ede6aab59a56c3a666e", 
+          "uncompressed": 949540584, 
+          "url": "https://zenodo.org/record/2640900/files/e8c17ba54809e061bb51af172dca00b51c9bf833a50cd1546adab4315bbac318dc5701e3cf1ada8e544e3c1dfc719beed0b8e5e1c4407ede6aab59a56c3a666e.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1818, 
+      "name": "trendNet_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trendNet_outside.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "318d5f2ecfef3b478d3a62f56221c7d345ebf4e4", 
+        "compressed": 111907, 
+        "uid": "09f0f20c8758949a5b42d82253def609e265702b3abcf730dd03d5ba88cfd21f3435927df1258609e268f6f4b13dce8361a313885edef24a192180744deb53f1", 
+        "uncompressed": 110257, 
+        "url": "https://zenodo.org/record/2640900/files/trophy_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "e63eb35a976330523e907c7a83a955b2f382758a", 
+          "compressed": 123019544, 
+          "pattern": "%08d.jpg", 
+          "uid": "76d75b9a24dde7316ea70ff94c5c47e6bdd016a67c5e234e88ab96259b203613d1c160e63d40994968380d21a69749b4030150addc95a5c60e7b5dafa6b545b8", 
+          "uncompressed": 122935502, 
+          "url": "https://zenodo.org/record/2640900/files/76d75b9a24dde7316ea70ff94c5c47e6bdd016a67c5e234e88ab96259b203613d1c160e63d40994968380d21a69749b4030150addc95a5c60e7b5dafa6b545b8.zip"
+        }, 
+        "depth": {
+          "checksum": "aac7fd828259b7994320bfe98e6483b95e3b861b", 
+          "compressed": 997114379, 
+          "pattern": "%08d.png", 
+          "uid": "462c19942162df34e4d8b87462cb4f3acf11a41c745ac61426ff81f3460ba849c9559346693991b98f1ef6823c9962e366596c1e56d71de82b2f8e0c18b6eab0", 
+          "uncompressed": 997030337, 
+          "url": "https://zenodo.org/record/2640900/files/462c19942162df34e4d8b87462cb4f3acf11a41c745ac61426ff81f3460ba849c9559346693991b98f1ef6823c9962e366596c1e56d71de82b2f8e0c18b6eab0.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 2001, 
+      "name": "trophy_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trophy_outside.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "5e475cab8343b48726d68514ebf487e7bb012dd2", 
+        "compressed": 78626, 
+        "uid": "920f1da0a71986db66f965437e380e86b7edb607c7a8c0ee2299832e055c5005633c1d2a315c33ab9cd72d24b602af686421b4b756e1bfcacfa9f5a086b80bb9", 
+        "uncompressed": 76976, 
+        "url": "https://zenodo.org/record/2640900/files/trophy_room_noocc_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "b42873797d488b25401548f27d060fcc0e0c6c26", 
+          "compressed": 31838461, 
+          "pattern": "%08d.jpg", 
+          "uid": "5b285355ec35aba0ba81a2c285decaf29e82fd35a2983988970c876386323052e683ff753f34bc626abe29c6a90cabbb77d2bd332922649a1418accfd32b290d", 
+          "uncompressed": 31779283, 
+          "url": "https://zenodo.org/record/2640900/files/5b285355ec35aba0ba81a2c285decaf29e82fd35a2983988970c876386323052e683ff753f34bc626abe29c6a90cabbb77d2bd332922649a1418accfd32b290d.zip"
+        }, 
+        "depth": {
+          "checksum": "aebefb944c02f430d55ae538376d56cfb31b949a", 
+          "compressed": 181435524, 
+          "pattern": "%08d.png", 
+          "uid": "c757e5dbdf601359867bcb9b9385b8fd096bfa34535749abfe3c8aedf788a41707ba0454e6a62cd754385caa5eff2a455edfb7555ecd24571e5923fc656b44f9", 
+          "uncompressed": 181376346, 
+          "url": "https://zenodo.org/record/2640900/files/c757e5dbdf601359867bcb9b9385b8fd096bfa34535749abfe3c8aedf788a41707ba0454e6a62cd754385caa5eff2a455edfb7555ecd24571e5923fc656b44f9.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 360, 
+      "length": 1409, 
+      "name": "trophy_room_noocc_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trophy_room_noocc_1.png", 
+      "width": 640
+    }, 
+    {
+      "annotations": {
+        "checksum": "e4c3e689e4d0e357d5dc87c48560e147ec0e25cb", 
+        "compressed": 94487, 
+        "uid": "11b831e96a9f5123132ec7c13952885b0ad5311a5363e1d89521b74a23d187f5657ebcf3414068f8ea7e169f406d88747bcac044b9ad99924c80218f01a4fb4b", 
+        "uncompressed": 92837, 
+        "url": "https://zenodo.org/record/2640900/files/trophy_room_occ_1.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "86de8bc633f5f37aa2fb1709970e022aecd85c47", 
+          "compressed": 88612172, 
+          "pattern": "%08d.jpg", 
+          "uid": "ee21d41eb6fb026b69fb47bade0580f2afe81e2c6d6cf3c2a5a5039ca2674ac44daae0e339db38aad31265bc294d1eb2159d4dc6d872c9510cf806fcb3a6debc", 
+          "uncompressed": 88538882, 
+          "url": "https://zenodo.org/record/2640900/files/ee21d41eb6fb026b69fb47bade0580f2afe81e2c6d6cf3c2a5a5039ca2674ac44daae0e339db38aad31265bc294d1eb2159d4dc6d872c9510cf806fcb3a6debc.zip"
+        }, 
+        "depth": {
+          "checksum": "6157373ff5ac3822d5aaf98d292e11d27a76eb38", 
+          "compressed": 508870843, 
+          "pattern": "%08d.png", 
+          "uid": "73a0687619e66f42ce5bb20b055aa6d24ef53c9b4485850a472c41d8e8ee10bc683bcf19b8395e457e6729980e2cd1a9370d7368ffc4307d69e562f3453fdfa5", 
+          "uncompressed": 508797553, 
+          "url": "https://zenodo.org/record/2640900/files/73a0687619e66f42ce5bb20b055aa6d24ef53c9b4485850a472c41d8e8ee10bc683bcf19b8395e457e6729980e2cd1a9370d7368ffc4307d69e562f3453fdfa5.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 1745, 
+      "name": "trophy_room_occ_1", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/trophy_room_occ_1.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "ea05d418af963f8b80011b8a52013534c3c363b3", 
+        "compressed": 58762, 
+        "uid": "021c7ed0c9873f485d1728f412de6d277718fa000521e454f5f7d76ee8387624bc194e91f602c6ded63da2c8cef2c952819219d197bdad5cdb394ed4a57edd14", 
+        "uncompressed": 57112, 
+        "url": "https://zenodo.org/record/2640900/files/two_mugs.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "7252db78f59fb91e65ada6d453aff25baa8cf019", 
+          "compressed": 44507471, 
+          "pattern": "%08d.jpg", 
+          "uid": "5be4147ee5f0fd7e6c519504984ed57496156666d71ee0bce55ca318d9a6f7185c5a51db1f6d80fb1a3723fadee38964e4f4edabca496b28dd727cc08e381bc5", 
+          "uncompressed": 44459843, 
+          "url": "https://zenodo.org/record/2640900/files/5be4147ee5f0fd7e6c519504984ed57496156666d71ee0bce55ca318d9a6f7185c5a51db1f6d80fb1a3723fadee38964e4f4edabca496b28dd727cc08e381bc5.zip"
+        }, 
+        "depth": {
+          "checksum": "883c5d1b6921490b4fda4a375cd4926b0f8eec0e", 
+          "compressed": 139084286, 
+          "pattern": "%08d.png", 
+          "uid": "529b8f49ca22b99a3b2e36443b3688b42d9877e0bdb22dacaedb8323c5443a935f65fe0199b59c38c6fa28d92517ce8650e28281e5e7ec34af963a9d9881f884", 
+          "uncompressed": 139036658, 
+          "url": "https://zenodo.org/record/2640900/files/529b8f49ca22b99a3b2e36443b3688b42d9877e0bdb22dacaedb8323c5443a935f65fe0199b59c38c6fa28d92517ce8650e28281e5e7ec34af963a9d9881f884.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1134, 
+      "name": "two_mugs", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/two_mugs.png", 
+      "width": 768
+    }, 
+    {
+      "annotations": {
+        "checksum": "982ad2490f195a0b18b9a042232fa9e6421e9c15", 
+        "compressed": 37678, 
+        "uid": "ec2c4492208c499ff1e4a33899ac14b4102867b644d75cefb90f8fc03738974a87593723074baf0c621257f1827d5064f8c611146e35b35896137b276227aa2a", 
+        "uncompressed": 36028, 
+        "url": "https://zenodo.org/record/2640900/files/two_tennis_balls.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "ccc47b061961fa21958013ab12d56139f38ac9d0", 
+          "compressed": 37389031, 
+          "pattern": "%08d.jpg", 
+          "uid": "828a93c58f47ff7fce13cdb04df4d10bca3dc613596e802280bbd354296577ffc19e5d33308b1cb6653df9b399b29564ed9b9a55d6236f9573d4a09282b86db1", 
+          "uncompressed": 37358707, 
+          "url": "https://zenodo.org/record/2640900/files/828a93c58f47ff7fce13cdb04df4d10bca3dc613596e802280bbd354296577ffc19e5d33308b1cb6653df9b399b29564ed9b9a55d6236f9573d4a09282b86db1.zip"
+        }, 
+        "depth": {
+          "checksum": "90097fd5385f3efd992c5001a35423b3ebb4ea1e", 
+          "compressed": 125185590, 
+          "pattern": "%08d.png", 
+          "uid": "8facd1be5bb8824b12644da90861eff5e90b9eae014a06902a9de20d80c9d42f9b5935c2e7e8bfbc209fb6fe91bdd21398c1a9b1b903eef86bdb29e03da5284b", 
+          "uncompressed": 125155266, 
+          "url": "https://zenodo.org/record/2640900/files/8facd1be5bb8824b12644da90861eff5e90b9eae014a06902a9de20d80c9d42f9b5935c2e7e8bfbc209fb6fe91bdd21398c1a9b1b903eef86bdb29e03da5284b.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 540, 
+      "length": 722, 
+      "name": "two_tennis_balls", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/two_tennis_balls.png", 
+      "width": 960
+    }, 
+    {
+      "annotations": {
+        "checksum": "5b71b2db53dfc8677d31356ecf0f136de3731b1c", 
+        "compressed": 107685, 
+        "uid": "f06562d40e0c390286e34aad7dfe3297e0aa0b208bb032ddbb8ae79d7da84bf474106366727861567ae2831f6593311a0337b1b1c73646e627c051251c700827", 
+        "uncompressed": 106035, 
+        "url": "https://zenodo.org/record/2640900/files/XMG_outside.zip"
+      }, 
+      "channels": {
+        "color": {
+          "checksum": "19e5cfee102b26e3045594027d5670b11006a50f", 
+          "compressed": 77227741, 
+          "pattern": "%08d.jpg", 
+          "uid": "dfb2511ccabb53421b136efc681e9cf63af8c66c8b196727ad316dcc6a57effcc1ecd18e6ffb9addc480396ea17f196d8fedaf7a46e0b28ad3ffbac07e275d0a", 
+          "uncompressed": 77147479, 
+          "url": "https://zenodo.org/record/2640900/files/dfb2511ccabb53421b136efc681e9cf63af8c66c8b196727ad316dcc6a57effcc1ecd18e6ffb9addc480396ea17f196d8fedaf7a46e0b28ad3ffbac07e275d0a.zip"
+        }, 
+        "depth": {
+          "checksum": "5fbee8ed5e34ef69ec12761a508276a24c6d703f", 
+          "compressed": 669673460, 
+          "pattern": "%08d.png", 
+          "uid": "56c2dc2bf5b057a9bfc5fe7615a73b2379eeeb9b9ea62109213c7eb3c39a166a05d0f3707c5172cb90f19b045765d47bd90f999c0eec0e054a2e5b283a4f0fbf", 
+          "uncompressed": 669593198, 
+          "url": "https://zenodo.org/record/2640900/files/56c2dc2bf5b057a9bfc5fe7615a73b2379eeeb9b9ea62109213c7eb3c39a166a05d0f3707c5172cb90f19b045765d47bd90f999c0eec0e054a2e5b283a4f0fbf.zip"
+        }
+      }, 
+      "fps": 30, 
+      "height": 432, 
+      "length": 1911, 
+      "name": "XMG_outside", 
+      "preview": null, 
+      "thumbnail": "https://zenodo.org/record/2640900/files/XMG_outside.png", 
+      "width": 768
+    }
+  ], 
+  "timestamp": "2019-04-15 09:14:55.656000"
+}

@@ -64,7 +64,8 @@ class ExperimentOTB(object):
         # loop over the complete dataset / dataset slice
         # for s, (img_files, anno) in enumerate(self.dataset):
         for s in range(start_idx, end_idx):
-            img_files, anno = self.dataset[s]
+            img_files, anno, meta = self.dataset[s]
+            nlp = meta['nlp']
             seq_name = self.dataset.seq_names[s]
             print('--Sequence %d/%d: %s' % (s + 1, len(self.dataset), seq_name))
 
@@ -78,7 +79,8 @@ class ExperimentOTB(object):
             # tracking loop
             boxes, times = tracker.track(img_files,
                                          anno[0, :],
-                                         visualize=visualize)
+                                         visualize=visualize,
+                                         nlp=nlp)
             # assert len(boxes) == len(anno) # disabled as annotations for some benchmarks are withholded
 
             # record results
