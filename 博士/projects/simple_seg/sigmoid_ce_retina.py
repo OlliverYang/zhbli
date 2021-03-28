@@ -5,6 +5,19 @@ import torch
 eps = np.finfo(np.float32).tiny
 
 
+class SafeLog():
+    r"""
+    Safly perform log operation
+    """
+    default_hyper_params = dict()
+
+    def __init__(self):
+        super(SafeLog, self).__init__()
+
+    def forward(self, t):
+        return torch.log(torch.max(torch.tensor(eps, requires_grad=False), t))
+
+
 class SigmoidCrossEntropyRetina():
     def forward(self, pred_data, target_data):
         r"""
@@ -54,8 +67,10 @@ class SigmoidCrossEntropyRetina():
         onehot = onehot_[:, :, 1:].type(torch.Tensor).to(pred.device)
 
         pred = torch.sigmoid(pred)
-        pos_part = (1 - pred)**self.gamma * onehot * torch.log(pred)
-        neg_part = pred**self.gamma * (1 - onehot) * torch.log(1 - pred)
+
+        eps_torch = torch.tensor(eps, requires_grad=False).to(pred.device)
+        pos_part = (1 - pred)**self.gamma * onehot * torch.log(torch.max(eps_torch, pred))
+        neg_part = pred**self.gamma * (1 - onehot) * torch.log(torch.max(eps_torch, 1 - pred))  # safe log 是必须的，否则可能 nan
         loss = -(self.alpha * pos_part +
                  (1 - self.alpha) * neg_part).sum(dim=2) * mask.squeeze(2)
 

@@ -1,5 +1,5 @@
 import os
-from model import SimpleNet
+from model1 import SimpleNet
 import torchvision.transforms as T
 import cv2
 import torch
@@ -7,15 +7,29 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 from sigmoid_ce_retina import SigmoidCrossEntropyRetina
+import random
+import numpy as np
+
+seed = 31415926
+# 排除PyTorch的随机性：
+torch.manual_seed(seed)  # cpu种子
+torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+torch.cuda.manual_seed_all(seed)  # 所有可用GPU的种子
+
+# 排除第三方库的随机性
+np.random.seed(seed)
+random.seed(seed)
+
+# 排除cudnn加速的随机性：
+torch.backends.cudnn.enabled = True   # 默认值
+torch.backends.cudnn.benchmark = False  # 默认为False
+torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y要排除随机性必须为True
 
 
-LR = 0.01
-NUM_CLASSES = 1  # 若较大，则非常占显存
-IMG_SIZE = 1024
-ITER = 256
-GPU_ID = '3'
+cfg = {'LR': 0.01, 'NUM_CLASSES': 1, 'IMG_SIZE': 1024, 'ITER': 256, 'GPU_ID': '3',
+       'OUT_CHANNEL': 4, 'KERNEL_SIZE': 3, 'DILATION': 1, 'LAYER_NUMBER': 128} # NUM_CLASSES 若较大，则非常占显存
 
-os.environ['CUDA_VISIBLE_DEVICES'] = GPU_ID
+os.environ['CUDA_VISIBLE_DEVICES'] = cfg['GPU_ID']
 
 
 def decode_segmap(image_, nc=21):
@@ -62,9 +76,9 @@ def cross_entropy2d(input_, target_, weight=None, size_average=True):
 
 
 def train():
-    model = SimpleNet().cuda().train()
+    model = SimpleNet(cfg).cuda().train()
 
-    optimizer = torch.optim.SGD(model.parameters(), LR,
+    optimizer = torch.optim.SGD(model.parameters(), cfg['LR'],
                                 momentum=0.9,
                                 weight_decay=1e-4)
 
@@ -74,19 +88,23 @@ def train():
                      T.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])])
     image_np = cv2.imread('./1.jpg')
-    image_np = cv2.resize(image_np, (IMG_SIZE, IMG_SIZE))
+    img_h, img_w = image_np.shape[:2]
+
+    image_np = cv2.resize(image_np, (cfg['IMG_SIZE'], cfg['IMG_SIZE']))
     image = trf(image_np)
     inp = image.unsqueeze(0).cuda()
 
     gt = cv2.imread('./1.png')
-    gt = cv2.resize(gt, (IMG_SIZE, IMG_SIZE))
+    gt = cv2.resize(gt, (cfg['IMG_SIZE'], cfg['IMG_SIZE']))
     gt = gt[:, :, 0] + gt[:, :, 1] + gt[:, :, 2]
     gt[gt != 0] = 1
     target = torch.from_numpy(gt).cuda()
     target = target.unsqueeze(0).long()  # 必须为 long 类型，否则计算损失时会报错。
 
-    for i in range(ITER+1):
-        out = model(inp)
+    for i in range(cfg['ITER']+1):
+        out = model(inp, img_h, img_w)
+
+        """计算损失"""
         # loss = cross_entropy2d(out, target, size_average=True)
         loss = criteria.forward(out, target)
         print(i, loss.item())
@@ -110,7 +128,8 @@ def train():
     plt.axis('off')
     plt.show()
 
-    print(ITER, IMG_SIZE)
+    print(cfg)
+
 
 if __name__ == '__main__':
     train()
