@@ -149,6 +149,8 @@ class SiamTrack(ModuleBase):
                 # template as kernel
                 c_z_k = self.c_z_k(f_z)
                 r_z_k = self.r_z_k(f_z)
+                c_z_k = torch.nn.functional.adaptive_avg_pool2d(c_z_k, (1, 1))
+                r_z_k = torch.nn.functional.adaptive_avg_pool2d(r_z_k, (1, 1))
                 # output
                 out_list = [c_z_k, r_z_k]
         # used for template feature extraction (trt mode)

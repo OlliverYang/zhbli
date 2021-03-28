@@ -148,16 +148,20 @@ class SiamFCppTracker(PipelineBase):
         phase = self._hyper_params['phase_init']
         with torch.no_grad():
             data = imarray_to_tensor(im_z_crop).to(self.device)
-            # features = self._model(data, phase=phase)
 
-            """获得语言特征"""
-            sentence_feature = self._model.sentence_transformer.encode(
-                [nlp], convert_to_numpy=False, convert_to_tensor=True, device=self.device,
-                normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
-            c_z_k = self._model.c_z_k(sentence_feature)
-            r_z_k = self._model.r_z_k(sentence_feature)
+            USE_SENTENCE = False
 
-        return (c_z_k, r_z_k), im_z_crop, avg_chans
+            if USE_SENTENCE:
+                """获得语言特征"""
+                sentence_feature = self._model.sentence_transformer.encode(
+                    [nlp], convert_to_numpy=False, convert_to_tensor=True, device=self.device,
+                    normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
+                c_z_k = self._model.c_z_k(sentence_feature)
+                r_z_k = self._model.r_z_k(sentence_feature)
+                return (c_z_k, r_z_k), im_z_crop, avg_chans
+            else:
+                features = self._model(data, phase=phase)
+                return features, im_z_crop, avg_chans
 
     def init(self, im, state, nlp=None):
         r"""Initialize tracker

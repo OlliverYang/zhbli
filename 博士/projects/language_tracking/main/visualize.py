@@ -44,9 +44,9 @@ def main():
 
 
 if __name__ == '__main__':
-    prediction_root = '/home/etvuz/projects/language_tracking/logs/GOT-Benchmark/result/LaSOT/siamfcpp_googlenet'
+    prediction_root = '/home/etvuz/projects/language_tracking/logs_tracker/GOT-Benchmark/result/LaSOT/siamfcpp_googlenet'
     dataset_root = '/home/zhbli/Dataset/data3/LASOT'
     save_root = '/tmp/0visualize'
     colors = {'Ours': [0, 255, 0], 'SiamMask': [0, 0, 255], 'SiamFCv2': [255, 0, 0]}  # BGR
-    single_video = 'bicycle-18'
+    single_video = 'basketball-11'
     main()
