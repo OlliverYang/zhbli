@@ -53,7 +53,7 @@ class Model(torch.nn.Module):
             ])
             # 反卷积知识：可以根据反卷积的 o(输入分辨率) s（步长） k（核大小） p（padding） 参数来计算反卷积的输出i。公式如下：i = ( o − 1 ) ∗ s + k − 2 ∗ p
 
-    def forward(self, x, img_h, img_w):
+    def forward(self, x, img_h, img_w, anno_xywh):
         """"""
         """进行编码"""
         encoder = []
@@ -83,9 +83,9 @@ class Model(torch.nn.Module):
             """得到目标在特征图上的GT位置（绝对位置）"""
             scale_x = heat_map.shape[3] / img_w
             scale_y = heat_map.shape[2] / img_h
-            x1, y1, w, h = [70, 80, 350, 128]  # 相对于原始输入图像。未经过任何缩放。
-            cx_abs = int((x1 + w / 2) * scale_x)
-            cy_abs = int((y1 + h / 2) * scale_y)  # 绝对位置
+            x1, y1, w, h = anno_xywh[0]; assert anno_xywh.shape[0] == 1 # 相对于原始输入图像。未经过任何缩放。
+            cx_abs = min(int((x1 + w / 2) * scale_x), heat_map.shape[3]-1)
+            cy_abs = min(int((y1 + h / 2) * scale_y), heat_map.shape[2]-1)  # 绝对位置
 
             """得到目标在 2*2 heat_map 上的GT位置(相对位置)"""
             cx = cx_abs - w_anchor

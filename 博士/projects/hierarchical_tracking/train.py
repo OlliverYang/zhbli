@@ -9,9 +9,7 @@ import matplotlib.pyplot as plt
 from sigmoid_ce_retina import SigmoidCrossEntropyRetina
 import random
 import numpy as np
-
-
-MODEL_PATH = '/tmp/model.pth'
+from got10k import GOT10k
 
 
 """排除随机性"""
@@ -31,6 +29,7 @@ torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y
 
 
 """配置参数"""
+MODEL_PATH = '/tmp/model.pth'
 cfg = {'LR': 0.001, 'NUM_CLASSES': 1, 'IMG_SIZE': 256, 'ITER': 64, 'GPU_ID': '3',
        'OUT_CHANNEL': 16, 'KERNEL_SIZE': 3, 'DILATION': 1}
 os.environ['CUDA_VISIBLE_DEVICES'] = cfg['GPU_ID']
@@ -55,8 +54,12 @@ def visualize(heat_map_np, prediction_cxy):
         assert cv2.imwrite('/tmp/heatmap_{}.png'.format(heatmap_size), heatmap)
 
 
-def train(model, inp, img_h, img_w):
+def train(model, inp, trf):
     """"""
+    """建立 dataset 和 dataloader"""
+    dataset = GOT10k(trf, cfg)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1)
+
     """建立优化器"""
     optimizer = torch.optim.SGD(model.parameters(), cfg['LR'],
                                 momentum=0.9,
@@ -64,19 +67,23 @@ def train(model, inp, img_h, img_w):
     """建立优化器"""
 
     """循环训练"""
-    for i in range(cfg['ITER'] + 1):
-        """前向传播与计算损失"""
-        layer, loss, heat_map_np = model(inp, img_h, img_w)
-        print(i, layer, loss.item())
+    for epoch in range(20):
+        for i, item in enumerate(dataloader):
+            inp = item[0]
+            anno_xywh = item[1]
+            img_h = item[2]
+            img_w = item[3]
+            """前向传播与计算损失"""
+            layer, loss, heat_map_np = model(inp, img_h, img_w, anno_xywh)
+            print(i, layer, loss.item())
 
-        """梯度反传与更新"""
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        """梯度反传与更新"""
-
-    # visualize(heat_map_np)
-    torch.save(model, MODEL_PATH)
+            """梯度反传与更新"""
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            """梯度反传与更新"""
+        # visualize(heat_map_np)
+        torch.save(model, MODEL_PATH)
 
 
 def test(model, inp, img_h, img_w):
@@ -106,7 +113,7 @@ def main(phase):
     """读入图像"""
 
     if phase == 'train':
-        train(model, inp, img_h, img_w)
+        train(model, inp, trf)
     else:
         """运行测试"""
         test(model, inp, img_h, img_w)
@@ -114,5 +121,5 @@ def main(phase):
 
 
 if __name__ == '__main__':
-    # main('train')
-    main('test')
+    main('train')
+    #main('test')
