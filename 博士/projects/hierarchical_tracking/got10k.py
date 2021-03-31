@@ -9,12 +9,18 @@ class GOT10k(Dataset):
             self.data_dict = pickle.load(f)
             self.transforms = transforms
             self.cfg = cfg
+            self.DEBUG = False
+            if self.DEBUG:
+                print('one video')
         return
 
     def __getitem__(self, index):
         video_name = random.choice(list(self.data_dict.keys()))
-        #print('no video random', end=' '); video_name = list(self.data_dict.keys())[0]
+        if self.DEBUG:
+            video_name = list(self.data_dict.keys())[0]
         image_id = random.randint(0, len(self.data_dict[video_name]['img_files']) - 1)
+        # if self.DEBUG:
+        #     image_id = 0
         img_path = self.data_dict[video_name]['img_files'][image_id]
         anno_xywh = self.data_dict[video_name]['anno'][image_id]
         image_np = cv2.imread(img_path)

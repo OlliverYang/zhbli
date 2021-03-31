@@ -19,7 +19,7 @@ class SafeLog():
 
 
 class SigmoidCrossEntropyRetina():
-    def forward(self, pred_data, target_data):
+    def forward(self, pred_data, target_data, mask):
         r"""
         Focal loss
         :param pred: shape=(B, HW, C), classification logits (BEFORE Sigmoid)
@@ -47,7 +47,11 @@ class SigmoidCrossEntropyRetina():
         self.alpha = 0.75
         self.gamma = 2
 
-        pred = pred_data
+        if np.any(mask):
+            pred = pred_data[mask]
+            target_data = target_data[mask]
+        else:
+            pred = pred_data
 
         """调整形状"""
         pred = pred.permute(0, 2, 3, 1)

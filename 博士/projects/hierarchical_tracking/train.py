@@ -30,8 +30,8 @@ torch.backends.cudnn.deterministic = True # 默认为False;benchmark为True时,y
 
 """配置参数"""
 MODEL_PATH = '/tmp/model.pth'
-cfg = {'LR': 0.001, 'NUM_CLASSES': 1, 'IMG_SIZE': 256, 'ITER': 64, 'GPU_ID': '3',
-       'OUT_CHANNEL': 16, 'KERNEL_SIZE': 3, 'DILATION': 1}
+cfg = {'LR': 0.1, 'IMG_SIZE': 256, 'GPU_ID': '1',
+       'OUT_CHANNEL': 1024, 'KERNEL_SIZE': 3, 'DILATION': 1, 'BATCH_SIZE': 1, 'RESUME': True}
 os.environ['CUDA_VISIBLE_DEVICES'] = cfg['GPU_ID']
 """配置参数"""
 
@@ -58,7 +58,7 @@ def train(model, inp, trf):
     """"""
     """建立 dataset 和 dataloader"""
     dataset = GOT10k(trf, cfg)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=1)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=cfg['BATCH_SIZE'])
 
     """建立优化器"""
     optimizer = torch.optim.SGD(model.parameters(), cfg['LR'],
@@ -69,13 +69,15 @@ def train(model, inp, trf):
     """循环训练"""
     for epoch in range(20):
         for i, item in enumerate(dataloader):
+            if i > 10000:
+                break
             inp = item[0]
             anno_xywh = item[1]
             img_h = item[2]
             img_w = item[3]
             """前向传播与计算损失"""
             layer, loss, heat_map_np = model(inp, img_h, img_w, anno_xywh)
-            print(i, layer, loss.item())
+            print(epoch, i, layer, loss.item())
 
             """梯度反传与更新"""
             optimizer.zero_grad()
@@ -95,6 +97,9 @@ def main(phase):
     """"""
     """建立模型"""
     model = Model(cfg).cuda()
+    if cfg['RESUME']:
+        print('resume')
+        model = torch.load(MODEL_PATH)
     if phase == 'train':
         model = model.train()
     else:
