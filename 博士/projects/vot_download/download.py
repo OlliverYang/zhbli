@@ -12,12 +12,19 @@ def main():
         json_file = json.load(f)
     sequences = json_file['sequences']
     sub_dirs = ['annotations', 'color', 'depth']
+
+    """处理每段视频"""
     for sequence in sequences:
         name = sequence['name']
         save_dir = os.path.join(save_root, name)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
-            
+
+        """若已经存在完整数据，则该视频成功"""
+        if sorted(os.listdir(save_dir)) == sorted(['annotations.zip', 'color.zip', 'depth.zip']):
+            continue
+
+        """对于不完整的数据集，打印其链接"""
         for sub_dir in sub_dirs:
             if sub_dir == 'annotations':
                 url = sequence[sub_dir]['url']
