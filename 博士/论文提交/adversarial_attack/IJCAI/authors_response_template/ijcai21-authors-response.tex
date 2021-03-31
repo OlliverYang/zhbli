@@ -1,0 +1,88 @@
+% IJCAI-21 Author's response
+
+% Template file with author's reponse
+
+\documentclass{article}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+\usepackage{ijcai21-authors-response}
+
+
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{lipsum}
+\urlstyle{same}
+
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+
+
+\begin{document}
+
+Thanks for your valuable comments. We will explain your concerns point by point.
+
+\section{Response to Reviewer \#3}
+
+\subsubsection{Q: Is it reasonable to apply a patch to the target to be identified?}
+
+There is no overlap between the real target and the patch. Specicically, the boundary of the patch and the real target is 16 pixels apart in our experiments settings.
+
+\subsubsection{Q: How can we know what is the object that the application is tracking?}
+
+In academic research, the target position of the first frame is given. In practical applicaiton, the target position of the first frame is often obtained by running an object detector on this frame. Once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
+
+\section{Response to Reviewer \#10}
+\subsubsection{Q: The university shall reside on trackers rather than videos.}
+
+There are two similar concepts in the field of adversarial attacks: \textit{university} and \textit{transferability}.
+The university of adversarial examples is proposed in \cite{UAP}, which means an adversarial example is image-agnostic.
+The transferability means the adversarial example can be used in different networks. We have analyzed the transferability to different backbones/tracking architectures in \textbf{Sec. 4.4}.
+%We will clarify this in the camera-ready paper if necessary.
+
+\subsubsection{Q: During testing, the target trajectory is predicted by the tracker, rather than the ground truth. This shall be made clear in the paper.}
+We will clarify this in the camera-ready paper.
+
+\subsubsection{Q: Literature missing in the related works}
+We will add these missing references in the camera-ready paper.
+
+\section{Response to Reviewer \#64}
+
+\subsubsection{Q: CNN attacks are usually expected imperceptible but the proposed method has to add an obviously noticeable fake target patch to tracking frames.}
+Both imperceptible perturbations and dversarial patches \cite{patch} are popular adversarial attack methods.
+In our work, the patch is small, and its area accounts for 4\% of the searched image area.
+Making the patch looks like the background is a very meaningful future work.
+% There are two kinds of universarial perturbations: imperceptible perturbations and adversarial patches \cite{patch}.
+
+\section{Response to Reviewer \#76}
+
+\subsubsection{Q: The paper applies FGSM method to the exemplar and Brown et al.' work to the candidate image.}
+To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack siamese trackers. Besides FGSM and Brown et al.' work, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
+In short, we focus on proposing a video-agnostic attacking system for siamese trackers instead of prosing a specific adversarial example generation method.
+
+\section{Response to Reviewer \#87}
+
+\subsubsection{Q: How to initialize the imperceptible perturbation $\delta$ and the adversarial patch $p$?}
+Each element in $\delta$ is initialized to 0.
+$p$ is initialized with a normal distribution, with a mean of 127 and a standard deviation of 1.
+
+\subsubsection{Q: Is only one imperceptible perturbation $\delta$ and one adversarial patch $p$ attained? How to keep the $\delta$ and $p$ video-agnostic and if the unique ($\delta$, $p$) is really effective to various videos?}
+Only one $\delta$ and one $p$ are obtained after end-to-end training. The unique ($\delta$, $p$) works because we train it on large datasets including COCO, ILSVRC-VID and the training splits of GOT10k and LaSOT.
+
+\subsubsection{Q: I believe that how to use the proposed attack method to improve the object tracking will make this work more valuable.}
+In this paper, we focus on the attck to the trakcer, and increasing the robustness of trackers against attacks is a very meaningful future work.
+
+\bibliographystyle{named}
+\bibliography{ijcai21}
+
+\end{document}
+
