@@ -33,5 +33,5 @@ test:
       LaSOTTester:
         exp_name: *TEST_NAME
         exp_save: *TEST_SAVE
-        device_num: 1
+        device_num: 32
         subsets: ["test"]  # (train_test|test)

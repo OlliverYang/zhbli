@@ -11,7 +11,8 @@ from videoanalyst.model.task_model.taskmodel_base import (TRACK_TASKMODELS,
                                                           VOS_TASKMODELS)
 
 torch.set_printoptions(precision=8)
-USE_SENTENCE = False
+USE_SENTENCE = True
+USE_TRACKER = True
 
 @TRACK_TASKMODELS.register
 @VOS_TASKMODELS.register
@@ -45,6 +46,7 @@ class SiamTrack(ModuleBase):
         self.sentence_transformer = sentence_transformer
         self.sentence_transformer.train()
         self.head = head
+        self.head_sentence = sentence_head
         self.loss = loss
         self.trt_fea_model = None
         self.trt_track_model = None
@@ -69,34 +71,54 @@ class SiamTrack(ModuleBase):
         if USE_SENTENCE:
             sentence_feature = training_data["sentence_feature"]
             # feature adjustment
-            c_z_k = self.c_z_k(sentence_feature)
-            r_z_k = self.r_z_k(sentence_feature)
-        else:
+            c_z_k_sentence = self.c_z_k_sentence(sentence_feature)
+            r_z_k_sentence = self.r_z_k_sentence(sentence_feature)
+
+            c_x_sentence = self.c_x_sentence(f_x)
+            r_x_sentence = self.r_x_sentence(f_x)
+
+            # feature matching
+            r_out_sentence = xcorr_depthwise(r_x_sentence, r_z_k_sentence)
+            c_out_sentence = xcorr_depthwise(c_x_sentence, c_z_k_sentence)
+
+            # head
+            fcos_cls_score_final_sentence, fcos_ctr_score_final_sentence, fcos_bbox_final_sentence, corr_fea_sentence = self.head_sentence(
+                c_out_sentence, r_out_sentence)
+
+            predict_data_sentence = dict(
+                cls_pred=fcos_cls_score_final_sentence,
+                ctr_pred=fcos_ctr_score_final_sentence,
+                box_pred=fcos_bbox_final_sentence,
+            )
+
+        if USE_TRACKER:
             f_z = self.basemodel(target_img)
             c_z_k = self.c_z_k(f_z)
             r_z_k = self.r_z_k(f_z)
             c_z_k = torch.nn.functional.adaptive_avg_pool2d(c_z_k, (1,1))
             r_z_k = torch.nn.functional.adaptive_avg_pool2d(r_z_k, (1,1))
 
-        c_x = self.c_x(f_x)
-        r_x = self.r_x(f_x)
+            c_x = self.c_x(f_x)
+            r_x = self.r_x(f_x)
 
-        # feature matching
-        r_out = xcorr_depthwise(r_x, r_z_k)
-        c_out = xcorr_depthwise(c_x, c_z_k)
+            # feature matching
+            r_out = xcorr_depthwise(r_x, r_z_k)
+            c_out = xcorr_depthwise(c_x, c_z_k)
 
-        # head
-        fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
-            c_out, r_out)
-        predict_data = dict(
-            cls_pred=fcos_cls_score_final,
-            ctr_pred=fcos_ctr_score_final,
-            box_pred=fcos_bbox_final,
-        )
+            # head
+            fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
+                c_out, r_out)
+
+            predict_data = dict(
+                cls_pred=fcos_cls_score_final,
+                ctr_pred=fcos_ctr_score_final,
+                box_pred=fcos_bbox_final,
+            )
+
         if self._hyper_params["corr_fea_output"]:
             predict_data["corr_fea"] = corr_fea
 
-        return predict_data
+        return predict_data, predict_data_sentence
 
     def instance(self, img):
         f_z = self.basemodel(img)
@@ -180,31 +202,62 @@ class SiamTrack(ModuleBase):
                 else:
                     # backbone feature
                     f_x = self.basemodel(search_img)
-                    # feature adjustment
-                    c_x = self.c_x(f_x)
-                    r_x = self.r_x(f_x)
             elif len(args) == 4:
                 # c_x, r_x already computed
                 c_z_k, r_z_k, c_x, r_x = args
             else:
                 raise ValueError("Illegal args length: %d" % len(args))
 
-            # feature matching
-            r_out = xcorr_depthwise(r_x, r_z_k)
-            c_out = xcorr_depthwise(c_x, c_z_k)
-            # head
-            fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
-                c_out, r_out, search_img.size(-1))
-            # apply sigmoid
-            fcos_cls_prob_final = torch.sigmoid(fcos_cls_score_final)
-            fcos_ctr_prob_final = torch.sigmoid(fcos_ctr_score_final)
-            # apply centerness correction
-            fcos_score_final = fcos_cls_prob_final * fcos_ctr_prob_final
-            # register extra output
-            extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea)
-            self.cf = c_x
-            # output
-            out_list = fcos_score_final, fcos_bbox_final, fcos_cls_prob_final, fcos_ctr_prob_final, extra
+            if USE_SENTENCE:
+                r_z_k_sentence = r_z_k
+                c_z_k_sentence = c_z_k
+
+                # feature adjustment
+                c_x_sentence = self.c_x_sentence(f_x)
+                r_x_sentence = self.r_x_sentence(f_x)
+
+                # feature matching
+                r_out_sentence = xcorr_depthwise(r_x_sentence, r_z_k_sentence)
+                c_out_sentence = xcorr_depthwise(c_x_sentence, c_z_k_sentence)
+
+                # head
+                fcos_cls_score_final_sentence, fcos_ctr_score_final_sentence, fcos_bbox_final_sentence, corr_fea_sentence = self.head_sentence(
+                    c_out_sentence, r_out_sentence, search_img.size(-1))
+
+                # apply sigmoid
+                fcos_cls_prob_final = torch.sigmoid(fcos_cls_score_final_sentence)
+                fcos_ctr_prob_final = torch.sigmoid(fcos_ctr_score_final_sentence)
+                # apply centerness correction
+                fcos_score_final = fcos_cls_prob_final * fcos_ctr_prob_final
+                # register extra output
+                extra = dict(c_x=c_x_sentence, r_x=r_x_sentence, corr_fea=corr_fea_sentence)
+                self.cf = c_x_sentence
+                # output
+                out_list = fcos_score_final, fcos_bbox_final_sentence, fcos_cls_prob_final, fcos_ctr_prob_final, extra
+
+            if not USE_SENTENCE:
+                # feature adjustment
+                c_x = self.c_x(f_x)
+                r_x = self.r_x(f_x)
+
+                # feature matching
+                r_out = xcorr_depthwise(r_x, r_z_k)
+                c_out = xcorr_depthwise(c_x, c_z_k)
+
+                # head
+                fcos_cls_score_final, fcos_ctr_score_final, fcos_bbox_final, corr_fea = self.head(
+                    c_out, r_out, search_img.size(-1))
+
+                # apply sigmoid
+                fcos_cls_prob_final = torch.sigmoid(fcos_cls_score_final)
+                fcos_ctr_prob_final = torch.sigmoid(fcos_ctr_score_final)
+                # apply centerness correction
+                fcos_score_final = fcos_cls_prob_final * fcos_ctr_prob_final
+                # register extra output
+                extra = dict(c_x=c_x, r_x=r_x, corr_fea=corr_fea)
+                self.cf = c_x
+                # output
+                out_list = fcos_score_final, fcos_bbox_final, fcos_cls_prob_final, fcos_ctr_prob_final, extra
         else:
             raise ValueError("Phase non-implemented.")
 
@@ -233,19 +286,21 @@ class SiamTrack(ModuleBase):
 
         # feature adjustment
         if USE_SENTENCE:
-            self.r_z_k = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
-            self.c_z_k = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
-        else:
+            self.r_z_k_sentence = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
+            self.c_z_k_sentence = conv_bn_relu(768, head_width, 1, 1, 0, has_relu=False)
+            self.r_x_sentence = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
+            self.c_x_sentence = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
+        if USE_TRACKER:
             self.r_z_k = conv_bn_relu(head_width, head_width, 1, 1, 0, has_relu=False)
             self.c_z_k = conv_bn_relu(head_width, head_width, 1, 1, 0, has_relu=False)
-
-        self.r_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
-        self.c_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
+            self.r_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
+            self.c_x = conv_bn_relu(head_width, head_width, 1, 3, 1, has_relu=False)
 
     def _initialize_conv(self, ):
         conv_weight_std = self._hyper_params['conv_weight_std']
         conv_list = [
-            self.r_z_k.conv, self.c_z_k.conv, self.r_x.conv, self.c_x.conv
+            self.r_z_k.conv, self.c_z_k.conv, self.r_x.conv, self.c_x.conv,
+            self.r_z_k_sentence.conv, self.c_z_k_sentence.conv, self.r_x_sentence.conv, self.c_x_sentence.conv
         ]
         for ith in range(len(conv_list)):
             conv = conv_list[ith]
