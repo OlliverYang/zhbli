@@ -56,10 +56,10 @@ test_pipeline = [
 ]
 
 # change the path of the dataset
-data_root = '/home/yy1/2021/data/prw/PRW-v16.04.20/'
+data_root = '/home/zhbli/Dataset/data3/PRW-v16.04.20/'
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=4,
+    samples_per_gpu=2,
+    workers_per_gpu=2,
     train=dict(
         ann_file=data_root + 'train_pid.json', # change the path of the annotation file
         img_prefix=data_root + 'frames/',
