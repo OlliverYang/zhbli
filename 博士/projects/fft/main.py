@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
- 
+
+
+THRESHOLD = 9
+
 # 读取图像
 img = cv2.imread('1.jpg', 0)
  
@@ -16,8 +19,9 @@ fshift_abs = np.log(np.abs(fshift))
 rows, cols = img.shape
 crow, ccol = int(rows/2), int(cols/2)
 # fshift[crow-30:crow+30, ccol-30:ccol+30] = 0
-fshift[fshift_abs<12] = 0
-fshift_abs = np.log(np.abs(fshift))
+fshift[fshift_abs<THRESHOLD] = 0
+fshift_abs[fshift_abs<THRESHOLD] = 0
+print(fshift_abs[fshift_abs>=THRESHOLD].size)
  
 # 傅里叶逆变换
 ishift = np.fft.ifftshift(fshift)
