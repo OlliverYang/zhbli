@@ -8,11 +8,14 @@ import ltr.data.transforms as tfm
 from ltr import MultiGPU
 
 
+ONLY_GOT10K = True
+
+
 def run(settings):
     # Most common settings are assigned in the settings struct
     settings.device = 'cuda'
     settings.description = 'TransT with default settings.'
-    settings.batch_size = 38
+    settings.batch_size = 32
     settings.num_workers = 8
     settings.multi_gpu = True
     settings.print_interval = 1
@@ -36,10 +39,13 @@ def run(settings):
     settings.featurefusion_layers = 4
 
     # Train datasets
-    lasot_train = Lasot(settings.env.lasot_dir, split='train')
-    got10k_train = Got10k(settings.env.got10k_dir, split='vottrain')
-    trackingnet_train = TrackingNet(settings.env.trackingnet_dir, set_ids=list(range(4)))
-    coco_train = MSCOCOSeq(settings.env.coco_dir)
+    if not ONLY_GOT10K:
+        lasot_train = Lasot(settings.env.lasot_dir, split='train')
+        got10k_train = Got10k(settings.env.got10k_dir, split='vottrain')
+        trackingnet_train = TrackingNet(settings.env.trackingnet_dir, set_ids=list(range(4)))
+        coco_train = MSCOCOSeq(settings.env.coco_dir)
+    else:
+        got10k_train = Got10k(settings.env.got10k_dir, split='vottrain')
 
     # The joint augmentation transform, that is applied to the pairs jointly
     transform_joint = tfm.Transform(tfm.ToGrayscale(probability=0.05))
@@ -60,8 +66,13 @@ def run(settings):
                                                       joint_transform=transform_joint)
 
     # The sampler for training
-    dataset_train = sampler.TransTSampler([lasot_train, got10k_train, coco_train, trackingnet_train], [1,1,1,1],
-                                samples_per_epoch=1000*settings.batch_size, max_gap=100, processing=data_processing_train)
+    if not ONLY_GOT10K:
+        dataset_train = sampler.TransTSampler([lasot_train, got10k_train, coco_train, trackingnet_train], [1,1,1,1],
+                                    samples_per_epoch=1000*settings.batch_size, max_gap=100, processing=data_processing_train)
+    else:
+        dataset_train = sampler.TransTSampler([got10k_train], [1],
+                                              samples_per_epoch=1000 * settings.batch_size, max_gap=100,
+                                              processing=data_processing_train)
 
     # The loader for training
     loader_train = LTRLoader('train', dataset_train, training=True, batch_size=settings.batch_size, num_workers=settings.num_workers,
