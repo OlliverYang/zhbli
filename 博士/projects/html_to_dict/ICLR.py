@@ -5,7 +5,7 @@ from urllib.parse import urljoin
 
 def main():
     i = 0
-    save_file = 'ICLR2021.txt'
+    save_file = 'iclr2021.txt'
     file = open(save_file, 'w', encoding='UTF-8')
     urls = ['oral.html', 'spotlight.html', 'poster.html']
     for url in urls:
@@ -16,10 +16,11 @@ def main():
             i += 1
             title = content.find_all("a")[0].text.replace("  ", "").replace("\n", "")
             paper = content.find_all("span", attrs={"class": "note-content-value"})
-            abstract = paper[1].text.replace("  ", "").replace("\n", "")
+            abstracts = [x.text.replace("  ", "").replace("\n", "") for x in paper]
+            abstract = max(abstracts, key=len)
             id = content.attrs['data-id']
             link = 'https://openreview.net/pdf?id=' + id
-            string = '{}\n{}\n{}\n'.format(title, link, abstract).replace('<', '-').replace('>', '-').replace('=', '-')
+            string = '{}\n{}\n{}\n'.format(title, link, abstract).replace('<', '-').replace('>', '-').replace('&', '-')
             file.write(string)
             print(i)
 

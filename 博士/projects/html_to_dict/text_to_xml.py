@@ -1,4 +1,4 @@
-title = 'ICLR2021'
+title = 'iclr2021'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
