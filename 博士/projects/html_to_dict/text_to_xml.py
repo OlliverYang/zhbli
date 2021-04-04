@@ -1,12 +1,17 @@
-input = open('cvpr2020.md', 'r').read().splitlines()
-output = open('cvpr2020_1.xml', 'w')
+title = 'ICLR2021'
+input_file = title + '.txt'
+output_file = title + '.xml'
+
+
+input = open(input_file, 'r', encoding='UTF-8').read().splitlines()
+output = open(output_file, 'w', encoding='UTF-8')
 
 output.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 output.write('<rss version="2.0">\n\n')
 output.write('<channel>\n')
-output.write('  <title>CVPR2020</title>\n')
+output.write('  <title>title</title>\n')
 output.write('  <link>https://www.w3schools.com</link>\n')
-output.write('  <description>Free web building tutorials</description>\n')
+output.write('  <description>{}</description>\n'.format(title))
 
 
 i = 0
