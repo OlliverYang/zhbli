@@ -9,7 +9,7 @@ output = open(output_file, 'w', encoding='UTF-8')
 output.write('<?xml version="1.0" encoding="UTF-8" ?>\n')
 output.write('<rss version="2.0">\n\n')
 output.write('<channel>\n')
-output.write('  <title>title</title>\n')
+output.write('  <title>{}</title>\n'.format(title))
 output.write('  <link>https://www.w3schools.com</link>\n')
 output.write('  <description>{}</description>\n'.format(title))
 
