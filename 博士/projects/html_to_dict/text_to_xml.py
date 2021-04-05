@@ -1,4 +1,4 @@
-title = 'eccv2020'
+title = 'ECCV_2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
@@ -16,7 +16,9 @@ output.write('  <description>{}</description>\n'.format(title))
 
 i = 0
 for line in input:
-    line = line.replace('&', '-').replace('<', '-').replace('>', '-').replace('\f', 'ff')
+    line = line.replace('&', '-').replace('<', '-').replace('>', '-').replace('\\', '')  # 非常关键
+    if line == 'Towards Real-Time Multi-Object Tracking':
+        print('debug')
     i += 1
     if i % 3 == 1:
         output.write('  <item>\n')

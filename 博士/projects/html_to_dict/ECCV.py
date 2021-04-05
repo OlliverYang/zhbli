@@ -23,7 +23,7 @@ def main():
             break
         title = content.text.replace('\n', '')
 
-        if title != 'Deep Spatial-angular Regularization for Compressive Light Field Reconstruction over Coded Apertures ' and jump:
+        if title != 'Towards Real-Time Multi-Object Tracking ' and jump:
             continue
         else:
             jump = False
