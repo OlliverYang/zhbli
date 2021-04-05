@@ -1,4 +1,4 @@
-title = 'ECCV_2020'
+title = 'NIPS2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
