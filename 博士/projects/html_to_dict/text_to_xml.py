@@ -1,4 +1,4 @@
-title = 'iclr2021'
+title = 'ECCV2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
