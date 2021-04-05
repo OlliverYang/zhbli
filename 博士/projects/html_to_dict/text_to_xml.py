@@ -1,4 +1,4 @@
-title = 'ECCV2020'
+title = 'eccv2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
@@ -16,8 +16,7 @@ output.write('  <description>{}</description>\n'.format(title))
 
 i = 0
 for line in input:
-    line = line.replace('&', '-')
-    line = line.replace('<', '-')
+    line = line.replace('&', '-').replace('<', '-').replace('>', '-').replace('\f', 'ff')
     i += 1
     if i % 3 == 1:
         output.write('  <item>\n')
