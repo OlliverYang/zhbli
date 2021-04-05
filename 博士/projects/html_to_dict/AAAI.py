@@ -4,7 +4,7 @@ import requests
 
 def main():
     save_file = 'AAAI2020.txt'
-    file = open(save_file, 'a', encoding='UTF-8')
+    file = open(save_file, 'w', encoding='UTF-8')
     urls = ['https://www.aaai.org/Library/AAAI/aaai20contents-issue{:02d}.php'.format(x) for x in range(1, 11)]
     i = 0
     jump = True

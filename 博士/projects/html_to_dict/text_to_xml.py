@@ -1,4 +1,4 @@
-title = 'AAAI2020'
+title = 'IJCAI2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
