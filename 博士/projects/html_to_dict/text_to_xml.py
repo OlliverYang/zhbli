@@ -17,7 +17,7 @@ output.write('  <description>{}</description>\n'.format(title))
 i = 0
 for line in input:
     line = line.replace('&', '-').replace('<', '-').replace('>', '-').replace('\\', '')  # 非常关键
-    if line == 'Towards Real-Time Multi-Object Tracking':
+    if 'Community detection using fast low-cardinality semidefinite programming' in line:
         print('debug')
     i += 1
     if i % 3 == 1:
