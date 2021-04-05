@@ -1,4 +1,4 @@
-title = 'MM2020'
+title = 'ICML2020'
 input_file = title + '.txt'
 output_file = title + '.xml'
 
