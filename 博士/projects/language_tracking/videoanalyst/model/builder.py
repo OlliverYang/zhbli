@@ -35,13 +35,12 @@ def build(
     """
     if task == "track":
         backbone = backbone_builder.build(task, cfg.backbone)
-
         sentence_transformer = SentenceTransformer('paraphrase-distilroberta-base-v1')
-
         head = head_builder.build(task, cfg.task_head)
+        sentence_head = head_builder.build(task, cfg.task_head)
         losses = loss_builder.build(task, cfg.losses)
 
-        task_model = task_builder.build(task, cfg.task_model, backbone, head, losses, sentence_transformer)
+        task_model = task_builder.build(task, cfg.task_model, backbone, head, losses, sentence_transformer=sentence_transformer, sentence_head=sentence_head)
 
     elif task == "vos":
         gml_extractor = backbone_builder.build(task, cfg.gml_extractor)

@@ -124,8 +124,8 @@ def main(det_thresh=0.05, gallery_size=-1, ignore_cam_id=True, input_path=None):
     #results_path = '/raid/ljp/code/chao_mmdetection/jobs/dcn_base_focal/'
 
     # change here
-    results_path = '/home/yy1/2021/mmdetection-public/work_dirs/' + input_path
-    data_root='/home/yy1/2021/data/prw/PRW-v16.04.20/'
+    results_path = '/home/etvuz/projects/AlignPS/work_dirs/' + input_path
+    data_root='/home/etvuz/projects/AlignPS/data/prw/PRW-v16.04.20/'
     probe_set = load_probes(data_root)
     gallery_set = gt_roidbs(data_root)
 

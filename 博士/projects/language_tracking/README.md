@@ -184,4 +184,23 @@ epoch 19, lr: 1.0e-06, cls: 0.035, ctr: 0.008, reg: 0.383, iou: 0.888, data: 1.4
 
 ## 实验结果
 
-"success_score": 0.44787510864688007, "precision_score": 0.4363740975316133, "normalized_precision_score": 0.4791411810497288
+"success_score": 0.44787510864688007, "precision_score": 0.4363740975316133, "normalized_precision_score": 0.4791411810497288, "success_rate": 0.5250524085071655
+
+# 训练语言+跟踪
+
+2021-03-30 19:52:22.796 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-17.pkl
+epoch 18, lr: 5.5e-04, cls: 0.054, ctr: 0.004, reg: 0.362, iou: 0.901, data: 1.1e-03, fwd: 4.0e-01, bwd: 3.9e-01, optim: 3.5e-01,  max mem: 8833.9M: 100%|████████████████████████████████████████████| 9375/9375 [3:02:33<00:00,  1.17s/it]
+2021-03-30 22:54:58.470 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-18.pkl
+epoch 19, lr: 1.0e-06, cls: 0.051, ctr: 0.007, reg: 0.489, iou: 0.863, data: 1.1e-03, fwd: 4.0e-01, bwd: 3.6e-01, optim: 3.4e-01,  max mem: 8833.9M: 100%|████████████████████████████████████████████| 9375/9375 [3:03:16<00:00,  1.17s/it]
+2021-03-31 01:58:17.063 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/epoch-19.pkl
+2021-03-31 01:58:18.228 | INFO     | videoanalyst.engine.trainer.trainer_base:save_snapshot:155 - Snapshot saved at: snapshots/siamfcpp_googlenet-lasot/final_model.pkl
+
+## 实验结果(分辨率512是不行的)
+
+### 跟踪
+
+"success_score": 0.43884378914481026,  "precision_score": 0.4205854341987701,  "normalized_precision_score": 0.4669308361494234,  "success_rate": 0.5121054277959918
+
+### 语言
+
+"success_score": 0.43102863684510584, "precision_score": 0.4115384979911166, "normalized_precision_score": 0.45701834737753555, "success_rate": 0.5020185270995201, "speed_fps": 39.81084014706859（32并行）

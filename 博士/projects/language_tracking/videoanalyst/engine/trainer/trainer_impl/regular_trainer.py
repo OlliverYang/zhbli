@@ -116,12 +116,20 @@ class RegularTrainer(TrainerBase):
                         normalize_embeddings=True).unsqueeze(2).unsqueeze(3)
                 training_data['sentence_feature'] = sentence_feature
 
-                predict_data = self._model(training_data)
+                predict_data, predict_data_sentence = self._model(training_data)
+
+                """计算跟踪损失"""
                 training_losses, extras = OrderedDict(), OrderedDict()
                 for loss_name, loss in self._losses.items():
                     training_losses[loss_name], extras[loss_name] = loss(
                         predict_data, training_data)
-                total_loss = sum(training_losses.values())
+
+                training_losses_sentence, extras_sentence = OrderedDict(), OrderedDict()
+                for loss_name, loss in self._losses.items():
+                    training_losses_sentence[loss_name], extras[loss_name] = loss(
+                        predict_data_sentence, training_data)
+
+                total_loss = (sum(training_losses.values()) + sum(training_losses_sentence.values())) / 2
 
             # backward propagation
             with Timer(name="bwd", output_dict=time_dict):

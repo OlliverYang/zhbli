@@ -39,7 +39,10 @@ class LaSOTTester(TesterBase):
     def update_params(self):
         # set device state
         num_gpu = self._hyper_params["device_num"]
-        if num_gpu % 4 == 0:
+        if num_gpu == 12:
+            all_devs = [torch.device("cuda:%d" % i) for i in range(3)]
+            all_devs = all_devs * (num_gpu // 3)
+        elif num_gpu % 4 == 0:
             all_devs = [torch.device("cuda:%d" % i) for i in range(4)]
             all_devs = all_devs * (num_gpu // 4)
         else:
