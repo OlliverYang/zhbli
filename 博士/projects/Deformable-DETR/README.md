@@ -1,169 +1,55 @@
-# Deformable DETR
+# 训练参数
 
-By [Xizhou Zhu](https://scholar.google.com/citations?user=02RXI00AAAAJ),  [Weijie Su](https://www.weijiesu.com/),  [Lewei Lu](https://www.linkedin.com/in/lewei-lu-94015977/), [Bin Li](http://staff.ustc.edu.cn/~binli/), [Xiaogang Wang](http://www.ee.cuhk.edu.hk/~xgwang/), [Jifeng Dai](https://jifengdai.org/).
+GPUS_PER_NODE=7 ./tools/run_dist_launch.sh 7 ./configs/r50_deformable_detr_single_scale.sh --coco_path /data/COCO2017 --batch_size 4
 
-This repository is an official implementation of the paper [Deformable DETR: Deformable Transformers for End-to-End Object Detection](https://arxiv.org/abs/2010.04159).
+我们的 batch size = 28，作者代码中提及的 batch size = 32
 
+# 测试数据集 
 
-## Introduction
+可能是 coco-2017-val
 
-**TL; DR.** Deformable DETR is an efficient and fast-converging end-to-end object detector. It mitigates the high complexity and slow convergence issues of DETR via a novel sampling-based efficient attention mechanism.  
+# 测试精度
 
-![deformable_detr](./figs/illustration.png)
+IoU metric: bbox                                                                
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.390 
+Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.597 
+Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.417 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.204 
+Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.427
+Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.551
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.324
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.530
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.567
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.319
+Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.621
+Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.798
 
-![deformable_detr](./figs/convergence.png)
+# 作者的代码中提及的精度
 
-**Abstract.** DETR has been recently proposed to eliminate the need for many hand-designed components in object detection while demonstrating good performance. However, it suffers from slow convergence and limited feature spatial resolution, due to the limitation of Transformer attention modules in processing image feature maps. To mitigate these issues, we proposed Deformable DETR, whose attention modules only attend to a small set of key sampling points around a reference. Deformable DETR can achieve better performance than DETR (especially on small objects) with 10× less training epochs. Extensive experiments on the COCO benchmark demonstrate the effectiveness of our approach.
+AP	    APS	    APM	    APL
+39.4	20.6	43.0	55.5
 
-## License
+# 训练时间
 
-This project is released under the [Apache 2.0 license](./LICENSE).
+1 day, 6:36:26（训练过程中进行了多次val，不过每次val仅需要一分多钟） 
 
-## Changelog
+也就是说，7 卡 50 轮 耗时 30:36:26。
 
-See [changelog.md](./docs/changelog.md) for detailed logs of major changes. 
+共训练 50 轮。
 
+Epoch: [49] Total time: 0:35:19 (0.5018 s / it) 每轮半个多小时
 
-## Citing Deformable DETR
-If you find Deformable DETR useful in your research, please consider citing:
-```bibtex
-@article{zhu2020deformable,
-  title={Deformable DETR: Deformable Transformers for End-to-End Object Detection},
-  author={Zhu, Xizhou and Su, Weijie and Lu, Lewei and Li, Bin and Wang, Xiaogang and Dai, Jifeng},
-  journal={arXiv preprint arXiv:2010.04159},
-  year={2020}
-}
-```
+# 收敛情况
 
-## Main Results
+Epoch: [49]  [4223/4224]  eta: 0:00:00  lr: 0.000020  class_error: 10.76  grad_norm: 64.63  loss: 7.5466 (7.4440)  loss_bbox: 0.2249 (0.2250)  loss_bbox_0: 0.2630 (0.2604)  loss_bbox_1: 0.2333 (0.2400)  loss_bbox_2: 0.2285 (0.2327)  loss_bbox_3: 0.2272 (0.2286)  loss_bbox_4: 0.2241 (0.2261)  loss_ce: 0.3865 (0.3952)  loss_ce_0: 0.4603 (0.4728)  loss_ce_1: 0.4278 (0.4295)  loss_ce_2: 0.4093 (0.4112)  loss_ce_3: 0.3989 (0.4010)  loss_ce_4: 0.3858 (0.3961)  loss_giou: 0.5654 (0.5697)  loss_giou_0: 0.6187 (0.6305)  loss_giou_1: 0.5890 (0.5945)  loss_giou_2: 0.5729 (0.5828)  loss_giou_3: 0.5650 (0.5762)  loss_giou_4: 0.5732 (0.5717)  cardinality_error_unscaled: 292.3214 (292.1922)  cardinality_error_0_unscaled: 292.2143 (292.5620)  cardinality_error_1_unscaled: 292.2143 (292.2490)  cardinality_error_2_unscaled: 292.2500 (292.2910)  cardinality_error_3_unscaled: 292.3929 (292.4365)  cardinality_error_4_unscaled: 292.3214 (292.4059)  class_error_unscaled: 9.4849 (8.2481)  loss_bbox_unscaled: 0.0450 (0.0450)  loss_bbox_0_unscaled: 0.0526 (0.0521)
+loss_bbox_1_unscaled: 0.0467 (0.0480)  loss_bbox_2_unscaled: 0.0457 (0.0465)  loss_bbox_3_unscaled: 0.0454 (0.0457)  
+loss_bbox_4_unscaled: 0.0448 (0.0452)  loss_ce_unscaled: 0.1933 (0.1976)  loss_ce_0_unscaled: 0.2301 (0.2364)  
+loss_ce_1_unscaled: 0.2139 (0.2147)  loss_ce_2_unscaled: 0.2046 (0.2056)  loss_ce_3_unscaled: 0.1994 (0.2005)  
+loss_ce_4_unscaled: 0.1929 (0.1980)  loss_giou_unscaled: 0.2827 (0.2849)  loss_giou_0_unscaled: 0.3094 (0.3152)  
+loss_giou_1_unscaled: 0.2945 (0.2973)  loss_giou_2_unscaled: 0.2865 (0.2914)  loss_giou_3_unscaled: 0.2825 (0.2881)  
+loss_giou_4_unscaled: 0.2866 (0.2858)  time: 0.5107  data: 0.0000  max mem: 5297                                                                 
+                                                                  
 
-| <sub><sub>Method</sub></sub>   | <sub><sub>Epochs</sub></sub> | <sub><sub>AP</sub></sub> | <sub><sub>AP<sub>S</sub></sub></sub> | <sub><sub>AP<sub>M</sub></sub></sub> | <sub><sub>AP<sub>L</sub></sub></sub> | <sub><sub>params<br>(M)</sub></sub> | <sub><sub>FLOPs<br>(G)</sub></sub> | <sub><sub>Total<br>Train<br>Time<br>(GPU<br/>hours)</sub></sub> | <sub><sub>Train<br/>Speed<br>(GPU<br/>hours<br/>/epoch)</sub></sub> | <sub><sub>Infer<br/>Speed<br/>(FPS)</sub></sub> | <sub><sub>Batch<br/>Infer<br/>Speed<br>(FPS)</sub></sub> | <sub><sub>URL</sub></sub>                     |
-| ----------------------------------- | :----: | :--: | :----: | :---: | :------------------------------: | :--------------------:| :----------------------------------------------------------: | :--: | :---: | :---: | ----- | ----- |
-| <sub><sub>Faster R-CNN + FPN</sub></sub> | <sub>109</sub> | <sub>42.0</sub> | <sub>26.6</sub> | <sub>45.4</sub> | <sub>53.4</sub> | <sub>42</sub> | <sub>180</sub> | <sub>380</sub> | <sub>3.5</sub> | <sub>25.6</sub> | <sub>28.0</sub> | <sub>-</sub> |
-| <sub><sub>DETR</sub></sub> | <sub>500</sub> | <sub>42.0</sub> | <sub>20.5</sub> | <sub>45.8</sub> | <sub>61.1</sub> | <sub>41</sub> | <sub>86</sub> | <sub>2000</sub> | <sub>4.0</sub> |     <sub>27.0</sub>       |         <sub>38.3</sub>           | <sub>-</sub> |
-| <sub><sub>DETR-DC5</sub></sub>      | <sub>500</sub> | <sub>43.3</sub> | <sub>22.5</sub> | <sub>47.3</sub> | <sub>61.1</sub> | <sub>41</sub> |<sub>187</sub>|<sub>7000</sub>|<sub>14.0</sub>|<sub>11.4</sub>|<sub>12.4</sub>| <sub>-</sub> |
-| <sub><sub>DETR-DC5</sub></sub>      | <sub>50</sub> | <sub>35.3</sub> | <sub>15.2</sub> | <sub>37.5</sub> | <sub>53.6</sub> | <sub>41</sub> |<sub>187</sub>|<sub>700</sub>|<sub>14.0</sub>|<sub>11.4</sub>|<sub>12.4</sub>| <sub>-</sub> |
-| <sub><sub>DETR-DC5+</sub></sub>     | <sub>50</sub> | <sub>36.2</sub> | <sub>16.3</sub> | <sub>39.2</sub> | <sub>53.9</sub> | <sub>41</sub> |<sub>187</sub>|<sub>700</sub>|<sub>14.0</sub>|<sub>11.4</sub>|<sub>12.4</sub>| <sub>-</sub> |
-| **<sub><sub>Deformable DETR<br>(single scale)</sub></sub>** | <sub>50</sub> | <sub>39.4</sub> | <sub>20.6</sub> | <sub>43.0</sub> | <sub>55.5</sub> | <sub>34</sub> |<sub>78</sub>|<sub>160</sub>|<sub>3.2</sub>|<sub>27.0</sub>|<sub>42.4</sub>| <sub>[config](./configs/r50_deformable_detr_single_scale.sh)<br/>[log](https://drive.google.com/file/d/1n3ZnZ-UAqmTUR4AZoM4qQntIDn6qCZx4/view?usp=sharing)<br/>[model](https://drive.google.com/file/d/1WEjQ9_FgfI5sw5OZZ4ix-OKk-IJ_-SDU/view?usp=sharing)</sub> |
-| **<sub><sub>Deformable DETR<br>(single scale, DC5)</sub></sub>** | <sub>50</sub> | <sub>41.5</sub> | <sub>24.1</sub> | <sub>45.3</sub> | <sub>56.0</sub> | <sub>34</sub> |<sub>128</sub>|<sub>215</sub>|<sub>4.3</sub>|<sub>22.1</sub>|<sub>29.4</sub>| <sub>[config](./configs/r50_deformable_detr_single_scale_dc5.sh)<br/>[log](https://drive.google.com/file/d/1-UfTp2q4GIkJjsaMRIkQxa5k5vn8_n-B/view?usp=sharing)<br/>[model](https://drive.google.com/file/d/1m_TgMjzH7D44fbA-c_jiBZ-xf-odxGdk/view?usp=sharing)</sub> |
-| **<sub><sub>Deformable DETR</sub></sub>** | <sub>50</sub> | <sub>44.5</sub> | <sub>27.1</sub> | <sub>47.6</sub> | <sub>59.6</sub> | <sub>40</sub> |<sub>173</sub>|<sub>325</sub>|<sub>6.5</sub>|<sub>15.0</sub>|<sub>19.4</sub>|<sub>[config](./configs/r50_deformable_detr.sh)<br/>[log](https://drive.google.com/file/d/18YSLshFjc_erOLfFC-hHu4MX4iyz1Dqr/view?usp=sharing)<br/>[model](https://drive.google.com/file/d/1nDWZWHuRwtwGden77NLM9JoWe-YisJnA/view?usp=sharing)</sub>                   |
-| **<sub><sub>+ iterative bounding box refinement</sub></sub>** | <sub>50</sub> | <sub>46.2</sub> | <sub>28.3</sub> | <sub>49.2</sub> | <sub>61.5</sub> | <sub>41</sub> |<sub>173</sub>|<sub>325</sub>|<sub>6.5</sub>|<sub>15.0</sub>|<sub>19.4</sub>|<sub>[config](./configs/r50_deformable_detr_plus_iterative_bbox_refinement.sh)<br/>[log](https://drive.google.com/file/d/1DFNloITi1SFBWjYzvVEAI75ndwmGM1Uj/view?usp=sharing)<br/>[model](https://drive.google.com/file/d/1JYKyRYzUH7uo9eVfDaVCiaIGZb5YTCuI/view?usp=sharing)</sub> |
-| **<sub><sub>++ two-stage Deformable DETR</sub></sub>** | <sub>50</sub> | <sub>46.9</sub> | <sub>29.6</sub> | <sub>50.1</sub> | <sub>61.6</sub> | <sub>41</sub> |<sub>173</sub>|<sub>340</sub>|<sub>6.8</sub>|<sub>14.5</sub>|<sub>18.8</sub>|<sub>[config](./configs/r50_deformable_detr_plus_iterative_bbox_refinement_plus_plus_two_stage.sh)<br/>[log](https://drive.google.com/file/d/1ozi0wbv5-Sc5TbWt1jAuXco72vEfEtbY/view?usp=sharing) <br/>[model](https://drive.google.com/file/d/15I03A7hNTpwuLNdfuEmW9_taZMNVssEp/view?usp=sharing)</sub> |
+# 结论
 
-*Note:*
-
-1. All models of Deformable DETR are trained with total batch size of 32. 
-2. Training and inference speed are measured on NVIDIA Tesla V100 GPU.
-3. "Deformable DETR (single scale)" means only using res5 feature map (of stride 32) as input feature maps for Deformable Transformer Encoder.
-4. "DC5" means removing the stride in C5 stage of ResNet and add a dilation of 2 instead.
-5. "DETR-DC5+" indicates DETR-DC5 with some modifications, including using Focal Loss for bounding box classification and increasing number of object queries to 300.
-6. "Batch Infer Speed" refer to inference with batch size = 4  to maximize GPU utilization.
-7. The original implementation is based on our internal codebase. There are slight differences in the final accuracy and running time due to the plenty details in platform switch.
-
-
-## Installation
-
-### Requirements
-
-* Linux, CUDA>=9.2, GCC>=5.4
-  
-* Python>=3.7
-
-    We recommend you to use Anaconda to create a conda environment:
-    ```bash
-    conda create -n deformable_detr python=3.7 pip
-    ```
-    Then, activate the environment:
-    ```bash
-    conda activate deformable_detr
-    ```
-  
-* PyTorch>=1.5.1, torchvision>=0.6.1 (following instructions [here](https://pytorch.org/))
-
-    For example, if your CUDA version is 9.2, you could install pytorch and torchvision as following:
-    ```bash
-    conda install pytorch=1.5.1 torchvision=0.6.1 cudatoolkit=9.2 -c pytorch
-    ```
-  
-* Other requirements
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-### Compiling CUDA operators
-```bash
-cd ./models/ops
-sh ./make.sh
-# unit test (should see all checking is True)
-python test.py
-```
-
-## Usage
-
-### Dataset preparation
-
-Please download [COCO 2017 dataset](https://cocodataset.org/) and organize them as following:
-
-```
-code_root/
-└── data/
-    └── coco/
-        ├── train2017/
-        ├── val2017/
-        └── annotations/
-        	├── instances_train2017.json
-        	└── instances_val2017.json
-```
-
-### Training
-
-#### Training on single node
-
-For example, the command for training Deformable DETR on 8 GPUs is as following:
-
-```bash
-GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 8 ./configs/r50_deformable_detr.sh
-```
-
-#### Training on multiple nodes
-
-For example, the command for training Deformable DETR on 2 nodes of each with 8 GPUs is as following:
-
-On node 1:
-
-```bash
-MASTER_ADDR=<IP address of node 1> NODE_RANK=0 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 16 ./configs/r50_deformable_detr.sh
-```
-
-On node 2:
-
-```bash
-MASTER_ADDR=<IP address of node 1> NODE_RANK=1 GPUS_PER_NODE=8 ./tools/run_dist_launch.sh 16 ./configs/r50_deformable_detr.sh
-```
-
-#### Training on slurm cluster
-
-If you are using slurm cluster, you can simply run the following command to train on 1 node with 8 GPUs:
-
-```bash
-GPUS_PER_NODE=8 ./tools/run_dist_slurm.sh <partition> deformable_detr 8 configs/r50_deformable_detr.sh
-```
-
-Or 2 nodes of  each with 8 GPUs:
-
-```bash
-GPUS_PER_NODE=8 ./tools/run_dist_slurm.sh <partition> deformable_detr 16 configs/r50_deformable_detr.sh
-```
-#### Some tips to speed-up training
-* If your file system is slow to read images, you may consider enabling '--cache_mode' option to load whole dataset into memory at the beginning of training.
-* You may increase the batch size to maximize the GPU utilization, according to GPU memory of yours, e.g., set '--batch_size 3' or '--batch_size 4'.
-
-### Evaluation
-
-You can get the config file and pretrained model of Deformable DETR (the link is in "Main Results" session), then run following command to evaluate it on COCO 2017 validation set:
-
-```bash
-<path to config file> --resume <path to pre-trained model> --eval
-```
-
-You can also run distributed evaluation by using ```./tools/run_dist_launch.sh``` or ```./tools/run_dist_slurm.sh```.
+可复现
