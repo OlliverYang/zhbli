@@ -96,6 +96,13 @@ Scenarios of possible adversarial attacks can be categorized along different dim
 
 \textit{Un-universal attacks v.s. Universal attacks} In the setting of un-universal attacks, the attacker has to generate one perturbation of every new data, which is time costing. In the setting of the universal attacks, only one perturbation is generated and used to every data point of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers, which is no time/computation cost.
 
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.7\textwidth]{images/network_v5.pdf}
+  \caption{The training pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the \textit{fake target} $p$ into $\textbf x$, the tracker outputs the location and size of the \textit{fake target} instead of the real target.}
+  \label{fig:net}
+\end{figure*}
+
 \textit{Optimisation based attack and GAN based attack} The optimisation based attack do loops to generate perturbations. The loop is time costing. To avoid this, the GAN based method use GAN to generate perturbation for one datapoint without loop. However, these methods need to run a GAN network for every datapoint, which occupy the GPU memory and time. In this paper, we generate perturbations in an off-line manner, which do not need the loop and network feed forward.
 
 \textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
@@ -114,13 +121,6 @@ RTAA \cite{RTAA} takes temporal motion into consideration when generating lightw
 Targeted attacks to follow an erroneous path which looks realistic are crucial to deceive the tracking system without raising any suspicion in the real-world applications.
 SPARK \cite{SPARK} computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers. However, SPARK needs to generate distinct adversarial example for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time. The recent real-time attacker in \cite{TTP} exclusively uses the template image to generate temporally-transferable perturbation in a one-shot manner, and then adds it to every search image. However, this method still needs to generate perturbations for each individual video, and its targeted attack setting requires diverse perturbations from several runs of network inference. It is ill-suited to attack a real-world online-tracking system when we can not get access to the limited computational resources. In this paper, however, we propose video-agnostic perturbations which allow perturbing a novel video to come at no additional cost except the mere addition and pasting operations.
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=0.48\textwidth]{images/network_v5.pdf}
-\caption{The training pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and pasting the \textit{fake target} $p$ into $\textbf x$, the tracker outputs the location and size of the \textit{fake target} instead of the real target.}
-\label{fig:net}
-\end{figure}
-
 % 方法
 \section{Method}
 
@@ -128,14 +128,13 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
  
 \subsection{Problem Definition}
 
-Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$.
-$B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame.
-The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state.
-In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame.
-At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network, and the resulting features are processed by some non-shared layers and fused by depth-wise separable correlation. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$ in an anchor-free manner. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
+Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$. $B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame. The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state. In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame. At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network and then fused using a channel-by-channel mutual correlation operation:
+\begin{equation}
+  f_{i}(\mathbf{z}, \mathbf{x})=\psi_{i}(\phi(\mathbf{z})) \star \psi_{i}(\phi(\mathbf{x})), i \in\{\mathrm{cls}, \text { reg }\}
+\end{equation}
+where $\star$ denotes the channel-by-channel correlation operation, $\phi(\cdot)$ denotes the feature extractor of the twin network, $\psi_i(\cdot)$ denotes the layer specific to the classification or regression task, and $i$ denotes the specific task type ($\mathrm{cls}$ denotes the classification task and $\mathrm{reg}$ denotes the regression task). $\psi_{\mathrm{cls}}$ and $\psi_{\mathrm{reg}}$ are both designed as two convolutional layers for adapting generic features to the feature space specific to the classification/regression task. $\psi_{\mathrm{cls}}$ and $\psi_{\mathrm{reg}}$ extracted features have the same size. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$ in an anchor-free manner. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
 
-Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}).
-Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
 
 \subsection{Generating Video-Agnostic Perturbations}
 
@@ -161,6 +160,44 @@ Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and 
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
 
+\begin{algorithm}[tb]
+  \caption{Training Process}
+  \label{alg:algorithm}
+  \textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $\phi$, and max iteration number $N$.\\
+  \textbf{Output}: Imperceptible perturbation $\delta$, and adversarial patch $p$.
+  \begin{algorithmic}[1] %[1] enables line numbers
+  \STATE Let $k = 0$.
+  \WHILE{$k < N$}
+  \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+  \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
+  \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
+  \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
+  \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
+  \STATE Calculate the \textit{fake target} position $\{l^x, l^y, w, h\}$ with respect to the search image.
+  \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
+  \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
+  \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
+  \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
+  \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
+  \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
+  \STATE $k = k + 1.$
+  \ENDWHILE
+  \STATE \textbf{return} $\delta_N, p_N.$
+  \end{algorithmic}
+  \label{alg}
+\end{algorithm}
+
+\begin{equation}
+  \mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
+\end{equation}  
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.95\textwidth]{images/vis_v4.pdf}
+  \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
+  \label{fig:vis}
+\end{figure*}
+
 \textit{Target Generation} The target is used to calcutate the loss. The target composed of three part: classification target, regression target and quality estimation target. Specifically, for classification, location $(x,y)$ on feature map $\psi_{\mathrm{cls}}$ is considered as a positive sample if its corresponding location $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ on the input image falls into the fake bounding box, and vice versa are considered as negative samples. $s=8$ denotes the total step length of the feature extraction network.
 
 In the regression branch, the last convolution layer predicts the distance of position $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ to the four edges of the fake target labeled box, denoted as the four-dimensional vector $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$. Thus, the regression label of position $(x,y)$ can be expressed as:
@@ -174,10 +211,6 @@ In the regression branch, the last convolution layer predicts the distance of po
 where $(x_0, y_0)$ and $(x_1, y_1)$ denote the coordinates of the upper-left and lower-right corners of the fake target labeling box $B^*$, respectively.
 
 SiamFC++ assumes that feature pixels near the center of the target will have higher importance than other pixels.Following the design of SiamFC++, we use a $1 \times 1$ convolutional layer for quality assessment, i.e., to learn the intersection over union (IoU) score of the predicted border to the fake target labeled box:
-
-\begin{equation}
-  \mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
-\end{equation}  
 
 \textit{Training Objective} The loss function is calculated as follows:
 \begin{equation}
@@ -213,40 +246,6 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 \end{equation}
 
 Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
-
-\begin{algorithm}[tb]
-  \caption{Training Process}
-  \label{alg:algorithm}
-  \textbf{Input}: Training dataset $\mathcal{V}$, Siamese tracker $\phi$, and max iteration number $N$.\\
-  \textbf{Output}: Imperceptible perturbation $\delta$, and adversarial patch $p$.
-  \begin{algorithmic}[1] %[1] enables line numbers
-  \STATE Let $k = 0$.
-  \WHILE{$k < N$}
-  \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
-  \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
-  \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-  \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
-  \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-  \STATE Calculate the \textit{fake target} position $\{l^x, l^y, w, h\}$ with respect to the search image.
-  \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (l^x, l^y), (w, h)).$
-  \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
-  \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{l^x, l^y, w, h\}$.
-  \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-  \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
-  \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
-  \STATE $k = k + 1.$
-  \ENDWHILE
-  \STATE \textbf{return} $\delta_N, p_N.$
-  \end{algorithmic}
-  \label{alg}
-\end{algorithm}
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.95\textwidth]{images/vis_v4.pdf}
-  \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
-  \label{fig:vis}
-\end{figure*}
   
 \textit{Optimisation} At each training step, the perturbations are updated as follows:
 \begin{gather}
