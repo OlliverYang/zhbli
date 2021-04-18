@@ -20,17 +20,16 @@
 \newcommand{\eg}{e.g.}
 \newcommand{\ie}{i.e.}
 
+% 题目
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
-\title{Bare Demo of IEEEtran.cls\\ for IEEE Journals}
-\author{Michael~Shell,~\IEEEmembership{Member,~IEEE,}
-        John~Doe,~\IEEEmembership{Fellow,~OSA,}
-        and~Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
-\thanks{M. Shell was with the Department
-of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
-GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
-\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
-\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+\title{Video-Agnostic Perturbations: Efficient Targeted Attacks for Siamese Visual Tracking}
+\author{Zhenbang Li, Bing Li, Jin Gao, Liang Li, Weiming Hu
+\thanks{This work is supported by the National Key R\&D Program of China (No. 2018AAA0102802, No. 2018AAA0102803, No. 2018AAA0102800), the NSFC-General Technology Collaborative Fund for Basic Research (Grant No. U1636218), the Natural Science Foundation of China (Grant No. 61751212, 61721004, 61772225, 61972394), the Key Research Program of Frontier Sciences, CAS (Grant No. QYZDJ-SSW-JSC040), and the National Natural Science Foundation of Guangdong (No. 2018B030311046). \textit{(Corresponding author: Jin Gao.)}}
+\thanks{Z. Li, B. Li, J. Gao are with the National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: zhenbang.li@nlpr.ia.ac.cn; bli@nlpr.ia.ac.cn; jin.gao@nlpr.ia.ac.cn).}
+\thanks{L. Li is with the Brain Science Center, Beijing Institute of Basic Medical Sciences, Beijing, China (e-mail: liang.li.brain@aliyun.com).}
+\thanks{W. Hu is with CAS Center for Excellence in Brain Science and Intelligence Technology, National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: wmhu@nlpr.ia.ac.cn).}
+}
 \markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
 \maketitle
@@ -38,7 +37,7 @@ GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this %
 % 摘要
 \begin{abstract}
 Siamese trackers are shown to be vulnerable to adversarial attacks recently. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. The question is what if we can not get access to the limited computational resources in the real-world online-tracking phase.
-In this paper, we show the existence of video-agnostic perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be universal and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. We will make our code publicly available.
+In this paper, we show the existence of video-agnostic perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be universal and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. The attack performance is state-of-the-art: drop the presion score of OTB2015 from 0.861 to 0.048, and 0.928 for the fake trajectory. The black box attack performance is also good. We will make our code publicly available.
 \end{abstract}
 
 % 关键字
@@ -90,8 +89,14 @@ In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas 
 \subsection{Adversarial Attacks}
 
 Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. 
-%Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
+Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
+
+\textit{Write box attack v.s. Black box attack} In the write box attack setting, the attacker knows every thing about the system, including the parameters of the network, the training/testing dataset and so on. In the black box setting, the attacker do not know the parameters of the network. This paper focus on the write box attack. However, although we train perturbations using the known paramters, we surprisely find that the trained perturbations can do black attack on different trackers.
+
+\textit{Un-universal attacks v.s. Universal attacks} In the setting of un-universal attacks, the attacker has to generate one perturbation of every new data, which is time costing. In the setting of the universal attacks, only one perturbation is generated and used to every data point of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers, which is no time/computation cost.
+
+\textit{Optimisation based attack and GAN based attack} The optimisation based attack do loops to generate perturbations. The loop is time costing. To avoid this, the GAN based method use GAN to generate perturbation for one datapoint without loop. However, these methods need to run a GAN network for every datapoint, which occupy the GPU memory and time. In this paper, we generate perturbations in an off-line manner, which do not need the loop and network feed forward.
 
 \textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
 Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
@@ -135,6 +140,8 @@ Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbin
 \subsection{Generating Video-Agnostic Perturbations}
 
 In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers.
+At beginning, each element in $\delta$ is initialized to 0.
+$p$ is initialized with a normal distribution, with a mean of 127 and a standard deviation of 1.
 During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$.
 The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
@@ -154,6 +161,24 @@ Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and 
 \textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).
 \end{equation}
 
+\textit{Target Generation} The target is used to calcutate the loss. The target composed of three part: classification target, regression target and quality estimation target. Specifically, for classification, location $(x,y)$ on feature map $\psi_{\mathrm{cls}}$ is considered as a positive sample if its corresponding location $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ on the input image falls into the fake bounding box, and vice versa are considered as negative samples. $s=8$ denotes the total step length of the feature extraction network.
+
+In the regression branch, the last convolution layer predicts the distance of position $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ to the four edges of the fake target labeled box, denoted as the four-dimensional vector $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$. Thus, the regression label of position $(x,y)$ can be expressed as:
+
+\begin{equation}
+  \begin{array}{ll}
+  l^{*}=\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right)-x_{0}, \quad t^{*}=\left(\left\lfloor\frac{s}{2}\right\rfloor+y s\right)-y_{0} \\
+  r^{*}=x_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right), \quad b^{*}=y_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+y s\right)
+  \end{array}
+\end{equation}
+where $(x_0, y_0)$ and $(x_1, y_1)$ denote the coordinates of the upper-left and lower-right corners of the fake target labeling box $B^*$, respectively.
+
+SiamFC++ assumes that feature pixels near the center of the target will have higher importance than other pixels.Following the design of SiamFC++, we use a $1 \times 1$ convolutional layer for quality assessment, i.e., to learn the intersection over union (IoU) score of the predicted border to the fake target labeled box:
+
+\begin{equation}
+  \mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
+\end{equation}  
+
 \textit{Training Objective} The loss function is calculated as follows:
 \begin{equation}
 \begin{array}{l}
@@ -166,8 +191,28 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \end{array}
 \label{eq:loss}
 \end{equation}
-\textcolor{black} %(SiamFC++)
-{where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position and size of the \textit{fake target}. $\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples in the training phase, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result, $L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment, and $L_{\mathrm{reg}}$ denotes the IoU loss \cite{iou-loss} for bounding box regression. Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.}
+where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position and size of the \textit{fake target}. $\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples in the training phase, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result:
+
+\begin{equation}
+  \mathrm{FL}\left(p_{\mathrm{t}}\right)=-\alpha_{\mathrm{t}}\left(1-p_{\mathrm{t}}\right)^{\gamma} \log \left(p_{\mathrm{t}}\right)
+\end{equation}
+
+$L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment:
+
+\begin{equation}
+\begin{array}{ll}
+\ell(x, y)=L=\left\{l_{1}, \ldots, l_{N}\right\}^{\top},\\
+l_{n}=-w_{n}\left[y_{n} \cdot \log x_{n}+\left(1-y_{n}\right) \cdot \log \left(1-x_{n}\right)\right]
+\end{array}
+\end{equation}
+
+and $L_{\mathrm{reg}}$ denotes the GIoU loss \cite{GIoU} for bounding box regression.
+
+\begin{equation}
+G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
+\end{equation}
+
+Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
 
 \begin{algorithm}[tb]
   \caption{Training Process}
@@ -209,9 +254,9 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
-During training, we only optimize the values of perturbations $(\delta, p)$ and the parameters of the Siamese network remain intact.
+During training, we only optimize the values of perturbations $(\delta, p)$ and the parameters of the Siamese network remain intact. We outline this training procedure in Algorithm \ref{alg}.
 
-We outline this training procedure in Algorithm \ref{alg}.
+\subsection{Discussion: Difference between our method and the origional UAP/patch method} We firstly show that these two different attack method can be optimisated together. Then, as shown in the Experiment section, the comine of both attacks is necessary, just use one can not get good result. The patch works as a fake target, it tells the network where to look. This is necessary for targeted attack for trackers, which need to specify a wrong path. Use a fake target to mislead the path is our contribution. Compared to other work, which pre-compute several destinatios and match the similar path. This is sub-optimal because it only an approximation for the path. As shown in experiments, this method works not as good as ours. The target perturbation is used to find the fake target. It hide the real feature of the target, generating signals specific for the fake target.
 
 \subsection{Attacking the Tracker at Inference Time}
 
@@ -234,6 +279,10 @@ The tracker then takes $\tilde{\textbf z}_i=\textbf z_i+\delta$ and $\tilde{ \te
 It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 16 pixels apart.
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
 The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$. Note that the annotations of GOT-10k's test data are kept private, so we only use its validation set for our evaluation and denote it as GOT-Val.
+
+\subsubsection{Q: How can we know what is the object that the application is tracking?}
+
+In academic research, the target position of the first frame is given. In practical applicaiton, the target position of the first frame is often obtained by running an object detector on this frame. Once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
 
 \textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated imperceptible template perturbation $\delta$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
 
