@@ -50,17 +50,15 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 \section{Introduction}
 \IEEEPARstart{T}{his} Given an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the online-tracking phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
 
-\begin{figure}[htbp]
+\begin{figure*}[t]
   \centering
-  %\subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
-  %\subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
-  \includegraphics[width=0.45\textwidth]{images/1_v8.pdf}
+  \includegraphics[width=0.75\textwidth]{images/1_v8.pdf}
   \caption{An illustration of our attacks to SiamFC++ on some example tracking sequences from GOT-10k benchmark. Our approach generates the video-agnostic perturbations which can force SiamFC++ to follow a complicated trajectory at virtually no cost. This is realized by off-line training the perturbations so that the tracker mistakenly believes the \textit{fake target} area contains the object to be tracked (see the left heatmap). Moreover, the quality assessment branch in SiamFC++ is also misled to confirm this result (see the right heatmap). The \textit{fake target} size is gradually decreased.} 
   %Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations. 
   %Red represents the ground-truth bounding box, and green represents the predicted bounding box by the tracker.
   %The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
   \label{fig:1}
-\end{figure}
+\end{figure*}
 
 Recently, the robustness of Siamese trackers have attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK}. Despite their success, these attack methods are not suitable for attacking the real-world online-tracking systems built upon the small edge platforms with limited computational resources. The reason is that they still need to craft the perturbations for each video independently based on either iterative optimisation or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
 
@@ -78,14 +76,6 @@ Recently, some Siamese trackers~\cite{SiamRPN,SiamRPN++,SiamFC++} have demonstra
 In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in the decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution knowledge-free and estimation quality assessment guidelines.
 In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas the transferability of our generated adversarial attacks to the previous anchor-based trackers is also studied.
 
-\begin{figure}[t]
-  \centering
-  \subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
-  \subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
-  \caption{Visualization of the generated perturbations. Left: the template perturbations. Right: the adversarial patch.}
-  \label{fig:vis_perturbations}
-\end{figure}
-
 \subsection{Adversarial Attacks}
 
 Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. 
@@ -95,6 +85,14 @@ Scenarios of possible adversarial attacks can be categorized along different dim
 \textit{Write box attack v.s. Black box attack} In the write box attack setting, the attacker knows every thing about the system, including the parameters of the network, the training/testing dataset and so on. In the black box setting, the attacker do not know the parameters of the network. This paper focus on the write box attack. However, although we train perturbations using the known paramters, we surprisely find that the trained perturbations can do black attack on different trackers.
 
 \textit{Un-universal attacks v.s. Universal attacks} In the setting of un-universal attacks, the attacker has to generate one perturbation of every new data, which is time costing. In the setting of the universal attacks, only one perturbation is generated and used to every data point of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers, which is no time/computation cost.
+
+\begin{figure}[t]
+  \centering
+  \subfigure{\includegraphics[width=0.2\textwidth]{images/x.jpg}} \qquad
+  \subfigure{\includegraphics[width=0.2\textwidth]{images/z.jpg}}
+  \caption{Visualization of the generated perturbations. Left: the template perturbations. Right: the adversarial patch.}
+  \label{fig:vis_perturbations}
+\end{figure}
 
 \begin{figure*}[t]
   \centering
@@ -124,7 +122,7 @@ SPARK \cite{SPARK} computes incremental perturbations by using information from 
 % 方法
 \section{Method}
 
-\textcolor{black}{In this section, we introduce our video-agnostic targeted attack framework for Siamese trackers. We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., an adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Below, we formalize our targeted attacks to SiamFC++ \cite{SiamFC++}, and then introduce our perturbation strategy in detail.}
+In this section, we introduce our video-agnostic targeted attack framework for Siamese trackers. We aim to attack the tracker by adding an imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., an adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Below, we formalize our targeted attacks to SiamFC++ \cite{SiamFC++}, and then introduce our perturbation strategy in detail.
  
 \subsection{Problem Definition}
 
@@ -189,14 +187,7 @@ Subsequently, the SiamFC++ tracker $\phi(\cdot)$ takes $\tilde {\textbf x}$ and 
 
 \begin{equation}
   \mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
-\end{equation}  
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.95\textwidth]{images/vis_v4.pdf}
-  \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
-  \label{fig:vis}
-\end{figure*}
+\end{equation}
 
 \textit{Target Generation} The target is used to calcutate the loss. The target composed of three part: classification target, regression target and quality estimation target. Specifically, for classification, location $(x,y)$ on feature map $\psi_{\mathrm{cls}}$ is considered as a positive sample if its corresponding location $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ on the input image falls into the fake bounding box, and vice versa are considered as negative samples. $s=8$ denotes the total step length of the feature extraction network.
 
@@ -211,6 +202,13 @@ In the regression branch, the last convolution layer predicts the distance of po
 where $(x_0, y_0)$ and $(x_1, y_1)$ denote the coordinates of the upper-left and lower-right corners of the fake target labeling box $B^*$, respectively.
 
 SiamFC++ assumes that feature pixels near the center of the target will have higher importance than other pixels.Following the design of SiamFC++, we use a $1 \times 1$ convolutional layer for quality assessment, i.e., to learn the intersection over union (IoU) score of the predicted border to the fake target labeled box:
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.75\textwidth]{images/vis_v5.pdf}
+  \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
+  \label{fig:vis}
+\end{figure*}
 
 \textit{Training Objective} The loss function is calculated as follows:
 \begin{equation}
