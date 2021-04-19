@@ -425,6 +425,24 @@ In conclusion, all loss terms are beneficial, and the classification term is mor
 
 \subsection{Transferability Analysis}
 
+\begin{figure*}[t!]
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_BC.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_DEF.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_FM.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_IPR.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_IV.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_LR.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_MB.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_OCC.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_OPR.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_OV.png}
+    \includegraphics[width=0.3\textwidth]{images/OTB2015/success_plot_OPE_OTB100_SV.png}
+  \end{center}
+     \caption{FDSA}
+  \label{fig:globally_uav20l_1}
+\end{figure*}
+
 \textit{Transferability to Different Backbones} We evaluate the transferability of our attacks when applying the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.196. However, our perturbations do not generalize well to SiamFC++-ShuffleNet, which we conjecture to be due to the particular group convolution and channel shuffle operations in ShuffleNet.
 
