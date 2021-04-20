@@ -37,6 +37,7 @@
 % 摘要
 \begin{abstract}
 Siamese trackers are shown to be vulnerable to adversarial attacks recently. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. The question is what if we can not get access to the limited computational resources in the real-world online-tracking phase.
+
 In this paper, we show the existence of video-agnostic perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be universal and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and pasting a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition and pasting operations -- and not require gradient optimisation or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. The attack performance is state-of-the-art: drop the presion score of OTB2015 from 0.861 to 0.048, and 0.928 for the fake trajectory. The black box attack performance is also good. We will make our code publicly available.
 \end{abstract}
 
@@ -52,7 +53,7 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.48\textwidth]{images/UAP.png}
+  \includegraphics[width=0.48\textwidth]{images/UAP.pdf}
   \caption{Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.} 
   \label{fig:UAP}
 \end{figure}
@@ -212,7 +213,7 @@ SiamFC++ assumes that feature pixels near the center of the target will have hig
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.75\textwidth]{images/vis_v5.pdf}
+  \includegraphics[width=0.75\textwidth]{images/vis_v6.pdf}
   \caption{Our targeted attack results following a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
   \label{fig:vis}
 \end{figure*}
@@ -292,8 +293,6 @@ In academic research, the target position of the first frame is given. In practi
 
 \begin{table}
 \centering
-%\footnotesize
-%\tabcolsep=2.0pt
 \caption{Overall attack results on the evaluation benchmarks.}
 \begin{tabular}{c c | c | c | c}
 \toprule
@@ -334,8 +333,6 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 
 \begin{table}
 \centering
-%\footnotesize
-%\tabcolsep=2.5pt
 \caption{Contribution of each loss on GOT-Val.}
 \begin{tabular}{ccc|cc|cc} 
 \toprule
@@ -379,8 +376,6 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 
 \begin{table}
 \centering
-%\footnotesize
-%\tabcolsep=2.0pt
 \caption{Transferability to different backbones on GOT-Val.}
 \begin{tabular}{c|cc|cc|cc} 
 \toprule
@@ -400,8 +395,6 @@ ShuffleNet                & 0.766 & 0.888                        & 0.554 & 0.656
 
 \begin{table}
 \centering
-%\footnotesize
-%\tabcolsep=2.0pt
 \caption{Transferability to different tracking architectures on OTB2015.}
 \begin{tabular}{c|cc|cc} 
 \toprule
