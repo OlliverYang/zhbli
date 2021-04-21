@@ -1,10 +1,6 @@
 %!TEX program = pdflatex
-%\iffalse
 %!BIB program = bibtex
-%\fi
-
 \documentclass[journal]{IEEEtran}
-
 \usepackage{graphicx}  % 用于 includegraphics
 \usepackage{booktabs}  % 用于表格 midrule
 \usepackage{subfigure}  % show sub-figure
@@ -55,7 +51,7 @@ IEEE, IEEEtran, journal, \LaTeX, paper, template.
 
 % 引言
 \section{Introduction}
-\IEEEPARstart{T}{his} Given an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the online-tracking phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
+\IEEEPARstart{G}{iven} an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the online-tracking phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{SiamFC,SiamRPN,SiamRPN++,SiamFC++}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
 
 \begin{figure}[t]
   \centering
@@ -93,12 +89,12 @@ In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas 
 \subsection{Adversarial Attacks}
 
 Adversarial attacks to image classification were first investigated in \cite{intriguing}, which is aimed to identify the vulnerability of modern deep networks to imperceptible perturbations. 
-Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
+Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating,zhang2020adversarial,morris2020textattack,jin2020bert} and object detection \cite{wei2019transferable}.
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
 
-\textit{White box attacks v.s. Black box attacks} In the white box attack setting, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights. In the black box setting, the adversary has limited or no knowledge about the model under attack \cite{kurakin2018adversarial}. In this paper, we focus on the white box attack for siamese trackers. However, although we train perturbations using the parameters of the SiamFC++ network, we surprisely find that the trained perturbations can perform black attack on other trackers such as SiamRPN and SiamRPN++.
+\textit{White box attacks v.s. Black box attacks} In the white box attack setting \cite{meng2019white}, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights. In the black box setting \cite{cheng2018query,li2019nattack,papernot2017practical,li2020projection}, the adversary has limited or no knowledge about the model under attack \cite{kurakin2018adversarial}. In this paper, we focus on the white box attack for siamese trackers. However, although we train perturbations using the parameters of the SiamFC++ network, we surprisely find that the trained perturbations can perform black attack on other trackers such as SiamRPN and SiamRPN++.
 
-\textit{Non-universal attacks v.s. Universal attacks} In the setting of non-universal attacks, the adversary has to generate one perturbation of every new datapoint, which is time consuming. In the setting of the universal attacks, only one perturbation is generated and used for every datapoint of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers to perform efficient attack.
+\textit{Non-universal attacks v.s. Universal attacks} In the setting of non-universal attacks \cite{dai2018adversarial,li2018second,lin2017tactics}, the adversary has to generate one perturbation of every new datapoint, which is time consuming. In the setting of the universal attacks \cite{khrulkov2018art,mopuri2018nag,zhang2020understanding,mopuri2018generalizable,chen2018shapeshifter}, only one perturbation is generated and used for every datapoint of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers to perform efficient attack.
 
 \begin{figure}[t]
   \centering
