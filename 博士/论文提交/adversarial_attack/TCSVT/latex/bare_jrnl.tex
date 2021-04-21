@@ -440,7 +440,7 @@ To verify whether the perturbations generated for the template images are diffic
     \includegraphics[width=0.32\textwidth]{images/OTB2015/success_plot_OPE_OTB100_SV.png}
   \end{center}
       \caption{Attribute-based success-rate plots in OTB-2015.}
-  \label{fig:globally_uav20l_1}
+  \label{fig:attr}
 \end{figure*}
 
 \textit{Ablation Study: Influence of Training Loss} We implemented a series of experiments to analyze and evaluate the contribution of each loss component.
@@ -479,9 +479,7 @@ As shown in Table, the 16-by-16 patch can achieve ? and its area only accounts f
 The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.196. However, our perturbations do not generalize well to SiamFC++-ShuffleNet, which we conjecture to be due to the particular group convolution and channel shuffle operations in ShuffleNet.
 
 \textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} to verify the transferability to different tracking architectures.
-SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.379 while the performance of SiamRPN++ is decreased from 0.676 to 0.518. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
-
-We further analyze the perfor-mance of our method with respect to 11 attributes in OTB-2015 [22]. As suggested in OTB [22], the attributes consistof out-of-view (OV), occlusion (OCC), illumination varia-tion (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM),background clutters (BC), motion blur (MB), and in-planerotation (IPR).
+SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.379 while the performance of SiamRPN++ is decreased from 0.676 to 0.518. We further analyze the perfor-mance of our method with respect to 11 attributes in OTB-2015 [22]. As suggested in OTB [22], the attributes consistof out-of-view (OV), occlusion (OCC), illumination varia-tion (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM),background clutters (BC), motion blur (MB), and in-planerotation (IPR). Figure \ref{fig:attr} illustrates the results of the aforementioned trackers under the 11 attributes. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
 
 \subsection{Comparison with Other Methods}
 
