@@ -24,12 +24,18 @@
 \hyphenation{op-tical net-works semi-conduc-tor}
 \begin{document}
 \title{Video-Agnostic Perturbations: Efficient Targeted Attacks for Siamese Visual Tracking}
-\author{Zhenbang Li, Bing Li, Jin Gao, Liang Li, Weiming Hu
-\thanks{This work is supported by the National Key R\&D Program of China (No. 2018AAA0102802, No. 2018AAA0102803, No. 2018AAA0102800), the NSFC-General Technology Collaborative Fund for Basic Research (Grant No. U1636218), the Natural Science Foundation of China (Grant No. 61751212, 61721004, 61772225, 61972394), the Key Research Program of Frontier Sciences, CAS (Grant No. QYZDJ-SSW-JSC040), and the National Natural Science Foundation of Guangdong (No. 2018B030311046). \textit{(Corresponding author: Jin Gao.)}}
-\thanks{Z. Li, B. Li, J. Gao are with the National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: zhenbang.li@nlpr.ia.ac.cn; bli@nlpr.ia.ac.cn; jin.gao@nlpr.ia.ac.cn).}
-\thanks{L. Li is with the Brain Science Center, Beijing Institute of Basic Medical Sciences, Beijing, China (e-mail: liang.li.brain@aliyun.com).}
-\thanks{W. Hu is with CAS Center for Excellence in Brain Science and Intelligence Technology, National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: wmhu@nlpr.ia.ac.cn).}
+\author{
+  Zhenbang Li
+  \thanks{This work is supported by the National Key R\&D Program of China (No. 2018AAA0102802, No. 2018AAA0102803, No. 2018AAA0102800), the NSFC-General Technology Collaborative Fund for Basic Research (Grant No. U1636218), the Natural Science Foundation of China (Grant No. 61751212, 61721004, 61772225, 61972394), the Key Research Program of Frontier Sciences, CAS (Grant No. QYZDJ-SSW-JSC040), and the National Natural Science Foundation of Guangdong (No. 2018B030311046). \textit{(Corresponding author: Jin Gao.)}}
+  
+  \thanks{Z. Li is with the National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: zhenbang.li@nlpr.ia.ac.cn; bli@nlpr.ia.ac.cn; jin.gao@nlpr.ia.ac.cn).}
+  
+  \iffalse
+  \thanks{L. Li is with the Brain Science Center, Beijing Institute of Basic Medical Sciences, Beijing, China (e-mail: liang.li.brain@aliyun.com).}
+  \thanks{W. Hu is with CAS Center for Excellence in Brain Science and Intelligence Technology, National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: wmhu@nlpr.ia.ac.cn).}
+  \fi
 }
+
 \markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}
 {Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
 \maketitle
@@ -90,9 +96,9 @@ Adversarial attacks to image classification were first investigated in \cite{int
 Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating} and object detection \cite{wei2019transferable}.
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
 
-\textit{Write box attack v.s. Black box attack} In the write box attack setting, the attacker knows every thing about the system, including the parameters of the network, the training/testing dataset and so on. In the black box setting, the attacker do not know the parameters of the network. This paper focus on the write box attack. However, although we train perturbations using the known paramters, we surprisely find that the trained perturbations can do black attack on different trackers.
+\textit{White box attacks v.s. Black box attacks} In the white box attack setting, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights. In the black box setting, the adversary has limited or no knowledge about the model under attack \cite{kurakin2018adversarial}. In this paper, we focus on the white box attack for siamese trackers. However, although we train perturbations using the parameters of the SiamFC++ network, we surprisely find that the trained perturbations can perform black attack on other trackers such as SiamRPN and SiamRPN++.
 
-\textit{Un-universal attacks v.s. Universal attacks} In the setting of un-universal attacks, the attacker has to generate one perturbation of every new data, which is time costing. In the setting of the universal attacks, only one perturbation is generated and used to every data point of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers, which is no time/computation cost.
+\textit{Non-universal attacks v.s. Universal attacks} In the setting of non-universal attacks, the adversary has to generate one perturbation of every new datapoint, which is time consuming. In the setting of the universal attacks, only one perturbation is generated and used for every datapoint of the dataset. In this paper, we focus on generating universal perturbations for siamese trackers to perform efficient attack.
 
 \begin{figure}[t]
   \centering
@@ -109,7 +115,13 @@ Scenarios of possible adversarial attacks can be categorized along different dim
   \label{fig:net}
 \end{figure*}
 
-\textit{Optimisation based attack and GAN based attack} The optimisation based attack do loops to generate perturbations. The loop is time costing. To avoid this, the GAN based method use GAN to generate perturbation for one datapoint without loop. However, these methods need to run a GAN network for every datapoint, which occupy the GPU memory and time. In this paper, we generate perturbations in an off-line manner, which do not need the loop and network feed forward.
+\iffalse
+\textit{Optimisation based attacks and GAN based attacks}
+The optimisation based attacks are slow and can only optimize perturbation for one specific instance each time.
+To avoid this, the GAN based method use GAN to generate perturbation for one datapoint without loop. 
+However, the GAN network run for every datapoint, which occupys the GPU memory and time. 
+In this paper, we generate perturbations in an off-line manner, which do not require gradient optimisation or network inference.
+\fi
 
 \textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
 Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
@@ -141,6 +153,8 @@ Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$. $B^{gt}
 where $\star$ denotes the channel-by-channel correlation operation, $\phi(\cdot)$ denotes the feature extractor of the twin network, $\psi_i(\cdot)$ denotes the layer specific to the classification or regression task, and $i$ denotes the specific task type ($\mathrm{cls}$ denotes the classification task and $\mathrm{reg}$ denotes the regression task). $\psi_{\mathrm{cls}}$ and $\psi_{\mathrm{reg}}$ are both designed as two convolutional layers for adapting generic features to the feature space specific to the classification/regression task. $\psi_{\mathrm{cls}}$ and $\psi_{\mathrm{reg}}$ extracted features have the same size. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$ in an anchor-free manner. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
 
 Formally, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and pasting the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+
+Our attack algorithm is based on the imperceptible perturbation genration method \cite{FGSM} and adversarial patch generation method \cite{patch}. However, we do not simply apply either of above methods to trackers. In this paper, we demostrate that the imperceptible perturbations and the adversarial patch are indispensable for attacking trackers and can be jointly optimized in and end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target, which tells the tracker where the target is. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding diverse directions and use them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours. On the other hand, the imperceptible perturbation applied to the template image is optimized to find the fake target, cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target (see Figure \ref{fig:1}).
 
 \subsection{Generating Video-Agnostic Perturbations}
 
@@ -230,27 +244,27 @@ L&=\frac{\alpha}{N_{\mathrm{pos}}} \sum_{x, y} L_{\mathrm{cls}}\left(\textbf{C}_
 \end{array}
 \label{eq:loss}
 \end{equation}
-where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position and size of the \textit{fake target}. $\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples in the training phase, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result:
-
+where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the values of $\textbf{C}, \textbf{R}, \textbf{Q}$ at location $(x, y)$, respectively. $\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*$ are the fake labels generated according to the position and size of the \textit{fake target}. $\textbf 1$ is the indicator function that takes 1 if the condition in subscribe holds and takes 0 if not, $N_{\mathrm{pos}}$ denotes the number of positive samples in the training phase, $L_{\mathrm{cls}}$ denotes the focal loss \cite{focal} for classification result.
+\iffalse
 \begin{equation}
   \mathrm{FL}\left(p_{\mathrm{t}}\right)=-\alpha_{\mathrm{t}}\left(1-p_{\mathrm{t}}\right)^{\gamma} \log \left(p_{\mathrm{t}}\right)
 \end{equation}
-
-$L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment:
-
+\fi
+$L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment.
+\iffalse
 \begin{equation}
 \begin{array}{ll}
 \ell(x, y)=L=\left\{l_{1}, \ldots, l_{N}\right\}^{\top},\\
 l_{n}=-w_{n}\left[y_{n} \cdot \log x_{n}+\left(1-y_{n}\right) \cdot \log \left(1-x_{n}\right)\right]
 \end{array}
 \end{equation}
-
+\fi
 and $L_{\mathrm{reg}}$ denotes the GIoU loss \cite{GIoU} for bounding box regression.
-
+\iffalse
 \begin{equation}
 G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 \end{equation}
-
+\fi
 Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
   
 \textit{Optimisation} At each training step, the perturbations are updated as follows:
@@ -260,8 +274,6 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
 where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
 During training, we only optimize the values of perturbations $(\delta, p)$ and the parameters of the Siamese network remain intact. We outline this training procedure in Algorithm \ref{alg}.
-
-\subsection{Discussion: Difference between our method and the origional UAP/patch method} We firstly show that these two different attack method can be optimisated together. Then, as shown in the Experiment section, the comine of both attacks is necessary, just use one can not get good result. The patch works as a fake target, it tells the network where to look. This is necessary for targeted attack for trackers, which need to specify a wrong path. Use a fake target to mislead the path is our contribution. Compared to other work, which pre-compute several destinatios and match the similar path. This is sub-optimal because it only an approximation for the path. As shown in experiments, this method works not as good as ours. The target perturbation is used to find the fake target. It hide the real feature of the target, generating signals specific for the fake target.
 
 \subsection{Attacking the Tracker at Inference Time}
 
@@ -283,11 +295,7 @@ The tracker then takes $\tilde{\textbf z}_i=\textbf z_i+\delta$ and $\tilde{ \te
 \textit{Generating the Fake Trajectory} We need to predefine a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video to achieve targeted attack in the online-tracking phase, which we call the \textit{fake trajectory}. We denote the \textit{real trajectory} as $B^{gt}=\{b^{gt}_i\}_1^T$ with the bounding box ground truth.
 It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 16 pixels apart.
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$. Note that the annotations of GOT-10k's test data are kept private, so we only use its validation set for our evaluation and denote it as GOT-Val.
-
-\subsubsection{Q: How can we know what is the object that the application is tracking?}
-
-In academic research, the target position of the first frame is given. In practical applicaiton, the target position of the first frame is often obtained by running an object detector on this frame. Once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
+The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$. Because the annotations of GOT-10k's test data are kept private, we only use its validation set for our evaluation and denote it as GOT-Val. Note that the target position of the first frame is pre-defined in the academic study of object tracking, while in practical applicaiton, the target position of the first frame is often obtained by running an object detector on this frame. In this scenario, once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
 
 \textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated imperceptible template perturbation $\delta$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
 
@@ -409,16 +417,16 @@ SiamRPN                   & 0.666   & 0.876                  & 0.379   & 0.506  
 \label{tab:arch}
 \end{table}
 
-\textit{Ablation Study: Influence of Training Iterations} Table \ref{tab:iter} demonstrates the effect of the number of training iterations of the algorithm on the effectiveness of the attack. It can be observed that as the number of iterations increases, the AO value relative to the false trajectory increases significantly, while the AO value relative to the real trajectory decreases significantly. This demonstrates the effectiveness of the end-to-end training process proposed in this chapter.
-After about 30,000 training iterations, the resulting perturbation prevents the tracker from tracking most of the targets in GOT-Val, and the AO relative to the true trajectory decreases from 0.760 to 0.035. We note that the AO decreases significantly faster at the beginning of the training cycle (training iterations less than 2048) than later. This demonstrates the fast convergence capability of our end-to-end training scheme.
+\textit{Ablation Study: Influence of Training Iterations} Table \ref{tab:iter} demonstrates the effect of the number of training iterations of the algorithm on the effectiveness of the attack. It can be observed that as the number of iterations increases, the AO value with respect to the false trajectory increases significantly, while the AO value with respect to the real trajectory decreases significantly. This demonstrates the effectiveness of the end-to-end training process proposed in this chapter.
+After about 30,000 training iterations, the resulting perturbation prevents the tracker from tracking most of the targets in GOT-Val, and the AO with respect to the true trajectory decreases from 0.760 to 0.035. We note that the AO decreases significantly faster at the beginning of the training cycle (training iterations less than 2048) than later. This demonstrates the fast convergence capability of our end-to-end training scheme.
 
-To verify whether the perturbations generated for the template images are difficult to perceive, we evaluate and analyze the quality of the template images after the perturbations. The quality of the perturbed template images is evaluated by the metric SSIM. As shown in Table \ref{tab:iter}, the SSIM value of the perturbed template image gradually decreases as the training proceeds, which indicates that the difference between the perturbed template image and the original template image gradually increases due to the learned adversarial perturbation being added to the clean template image. The SSIM value ranges from 0 to 1. If the SSIM is close to 1, the difference between the perturbed template image and the original template image is smaller. If SSIM is closer to 0, it means that the difference between the perturbed template image and the original template image is larger, which means that the perturbation generated by the template image is easier to perceive. The SSIM value after convergence of this algorithm is 0.88, which means that the difference between the perturbed template image and the original template image is smaller, that is, the perturbation generated by the template image is harder to perceive (see Fig. \ref{fig:1}).
+To verify whether the perturbations generated for the template images are difficult to perceive, we evaluate and analyze the quality of the template images after the perturbations. The quality of the perturbed template images is evaluated by the metric SSIM. As shown in Table \ref{tab:iter}, the SSIM value of the perturbed template image gradually decreases as the training proceeds, which indicates that the difference between the perturbed template image and the original template image gradually increases due to the learned adversarial perturbation being added to the clean template image. The SSIM value ranges from 0 to 1. If the SSIM is close to 1, the difference between the perturbed template image and the original template image is small. If SSIM is closer to 0, it means that the difference between the perturbed template image and the original template image is large, which means that the perturbation generated by the template image is easier to perceive. The SSIM value after convergence of this algorithm is 0.88, which means that the difference between the perturbed template image and the original template image is small, that is, the perturbation generated by the template image is harder to perceive (see Figure \ref{fig:1}).
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.48\textwidth]{images/iter.png}
   \caption{Influence of the training iteration number on GOT-Val.} 
-  \label{fig:1}
+  \label{fig:iter}
 \end{figure}
 
 \begin{figure*}[t!]
@@ -441,11 +449,33 @@ To verify whether the perturbations generated for the template images are diffic
 
 \textit{Ablation Study: Influence of Training Loss} We implemented a series of experiments to analyze and evaluate the contribution of each loss component.
 In table \ref{tab:loss}, we report the attack results on the GOT-Val dataset. The results reflect the differences in attack performance for different perturbations obtained by training using different combinations of the loss terms in Eq. \ref{eq:loss}.
-The AO value of the tracker relative to the true trajectory decreases from 0.760 to 0.703 when only adversarial information is generated using quality assessment loss, indicating that quality assessment loss can cause a slight degradation in the performance of the tracker. This is because the perturbation information generated using quality assessment loss interferes with the tracker's ability to select the best target frame.
-However, the tracker's AO value relative to the spurious trajectory is only 0.044, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to generate tracking frames along the specified trajectory.
-When only the adversarial information is generated using regression loss, the AO value of the tracker relative to the true trajectory decreases from 0.760 to 0.165, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the true target border position.
-When only adversarial information is generated using classification loss, the tracker's AO value decreases from 0.760 to 0.086 relative to the true trajectory and up to 0.718 relative to the false trajectory. this is because the perturbation information generated using classification loss causes the tracker to localize to the false target instead of the true target's location.
+The AO value of the tracker with respect to the true trajectory decreases from 0.760 to 0.703 when only adversarial information is generated using quality assessment loss, indicating that quality assessment loss can cause a slight degradation in the performance of the tracker. This is because the perturbation information generated using quality assessment loss interferes with the tracker's ability to select the best target frame.
+However, the tracker's AO value with respect to the spurious trajectory is only 0.044, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to generate tracking frames along the specified trajectory.
+When only the adversarial information is generated using regression loss, the AO value of the tracker with respect to the true trajectory decreases from 0.760 to 0.165, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the true target border position.
+When only adversarial information is generated using classification loss, the tracker's AO value decreases from 0.760 to 0.086 with respect to the true trajectory and up to 0.718 with respect to the false trajectory. this is because the perturbation information generated using classification loss causes the tracker to localize to the false target instead of the true target's location.
 In conclusion, all loss terms are beneficial, and the classification term is more important than the quality assessment term.
+
+\textit{Ablation Study: Influence of the Adversarial Patch Size} 
+It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 32-by-32, 16-by-16 and 8-by-8 to test the efficiency of their attacks.
+As shown in Table, the 16-by-16 patch can achieve ? and its area only accounts for ?\% of the searched image area.
+
+\begin{figure}[t!]
+  \begin{center}
+    \includegraphics[width=0.48\textwidth]{images/patch_size/patch_size.png}
+  \end{center}
+  \caption{Influence of patch size.}
+  \label{fig:patch_size_table}
+\end{figure}
+
+\begin{figure}[t!]
+  \begin{center}
+    \includegraphics[width=0.15\textwidth]{images/patch_size/32.jpg}
+    \includegraphics[width=0.15\textwidth]{images/patch_size/16.jpg}
+    \includegraphics[width=0.15\textwidth]{images/patch_size/8.jpg}
+  \end{center}
+  \caption{Influence of patch size.}
+  \label{fig:patch_size_vis}
+\end{figure}
 
 \subsection{Transferability Analysis}
 
@@ -477,7 +507,7 @@ We further analyze the perfor-mance of our method with respect to 11 attributes 
   \label{tab:untargeted}
 \end{table}
 
-We compare the twin network attack method proposed in this chapter with the latest attack methods, including the AlexNet-based untargeted attack method CSA \cite{CSA}, and two other targeted attack methods: the AlexNet-based FAN \cite{FAN} and the ResNet50 -based TTP \ cite{TTP}. We report the accuracy scores relative to the real/false trajectories in table \ref{tab:untargeted}. CSA \cite{CSA} is a twin tracking attack method called cooling-shrinking attack. CSA can suppress the peak region on the heat map reflecting the target location, which is used to attack the tracker's targeting ability; CSA can also simultaneously force the tracker's predicted bounding box to shrink, which is used to attack the tracker's the border regression capability of the tracker. However, the method requires running a generative network for each frame to obtain adversarial information, so the attack time is as high as 4720 ms, making it difficult to meet the demand for real-time tracking. CSA reduces the accuracy score relative to the real trajectory from 0.851 to 0.458, and the attack performance is more limited. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for target tracking. In the literature \cite{FAN}, Liang et al. proposed a fast attack network (FAN) for attacking SiamFC trackers. To perform untargeted attacks, the FAN proposes a drift loss that shifts the tracker's prediction of the target's position. Over time, the tracking error accumulates until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of a particular trajectory region.FAN can reduce the accuracy score relative to the real trajectory from 0.720 to 0.180, which has better performance for non-targeted attacks. However, the accuracy score is only 0.420 with respect to false trajectories, which has a more limited targeted attack performance. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. In the literature \cite{TTP}, Nakka et al. propose a temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker.TTP generates a single adversarial perturbation from the template image only and adds this perturbation to each search image of the video TTP reduces the accuracy score relative to the real trajectory from 0.910 to 0.080, which has a better performance for non-targeted attacks. However, the accuracy score of this method is only 0.692 with respect to the false trajectory, and the performance of targeted attacks is more limited. In addition, the method needs to run a generative network for each video to obtain adversarial information, and thus requires the computational and storage resources of the target tracking platform, which is difficult to deploy to resource-constrained embedded platforms. Our method can reduce the accuracy score from 0.861 to 0.048 with respect to real trajectories and up to 0.928 with respect to false trajectories, which is significantly better than other methods, and only needs to perform additive operations and image paste operations to generate adversarial information for any video without gradient optimization or network inference.
+We compare the attack method proposed in this paper with the latest attack methods, including the AlexNet-based untargeted attack method CSA \cite{CSA}, and two other targeted attack methods: the AlexNet-based FAN \cite{FAN} and the ResNet50-based TTP \cite{TTP}. We report the accuracy scores with respcet to the real/false trajectories in table \ref{tab:untargeted}. CSA \cite{CSA} is a siamese tracking attack method called cooling-shrinking attack. CSA can suppress the peak region on the heat map reflecting the target location, which is used to attack the tracker's targeting ability. CSA can also simultaneously force the tracker's predicted bounding box to shrink, which is used to attack the bounding the box regression capability of the tracker. However, this method requires running a generative network for each frame to obtain adversarial information, so the attack time is as high as 4720 ms, making it difficult to meet the demand for real-time tracking. CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for siamese trackers. Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692 , which demonstrates that TTP's performance of targeted attacks is more limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.048. The accuracy score is up to 0.928 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation and the image paste operation to generate adversarial information for any video without gradient optimization or network inference.
 
 \begin{figure}[t!]
   \begin{center}
