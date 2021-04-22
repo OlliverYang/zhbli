@@ -452,24 +452,23 @@ When only adversarial information is generated using classification loss, the tr
 In conclusion, all loss terms are beneficial, and the classification term is more important than the quality assessment term.
 
 \textit{Ablation Study: Influence of the Adversarial Patch Size} 
-It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 32-by-32, 16-by-16 and 8-by-8 to test the efficiency of their attacks.
-As shown in Table, the 16-by-16 patch can achieve ? and its area only accounts for ?\% of the searched image area.
+It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 32-by-32, 16-by-16 and 8-by-8 (Figure \ref{fig:patch_size_vis}) to test the efficiency of their attacks. During training and test, the patch size is fixed. We evaluate the AO score of SiamFC++ on the perturbed GOT-10 Val dataset.
+As shown in Figure \ref{fig:patch_size_table}, the 16-by-16 patch can make the AO score drop dramatically to 0.12 and its area only accounts for 0.39\% of the searched image area.
 
 \begin{figure}[t!]
   \begin{center}
     \includegraphics[width=0.48\textwidth]{images/patch_size/patch_size.png}
   \end{center}
-  \caption{Influence of patch size.}
+  \caption{Influence of the adversarial patch size. The 16-by-16 patch can make the AO score drop dramatically to 0.12 and its area only accounts for 0.39\% of the searched image area.}
   \label{fig:patch_size_table}
 \end{figure}
 
-\begin{figure}[t!]
-  \begin{center}
-    \includegraphics[width=0.15\textwidth]{images/patch_size/32.jpg}
-    \includegraphics[width=0.15\textwidth]{images/patch_size/16.jpg}
-    \includegraphics[width=0.15\textwidth]{images/patch_size/8.jpg}
-  \end{center}
-  \caption{Influence of patch size.}
+\begin{figure}
+  \centering
+  \subfigure[32$\times$32]{\label{fig:a}\includegraphics[width=0.15\textwidth]{images/patch_size/32.jpg}}
+  \subfigure[16$\times$16]{\label{fig:b}\includegraphics[width=0.15\textwidth]{images/patch_size/16.jpg}}
+  \subfigure[8$\times$8]{\label{fig:c}\includegraphics[width=0.15\textwidth]{images/patch_size/8.jpg}}
+  \caption{Adversarial patches of different sizes.}
   \label{fig:patch_size_vis}
 \end{figure}
 
@@ -483,11 +482,9 @@ SiamRPN uses an RPN network to perform location regression and target classifica
 
 \subsection{Comparison with Other Methods}
 
-\begin{table}[]
+\begin{table}[t]
   \centering
-  %\footnotesize
-  %\tabcolsep=2.0pt
-  \caption{Precision score with respect to the \textit{real / fake trajectory} on OTB2015.}
+  \caption{Precision score with respect to the real/fake trajectory on OTB2015.}
   \begin{tabular}{@{}cccccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{Method} & \multirow{2}{*}[-2pt]{Tracker} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular}} & \multicolumn{2}{c}{Perturbed Videos} \\ \cmidrule(l){5-6} 
@@ -522,6 +519,13 @@ Experiments on several popular datasets show that our method can effectively foo
 % 引文
 \bibliographystyle{IEEEtran}
 \bibliography{ref}
+
+% 作者
+%\vfill  % 距离更远了
+\enlargethispage{-5in}  % 距离近了些
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{images/zhbli.jpg}}]{Zhenbang Li}
+received the B.S. degree in computer science and technology from Beijing Institute of Technology, Beijing, China, in 2016. Currently, he is a Ph.D. student in Institute of Automation, Chinese Academy of Sciences, Beijing, China. His research interests include object tracking and deep learning.
+\end{IEEEbiography}
 
 \end{document}
 
