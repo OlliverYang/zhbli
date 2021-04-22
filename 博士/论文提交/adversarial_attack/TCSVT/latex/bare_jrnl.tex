@@ -149,7 +149,7 @@ In this section, we introduce our video-agnostic targeted attack framework for S
 
 Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$. $B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame. The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state. In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame. At each time-step, the template image $\textbf z$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network and then fused using a channel-weise correlation operation:
 \begin{equation}
-  f_{i}(\mathbf{z}, \mathbf{x})=\psi_{i}(\phi(\mathbf{z})) \star \psi_{i}(\phi(\mathbf{x})), i \in\{\mathrm{cls}, \text {reg}\}
+  f_{i}(\mathbf{z}, \mathbf{x})=\psi_{i}(\phi(\mathbf{z})) \star \psi_{i}(\phi(\mathbf{x})), i \in\{\mathrm{cls}, \mathrm{reg}\}
 \end{equation}
 where $\star$ denotes the channel-wise correlation operation, $\phi(\cdot)$ denotes the feature extractor of the Siamese network, $\psi_i(\cdot)$ denotes the layer specific to the classification or regression task, and $i$ denotes the specific task type ($\mathrm{cls}$ denotes the classification task and $\mathrm{reg}$ denotes the regression task). $\psi_{\mathrm{cls}}$ and $\psi_{\mathrm{reg}}$ are both designed as two convolutional layers for adapting generic features to the feature space specific to the classification/regression task. The fused features then act as input to a head network, which predicts a classification map $\textbf{C}$, a bounding box regression map $\textbf{R}$, and a quality assessment map $\textbf{Q}$ in an anchor-free manner. In short, $\textbf C$ encodes the probability of each spatial position to contain the target, $\textbf R$ regresses the bounding box of the target, and $\textbf Q$ predicts the target state estimation quality. The final bounding box is then generated according to $\textbf{C}$, $\textbf{R}$ and $\textbf{Q}$.
 
@@ -168,9 +168,9 @@ As mentioned before, the patch is regarded as a \textit{fake target} and pasted 
 The width/height of the \textit{fake target} is randomly selected between 32 pixels and 128 pixels.
 The perturbed search image is generated as follows:
 \begin{equation}
-\tilde{\textbf x} = A(\textbf x, p_k, (x_0, y_0, x_1, y_1)),
+\tilde{\textbf x} = A(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
 \end{equation}
-where $(x_0, y_0)$ and $(x_1, y_1)$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. $A$ is a patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{w\times h\times 3}$, and then pastes the resized patch $\hat{p}_k$ into the search image $\textbf x$ at location $(l^x,l^y)$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf  z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
+where $ \hat b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. $A$ is a patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{(x_1-x_0)\times (y_1-y_0)\times 3}$, and then pastes the resized patch $\hat{p}_k$ into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
 
 \begin{algorithm}[tb]
   \caption{Training Process}
@@ -186,8 +186,8 @@ where $(x_0, y_0)$ and $(x_1, y_1)$ denote the coordinates of the upper-left and
   \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
   \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
   \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
-  \STATE $\tilde{\textbf x} = A(\textbf x, p_k, (x_0, y_0, x_1, y_1)).$
-  \STATE $\textbf{C, R, Q} = \phi(\tilde {\textbf x}, \tilde{\textbf z}).$
+  \STATE $\tilde{\textbf x} = A(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
+  \STATE $\textbf{C, R, Q} = tracker(\tilde {\textbf x}, \tilde{\textbf z}).$
   \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
   \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
   \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
@@ -212,10 +212,10 @@ In the regression branch, the last convolution layer predicts the distance of po
   \end{array}
 \end{equation}
 
-SiamFC++ assumes that feature pixels near the center of the target will have higher importance than other pixels. Following the design of SiamFC++, we use a $1 \times 1$ convolutional layer for quality assessment, i.e., to learn the intersection over union (IoU) score of the predicted box and $B^{fake}$:
+SiamFC++ assumes that feature pixels near the center of the target will have higher importance than other pixels. Following the design of SiamFC++, we use a $1 \times 1$ convolutional layer for quality assessment, i.e., to learn the intersection over union (IoU) score of the predicted box $b^{pred}$ and $b^{fake}$:
 
 \begin{equation}
-  \mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B^{pred}, B^{fake}\right)}{\operatorname{Union}\left(B^{pred}, B^{fake}\right)}
+  \mathrm{IoU}^{*}=\frac{\operatorname{ Intersection }\left(b^{pred}, b^{fake}\right)}{\operatorname{Union}\left(b^{pred}, b^{fake}\right)}
 \end{equation}
 
 \begin{figure*}[t]
@@ -272,9 +272,9 @@ During training, we only optimize the values of perturbations $(\delta, p)$ and 
 
 Once the perturbations $(\delta, p)$ is trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition and pasting of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b_i=\{l^x_i, l^y_i, w_i, h_i\}$ with respect to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b_i$:
+During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$ with respect to the search image $\textbf x_i$, and paste $p$ into $\textbf x_i$ according to $\hat b^{fake}_i$:
 \begin{equation}
-\tilde{\textbf x}_i = A(\textbf x_i, p, (l^x_i, l^y_i), (w_i, h_i)).
+\tilde{\textbf x}_i = A(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
 \end{equation}
 The tracker then takes $\tilde{\textbf z}_i=\textbf z_i+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
 
@@ -526,7 +526,7 @@ received the B.S. degree from the Beihang University, Beijing, China in 2010, an
 
 \begin{IEEEbiographynophoto}
 {YaYa Shi}
-received the B.S. degree from the Hefei University of Technology, Anhui, China in 2018. Currently, he is a Ph.D. student in the University of Science and Technology of China, Anhui, China. Her research interests include video captioning and deep learning.
+received the B.S. degree from the Hefei University of Technology, Anhui, China in 2018. Currently, She is a Ph.D. student in the University of Science and Technology of China, Anhui, China. Her research interests include video captioning and deep learning.
 \end{IEEEbiographynophoto}
 
 \begin{IEEEbiographynophoto}
