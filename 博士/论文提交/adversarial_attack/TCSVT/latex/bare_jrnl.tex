@@ -201,9 +201,10 @@ where $(l^x, l^y)$ and $(w, h)$ represent the position and size of the \textit{f
 \end{algorithm}
 
 \textit{Generating Fake Labels} The fake lables are composes of three parts: fake classification label $\textbf{C}^*$, fake regression label $\textbf{R}^*$ and fake quality estimation label $\textbf{Q}^*$.
+
 For classification, location $(x,y)$ on feature map $\psi_{\mathrm{cls}}$ is considered as a positive sample (i.e., $\textbf{C}^*_{x,y} = 1$) if its corresponding location $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ on the input image falls into the fake bounding box, and vice versa are considered as negative samples (i.e., $\textbf{C}^*_{x,y} = 0$). $s=8$ denotes the total step length of the feature extraction network.
 
-In the regression branch, the last convolution layer predicts the distance of position $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ to the four edges of the fake target labeled box, denoted as the four-dimensional vector $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$. Thus, the regression label of position $(x,y)$ can be expressed as:
+In the regression branch, the last convolution layer predicts the distance of position $\left(\left\lfloor\frac{s}{2}\right\rfloor+x s,\left\lfloor\frac{s}{2}\right\rfloor+y s\right)$ to the four edges of the fake target labeled box, denoted as the four-dimensional vector $\boldsymbol{t}^{*}=\left(l^{*}, t^{*}, r^{*}, b^{*}\right)$. Thus, the fake regression label $\textbf{R}^*$ at position $(x,y)$ can be expressed as:
 
 \begin{equation}
   \begin{array}{ll}
