@@ -154,45 +154,34 @@ A straight forward way to achieve targeted attack for Siamese trackers is direct
 
 \begin{equation}
 \begin{gathered}
-  \min L(y^{target}, f(x', z'))\\
-  x' = x + \delta_x \\
-  z' = z + \delta_z\\
-  \text{s.t.}\ ||\delta_x||_p \le \epsilon, ||\delta_z||_p \le \epsilon
+  \min\limits_{\delta_{\textbf{x}_{i}}, \delta_{\textbf{z}_{i}}} L(y^{fake}, f(\textbf{x}_i + \delta_{\textbf{x}_{i}}, \textbf{z}_0 + \delta_{\textbf{z}_{i}}))\\
+  \text{s.t.}\ ||\delta_{\textbf{x}_i}||_p \le \epsilon, ||\delta_{\textbf{z}_i}||_p \le \epsilon,
 \end{gathered}
 \end{equation}
-Where $z$ is generated using the first frame of the current video. $x$ is generated using the current frame. $y^{target}$ is the fake bounding box that we want the tracker to output.
+where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_0)$ is the search-template pair of the video being tracked. $y^{target}$ is the fake bounding box that we want the tracker to output at frame $i$.
 % 不写 BIM，原因是BIM的优化为 xi+1 = xi + delta, 与上面公式不太好兼容。
-However, these methods require perturbing the input image pair $(x, z)$ frame by frame, which comes at a non-negligible cost, considering that VOT is a real-time task.
+However, these methods require perturbing the input image pair $(\textbf{x}, \textbf{z})$ frame by frame, which comes at a non-negligible cost, considering that VOT is a real-time task.
 As a consequence, universal adversarial perturbations \cite{UAP, shafahi2020universal} are more practical for attacking Siamese trackers:
 \begin{equation}
   \begin{gathered}
-    \min \frac{1}{N}\sum_{i=1}^N L(y^{target}, f(x'_i, z'_i))\\
-    x' = x_i + \delta_x\\
-    z' = z_i + \delta_z\\
-    (x_i, z_i) \in V_{train}\\
-    \text{s.t.}\ ||\delta_x||_p \le \epsilon, ||\delta_z||_p \le \epsilon
+    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}, \textbf{z} + \delta_\textbf{z}))\\
+    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon, ||\delta_\textbf{z}||_p \le \epsilon
   \end{gathered}
 \end{equation}  
 where is universal trained on training sets and useful for all testing set. 
 Note that universal adversarial perterbations are added to the whole image and cannot tell the tracker where to look, so $y^{target}$ is kept constant during the training process, resulting in the inability to perform targted attacks.
-To achieve universal targeted attack, it is patch is useful:
+To achieve universal targeted attack, one feasible way is to paste a small (universal) adversarial patch into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the adversarial patch instead of the real target:
 \begin{equation}
-  \begin{gathered}
-    \min \frac{1}{N}\sum_{i=1}^N L(y^{target}_i, f(x'_i, z_i))\\
-    x' = x_i\odot (1-m^{target}_i) + \delta_x\odot m^{target}_i\\
-    (x_i, z_i) \in V_{train}\\
-  \end{gathered}
+    \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x}\odot (1-m^{fake}) + \delta_\textbf{x}\odot m^{fake}, \textbf{z}))
 \end{equation}
 where the target box is changed according to the patch position. Note that in this naive way to use patch, the template image is not changed. However, the patch is not constrained, which decrease the usage.
+However, CNN attacks are usually expected imperceptible but the above method has to add an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
-In this paper, we aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
 \begin{equation}
   \begin{gathered}
-    \min \frac{1}{N}\sum_{i=1}^N L(y^{target}_i, f(x'_i, z'_i))\\
-    x' = x_i + \delta_x\odot m^{target}_i\\
-    z' = z_i + \delta_z\\
-    (x_i, z_i) \in V_{train}\\
-    \text{s.t.}\ ||\delta_x||_p \le \epsilon, ||\delta_z||_p \le \epsilon
+    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}\odot m^{fake}, \textbf{z} + \delta_\textbf{z}))\\
+    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon, ||\delta_\textbf{z}||_p \le \epsilon
   \end{gathered}
 \end{equation}
 
