@@ -154,40 +154,40 @@ A straight forward way to achieve targeted attack for Siamese trackers is direct
 
 \begin{equation}
 \begin{gathered}
-  \min\limits_{\delta_{\textbf{x}_{i}}, \delta_{\textbf{z}_{i}}} L(y^{fake}, f(\textbf{x}_i + \delta_{\textbf{x}_{i}}, \textbf{z}_0 + \delta_{\textbf{z}_{i}}))\\
+  \min\limits_{\delta_{\textbf{x}_{i}}, \delta_{\textbf{z}_{i}}} L(y^{fake}_i, f(\textbf{x}_i + \delta_{\textbf{x}_{i}}, \textbf{z}_0 + \delta_{\textbf{z}_{i}}))\\
   \text{s.t.}\ ||\delta_{\textbf{x}_i}||_p \le \epsilon, ||\delta_{\textbf{z}_i}||_p \le \epsilon,
 \end{gathered}
 \end{equation}
-where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_0)$ is the search-template pair of the video being tracked. $y^{target}$ is the fake bounding box that we want the tracker to output at frame $i$.
+where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_0)$ is the search-template pair of the video being tracked. $y^{fake}_i=\{\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*\}$ is the fake target of the loss function generated according to the fake ground truth box $b^{fake}_i$ that we want the tracker to output at frame $i$ (see Sec. \ref{generate}). 
 % 不写 BIM，原因是BIM的优化为 xi+1 = xi + delta, 与上面公式不太好兼容。
 However, these methods require perturbing the input image pair $(\textbf{x}, \textbf{z})$ frame by frame, which comes at a non-negligible cost, considering that VOT is a real-time task.
 As a consequence, universal adversarial perturbations \cite{UAP, shafahi2020universal} are more practical for attacking Siamese trackers:
 \begin{equation}
   \begin{gathered}
     \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}, \textbf{z} + \delta_\textbf{z}))\\
-    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon, ||\delta_\textbf{z}||_p \le \epsilon
+    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon, ||\delta_\textbf{z}||_p \le \epsilon,
   \end{gathered}
 \end{equation}  
-where is universal trained on training sets and useful for all testing set. 
+where the input pair $(\textbf x,\textbf z)$ is randomly picked from the training set and useful for all testing set. 
 Note that universal adversarial perterbations are added to the whole image and cannot tell the tracker where to look, so $y^{target}$ is kept constant during the training process, resulting in the inability to perform targted attacks.
 To achieve universal targeted attack, one feasible way is to paste a small (universal) adversarial patch into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the adversarial patch instead of the real target:
 \begin{equation}
-    \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x}\odot (1-m^{fake}) + \delta_\textbf{x}\odot m^{fake}, \textbf{z}))
+    \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x}\odot (1-m) + \delta_\textbf{x}\odot m, \textbf{z}))
 \end{equation}
-where the target box is changed according to the patch position. Note that in this naive way to use patch, the template image is not changed. However, the patch is not constrained, which decrease the usage.
+where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$. The target box is changed according to the patch position. $\odot$ is element-wise multiplication. Note that in this naive way to use patch, the template image is not changed. However, the patch is not constrained, which decrease the usage.
 However, CNN attacks are usually expected imperceptible but the above method has to add an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
 To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
 \begin{equation}
   \begin{gathered}
-    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}\odot m^{fake}, \textbf{z} + \delta_\textbf{z}))\\
+    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}\odot m, \textbf{z} + \delta_\textbf{z}))\\
     \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon, ||\delta_\textbf{z}||_p \le \epsilon
   \end{gathered}
 \end{equation}
 
 Our attack algorithm is based on the imperceptible perturbation generation method \cite{FGSM} and adversarial patch generation method \cite{patch}. However, we do not simply apply either of the above methods to trackers. In this paper, we demonstrate that the imperceptible perturbations and the adversarial patch are indispensable for attacking trackers and can be jointly optimized in an end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target, which tells the tracker where to look. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding to diverse directions and uses them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours. On the other hand, the imperceptible perturbation applied to the template image is optimized to find the fake target, cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target (see Figure \ref{fig:1}).
 
-\subsection{Generating Video-Agnostic Perturbations}
+\subsection{Generating Video-Agnostic Perturbations}\label{generate}
 
 In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers (Figure \ref{fig:vis_perturbations}). At beginning, each element in $\delta$ is initialized to 0. $p$ is initialized with a normal distribution, with a mean of 127 and a standard deviation of 1. During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$. The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
