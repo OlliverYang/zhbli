@@ -160,6 +160,7 @@ A straight forward way to achieve targeted attack for Siamese trackers is direct
 \end{equation}
 where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_0)$ is the search-template pair of the video being tracked. $y^{fake}_i=\{\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*\}$ is the fake target of the loss function generated according to the fake ground truth box $b^{fake}_i$ that we want the tracker to output at frame $i$ (see Sec. \ref{generate}). 
 % 不写 BIM，原因是BIM的优化为 xi+1 = xi + delta, 与上面公式不太好兼容。
+Additionally, $\delta$ should be sufficiently small, which is commonly modeled through an upper-bound $\epsilon$ on the $l_p\text{-norm}$, commonly denoted as $||\cdot||_p$, of the perturbation. A popular choice is to set $p=\inf$.
 However, these methods require perturbing the input image pair $(\textbf{x}, \textbf{z})$ frame by frame, which comes at a non-negligible cost, considering that VOT is a real-time task.
 As a consequence, universal adversarial perturbations \cite{UAP, shafahi2020universal} are more practical for attacking Siamese trackers:
 \begin{equation}
@@ -175,7 +176,7 @@ To achieve universal targeted attack, one feasible way is to paste a small (univ
     \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x}\odot (1-m) + \delta_\textbf{x}\odot m, \textbf{z}))
 \end{equation}
 where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$. The target box is changed according to the patch position. $\odot$ is element-wise multiplication. Note that in this naive way to use patch, the template image is not changed. However, the patch is not constrained, which decrease the usage.
-However, CNN attacks are usually expected imperceptible but the above method has to add an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
+However, CNN attacks are usually expected imperceptible but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
 To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
 \begin{equation}
@@ -381,32 +382,32 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 
 \subsection{Compared with baselines}
 
-We compare our attack method with three baseline methods (See Table \ref{tab:imperceptible}).
-\textbf{Baseline-1} uses the BIM \cite{DBLP:conf/iclr/KurakinGB17a} method to do targeted attack. The difference between the BIM method and our method includes: (1) We use the training set, while Baseline-1 use every image. (2) We perform imperceptible patch, while Baseline-1 use full image perturbations. It needs to be optimized on every frame. So it spped is slow.
-\textbf{Baseline-2} uses the UAP \cite{UAP} method to perform untargeted attack. The difference between Baseline-2 and our method includes: (1) We perform imperceptible patch, while Baseline-2 use full image perturbations. (2) Our target is changed, while Baseline-2's target is fixed during training. As a result, Baseline-2 can not perform targeted attack, while our targeted attack performance is high.
-\textbf{Baseline-3} uses the AP \cite{patch} method to perform targeted attack. The difference between Baseline-3 and our method includes: (1) Baseline-3 paste a patch on the search image with no constrain while we add the patch onto the search image with constrain. (2) Baseline-3 uses clean template image while we add imperceptible perterbations onto the template image. As a result, Baseline-3's patch is noticeable while our patch is imperceptible, and our performance is high.
+We compare our attack method with two baseline methods (See Table \ref{tab:imperceptible}).
+%\textbf{Baseline-1} uses the BIM \cite{DBLP:conf/iclr/KurakinGB17a} method to do targeted attack. The difference between the BIM method and our method includes: (1) We use the training set, while Baseline-1 use every image. (2) We perform imperceptible patch, while Baseline-1 use full image perturbations. It needs to be optimized on every frame. So it spped is slow.
+\textbf{Baseline-1} performs untargeted attacks based on the UAP \cite{UAP} method. The difference between Baseline-1 and our method is that, Baseline-1 generates perturbations added to the whole search image and cannot perform targeted attacks, while our method adds a small (universal) imperceptible patch to the search image to perform targeted attacks (see Figure \ref{fig:imperceptible}).
+\textbf{Baseline-2} performs targeted attacks based on the adversarial patch \cite{patch} method. The difference between Baseline-2 and our method includes: (1) Baseline-2 pastes a adversarial patch on the search image without the $l_p\text{-norm}$ constrain while our method adds the patch onto the search image with the $l_p\text{-norm}$ constrain. (2) Baseline-2 uses the clean template image while we add imperceptible perterbations onto the template image. As a consequence, Baseline-2 generates an obviously noticeable patch while ours are imperceptible as shown in Figure \ref{fig:imperceptible}. Moreover, both the untargeted attack performance and the targeted performance of our method are better than Baseline-2 as shown in Table \ref{tab:imperceptible}.
 \begin{table}[t]
 \centering
-\caption{Compared with baselines.}
-\begin{tabular}{@{}lccc@{}}
+\caption{Compared with baselines on GOT-Val.}
+\begin{tabular}{@{}lcc@{}}
   \toprule
-  \multirow{2}{*}[-2pt]{Methods}  & \multicolumn{2}{c}{AO} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}}\\ \cmidrule(lr){2-3}
-       & Real Traj. & Fake Traj. &\\ \midrule
-Baseline-1 \cite{DBLP:conf/iclr/KurakinGB17a}  & ?          & ?\\
-Baseline-2 \cite{UAP}  & 0.09          & -          & 0\\
-Baseline-3 \cite{patch}   & 0.23       & 0.78       & 0\\
-  Ours & 0.15       & 0.84       & 0\\ \bottomrule
+  \multirow{2}{*}[-2pt]{Methods}  & \multicolumn{2}{c}{AO}\\ \cmidrule{2-3}
+       & Real Traj. & Fake Traj.\\ \midrule
+%Baseline-1 \cite{DBLP:conf/iclr/KurakinGB17a}  & ?          & ?\\
+Baseline-1 \cite{UAP}  & 0.09          & -\\
+Baseline-2 \cite{patch}   & 0.23       & 0.78\\
+  Ours & 0.15       & 0.84\\ \bottomrule
   \end{tabular}
 \label{tab:imperceptible}
 \end{table}
 
 \begin{figure}
   \centering
-  \subfigure[Baseline-1]{\label{fig:imperceptiblea}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
-  \subfigure[Baseline-2]{\label{fig:imperceptibleb}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/UAP.jpg}}
-  \subfigure[Baseline-3]{\label{fig:imperceptiblec}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
-  \subfigure[Ours]{\label{fig:imperceptibled}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/Ours.jpg}}
-  \caption{Imperceptible or not on search image of baselines.}
+  %\subfigure[Baseline-1]{\label{fig:imperceptiblea}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
+  \subfigure[Baseline-1]{\label{fig:imperceptibleb}\includegraphics[width=0.15\textwidth]{images_imperceptible/imperceptible/UAP.jpg}}
+  \subfigure[Baseline-2]{\label{fig:imperceptiblec}\includegraphics[width=0.15\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
+  \subfigure[Ours]{\label{fig:imperceptibled}\includegraphics[width=0.15\textwidth]{images_imperceptible/imperceptible/Ours.jpg}}
+  \caption{Visualization of perturbations on search images. Baseline-1 generates perturbations added to the whole search image and cannot perform targeted attacks. Baseline-2 pastes an obviously noticeable patch on the search image, which raises the risk of being suspected. Our method adds a small (universal) imperceptible patch to the search image to perform targeted attacks.}
   \label{fig:imperceptible}
 \end{figure}
 
