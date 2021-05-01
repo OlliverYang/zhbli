@@ -196,7 +196,7 @@ A straight forward way to achieve targeted attack for Siamese trackers is direct
   \text{s.t.}\ ||\delta_{\textbf{x}_i}||_p \le \epsilon_1, ||\delta_{\textbf{z}_i}||_p \le \epsilon_2,
 \end{gathered}
 \end{equation}
-where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_i)$ is the search-template pair of the video being tracked at frame $i$ and $\textbf{z}_i \equiv \textbf{z}_0$. $y^{fake}_i=\{\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*\}$ is the fake target of the loss function generated according to the fake ground truth box $b^{fake}_i$ that we want the tracker to output at frame $i$ (see Sec. \ref{generate}). 
+where $L$ is the loss function of the SiamFC++ tracker. $(\textbf{x}_i, \textbf{z}_i)$ is the search-template pair of the video being tracked at frame $i$ and $\textbf{z}_i \equiv \textbf{z}_1$. $y^{fake}_i=\{\textbf{C}^*, \textbf{R}^*, \textbf{Q}^*\}$ is the fake target of the loss function generated according to the fake ground truth box $b^{fake}_i$ that we want the tracker to output at frame $i$ (see Sec. \ref{generate}). 
 % 不写 BIM，原因是BIM的优化为 xi+1 = xi + delta, 与上面公式不太好兼容。
 Additionally, $\delta$ should be sufficiently small, which is commonly modeled through an upper-bound $\epsilon$ on the $l_p\text{-norm}$, commonly denoted as $||\cdot||_p$, of the perturbation. A popular choice is to set $p=\infty$.
 However, these methods require perturbing the input image pair $(\textbf{x}, \textbf{z})$ frame by frame, which comes at a non-negligible cost, considering that VOT is a real-time task.
