@@ -21,7 +21,7 @@
 \begin{document}
 \title{Video-Agnostic Perturbations: A Simple and Strong Baseline for Siamese Visual Tracking Attack}
 \author{
-  Zhenbang Li, Jin Gao, Yaya Shi, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
+  Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
   \thanks{This work is supported by the national key R\&D program of china (No. 2018AAA0102802, No. 2018AAA0102803, No. 2018AAA0102800), the Natural Science Foundation of China (Grant No. 62036011, 61721004, 61772225), the Key Research Program of Frontier Sciences, CAS, Grant No. QYZDJ-SSW-JSC040, and the National Natural Science Foundation of Guangdong (No. 2018B030311046). \textit{(Corresponding author: Jin Gao.)}}
   
   \thanks{Z. Li, J. Gao, Shaoru Wang and B. Li are with the National Laboratory of Pattern Recognition, Institute of Automation, Chinese Academy of Sciences, Beijing, 100190, China, and also with School of Artificial Intelligence, University of Chinese Academy of Sciences, Beijing, 100190, China (e-mail: zhenbang.li@nlpr.ia.ac.cn; jin.gao@nlpr.ia.ac.cn; shaoru.wang@nlpr.ia.ac.cn; bli@nlpr.ia.ac.cn).}
@@ -98,14 +98,14 @@ Scenarios of possible adversarial attacks can be categorized along different dim
 \textit{White box attacks v.s. Black box attacks} In the white box attack setting \cite{meng2019white}, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights. In the black box setting \cite{cheng2018query,li2019nattack,papernot2017practical,li2020projection}, the adversary has limited or no knowledge about the model under attack \cite{kurakin2018adversarial}. In this paper, we focus on the white box attack for Siamese trackers. However, although we train perturbations using the parameters of the SiamFC++ network, we surprisingly find that the trained perturbations can perform black box attack on other trackers such as SiamRPN and SiamRPN++.
 
 \textit{Non-universal attacks v.s. Universal attacks} In the setting of non-universal attacks \cite{dai2018adversarial,li2018second,lin2017tactics}, the adversary has to generate one perturbation of every new datapoint, which is time consuming. In the setting of the universal attacks \cite{khrulkov2018art,mopuri2018nag,zhang2020understanding,mopuri2018generalizable,chen2018shapeshifter}, only one perturbation is generated and used for every datapoint of the dataset. In this paper, we focus on generating universal perturbations for Siamese trackers to perform efficient attacks.
-
+\iffalse
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.35\textwidth]{images_imperceptible/vis_perturbations.pdf}
   \caption{Visualization of the generated perturbations. Left: The template perturbation. Right: The adversarial patch.}
   \label{fig:vis_perturbations}
 \end{figure}
-
+\fi
 \begin{figure*}[t]
   \centering
   \includegraphics[width=0.7\textwidth]{images_imperceptible/network_v5.pdf}
@@ -189,7 +189,7 @@ Our attack algorithm is based on the imperceptible perturbation generation metho
 
 \subsection{Generating Video-Agnostic Perturbations}\label{generate}
 
-In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers (Figure \ref{fig:vis_perturbations}). At beginning, each element in $\delta$ is initialized to 0. $p$ is initialized with a normal distribution, with a mean of 127 and a standard deviation of 1. During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$. The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
+In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers. At beginning, each element in $\delta$ is initialized to 0. $p$ is initialized with a normal distribution, with a mean of 127 and a standard deviation of 1. During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$. The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_k.
 \end{equation}
@@ -378,6 +378,37 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \end{tabular}
 \label{tab:loss}
 \end{table}
+
+\subsection{Compared with baselines}
+
+We compare our attack method with three baseline methods (See Table \ref{tab:imperceptible}).
+\textbf{Baseline-1} uses the BIM \cite{DBLP:conf/iclr/KurakinGB17a} method to do targeted attack. The difference between the BIM method and our method includes: (1) We use the training set, while Baseline-1 use every image. (2) We perform imperceptible patch, while Baseline-1 use full image perturbations. It needs to be optimized on every frame. So it spped is slow.
+\textbf{Baseline-2} uses the UAP \cite{UAP} method to perform untargeted attack. The difference between Baseline-2 and our method includes: (1) We perform imperceptible patch, while Baseline-2 use full image perturbations. (2) Our target is changed, while Baseline-2's target is fixed during training. As a result, Baseline-2 can not perform targeted attack, while our targeted attack performance is high.
+\textbf{Baseline-3} uses the AP \cite{patch} method to perform targeted attack. The difference between Baseline-3 and our method includes: (1) Baseline-3 paste a patch on the search image with no constrain while we add the patch onto the search image with constrain. (2) Baseline-3 uses clean template image while we add imperceptible perterbations onto the template image. As a result, Baseline-3's patch is noticeable while our patch is imperceptible, and our performance is high.
+\begin{table}[t]
+\centering
+\caption{Compared with baselines.}
+\begin{tabular}{@{}lccc@{}}
+  \toprule
+  \multirow{2}{*}[-2pt]{Methods}  & \multicolumn{2}{c}{AO} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}}\\ \cmidrule(lr){2-3}
+       & Real Traj. & Fake Traj. &\\ \midrule
+Baseline-1 \cite{DBLP:conf/iclr/KurakinGB17a}  & ?          & ?\\
+Baseline-2 \cite{UAP}  & 0.09          & -          & 0\\
+Baseline-3 \cite{patch}   & 0.23       & 0.78       & 0\\
+  Ours & 0.15       & 0.84       & 0\\ \bottomrule
+  \end{tabular}
+\label{tab:imperceptible}
+\end{table}
+
+\begin{figure}
+  \centering
+  \subfigure[Baseline-1]{\label{fig:imperceptiblea}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
+  \subfigure[Baseline-2]{\label{fig:imperceptibleb}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/UAP.jpg}}
+  \subfigure[Baseline-3]{\label{fig:imperceptiblec}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/AP.jpg}}
+  \subfigure[Ours]{\label{fig:imperceptibled}\includegraphics[width=0.11\textwidth]{images_imperceptible/imperceptible/Ours.jpg}}
+  \caption{Imperceptible or not on search image of baselines.}
+  \label{fig:imperceptible}
+\end{figure}
 
 \subsection{Attack Results on the Evaluation Benchmarks}
 
