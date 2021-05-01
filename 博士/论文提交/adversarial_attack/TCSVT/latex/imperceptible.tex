@@ -36,7 +36,7 @@
 
 % 摘要
 \begin{abstract}
-Siamese trackers are shown to be vulnerable to adversarial attacks recently. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. In this paper, we show the existence of universal perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be video-agnostic and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and adding a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimisation or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. 
+Siamese trackers are shown to be vulnerable to adversarial attacks recently. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. In this paper, we show the existence of universal perturbations that can enable the targeted attack, e.g., forcing a tracker to follow the ground-truth trajectory with specified offsets, to be video-agnostic and free from inference in a network. Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and adding a \textit{fake target}, i.e., a small universal adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our approach allows perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimization or network inference. Experimental results on several datasets demonstrate that our approach can effectively fool the Siamese trackers in a targeted attack manner. 
 We show that the proposed perturbations are not only universal across videos, but also generalize well across different trackers. Such perturbations are therefore doubly universal, both with respect to the data and the network architectures.
 We will make our code publicly available.
 
@@ -69,7 +69,7 @@ Visual tracking, adversarial attacks, Siamese networks.
   \label{fig:1}
 \end{figure*}
 
-Recently, the robustness of Siamese trackers has attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK}. However, these attack methods still need to craft the perturbations for each video independently based on either iterative optimisation or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
+Recently, the robustness of Siamese trackers has attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK}. However, these attack methods still need to craft the perturbations for each video independently based on either iterative optimization or adversarial network inference, for which the adequacy of computational resources may be not ensured by the computationally intensive tracking systems. 
 
 Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
   
@@ -118,14 +118,14 @@ Scenarios of possible adversarial attacks can be categorized along different dim
 \fi
 
 \iffalse
-\textit{Optimisation based attacks and GAN based attacks}
-The optimisation based attacks are slow and can only optimize perturbation for one specific instance each time.
+\textit{Optimization based attacks and GAN based attacks}
+The optimization based attacks are slow and can only optimize perturbation for one specific instance each time.
 To avoid this, the GAN based methods use GAN to generate perturbation for one datapoint without loop. 
 However, the GAN networks run for every datapoint, which occupies the GPU memory and time. 
-In this paper, we generate perturbations in an offline manner, which do not require gradient optimisation or network inference.
+In this paper, we generate perturbations in an offline manner, which do not require gradient optimization or network inference.
 \fi
 
-\textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimisation strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
+\textit{Imperceptible Perturbations v.s. Adversarial Patch} The imperceptible perturbations most commonly modify each pixel by a small amount and can be found using a number of optimization strategies such as Limited-memory BFGS \cite{intriguing} and PGD \cite{PGD}.
 Different from the imperceptible perturbations, the adversarial patch is extremely salient to a neural network. The adversarial patch can be placed anywhere into the input image to cause the network to misbehave, and thus is commonly used for universal attacks \cite{patch}.
 To the best of our knowledge, we are the first to attack object trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
 Note that our adversarial patch works in the image domain instead of the network domain. In the network-domain case, the noise is allowed to take any value and is not restricted to the dynamic range of image value as in the image-domain case \cite{karmon2018lavan}.
@@ -215,7 +215,7 @@ To achieve universal targeted attacks, one feasible way is to paste a small (uni
 \end{equation}
 where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$ which is variable during training according to the patch position. $\odot$ is element-wise multiplication. Note that this vanilla adversarial patch method uses the clean template image during training. However, CNN attacks are usually expected imperceptible but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
-To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x_i$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x_i$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimization or network inference.
 \begin{equation}
   \begin{gathered}
     \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}\odot m, \textbf{z} + \delta_\textbf{z}))\\
@@ -340,7 +340,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 \fi
 Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
   
-\textit{Optimisation} At each training step, the perturbations are updated as follows:
+\textit{Optimization} At each training step, the perturbations are updated as follows:
 \begin{gather}
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
 p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
@@ -350,7 +350,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$ and 
 
 \subsection{Attacking the Tracker at Inference Time}
 
-Once the perturbations $(\delta, p)$ are trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimisation or network inference.
+Once the perturbations $(\delta, p)$ are trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimization or network inference.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
 During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$ with respect to the search image $\textbf x_i$, and add $p$ into $\textbf x_i$ according to $\hat b^{fake}_i$:
 \begin{equation}
