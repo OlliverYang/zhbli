@@ -257,18 +257,19 @@ Our attack algorithm is based on the imperceptible perturbation generation metho
 \subsection{Generating Video-Agnostic Perturbations}\label{generate}
 
 In this subsection, we show how to train the video-agnostic perturbations $(\delta, p)$ for Siamese trackers. At beginning, each element in $\delta$ and $p$ is initialized to 0.
-During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{128\times 128\times 3}$. We first randomly pick paired frames $I_t, I_s$ from $V$. The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
+During the $k$-th iteration of training, a video $V=\{I_i\}_1^T$ is randomly selected from the training dataset $\mathcal V$. 
+Assuming the template perturbation at the $k$-th iteration is $\delta_k \in \mathbb{R}^{127\times 127 \times 3}$, and the adversarial patch is $p_k \in \mathbb{R}^{64\times 64\times 3}$. 
+We first randomly pick paired frames $I_t, I_s$ from $V$. The clean template image $\textbf z\in \mathbb{R}^{127\times 127 \times 3}$ is generated according to $I_t$ and $b^{gt}_t$, and the perturbed template image is:
 \begin{equation}
 \tilde {\textbf z} = \textbf z + \delta_k.
 \end{equation}
 Similarly, the clean search image $\textbf x \in \mathbb{R}^{303\times 303 \times 3}$ is generated according to $I_s$ and $b^{gt}_s$.
 As mentioned before, the patch is regarded as a \textit{fake target} and added into the search images. We force the center position of the \textit{fake target} to near the center position of the real target within a shift range of 64 pixels, where the shift is defined as the maximum range of translation generated from a uniform distribution.
-The width/height of the \textit{fake target} is randomly selected between 32 pixels and 128 pixels.
 The perturbed search image is generated as follows:
 \begin{equation}
 \tilde{\textbf x} = A(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
 \end{equation}
-where $ \hat b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. $A$ is a patch application operator \cite{patch} which first resizes the patch $p_k \in \mathbb{R}^{128\times 128\times 3}$ to $\hat{p}_k \in \mathbb{R}^{(x_1-x_0)\times (y_1-y_0)\times 3}$, and then adds the resized patch $\hat{p}_k$ into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
+where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. $A$ is a patch application operator \cite{patch} which adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
 
 \begin{table}
   \centering
@@ -353,7 +354,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$ and 
 
 Once the perturbations $(\delta, p)$ are trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimization or network inference.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to transform the bounding box $b^{fake}_i$ (with respect to the original frame $I_i$) into the box $\hat b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$ with respect to the search image $\textbf x_i$, and add $p$ into $\textbf x_i$ according to $\hat b^{fake}_i$:
+During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to generate the bounding box $b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$ with respect to the search image $\textbf x_i$, and add $p$ into $\textbf x_i$ according to $b^{fake}_i$:
 \begin{equation}
 \tilde{\textbf x}_i = A(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
 \end{equation}
