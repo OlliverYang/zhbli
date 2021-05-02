@@ -426,7 +426,7 @@ It is possible to manually label arbitrary $B^{fake}$ for each video, however, i
 %The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$ (Figure \ref{fig:vis}). 
 Because the annotations of GOT-10k's test data are kept private, we only use its validation set for our evaluation and denote it as GOT-Val. Note that the target position of the first frame is pre-defined in the academic study of object tracking, while in practical application, the target position of the first frame is often obtained by running an object detector on this frame. In this scenario, once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
 
-\textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated imperceptible template perturbation $\delta$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
+\textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated imperceptible template perturbation $\delta$ and $p$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
 
 \subsection{Implementation Details}
 
