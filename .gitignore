@@ -1,2 +1,8 @@
-
+# latex
+*.uax
+*.bbl
+*.blg
+*.aux
+*.gz
+*.log
 博士/中期/~$*.docx

@@ -1,0 +1,47 @@
+%!TEX program = pdflatex
+%!BIB program = bibtex
+
+\documentclass[11pt,a4paper]{article}
+\begin{document}
+In this paper, we focus on the long-term tracking.
+The main difference between long-term tracking and short-term tracking is that the former has to deal with the cases in which the target disappears and reappears frequently. We think that a global search mechinaism is necessary \cite{zhang2021distractor} for long-term tracking, because in the local search setting, once the target run out of the frame, the track cannot set the window correctly, while the global serach mechinaism can rework when the target go back immidiately.
+
+Directly change the local search tracker to the global search tracker is sub-optimal, because of the small object.
+As we can see in the object detection field, the smaller, the lower performance. Note that small object is not an issue in local search tracker, because they resize object to a fixed size to avoid this problem.
+
+Now, the question is, how to improve the ability to track the small object in the global search long-term tracking setting. To begin with, we need to analyse that how the size of the object influence the tracking performace and why. As we can see in experiment, the full image tracking performance is strongly relavent to the object size.
+% 需要实验支撑。如果这一点不成立，那么这篇文章就失去了意义。
+
+Now let us analyse why the full image tracker can not work well on small object. The reson can be catogeried into the following reasons:
+\begin{itemize}
+    \item Network depth. The deeper, the bad for small object because of the respective field will involve more background infomation when the network going deeper until the noise feature overwheel the object feature. Similar experiment results can be found in \cite{zhang2021distractor} and \cite{SiamDW_2019_CVPR}.
+    \item The unfair IoU metric. if we miss one pixel of gt box, the large box degree small while the small box degree big.
+    \item Unfair loss. The large area have more loss. The small area have less loss. Focal loss try to fix this problem. 
+    \item Dataset imblance of difference size. If the training set object is all large, how we respect to have good performance on small object?
+\end{itemize}
+To handle the above problems, we do the following improve:
+\begin{itemize}
+    \item We do deep supervision on shallow and deep layers.
+    \item We not use IoU bet use the point. If the top point fall into the box, it's ok.
+    \item We only use a fixed number of point for different size object.
+    \item We do data augment, have every size.
+\end{itemize}
+
+\section{Related Work}
+\subsection{Global Trackers} Siam R-CNN, GlobalTrack, 
+\subsection{Loss function} The focal loss change the weight between the easy and hard example. The hard example mine loss try to increase the hard example weight.
+\subsection{Handle small objects in object detection}
+FPN use pyramid features, and detect small objects on 
+\subsection{Object/Tracking as Points} In these methods, they regard the center of object as point as use L1 loss to Fitting a Gaussian distribution. However, we think every point in the box is ok, and do not use l1 to fit the gaussion.
+\subsection{Sampling strategy} Sampling means how we select examples to train the loss. OHEM try to mine hard examples. \cite{wu2017sampling} think that we need to sample uniformly according to distance.
+\section{Experiments}
+\subsection{Ablation Studies}
+\subsubsection{Imblance training set objecet size}
+First, we see if the size is imblance in the training set.
+Second, we see if the imbalce of training data size really influence the test ablity.
+\subsection{Layer number}
+\subsection{Sample point number}
+\newpage
+\bibliographystyle{IEEEbib}
+\bibliography{ref}
+\end{document}
