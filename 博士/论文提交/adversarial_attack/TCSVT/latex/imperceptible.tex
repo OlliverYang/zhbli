@@ -354,7 +354,7 @@ During training, we only optimize the values of perturbations $(\delta, p)$ and 
 
 Once the perturbations $(\delta, p)$ are trained, we can use them to perturb the template image and search images of any novel video for attacking. Both $\delta$ and $p$ are universal (i.e., video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimization or network inference.
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
-During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to generate the bounding box $b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$ with respect to the search image $\textbf x_i$, and add $p$ into $\textbf x_i$ according to $b^{fake}_i$:
+During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to add $p$ into $\textbf x_i$ according to $b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$:
 \begin{equation}
 \tilde{\textbf x}_i = A(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
 \end{equation}
