@@ -325,7 +325,7 @@ where $\textbf{C}_{x, y}, \textbf{R}_{x, y}, \textbf{Q}_{x, y}$ represent the va
   \mathrm{FL}\left(p_{\mathrm{t}}\right)=-\alpha_{\mathrm{t}}\left(1-p_{\mathrm{t}}\right)^{\gamma} \log \left(p_{\mathrm{t}}\right)
 \end{equation}
 \fi
-$L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment.
+$L_{\mathrm{quality}}$ denotes the binary cross entropy (BCE) loss for quality assessment,
 \iffalse
 \begin{equation}
 \begin{array}{ll}
@@ -340,7 +340,7 @@ and $L_{\mathrm{reg}}$ denotes the IoU loss \cite{iou-loss} for bounding box reg
 G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 \end{equation}
 \fi
-Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
+%Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
   
 \textit{Optimization} At each training step, the perturbations are updated as follows:
 \begin{gather}
