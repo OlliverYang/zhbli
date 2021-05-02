@@ -347,7 +347,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
 p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
-where $\epsilon_1$ is used to ensure that the perturbation added to the template image is imperceptible, and $\epsilon_2$ is used to maintain the training stability.
+where $\epsilon_1$ and $\epsilon_2$ are used to ensure that the perturbation added to the template/search image is imperceptible.
 During training, we only optimize the values of perturbations $(\delta, p)$ and the parameters of the Siamese network remain intact. We outline this training procedure in Algorithm \ref{alg}.
 
 \subsection{Attacking the Tracker at Inference Time}
