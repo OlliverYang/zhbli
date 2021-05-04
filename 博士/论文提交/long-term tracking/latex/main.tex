@@ -34,6 +34,14 @@ To handle the above problems, we do the following improve:
 FPN use pyramid features, and detect small objects on 
 \subsection{Object/Tracking as Points} In these methods, they regard the center of object as point as use L1 loss to Fitting a Gaussian distribution. However, we think every point in the box is ok, and do not use l1 to fit the gaussion.
 \subsection{Sampling strategy} Sampling means how we select examples to train the loss. OHEM try to mine hard examples. \cite{wu2017sampling} think that we need to sample uniformly according to distance.
+
+\section{Method}
+\subsection{Loss}
+If the max point in feature map is fall into the GT box, then we let it go to 1. If the max point in the feature map is fall into the background, then we let it go to 0.
+Because we let the max in the background to 0, so we do the hard negtive mineing.
+One drawback is, at the begining of training, maybe the top point always at the background, so we always let max value to 0, so the network learn a trival solution, it is not good. So we need to modify, always selet a positive point and a negative point: Let the max point at the box go to 1, and let the max point at background go to 0.
+Now, if a positive point is larger than 0.5, we do not need to train it at all. (or a negtive point is less than 0.5). So we can focus on the harder points. Another benifit is it can advoid a trival solution: loss always 1: neg=0 and pos=1
+
 \section{Experiments}
 \subsection{Ablation Studies}
 \subsubsection{Imblance training set objecet size}
