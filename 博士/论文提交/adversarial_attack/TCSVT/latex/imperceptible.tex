@@ -177,17 +177,21 @@ where the input pair $(\textbf x,\textbf z)$ is randomly picked from the trainin
 Note that universal adversarial perterbations are added to the whole image and cannot tell the tracker where to look, so $y^{fake}$ is kept constant during the training process, resulting in the inability to perform targeted attacks.
 To achieve universal targeted attacks, one feasible way is to paste a small (universal) adversarial patch into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the adversarial patch instead of the real target:
 \begin{equation}
-    \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x}\odot (1-m) + \delta_\textbf{x}\odot m, \textbf{z})),
+    \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(A_{\text{paste}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}}), \textbf{z})),
 \end{equation}
-where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$ which is variable during training according to the patch position. $\odot$ is element-wise multiplication. Note that this vanilla adversarial patch method uses the clean template image during training. However, CNN attacks are usually expected imperceptible but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
+%where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$ which is variable during training according to the patch position.
+% $\odot$ is element-wise multiplication. 
+where $A_{\text{paste}}$ is a patch application operator \cite{patch} which pastes the adversarial patch $p_\textbf{x}$ into the search image according to $b^{fake}_{\textbf{x}}$. Both $b^{fake}_{\textbf{x}}$ and $y^{fake}$ are variable during training.
+Note that this vanilla adversarial patch method uses the clean template image during training. However, CNN attacks are usually expected imperceptible but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
 To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textbf x$, the tracker outputs the location and size of the adversarial patch instead of the real target (see Figure \ref{fig:net}). Both $\delta$ and $p$ are universal (\ie, video-agnostic), which means perturbing a novel video only involves the mere addition of the perturbations to the template and search images -- and does not require gradient optimization or network inference.
 \begin{equation}
   \begin{gathered}
-    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(\textbf{x} + \delta_\textbf{x}\odot m, \textbf{z} + \delta_\textbf{z}))\\
-    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon_1, ||\delta_\textbf{z}||_p \le \epsilon_2
+    \min\limits_{\delta_\textbf{x}, \delta_\textbf{z}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}}), \textbf{z} + \delta_\textbf{z}))\\
+    \text{s.t.}\ ||\delta_\textbf{x}||_p \le \epsilon_1, ||\delta_\textbf{z}||_p \le \epsilon_2,
   \end{gathered}
 \end{equation}
+where $A_{\text{add}}$ is a patch application operator \cite{patch} which adds the patch into the search image according to $b^{fake}_{\textbf{x}}$.
 
 Our attacks on Siamese visual tracking with both the template and search images as input, enable us to exploit both the imperceptible perturbation generation method \cite{FGSM} and adversarial patch generation method \cite{patch} simultaneously. However, applying both of the above methods to trackers is non-trivial. In this paper, we demonstrate that the imperceptible perturbations and the adversarial patch are both indispensable for attacking trackers and can be jointly optimized in an end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target, which tells the tracker where to look. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding to diverse directions and uses them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours. On the other hand, the imperceptible perturbation applied to the template image is optimized to find the fake target, cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target (see Figure \ref{fig:1}).
 
@@ -205,7 +209,7 @@ Our attacks on Siamese visual tracking with both the template and search images 
   \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
   \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
   \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
-  \STATE $\tilde{\textbf x} = A(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
+  \STATE $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
   \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}, \tilde{\textbf z}).$
   \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
   \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
@@ -238,9 +242,10 @@ Similarly, the clean search image $\textbf x \in \mathbb{R}^{303\times 303 \time
 As mentioned before, the patch is regarded as a \textit{fake target} and added into the search images. We force the center position of the \textit{fake target} to near the center position of the real target within a shift range of 64 pixels, where the shift is defined as the maximum range of translation generated from a uniform distribution.
 The perturbed search image is generated as follows:
 \begin{equation}
-\tilde{\textbf x} = A(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
+\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
 \end{equation}
-where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. $A$ is a patch application operator \cite{patch} which adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
+where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. 
+$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
 
 \textit{Generating Fake Labels} The fake lables are composed of three parts: fake classification label $\textbf{C}^*$, fake regression label $\textbf{R}^*$ and fake quality estimation label $\textbf{Q}^*$.
 
@@ -310,7 +315,7 @@ Once the perturbations $(\delta, p)$ are trained, we can use them to perturb the
 Assume $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.
 During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to add $p$ into $\textbf x_i$ according to $b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$:
 \begin{equation}
-\tilde{\textbf x}_i = A(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
+\tilde{\textbf x}_i = A_{\text{add}}(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
 \end{equation}
 The tracker then takes $\tilde{\textbf z}_1=\textbf z_1+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
   
