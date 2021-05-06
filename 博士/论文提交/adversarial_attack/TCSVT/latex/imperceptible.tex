@@ -342,7 +342,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 
 \begin{table}[t]
   \centering
-  \caption{Compared with baselines on GOT-Val.}
+  \caption{Compared with baselines on perturbed GOT-Val dataset.}
   \begin{tabular}{@{}lcc@{}}
     \toprule
     \multirow{2}{*}[-2pt]{Methods}  & \multicolumn{2}{c}{AO}\\ \cmidrule{2-3}
@@ -420,7 +420,8 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 We compare our attack method with two baseline methods (See Table \ref{tab:imperceptible}).
 %\textbf{Baseline-1} uses the BIM \cite{DBLP:conf/iclr/KurakinGB17a} method to do targeted attack. The difference between the BIM method and our method includes: (1) We use the training set, while Baseline-1 use every image. (2) We perform imperceptible patch, while Baseline-1 use full image perturbations. It needs to be optimized on every frame. So it spped is slow.
 \textbf{Baseline-1} performs untargeted attacks based on the UAP \cite{UAP} method. The difference between Baseline-1 and our method is that, Baseline-1 generates perturbations added to the whole search image and cannot perform targeted attacks, while our method adds a small (universal) imperceptible patch to the search image to perform targeted attacks (see Figure \ref{fig:imperceptible}).
-\textbf{Baseline-2} performs targeted attacks based on the adversarial patch \cite{patch} method. The differences between Baseline-2 and our method include: (1) Baseline-2 pastes an adversarial patch on the search image without the $l_p\text{-norm}$ constrain while our method adds the patch onto the search image with the $l_p\text{-norm}$ constrain. (2) Baseline-2 uses the clean template image while we add imperceptible perturbations onto the template image. As a consequence, Baseline-2 generates an obviously noticeable patch while ours are imperceptible as shown in Figure \ref{fig:imperceptible}. Moreover, both the untargeted attack performance and the targeted performance of our method are better than Baseline-2 as shown in Table \ref{tab:imperceptible}.
+\textbf{Baseline-2} performs targeted attacks based on the adversarial patch \cite{patch} method. The differences between Baseline-2 and our method include: (1) Baseline-2 pastes an adversarial patch on the search image without the $l_p\text{-norm}$ constrain while our method adds the patch onto the search image with the $l_p\text{-norm}$ constrain. (2) Baseline-2 uses the clean template image while we add imperceptible perturbations onto the template image. As a consequence, Baseline-2 generates an obviously noticeable patch while ours are imperceptible as shown in Figure \ref{fig:imperceptible}.
+%Moreover, both the untargeted attack performance and the targeted performance of our method are better than Baseline-2 as shown in Table \ref{tab:imperceptible}.
 
 \subsection{Attack Results on the Evaluation Benchmarks}
 
