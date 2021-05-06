@@ -174,7 +174,8 @@ As a consequence, universal adversarial perturbations \cite{UAP, shafahi2020univ
   \end{gathered}
 \end{equation}  
 where the input pair $(\textbf x,\textbf z)$ is randomly picked from the training set. 
-Note that universal adversarial perterbations are added to the whole image and cannot tell the tracker where to look, so $y^{fake}$ is kept constant during the training process, resulting in the inability to perform targeted attacks.
+Note that universal adversarial perterbations are added to the whole image and $y^{fake}$ is kept constant during the training process.
+As shown in \cite{hirano2020simple}, this vanilla UAP method is limited to untargeted attacks.
 To achieve universal targeted attacks, one feasible way is to paste a small (universal) adversarial patch into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the adversarial patch instead of the real target:
 \begin{equation}
     \min\limits_{\delta_\textbf{x}} \mathop{\mathbb{E}}\limits_{(\textbf{x}, \textbf{z}, y^{fake})} L(y^{fake}, f(A_{\text{paste}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}}), \textbf{z})),
