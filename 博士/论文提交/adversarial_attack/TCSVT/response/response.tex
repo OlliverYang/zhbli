@@ -1,0 +1,202 @@
+%!TEX program = pdflatex
+
+% IJCAI-21 Author's response
+
+% Template file with author's reponse
+
+\documentclass{article}
+\usepackage{geometry}
+\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+
+
+\usepackage{times}
+\usepackage{soul}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[small]{caption}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{lipsum}
+\usepackage{multirow}  % for multirow command used in the table
+\urlstyle{same}
+
+\newtheorem{example}{Example}
+\newtheorem{theorem}{Theorem}
+
+
+\begin{document}
+
+\noindent We thank the reviewers for their generous comments on the manuscript and we will explain their concerns point by point.
+
+\section*{Response to Reviewer \#1}
+
+\textbf{1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
+
+We admit that the description “imperceptible" is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task. Specifically, the goal of existing universal attack methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory. 
+We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" \cite{zolfi2021translucent} in the manuscript to avoid ambiguity.
+What's more, making the perturbation looks like the background is a very meaningful future work.
+\\[6pt]
+\noindent \textbf{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
+
+In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have added an explanation of the concept of ``attack cost" in the manuscript.
+
+\section*{Response to Reviewer \#2}
+\textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
+
+This is the same as Reviewer \#1's first question.
+\\[6pt]
+\noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to SPARK and TTP. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
+
+Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including SPARK, TTP, CSA and FAN in both targeted and untargeted attack manner, as shown in table \ref{tab:untargeted} and \ref{tab:targeted}:
+\begin{table}[h]
+    \centering
+    \caption{Untargeted attack: Precision score on OTB2015.}
+    \begin{tabular}{@{}ccccc@{}}
+    \toprule
+    \multirow{2}{*}[-1pt]{Method} & \multirow{2}{*}[-1pt]{Tracker} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Attack Cost\\per Frame(ms)\end{tabular}} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Before\\ Attack\end{tabular}} & \multirow{2}{*}[-1pt]{Untargeted Attack} \\
+        &  &  &  &     \\ \midrule
+    RTAA & DaSiamRPN & - & 0.880 & 0.050\\
+    SPARK & SiamRPN & 41.4 & 0.851 & 0.064\\
+    CSA & SiamRPN & 9 & 0.851 & 0.458\\
+    FAN & SiamFC & 10 & 0.720 & 0.180\\
+    TTP & SiamRPN++ & 8 & 0.910 & 0.080 \\
+    \midrule
+    Ours & SiamFC++ & 0 & 0.861 & 0.092\\ \bottomrule
+    \end{tabular}
+    \label{tab:untargeted}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \caption{Targeted attack: Precision score on OTB2015.}
+    \begin{tabular}{@{}ccc@{}}
+    \toprule
+    Method & Tracker &  Targeted Attack \\
+    \midrule
+    FAN & SiamFC  &0.420 \\
+    TTP & SiamRPN++ &0.692 \\
+    \midrule
+    Ours & SiamFC++  &0.795 \\ \bottomrule
+    \end{tabular}
+    \label{tab:targeted}
+\end{table}
+
+\noindent \textbf{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
+
+Our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is show in table \ref{tab:untargeted}.
+\\[6pt]
+\noindent \textbf{4. There are some datasets adopted in [7,41] that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
+
+Thanks for your advice and we have added the VOT2018, VOT2016, OTB2015 and UAV123 in the paper.
+
+\begin{table}[h]
+    \centering
+    \caption{Overall attack results on VOT2016, VOT2018, VOT2019 and UAV123.}
+    \begin{tabular}{c c | c | c}
+    \toprule
+    Benchmarks & Metrics & Before Attack    & Untargeted Attack  \\
+    \midrule
+    \multirow{2}{*}[-2pt]{VOT2016} 
+    & Accuracy   & 0.626 & 0.393\\
+    & Robustness & 0.144 & 9.061\\
+    & EAO        & 0.460 & 0.007\\
+    \midrule
+    \multirow{2}{*}[-4pt]{VOT2018} 
+    & Accuracy   & 0.587 & 0.342\\
+    & Robustness & 0.183 & 8.981\\
+    & EAO        & 0.426 & 0.007\\
+    \midrule
+    \multirow{2}{*}{VOT2019} 
+    & Accuracy   & 0.556 & 0.345\\
+    & Robustness & 0.537 & 8.824\\
+    & EAO        & 0.243 & 0.010\\
+    \midrule
+    \multirow{3}{*}{UAV123} 
+    & AO  & 0.623 & 0.064\\
+    & Precision & 0.781 & 0.187\\
+    \bottomrule
+    \end{tabular}
+    \label{tab:benchmark results1}
+\end{table}
+
+\begin{table}[h]
+    \centering
+    \caption{Overall attack results on OTB-15, GOT-Val and LaSOT.}
+    \begin{tabular}{c c | c | c | c}
+    \toprule
+    \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
+    \cmidrule{3-5}
+                              &                         & Real Traj. & Real Traj. & Fake Traj.     \\ 
+    \midrule
+    \multirow{2}{*}{OTB-15} 
+    & AO   & 0.642 & 0.063 & 0.759\\
+    & Precision & 0.861 & 0.092 & 0.795\\
+    \midrule
+    \multirow{2}{*}{GOT-Val} 
+    & SR & 0.897 & 0.123 & 0.890\\
+    & AO & 0.760 & 0.153 & 0.840 \\
+    \midrule
+    \multirow{3}{*}{LaSOT} 
+    & Precision  & 0.514 & 0.046 & 0.605\\
+    & Norm. Prec.& 0.551 & 0.048 & 0.702\\
+    & AO         & 0.525 & 0.069 & 0.691\\
+    %& Succ. rate  & 0.626 & 0.016 & 0.834\\
+    \midrule
+    \multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
+    \bottomrule
+    \end{tabular}
+    \label{tab:benchmark results}
+  \end{table}
+
+\section*{Response to Reviewer \#3}
+
+\textbf{1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
+
+We aggree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see table \ref{tab:benchmark results1} and table \ref{tab:benchmark results}).
+\\[6pt]
+\noindent \textbf{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
+
+Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set), the perturbations can effectively attack videos in VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see table \ref{tab:benchmark results1} and table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
+\\[6pt]
+\noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
+
+To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack siamese trackers. Besides FGSM and Brown et al.' work, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
+In short, we focus on proposing a video-agnostic attacking system for siamese trackers instead of prosing a specific adversarial example generation method.
+By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
+The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
+\\[6pt]
+\noindent \textbf{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
+
+Thanks for your advice and we have added the table to summarize the characteristics of the used datasets as shown in table \ref{tab:dataset}.
+\begin{table}[h]
+    \begin{tabular}{lrccccc} \toprule
+    \multicolumn{2}{c}{Dataset}                            & Videos & Total frames & Frame rate & Object classes & Num. of attributes \\ \midrule
+    \multirow{4}{*}{Training set} & GOT-10k training split & 9.34K & 1.4M        & 10 fps     & 480            & 6                  \\
+                                  & LaSOT training split   & 1.12K & 2.83M        & 30 fps     & 70             & 14                 \\
+                                  & COCO2017               & n/a    & 118K         & n/a        & 80             & n/a                \\
+                                  & ILSVRC-VID             & 5.4K  & 1.6M         & 30 fps     & 30             & n/a                \\ \midrule
+    \multirow{7}{*}{Test set}     & GOT-10k test split     & 420    & 56K          & 10 fps     & 84             & 6                  \\
+                                  & UAV123                 & 123    & 113K         & 30 fps     & 9              & 12                 \\
+                                  & LaSOT test split       & 280    & 690K         & 30 fps     & 70             & 14                 \\
+                                  & OTB-15                 & 100    & 59K          & 30 fps     & 22             & 11                 \\
+                                  & VOT2016                & 60     & 21K          & 30 fps     & 16             & 6                  \\
+                                  & VOT2018                & 60     & 21K          & 30 fps     & 24             & 6                  \\ 
+                                  & VOT2019                & 60     & 19K          & 30 fps     & 30             & 6                  \\ \bottomrule
+    \end{tabular}
+    \label{tab:dataset}
+\end{table}
+
+\noindent \textbf{5. The paper contains some grammar mistakes and typos, the authors need to improve it by double check.}
+
+Thanks for your advice and we changed the errors in the paper.
+
+\bibliographystyle{named}
+\bibliography{ijcai21}
+
+\end{document}
+
