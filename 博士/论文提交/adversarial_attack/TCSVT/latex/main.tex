@@ -548,18 +548,35 @@ SiamRPN uses an RPN network to perform location regression and target classifica
 
 \begin{table}[t]
   \centering
-  \caption{Precision score with respect to the real/fake trajectory on OTB2015.}
-  \begin{tabular}{@{}cccccc@{}}
+  \caption{Untargeted attack: Precision score on OTB2015.}
+  \begin{tabular}{@{}ccccc@{}}
   \toprule
-  \multirow{2}{*}[-2pt]{Method} & \multirow{2}{*}[-2pt]{Tracker} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Attack\\ Cost(ms)\end{tabular}} & \multirow{2}{*}[-2pt]{\begin{tabular}[c]{@{}c@{}}Clean\\ Videos\end{tabular}} & \multicolumn{2}{c}{Perturbed Videos} \\ \cmidrule(l){5-6} 
-   &  &  &  & Real Traj. & Fake Traj. \\ \midrule
-  CSA & SiamRPN & 4720 & 0.851 & 0.458 & - \\
-  FAN & SiamFC & 10 & 0.720 & 0.180&0.420 \\
-  TTP & SiamRPN++ & 8 & 0.910 & 0.080&0.692 \\
+  \multirow{2}{*}[-1pt]{Method} & \multirow{2}{*}[-1pt]{Tracker} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Attack Cost\\per Frame(ms)\end{tabular}} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Before\\ Attack\end{tabular}} & \multirow{2}{*}[-1pt]{Untargeted Attack} \\
+   &  &  &  &     \\ \midrule
+  RTAA & DaSiamRPN & - & 0.880 & 0.050\\
+  SPARK & SiamRPN & 41.4 & 0.851 & 0.064\\
+  CSA & SiamRPN & 9 & 0.851 & 0.458\\
+  FAN & SiamFC & 10 & 0.720 & 0.180\\
+  TTP & SiamRPN++ & 8 & 0.910 & 0.080 \\
   \midrule
-  Ours & SiamFC++ & 0 & 0.861 & 0.092&0.795 \\ \bottomrule
+  Ours & SiamFC++ & 0 & 0.861 & 0.092\\ \bottomrule
   \end{tabular}
   \label{tab:SOTA}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Targeted attack: Precision score on OTB2015.}
+  \begin{tabular}{@{}ccc@{}}
+  \toprule
+  Method & Tracker &  Targeted Attack \\
+  \midrule
+  FAN & SiamFC  &0.420 \\
+  TTP & SiamRPN++ &0.692 \\
+  \midrule
+  Ours & SiamFC++  &0.795 \\ \bottomrule
+  \end{tabular}
+  \label{tab:SOTA1}
 \end{table}
 
 \begin{figure}[t]
