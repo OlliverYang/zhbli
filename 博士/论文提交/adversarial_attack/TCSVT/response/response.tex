@@ -101,22 +101,22 @@ Thanks for your advice and we have added the VOT2018, VOT2016, OTB2015 and UAV12
     \toprule
     Benchmarks & Metrics & Before Attack    & Untargeted Attack  \\
     \midrule
-    \multirow{2}{*}[-2pt]{VOT2016} 
+    \multirow{2}{*}[-6pt]{VOT2016} 
     & Accuracy   & 0.626 & 0.393\\
     & Robustness & 0.144 & 9.061\\
     & EAO        & 0.460 & 0.007\\
     \midrule
-    \multirow{2}{*}[-4pt]{VOT2018} 
+    \multirow{2}{*}[-6pt]{VOT2018} 
     & Accuracy   & 0.587 & 0.342\\
     & Robustness & 0.183 & 8.981\\
     & EAO        & 0.426 & 0.007\\
     \midrule
-    \multirow{2}{*}{VOT2019} 
+    \multirow{2}{*}[-6pt]{VOT2019} 
     & Accuracy   & 0.556 & 0.345\\
     & Robustness & 0.537 & 8.824\\
     & EAO        & 0.243 & 0.010\\
     \midrule
-    \multirow{3}{*}{UAV123} 
+    \multirow{3}{*}[+6pt]{UAV123} 
     & AO  & 0.623 & 0.064\\
     & Precision & 0.781 & 0.187\\
     \bottomrule
@@ -174,6 +174,7 @@ The implication for improving the tracking robustness is to make the tracker awa
 
 Thanks for your advice and we have added the table to summarize the characteristics of the used datasets as shown in table \ref{tab:dataset}.
 \begin{table}[h]
+    \caption{Characteristics of the datasets used to train and evaluate the proposed attack method.}
     \begin{tabular}{lrccccc} \toprule
     \multicolumn{2}{c}{Dataset}                            & Videos & Total frames & Frame rate & Object classes & Num. of attributes \\ \midrule
     \multirow{4}{*}{Training set} & GOT-10k training split & 9.34K & 1.4M        & 10 fps     & 480            & 6                  \\
