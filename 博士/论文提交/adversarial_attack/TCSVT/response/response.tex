@@ -1,9 +1,5 @@
 %!TEX program = pdflatex
-
-% IJCAI-21 Author's response
-
-% Template file with author's reponse
-
+%!BIB program = bibtex
 \documentclass{article}
 \usepackage{geometry}
 \geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
@@ -43,7 +39,7 @@ What's more, making the perturbation looks like the background is a very meaning
 \\[6pt]
 \noindent \textbf{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
 
-In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have added an explanation of the concept of ``attack cost" in the manuscript.
+In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid ambiguity.
 
 \section*{Response to Reviewer \#2}
 \textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
@@ -52,7 +48,7 @@ This is the same as Reviewer \#1's first question.
 \\[6pt]
 \noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to SPARK and TTP. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
-Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including SPARK, TTP, CSA and FAN in both targeted and untargeted attack manner, as shown in table \ref{tab:untargeted} and \ref{tab:targeted}:
+Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}:
 \begin{table}[h]
     \centering
     \caption{Untargeted attack: Precision score on OTB2015.}
@@ -88,11 +84,11 @@ Thanks for your advice and we have added experiments as you suggested. Specifica
 
 \noindent \textbf{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
 
-Our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is show in table \ref{tab:untargeted}.
+Our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is show in Table \ref{tab:untargeted}.
 \\[6pt]
-\noindent \textbf{4. There are some datasets adopted in [7,41] that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
+\noindent \textbf{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
 
-Thanks for your advice and we have added the VOT2018, VOT2016, OTB2015 and UAV123 in the paper.
+Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB2015 and UAV123 in Sec. IV. D, as shown in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}:
 
 \begin{table}[h]
     \centering
@@ -157,11 +153,12 @@ Thanks for your advice and we have added the VOT2018, VOT2016, OTB2015 and UAV12
 
 \textbf{1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
 
-We aggree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see table \ref{tab:benchmark results1} and table \ref{tab:benchmark results}).
+We aggree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}).
+Experimental results demonstrate the transferability of the proposed method across different datasets
 \\[6pt]
 \noindent \textbf{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
 
-Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set), the perturbations can effectively attack videos in VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see table \ref{tab:benchmark results1} and table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
+Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT), the perturbations can effectively attack videos on VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
 \\[6pt]
 \noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
 
@@ -172,7 +169,7 @@ The implication for improving the tracking robustness is to make the tracker awa
 \\[6pt]
 \noindent \textbf{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
 
-Thanks for your advice and we have added the table to summarize the characteristics of the used datasets as shown in table \ref{tab:dataset}.
+Thanks for your advice and we have added the table to summarize the characteristics of the used datasets in Sec. IV. A, as shown in Table \ref{tab:dataset}:
 \begin{table}[h]
     \caption{Characteristics of the datasets used to train and evaluate the proposed attack method.}
     \begin{tabular}{lrccccc} \toprule
@@ -196,8 +193,8 @@ Thanks for your advice and we have added the table to summarize the characterist
 
 Thanks for your advice and we changed the errors in the paper.
 
-\bibliographystyle{named}
-\bibliography{ijcai21}
+\bibliographystyle{IEEEtran}
+\bibliography{ref.bib}
 
 \end{document}
 
