@@ -27,25 +27,51 @@
 
 \begin{document}
 
-\noindent We thank the reviewers for their generous comments on the manuscript and we will explain their concerns point by point.
+\noindent We thank the reviewers for their constructive comments on the manuscript and we explain their concerns point by point.
 
 \section*{Response to Reviewer \#1}
 
 \textbf{1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
 
-We admit that the description “imperceptible" is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task. Specifically, the goal of existing universal attack methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory. 
-We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" \cite{zolfi2021translucent} in the manuscript to avoid ambiguity.
+% 我们承认用词不对，因为的确是可见的。
+We admit that the description “imperceptible" is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task, because we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
+% 相关工作做了很多努力使得应用到跟踪器上的扰动变得不可感知。然而，这些方法需要在每帧图像上进行攻击，这降低了攻击效率。为了实现视频无关的通用攻击，我们牺牲了一定的不可感知性，实现了攻击效率和扰动感知性的平衡。
+Related work \cite{SPARK, CSA} has made many efforts to make perturbations applied to trackers imperceptible. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. To achieve video-agnostic universal attack on Siamese trackers, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
+We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" \cite{zolfi2021translucent} in the manuscript to avoid the ambiguity.
 What's more, making the perturbation looks like the background is a very meaningful future work.
 \\[6pt]
 \noindent \textbf{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
 
-In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid ambiguity.
+In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid the ambiguity.
 
 \section*{Response to Reviewer \#2}
 \textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
 
-This is the same as Reviewer \#1's first question.
-\\[6pt]
+% 与模板图像的扰动相同，我们在搜索图像上也牺牲了对抗补丁的一些不可感知性以提高攻击效率。
+Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Table. \ref{tab:iter}.
+
+\begin{table*}[h]
+    \centering
+    \renewcommand\tabcolsep{5.5pt} % 调整表格列间的长度
+    \caption{Influence of the training iteration number on GOT-Val.}
+    \begin{tabular}{cc|ccccccccccccccc} 
+    \toprule
+    \multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  \\ 
+    \midrule
+    \multirow{2}{*}{Fake Traj.} & AO    &  0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.15 & 0.18 & 0.47 & 0.73 & 0.78 & 0.82 & 0.84 & 0.84  \\
+                                & SR    &  0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.11 & 0.15 & 0.49 & 0.78 & 0.84 & 0.88 & 0.89 & 0.89    \\ 
+    \midrule
+    \multirow{2}{*}{Real Traj.} & AO   & 0.76 & 0.77 & 0.76 & 0.76 & 0.76 & 0.76 & 0.75 & 0.73 & 0.48 & 0.27 & 0.22 & 0.17 & 0.15 & 0.15    \\
+                                & SR   & 0.89 & 0.9 & 0.89 & 0.89 & 0.9 & 0.89 & 0.88 & 0.86 & 0.53 & 0.25 & 0.18 & 0.14 & 0.12 & 0.12    \\ 
+    \midrule
+    \multicolumn{2}{c|}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
+    \midrule
+    \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
+    \bottomrule
+    \end{tabular}
+    \label{tab:iter}
+\end{table*}
+
 \noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to SPARK and TTP. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
 Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}:
@@ -62,7 +88,7 @@ Thanks for your advice and we have added experiments as you suggested. Specifica
     FAN & SiamFC & 10 & 0.720 & 0.180\\
     TTP & SiamRPN++ & 8 & 0.910 & 0.080 \\
     \midrule
-    Ours & SiamFC++ & 0 & 0.861 & 0.092\\ \bottomrule
+    Ours & SiamFC++ & $\sim 0$ & 0.861 & 0.092\\ \bottomrule
     \end{tabular}
     \label{tab:untargeted}
 \end{table}
@@ -83,8 +109,7 @@ Thanks for your advice and we have added experiments as you suggested. Specifica
 \end{table}
 
 \noindent \textbf{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
-
-Our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.
+ Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.
 \\[6pt]
 \noindent \textbf{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
 
@@ -158,7 +183,10 @@ Experimental results demonstrate the transferability of the proposed method acro
 \\[6pt]
 \noindent \textbf{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
 
-Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT), the perturbations can effectively attack videos on VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
+% Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT), the perturbations can effectively attack videos on VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
+
+% 当数据集的标注信息不可用时，我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框.预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
+When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one boxe per frame. The predicted boxes can be considered as ground truth for training our attack method. Specifically, we use GOT-10k training split as
 \\[6pt]
 \noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
 
