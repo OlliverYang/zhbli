@@ -83,18 +83,23 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textbf{1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
+\textit{This paper proposes a universal attacking method to attack Siamese network-based trackers. In specific, this work aims at attacking a tracker from two aspects: adding a universal imperceptible perturbation to the template and adding a fake target to the search image. When performing tracking, the tracker will drift to the fake target region and thus lose the real target object. In comparison with previous methods, the proposed method is simple yet effective, and requires no additional cost to perform attacking. Overall, this is an interesting paper, and it is well written and organized. The authors conduct extensive experiments to show the effectiveness of the proposed method.}
 
+\textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
+
+\textit{I have two small questions. 1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
+
+\textbf{
 % 我们承认用词不对，因为的确是可见的。
 We admit that the description “imperceptible" is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task, because we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
 % 相关工作做了很多努力使得应用到跟踪器上的扰动变得不可感知。然而，这些方法需要在每帧图像上进行攻击，这降低了攻击效率。为了实现视频无关的通用攻击，我们牺牲了一定的不可感知性，实现了攻击效率和扰动感知性的平衡。
 Related work \cite{SPARK, CSA} has made many efforts to make perturbations applied to trackers imperceptible. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. To achieve video-agnostic universal attack on Siamese trackers, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
 We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" \cite{zolfi2021translucent} in the manuscript to avoid the ambiguity.
-What's more, making the perturbation looks like the background is a very meaningful future work.
-\\[6pt]
-\noindent \textbf{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
+What's more, making the perturbation looks like the background is a very meaningful future work.}
 
-In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid the ambiguity.
+\textit{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
+
+\textbf{In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid the ambiguity.}
 
 %%%%%%%%%%%%%%%%% 审稿人 2 %%%%%%%%%%%%%%%%%
 \newpage
@@ -117,10 +122,15 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
+\textit{The authors are the first to perform universal targeted attacks for Siamese trackers utilizing both the imperceptible perturbation and the adversarial patch together. Moreover, the performance can achieve the AO score 0.146.}
 
+\textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
+
+\textit{However, I have some concerns about this paper. 1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
+
+\textbf{
 % 与模板图像的扰动相同，我们在搜索图像上也牺牲了对抗补丁的一些不可感知性以提高攻击效率。
-Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Figure \ref{fig:vis} and Table \ref{tab:iter}.
+Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Figure \ref{fig:vis} and Table \ref{tab:iter}.}
 
 \begin{figure}[h]
     \centering
@@ -153,11 +163,12 @@ Similar to the perturbation on the template image, we sacrifice some imperceptib
     \label{tab:iter}
 \end{table*}
 
-\noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
+\textit{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
+\textbf{
 Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}. 
 % 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
-We do not compare with PAT because they only experimented on private data and not on the public datasets.
+We do not compare with PAT because they only experimented on private data and not on the public datasets.}
 
 \begin{table}[h]
     \centering
@@ -192,13 +203,13 @@ We do not compare with PAT because they only experimented on private data and no
     \label{tab:targeted}
 \end{table}
 
-\noindent \textbf{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
+\textit{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
 
-Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.
-\\[6pt]
-\noindent \textbf{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
+\textbf{Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.}
 
-Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB2015 and UAV123 in Sec. IV. D, as shown in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}:
+\textit{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
+
+\textbf{Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB2015 and UAV123 in Sec. IV. D, as shown in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}:}
 
 \begin{table}[h]
     \centering
@@ -281,19 +292,25 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textbf{1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
+\textit{This paper aims to propose a universal targeted attack on Siamese visual tracking. The problem studied here is a classical adversarial attack problem where adversarial samples are generated to mislead the training process. The authors propose a simple approach to generate adversarial samples and use experiments to demonstrate the effectiveness of the proposed framework. The advantage of the proposed attack is computation efficient and can be used in the real-time video tracking.}
 
+\textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
+
+\textit{However, I have the following questions listed below. 1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
+
+\textbf{
 We agree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}).
-Experimental results demonstrate the transferability of the proposed method across different datasets.
-\\[6pt]
-\noindent \textbf{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
+Experimental results demonstrate the transferability of the proposed method across different datasets.}
+
+\textit{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
 
 % Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT), the perturbations can effectively attack videos on VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
 
+\textbf{
 % 当数据集的标注信息不可用时，我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框。预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
 When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method.
 % 具体而言，我们使用 GOT-10k 训练集的视频，利用 SiamFC++ 预测跟踪结果。将得到的跟踪结果作为标签信息训练扰动，在 GOT-10k 验证集上进行评估。实验结果如表所示。
-Specifically, we run SiamFC++ on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set, as shown in Table \ref{tab:agent}.
+Specifically, we run SiamFC++ on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set, as shown in Table \ref{tab:agent}.}
 
 \begin{table}
     \centering
@@ -309,17 +326,19 @@ Specifically, we run SiamFC++ on videos in GOT-10k training set. The predicted b
     \label{tab:agent}
 \end{table}
 
-\noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
+\textit{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
 
+\textbf{
 The proposed method is effective based on such small change is, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
 To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack siamese trackers. Besides FGSM \cite{FGSM} and Brown et al.'s work \cite{patch}, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
 In short, we focus on proposing a video-agnostic attacking system for siamese trackers instead of proposing a specific adversarial example generation method.
 By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
-The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
-\\[6pt]
-\noindent \textbf{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
+The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.}
 
-Thanks for your advice and we have added the table to summarize the characteristics of the used datasets in Sec. IV. A, as shown in Table \ref{tab:dataset}:
+\textit{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
+
+\textbf{Thanks for your advice and we have added the table to summarize the characteristics of the used datasets in Sec. IV. A, as shown in Table \ref{tab:dataset}:}
+
 \begin{table}[h]
     \caption{Characteristics of the datasets used to train and evaluate the proposed attack method.}
     \begin{tabular}{lrccccc} \toprule
@@ -339,13 +358,14 @@ Thanks for your advice and we have added the table to summarize the characterist
     \label{tab:dataset}
 \end{table}
 
-\noindent \textbf{5. The paper contains some grammar mistakes and typos, the authors need to improve it by double check.}
+\textit{5. The paper contains some grammar mistakes and typos, the authors need to improve it by double check.}
 
+\textbf{
 Thanks for your advice and we changed the errors in the manuscript:
-
-Our perturbations also generalize well to SiamFC++-ShuffleNet, \textbf{in despite of} the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet. $\rightarrow$ Our perturbations also generalize well to SiamFC++-ShuffleNet, \textbf{despite} the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
-
-SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks \textbf{to} Siamese trackers. $\rightarrow$ SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks \textbf{on} Siamese trackers.
+Our perturbations also generalize well to SiamFC++-ShuffleNet, in despite of the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
+Our perturbations also generalize well to SiamFC++-ShuffleNet, despite the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
+SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers.
+SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks on Siamese trackers.}
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref.bib}
