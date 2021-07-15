@@ -74,7 +74,10 @@ Similar to the perturbation on the template image, we sacrifice some imperceptib
 
 \noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
-Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}. We do not compare 
+Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}. 
+% 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
+We do not compare with PAT because they only experimented on private data and not on the public datasets.
+
 \begin{table}[h]
     \centering
     \caption{Untargeted attack: Precision score on OTB2015.}
