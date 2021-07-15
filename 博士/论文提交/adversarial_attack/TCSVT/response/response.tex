@@ -1,8 +1,8 @@
 %!TEX program = pdflatex
 %!BIB program = bibtex
-\documentclass{article}
+\documentclass[12pt]{article}
 \usepackage{geometry}
-\geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
+% \geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
 
 
 \usepackage{times}
@@ -20,6 +20,7 @@
 \usepackage{algorithmic}
 \usepackage{lipsum}
 \usepackage{multirow}  % for multirow command used in the table
+\usepackage{setspace}
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -27,11 +28,61 @@
 
 
 \begin{document}
+\setstretch{1.5}
+\linespread{1}
+\title{Response to Reviewers of TCSVT-06387-2021: A Simple and Strong Baseline for Universal Targeted Attacks on Siamese Visual Tracking}
+\author{\normalsize{Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu}}
+\date{}
+\maketitle
 
-\noindent We thank the editor-in-chief for giving us the oppotunity to resubmit the revised manuscript. We also thank the reviewers for their constructive comments on the manuscript and we explain their concerns point by point.
+\noindent Dear Associate Editor:
 
-\section*{Response to Reviewer \#1}
+We would like to express our heartfelt gratitude to you and the reviewers for the insightful and helpful comments. 
+% 指出是主编建议修改后重投的。
+The editor-in-chief suggested us to revise the manuscript and resubmit it to TSCVT.
+When we revised the paper, we carefully considered and followed all the comments and suggestions provided by you and the reviewers. To summarize, we have made the following revisions:
 
+(1) ...
+
+(2) ...
+
+(3) We compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings.
+
+We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
+\indent We are looking forward to your reply.\\[10pt]
+\noindent Yours sincerely,
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
+\\
+\\
+\\
+\noindent Dr. Jin Gao (Contact author)\\
+\noindent National Laboratory of Pattern Recognition (NLPR)\\
+\noindent Institute of Automation, Chinese Academy of Sciences (CASIA)\\
+\noindent Address: No. 95, Zhongguancun East Road, Haidian District,\\
+\noindent Beijing 100190, P. R. China\\
+\noindent Email: jin.gao@nlpr.ia.ac.cn
+
+%%%%%%%%%%%%%%%%% 审稿人 1 %%%%%%%%%%%%%%%%%
+\newpage
+{\centering\section*{Response Letter to Reviewer \#1}}
+\noindent Dear Reviewer \#1:
+
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
+\indent We are looking forward to your reply.\\[10pt]
+\noindent Yours sincerely,
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
+\\
+\\
+\\
+\noindent Dr. Jin Gao (Contact author)\\
+\noindent National Laboratory of Pattern Recognition (NLPR)\\
+\noindent Institute of Automation, Chinese Academy of Sciences (CASIA)\\
+\noindent Address: No. 95, Zhongguancun East Road, Haidian District,\\
+\noindent Beijing 100190, P. R. China\\
+\noindent Email: jin.gao@nlpr.ia.ac.cn
+
+\newpage
 \textbf{1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
 
 % 我们承认用词不对，因为的确是可见的。
@@ -45,7 +96,27 @@ What's more, making the perturbation looks like the background is a very meaning
 
 In table VII, the attack cost is calculated on the video level instead of the image level. CSA needs 9ms to process a frame and needs an average of 4720ms to attack a video. We have changed ``attack cost" to ``attack cost per frame" in the manuscript to avoid the ambiguity.
 
-\section*{Response to Reviewer \#2}
+%%%%%%%%%%%%%%%%% 审稿人 2 %%%%%%%%%%%%%%%%%
+\newpage
+{\centering\section*{Response Letter to Reviewer \#2}}
+\noindent Dear Reviewer \#2:
+
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
+\indent We are looking forward to your reply.\\[10pt]
+\noindent Yours sincerely,
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
+\\
+\\
+\\
+\noindent Dr. Jin Gao (Contact author)\\
+\noindent National Laboratory of Pattern Recognition (NLPR)\\
+\noindent Institute of Automation, Chinese Academy of Sciences (CASIA)\\
+\noindent Address: No. 95, Zhongguancun East Road, Haidian District,\\
+\noindent Beijing 100190, P. R. China\\
+\noindent Email: jin.gao@nlpr.ia.ac.cn
+
+\newpage
 \textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
 
 % 与模板图像的扰动相同，我们在搜索图像上也牺牲了对抗补丁的一些不可感知性以提高攻击效率。
@@ -188,8 +259,28 @@ Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB201
     \label{tab:benchmark results}
   \end{table}
 
-\section*{Response to Reviewer \#3}
+%%%%%%%%%%%%%%%%% 审稿人 3 %%%%%%%%%%%%%%%%%
+\clearpage
+\newpage
+{\centering\section*{Response Letter to Reviewer \#3}}
+\noindent Dear Reviewer \#3:
 
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
+\indent We are looking forward to your reply.\\[10pt]
+\noindent Yours sincerely,
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
+\\
+\\
+\\
+\noindent Dr. Jin Gao (Contact author)\\
+\noindent National Laboratory of Pattern Recognition (NLPR)\\
+\noindent Institute of Automation, Chinese Academy of Sciences (CASIA)\\
+\noindent Address: No. 95, Zhongguancun East Road, Haidian District,\\
+\noindent Beijing 100190, P. R. China\\
+\noindent Email: jin.gao@nlpr.ia.ac.cn
+
+\newpage
 \textbf{1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
 
 We agree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}).
