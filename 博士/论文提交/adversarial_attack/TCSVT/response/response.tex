@@ -199,9 +199,25 @@ Experimental results demonstrate the transferability of the proposed method acro
 
 % Our perturbations generate well on different datasets. Once trained on public datasets (i.e., COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT), the perturbations can effectively attack videos on VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}). Thus, we can deploy perturbations trained on public datasets directly to real-world scenarios without fine-tuning using the private training set.
 
-% 当数据集的标注信息不可用时，我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框.预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
-When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one boxe per frame. The predicted boxes can be considered as ground truth for training our attack method. Specifically, we use GOT-10k training split as
-\\[6pt]
+% 当数据集的标注信息不可用时，我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框。预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
+When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method.
+% 具体而言，我们使用 GOT-10k 训练集的视频，利用 SiamFC++ 预测跟踪结果。将得到的跟踪结果作为标签信息训练扰动，在 GOT-10k 验证集上进行评估。实验结果如表所示。
+Specifically, we run SiamFC++ on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set, as shown in Table \ref{tab:agent}.
+
+\begin{table}
+    \centering
+    \caption{213}
+    \begin{tabular}{cccc}
+        \toprule
+        \multirow{2}{*}{Metrics} & \multirow{2}{*}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}                                            \\
+                                 &                                & Perturbations are trained on real GT & Perturbations are trained without real GT \\ \midrule
+        SR                       & 0.897                          & 0.123                                & 0.121                                     \\
+        AO                       & 0.760                          & 0.153                                & 0.160                                     \\                              
+        \bottomrule
+    \end{tabular}
+    \label{tab:agent}
+\end{table}
+
 \noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
 
 The proposed method is effective based on such small change is, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
