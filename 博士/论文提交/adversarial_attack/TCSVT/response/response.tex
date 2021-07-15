@@ -27,7 +27,7 @@
 
 \begin{document}
 
-\noindent We thank the reviewers for their constructive comments on the manuscript and we explain their concerns point by point.
+\noindent We thank the editor-in-chief for giving us the oppotunity to resubmit the revised manuscript. We also thank the reviewers for their constructive comments on the manuscript and we explain their concerns point by point.
 
 \section*{Response to Reviewer \#1}
 
@@ -72,9 +72,9 @@ Similar to the perturbation on the template image, we sacrifice some imperceptib
     \label{tab:iter}
 \end{table*}
 
-\noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to SPARK and TTP. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
+\noindent \textbf{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
-Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}:
+Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}. We do not compare 
 \begin{table}[h]
     \centering
     \caption{Untargeted attack: Precision score on OTB2015.}
@@ -109,7 +109,8 @@ Thanks for your advice and we have added experiments as you suggested. Specifica
 \end{table}
 
 \noindent \textbf{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
- Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.
+
+Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.
 \\[6pt]
 \noindent \textbf{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
 
@@ -190,8 +191,9 @@ When the ground truth box information of videos is not available, we can run the
 \\[6pt]
 \noindent \textbf{3. The technical novelty of this paper is not high as it directly borrows the approach from the traditional adversarial attack and use two additional path to train the neural networks. Can the authors provide theoretical analysis to explain the effectiveness based on such small change?}
 
-To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack siamese trackers. Besides FGSM and Brown et al.' work, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
-In short, we focus on proposing a video-agnostic attacking system for siamese trackers instead of prosing a specific adversarial example generation method.
+The proposed method is effective based on such small change is, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
+To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack siamese trackers. Besides FGSM \cite{FGSM} and Brown et al.'s work \cite{patch}, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
+In short, we focus on proposing a video-agnostic attacking system for siamese trackers instead of proposing a specific adversarial example generation method.
 By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
 The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
 \\[6pt]
