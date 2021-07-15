@@ -12,6 +12,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[small]{caption}
 \usepackage{graphicx}
+\usepackage{subfigure}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{booktabs}
@@ -48,7 +49,15 @@ In table VII, the attack cost is calculated on the video level instead of the im
 \textbf{1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
 
 % 与模板图像的扰动相同，我们在搜索图像上也牺牲了对抗补丁的一些不可感知性以提高攻击效率。
-Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Table. \ref{tab:iter}.
+Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Figure \ref{fig:vis} and Table \ref{tab:iter}.
+
+\begin{figure}[h]
+    \centering
+    \subfigure[FAN]{\label{fig:a}\includegraphics[width=0.48\textwidth]{FAN.pdf}}
+    \subfigure[Ours]{\label{fig:b}\includegraphics[width=0.48\textwidth]{Ours.pdf}}
+    \caption{The results under targeted attacks compared with FAN \cite{FAN}.  FAN crafts the perturbations for each video independently, which comes at a non-negligible computational cost. To achieve video-agnostic universal attack on Siamese trackers, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.}
+    \label{fig:vis}
+\end{figure}
 
 \begin{table*}[h]
     \centering
@@ -66,7 +75,8 @@ Similar to the perturbation on the template image, we sacrifice some imperceptib
     \midrule
     \multicolumn{2}{c|}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
     \midrule
-    \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
+    % \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
+    \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.93 & 0.78 & 0.56 & 0.50 & 0.51 & 0.52 & 0.53 & 0.56\\
     \bottomrule
     \end{tabular}
     \label{tab:iter}
