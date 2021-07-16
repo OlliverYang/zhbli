@@ -21,6 +21,9 @@
 \usepackage{lipsum}
 \usepackage{multirow}  % for multirow command used in the table
 \usepackage{setspace}
+\usepackage{ulem}  % 用于添加下划线
+\usepackage{CJKulem}  % 用于添加下划线
+\usepackage{ctex}  % 用于添加下划线
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -87,15 +90,29 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
-\textit{I have two small questions. 1. The authors mentioned that “a universal imperceptible perturbation is added to the template image”. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
+%%%% 问题 1.1 %%%%
+\textit{I have two small questions. 1. The authors mentioned that ``a universal imperceptible perturbation is added to the template image''. However, according to the description in the paper, the perturbation added to template image is not imperceptible.}
 
 \textbf{
 % 我们承认用词不对，因为的确是可见的。
-We admit that the description “imperceptible" is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task, because we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
+We admit that the description ``imperceptible'' is not precise because the perturbation can be found by human eyes. The reason is that the universal attack on the object tracking task is more difficult than on the image classification task, because we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
 % 相关工作做了很多努力使得应用到跟踪器上的扰动变得不可感知。然而，这些方法需要在每帧图像上进行攻击，这降低了攻击效率。为了实现视频无关的通用攻击，我们牺牲了一定的不可感知性，实现了攻击效率和扰动感知性的平衡。
 Related work \cite{SPARK, CSA} has made many efforts to make perturbations applied to trackers imperceptible. However, the existing attack methods craft the perturbations for each video independently, which comes at a non-negligible computational cost. To achieve video-agnostic universal attack on Siamese trackers, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.
 We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" \cite{zolfi2021translucent} in the manuscript to avoid the ambiguity.
-What's more, making the perturbation looks like the background is a very meaningful future work.}
+What's more, making the perturbation looks like the background is a very meaningful future work.
+For your convenience in cross-checking, changes in the revised manuscript is given as follows.}
+
+\textbf{We have replaced ``Specifically, we attack a tracker by adding a universal imperceptible perturbation to the template image and adding a fake target ...'' with}
+ ``\uline{Specifically, we attack a tracker by adding a universal translucent perturbation to the template image and adding a fake target ...}''
+\textbf{in the abstract of the revised manuscript.}
+
+\textbf{We have replaced ``To overcome all the shortcomings of the above methods, we propose to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an imperceptible patch $p$ for the search image $\textbf x$.'' with} 
+``\uline{To overcome all the shortcomings of the above methods, we propose to train a translucent perturbation $\delta$ for the template image $\textbf z$, and a translucent patch $p$ for the search image $\textbf x$.}'' 
+\textbf{in Section III.A of the revised manuscript.}
+
+\textbf{We have replaced ``Baseline-2 uses the clean template image while we add imperceptible perturbations onto the template image. As a consequence, Baseline-2 generates an obviously noticeable patch while ours are imperceptible as shown in Figure 5.'' with} 
+``\uline{Baseline-2 uses the clean template image while we add translucent perturbations onto the template image. As a consequence, Baseline-2 generates an obviously noticeable patch while ours are translucent as shown in Figure 5.}'' 
+\textbf{in Section IV.C of the revised manuscript.}
 
 \textit{2. In table VII, the cost for CSA method is 4720ms, which is different from the cost time reported in the original CSA method. In CSA, attacking the template and search region require 3ms and 9ms, respectively. Why is there such a big difference?}
 
