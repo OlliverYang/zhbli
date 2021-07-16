@@ -40,7 +40,7 @@
 
 We would like to express our heartfelt gratitude to you and the reviewers for the insightful and helpful comments. 
 % 指出是主编建议修改后重投的。
-The editor-in-chief suggested us to revise the manuscript and resubmit it to TSCVT.
+The editor-in-chief suggested us to revise the manuscript and resubmit it to TCSVT.
 When we revised the paper, we carefully considered and followed all the comments and suggestions provided by you and the reviewers. To summarize, we have made the following revisions:
 
 (1) We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" in the manuscript to avoid the ambiguity.
@@ -55,7 +55,7 @@ When we revised the paper, we carefully considered and followed all the comments
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
-\noindent Yours sincerely,
+\noindent Yours sincerely,\\
 \noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
@@ -72,10 +72,10 @@ We hope that our revised manuscript is now appropriate for publication in IEEE T
 {\centering\section*{Response Letter to Reviewer \#1}}
 \noindent Dear Reviewer \#1:
 
-Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology.
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
-\noindent Yours sincerely,
+\noindent Yours sincerely,\\
 \noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
@@ -125,10 +125,10 @@ For your convenience in cross-checking, changes in the revised manuscript is giv
 {\centering\section*{Response Letter to Reviewer \#2}}
 \noindent Dear Reviewer \#2:
 
-Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology.
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
-\noindent Yours sincerely,
+\noindent Yours sincerely,\\
 \noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
@@ -165,9 +165,9 @@ The detailed analysis is added in Section IV.D of the revised manuscript. For yo
 
 \uline{
 % 为了进一步分析扰动的可感知性，我们在图中与FAN进行了对比。
-To further analyze the perceptibility of perturbations, we compare our method with FAN in Figure \ref{fig:vis}.
+To further analyze the perceptibility of perturbations, we compare our method with FAN \cite{FAN} in Figure \ref{fig:vis}.
 % We visualize the perturbed frames ($3^{rd}$ row of Figure \ref{fig:vis}) of OTB2015 dataset, Singer2 video. 
-As shown in Figure \ref{fig:vis}, both FAN \cite{FAN} and our method can perform targeted attack. 
+As shown in Figure \ref{fig:vis}, both FAN and our method can perform targeted attack. 
 % 添加了由FAN生成的扰动的OTB的SSIM下降至0.92。添加了我们的扰动的OTB的SSIM下降至0.56。
 The SSIM of OTB2015 perturbed by FAN drops to 0.92, while the SSIM perturbed by our method drops to 0.56.
 % 这是因为FAN为每帧产生独立的扰动，而我们的扰动是通用的，因此我们的任务比FAN更难，导致我们的扰动值更大。
@@ -204,8 +204,8 @@ What's more, our method can perform universal attack, both with respect to the d
 
 \textbf{
 Thanks for your advice and we have added experiments as you suggested. We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 2 new tables that demonstrate the untargeted and targeted attack results respectively. 
-The table demonstrating the untargeted attack result is included in Section IV.F of the revised manuscript and referred to as Table IX.
-The table demonstrating the targeted attack result is included in Section IV.F of the revised manuscript and referred to as Table X. 
+The table demonstrating the untargeted attack result is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:untargeted}.
+The table demonstrating the targeted attack result is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:targeted}. 
 % 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
 We do not compare with PAT because they only experimented on private data and not on the public datasets.
 }
@@ -246,7 +246,11 @@ We do not compare with PAT because they only experimented on private data and no
 \end{table}
 
 \textbf{
-As can be seen from Table \ref{tab:untargeted} and Table \ref{tab:targeted}, CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for Siamese trackers. Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
+As can be seen from Table \ref{tab:untargeted} and Table \ref{tab:targeted}, CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for Siamese trackers. 
+SPARK \cite{SPARK} reduces the accuracy score with respect to the real trajectory from 0.851 to 0.064. However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time.
+RTAA \cite{RTAA} reduces the accuracy score with respect to the real trajectory from 0.880 to 0.050. However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
+Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. 
+Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
 }
 
 \begin{table}[t]
@@ -333,10 +337,10 @@ In addition, the experimental results in Table \ref{tab:benchmark results1} show
 {\centering\section*{Response Letter to Reviewer \#3}}
 \noindent Dear Reviewer \#3:
 
-Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Pattern Analysis and Machine Intelligence.
+Thank you very much for your thorough review. Your insightful comments are very helpful for us to improve the quality of the paper. According to your comments and suggestions, we have carefully and extensively revised the manuscript. The main revised parts are highlighted by underlines in the underlined version for your convenience. You will find that all your comments and suggestions are considered and followed. We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology.
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
-\noindent Yours sincerely,
+\noindent Yours sincerely,\\
 \noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
@@ -426,7 +430,7 @@ The implication for improving the tracking robustness is to make the tracker awa
 \textit{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
 
 \textbf{Thanks for the insightful comment. As suggested, we have added a new table to summarize the characteristics of the used datasets.
-The new table is included in Section IV.A of the revised manuscript and referred as Table \ref{tab:dataset}:}
+The new table is included in Section IV.A of the revised manuscript and referred as Table \ref{tab:dataset}.}
 
 \begin{table}[h]
     \renewcommand\thetable{I}
@@ -459,8 +463,10 @@ Specifically, we have replaced ``Our perturbations also generalize well to SiamF
 ``
 \uline{Our perturbations also generalize well to SiamFC++-ShuffleNet, despite the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.}
 ''
-\textbf{in Section IV.E of the revised manuscript.
-We have also replaced ``SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers.'' with}
+\textbf{in Section IV.E of the revised manuscript.}
+
+\textbf{
+We have replaced ``SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers.'' with}
 ``
 \uline{SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks on Siamese trackers.}
 ''
