@@ -45,9 +45,13 @@ When we revised the paper, we carefully considered and followed all the comments
 
 (1) We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" in the manuscript to avoid the ambiguity.
 
-(2) ...
+(2) We have carefully considered and followed all the comments and suggestions related to the clarity of the writing, and made the new material a thoroughly revised manuscript.
 
-(3) We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings.
+(3) We have summarized the characteristics of the used datasets in our experiments.
+
+(4) We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings.
+
+(5) We have added experiments to train perturbations in the absence of ground truth box information.
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
@@ -151,6 +155,7 @@ The detailed analysis is added in Section IV.D of the revised manuscript. For yo
 }
 
 \begin{figure}[h]
+    \renewcommand\thefigure{7}
     \centering
     \subfigure[FAN]{\label{fig:a}\includegraphics[width=0.48\textwidth]{FAN.pdf}}
     \subfigure[Ours]{\label{fig:b}\includegraphics[width=0.48\textwidth]{Ours.pdf}}
@@ -206,7 +211,7 @@ We do not compare with PAT because they only experimented on private data and no
 }
 
 \begin{table}[h]
-    \renewcommand\thetable{IX} 
+    \renewcommand\thetable{X} 
     \centering
     \caption{Untargeted attack: Precision score on OTB2015.}
     \begin{tabular}{@{}ccccc@{}}
@@ -225,7 +230,7 @@ We do not compare with PAT because they only experimented on private data and no
 \end{table}
 
 \begin{table}[h]
-    \renewcommand\thetable{X} 
+    \renewcommand\thetable{XI} 
     \centering
     \caption{Targeted attack: Precision score on OTB2015.}
     \begin{tabular}{@{}ccc@{}}
@@ -372,7 +377,7 @@ When the ground truth box information of videos is not available, we can run the
 To verify this, we run SiamFC++ on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set.
 The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{\textit{Ablitaion Study: Performance w/o ground truth information} Our perterbations are trained using datasets with ground truth box information.
+\uline{\textit{Ablation Study: Performance w/o ground truth information} Our perterbations are trained using datasets with ground truth box information.
 % 然而实际上我们可能仅知道视频内容而不知道边框信息。这时我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框。预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
 However, we may only know the video content but without the ground truth box information in practice. When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method. To verify this, we run SiamFC++ on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set. Experimental results is shown in Table \ref{tab:agent}. 
 % 使用GT训练结果是0.153, 不适用GT训练结果是0.160。
@@ -382,6 +387,7 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 }
 
 \begin{table}
+    \renewcommand\thetable{IX}
     \centering
     \caption{Attack results with or without ground truth (GT) information on GOT-Val.}
     \begin{tabular}{cccc}
@@ -410,17 +416,18 @@ The implication for improving the tracking robustness is to make the tracker awa
 The new table is included in Section IV.A of the revised manuscript and referred as Table \ref{tab:dataset}:}
 
 \begin{table}[h]
+    \renewcommand\thetable{I}
     \centering
     \renewcommand\tabcolsep{2.5pt} % 调整表格列间的长度
     \footnotesize
     \caption{Characteristics of the datasets used to train and evaluate the proposed attack method.}
     \begin{tabular}{lrccccc} \toprule
     \multicolumn{2}{c}{Dataset}                            & Videos & Total frames & Frame rate & Object classes & Num. of attributes \\ \midrule
-    \multirow{4}{*}{Training set} & GOT-10k training split & 9.34K & 1.4M        & 10 fps     & 480            & 6                  \\
-                                  & LaSOT training split   & 1.12K & 2.83M        & 30 fps     & 70             & 14                 \\
+    \multirow{4}{*}{Training set} & GOT-10k training split & 9.34K  & 1.4M        & 10 fps     & 480            & 6                  \\
+                                  & LaSOT training split   & 1.12K  & 2.83M        & 30 fps     & 70             & 14                 \\
                                   & COCO2017               & n/a    & 118K         & n/a        & 80             & n/a                \\
-                                  & ILSVRC-VID             & 5.4K  & 1.6M         & 30 fps     & 30             & n/a                \\ \midrule
-    \multirow{7}{*}{Test set}     & GOT-10k test split     & 420    & 56K          & 10 fps     & 84             & 6                  \\
+                                  & ILSVRC-VID             & 5.4K   & 1.6M         & 30 fps     & 30             & n/a                \\ \midrule
+    \multirow{7}{*}{Test set}     & GOT-10k validation split&180    & 21K          & 10 fps     & 84             & 6                  \\
                                   & UAV123                 & 123    & 113K         & 30 fps     & 9              & 12                 \\
                                   & LaSOT test split       & 280    & 690K         & 30 fps     & 70             & 14                 \\
                                   & OTB-15                 & 100    & 59K          & 30 fps     & 22             & 11                 \\
@@ -446,6 +453,7 @@ We have also replaced ``SPARK computes incremental perturbations by using inform
 ''
 \textbf{in Section II.B of the revised manuscript.}
 
+\normalem
 \bibliographystyle{IEEEtran}
 \bibliography{ref.bib}
 
