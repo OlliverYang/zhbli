@@ -22,8 +22,6 @@
 \usepackage{multirow}  % for multirow command used in the table
 \usepackage{setspace}
 \usepackage{ulem}  % 用于添加下划线
-\usepackage{CJKulem}  % 用于添加下划线
-\usepackage{ctex}  % 用于添加下划线
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -45,11 +43,11 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 The editor-in-chief suggested us to revise the manuscript and resubmit it to TSCVT.
 When we revised the paper, we carefully considered and followed all the comments and suggestions provided by you and the reviewers. To summarize, we have made the following revisions:
 
-(1) ...
+(1) We have replaced the phase ``imperceptible perturbation" with ``translucent perturbation" in the manuscript to avoid the ambiguity.
 
 (2) ...
 
-(3) We compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings.
+(3) We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings.
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
@@ -143,11 +141,14 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
+%%%% 问题 2.1 %%%%
 \textit{However, I have some concerns about this paper. 1. Adversarial patch makes the attack very obvious for the human eye. I think the attack should not only for the deep learning model but also for the human eyes.}
 
 \textbf{
 % 与模板图像的扰动相同，我们在搜索图像上也牺牲了对抗补丁的一些不可感知性以提高攻击效率。
-Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Figure \ref{fig:vis} and Table \ref{tab:iter}.}
+Thanks for the good comment. Similar to the perturbation on the template image, we sacrifice some imperceptibility of the adversarial patch on the search image to improve the attack efficiency, as shown in Figure \ref{fig:vis}. 
+The detailed analysis is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.
+}
 
 \begin{figure}[h]
     \centering
@@ -157,28 +158,41 @@ Similar to the perturbation on the template image, we sacrifice some imperceptib
     \label{fig:vis}
 \end{figure}
 
-\begin{table*}[h]
-    \centering
-    \renewcommand\tabcolsep{5.5pt} % 调整表格列间的长度
-    \caption{Influence of the training iteration number on GOT-Val.}
-    \begin{tabular}{cc|ccccccccccccccc} 
-    \toprule
-    \multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  \\ 
-    \midrule
-    \multirow{2}{*}{Fake Traj.} & AO    &  0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.15 & 0.18 & 0.47 & 0.73 & 0.78 & 0.82 & 0.84 & 0.84  \\
-                                & SR    &  0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.11 & 0.15 & 0.49 & 0.78 & 0.84 & 0.88 & 0.89 & 0.89    \\ 
-    \midrule
-    \multirow{2}{*}{Real Traj.} & AO   & 0.76 & 0.77 & 0.76 & 0.76 & 0.76 & 0.76 & 0.75 & 0.73 & 0.48 & 0.27 & 0.22 & 0.17 & 0.15 & 0.15    \\
-                                & SR   & 0.89 & 0.9 & 0.89 & 0.89 & 0.9 & 0.89 & 0.88 & 0.86 & 0.53 & 0.25 & 0.18 & 0.14 & 0.12 & 0.12    \\ 
-    \midrule
-    \multicolumn{2}{c|}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
-    \midrule
-    % \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
-    \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.93 & 0.78 & 0.56 & 0.50 & 0.51 & 0.52 & 0.53 & 0.56\\
-    \bottomrule
-    \end{tabular}
-    \label{tab:iter}
-\end{table*}
+\uline{
+% 为了进一步分析扰动的可感知性，我们在图中与FAN进行了对比。
+To further analyze the perceptibility of perturbations, we compare our method with FAN in Figure \ref{fig:vis}.
+% We visualize the perturbed frames ($3^{rd}$ row of Figure \ref{fig:vis}) of OTB2015 dataset, Singer2 video. 
+As shown in Figure \ref{fig:vis}, both FAN \cite{FAN} and our method can perform targeted attack. 
+% 添加了由FAN生成的扰动的OTB的SSIM下降至0.92。添加了我们的扰动的OTB的SSIM下降至0.56。
+The SSIM of OTB2015 perturbed by FAN drops to 0.92, while the SSIM perturbed by our method drops to 0.56.
+% 这是因为FAN为每帧产生独立的扰动，而我们的扰动是通用的，因此我们的任务比FAN更难，导致我们的扰动值更大。
+This is because FAN generates independent perturbations for each frame, while our perturbations are universal, which is a more difficult task, resulting in larger values for our perturbations.
+By relaxing the constraint on the value of the perturbation, we can achieve better targeted attack performance on OTB2015.
+Our method achieves a precision score of 0.795, compared to 0.420 for FAN.
+What's more, our method can perform universal attack, both with respect to the data and the network architectures.}
+
+% \begin{table*}[h]
+%     \centering
+%     \renewcommand\tabcolsep{5.5pt} % 调整表格列间的长度
+%     \caption{Influence of the training iteration number on GOT-Val.}
+%     \begin{tabular}{cc|ccccccccccccccc} 
+%     \toprule
+%     \multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  \\ 
+%     \midrule
+%     \multirow{2}{*}{Fake Traj.} & AO    &  0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.15 & 0.18 & 0.47 & 0.73 & 0.78 & 0.82 & 0.84 & 0.84  \\
+%                                 & SR    &  0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.11 & 0.15 & 0.49 & 0.78 & 0.84 & 0.88 & 0.89 & 0.89    \\ 
+%     \midrule
+%     \multirow{2}{*}{Real Traj.} & AO   & 0.76 & 0.77 & 0.76 & 0.76 & 0.76 & 0.76 & 0.75 & 0.73 & 0.48 & 0.27 & 0.22 & 0.17 & 0.15 & 0.15    \\
+%                                 & SR   & 0.89 & 0.9 & 0.89 & 0.89 & 0.9 & 0.89 & 0.88 & 0.86 & 0.53 & 0.25 & 0.18 & 0.14 & 0.12 & 0.12    \\ 
+%     \midrule
+%     \multicolumn{2}{c|}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
+%     \midrule
+%     % \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
+%     \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.93 & 0.78 & 0.56 & 0.50 & 0.51 & 0.52 & 0.53 & 0.56\\
+%     \bottomrule
+%     \end{tabular}
+%     \label{tab:iter}
+% \end{table*}
 
 \textit{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
