@@ -194,10 +194,11 @@ What's more, our method can perform universal attack, both with respect to the d
 %     \label{tab:iter}
 % \end{table*}
 
+%%%% 问题 2.2 %%%%
 \textit{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
 \textbf{
-Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 2 new tables that demonstrate the untargeted and targeted attack results respectively. 
+Thanks for your advice and we have added experiments as you suggested. We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 2 new tables that demonstrate the untargeted and targeted attack results respectively. 
 The table demonstrating the untargeted attack result is included in Section IV.F of the revised manuscript and referred to as Table IX.
 The table demonstrating the targeted attack result is included in Section IV.F of the revised manuscript and referred to as Table X. 
 % 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
@@ -243,15 +244,8 @@ We do not compare with PAT because they only experimented on private data and no
 As can be seen from Table IX and Table X, CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for Siamese trackers. Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
 }
 
-\textit{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
-
-\textbf{Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.}
-
-\textit{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
-
-\textbf{Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB2015 and UAV123 in Sec. IV. D, as shown in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}:}
-
-\begin{table}[h]
+\begin{table}[t]
+    \renewcommand\thetable{IV} 
     \centering
     \caption{Overall attack results on VOT2016, VOT2018, VOT2019 and UAV123.}
     \begin{tabular}{c c | c | c}
@@ -281,7 +275,16 @@ As can be seen from Table IX and Table X, CSA reduces the accuracy score with re
     \label{tab:benchmark results1}
 \end{table}
 
-\begin{table}[h]
+%%%% 问题 2.3 %%%%
+\textit{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
+
+\textbf{Sorry that in our previous manuscript we did not clarify that our perturbations are trained off-line and can perturb a novel video to come at no additional cost except the mere addition operations, not requiring gradient optimization or network inference, so we can attack online-tracking in real-time. The attack cost per frame is shown in Table \ref{tab:untargeted}.}
+
+%%%% 问题 2.4 %%%%
+\textit{4. There are some datasets adopted in \cite{SPARK,RTAA} that you should include in your experiments such as VOT2018, VOT2019, VOT2016, OTB2015 and UAV123. Otherwise, it is very difficult to justify the performance of the proposed method.}
+
+\begin{table}[t]
+    \renewcommand\thetable{V}
     \centering
     \caption{Overall attack results on OTB-15, GOT-Val and LaSOT.}
     \begin{tabular}{c c | c | c | c}
@@ -308,7 +311,14 @@ As can be seen from Table IX and Table X, CSA reduces the accuracy score with re
     \bottomrule
     \end{tabular}
     \label{tab:benchmark results}
-  \end{table}
+\end{table}
+
+\textbf{Thanks for your advice and we have added experiments on VOT2018, VOT2016, OTB2015 and UAV123 in Section IV.D.
+As suggested, we have added a new table that demonstrates the attack results on VOT2016, VOT2018, VOT2019 and UAV123. This new table is included in Section IV.D of the revised manuscript and referred to as Table IV. The table demonstrating the attack results on OTB2015, GOT-Val and LaSOT is included in Section IV.D of the revised manuscript and referred to as Table V.
+% 新增加的实验结果分析位于某处，展示如下。
+The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
+
+\uline{As shown in Table \ref{tab:benchmark results1}, the robustness on VOT2016, VOT2018 and VOT2019 increases rapidly after attacking the original sequences. The EAO drops dramatically from 0.460 to 0.007 on VOT2016 and from 0.426 to 0.007 on VOT2018. The AO drops from 0.623 to 0.064 on UAV123. The performance decrease indicates the effectiveness of our adversarial attack method.}
 
 %%%%%%%%%%%%%%%%% 审稿人 3 %%%%%%%%%%%%%%%%%
 \clearpage
