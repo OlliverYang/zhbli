@@ -318,7 +318,9 @@ As suggested, we have added a new table that demonstrates the attack results on 
 % 新增加的实验结果分析位于某处，展示如下。
 The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{As shown in Table \ref{tab:benchmark results1}, the robustness on VOT2016, VOT2018 and VOT2019 increases rapidly after attacking the original sequences. The EAO drops dramatically from 0.460 to 0.007 on VOT2016 and from 0.426 to 0.007 on VOT2018. The AO drops from 0.623 to 0.064 on UAV123. The performance decrease indicates the effectiveness of our adversarial attack method.}
+\uline{As shown in Table \ref{tab:benchmark results1}, the robustness on VOT2016, VOT2018 and VOT2019 increases rapidly after attacking the original sequences. The EAO drops dramatically from 0.460 to 0.007 on VOT2016 and from 0.426 to 0.007 on VOT2018. The AO drops from 0.623 to 0.064 on UAV123. The performance decrease indicates the effectiveness of our adversarial attack method.
+In addition, the experimental results in Table \ref{tab:benchmark results1} show that our perturbations (trained from COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT) can perform effective attacks on different datasets including VOT2016, VOT2018, VOT2019 and UAV123. This demonstrates the transferability of the proposed method across different datasets.
+}
 
 %%%%%%%%%%%%%%%%% 审稿人 3 %%%%%%%%%%%%%%%%%
 \clearpage
@@ -349,8 +351,13 @@ In addition, point-to-point responses to your comments are given below and highl
 \textit{However, I have the following questions listed below. 1. The authors use the concept of video agnostic, however, for the experiment, I do not see the experiments to demonstrate the video agnostic property of the proposed method. From my understanding, video agnostic property is that the adversarial examples generated from one dataset can be applied to another dataset. However, I do not see the experimental results to demonstrate this and the transferability across different datasets are required to demonstrate the performance of the proposed framework.}
 
 \textbf{
-We agree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019, UAV123, and OTB2015 (see Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}).
-Experimental results demonstrate the transferability of the proposed method across different datasets.}
+We agree that the adversarial examples generated from one dataset should be applied to another dataset. So we add experiments to verify this. Specifically, we adopt COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT as our training set. The test set includes VOT2016, VOT2018, VOT2019 and UAV123.
+Experimental results demonstrate the transferability of the proposed method across different datasets.
+The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
+
+\uline{As shown in Table \ref{tab:benchmark results1}, the robustness on VOT2016, VOT2018 and VOT2019 increases rapidly after attacking the original sequences. The EAO drops dramatically from 0.460 to 0.007 on VOT2016 and from 0.426 to 0.007 on VOT2018. The AO drops from 0.623 to 0.064 on UAV123. The performance decrease indicates the effectiveness of our adversarial attack method.
+In addition, the experimental results in Table \ref{tab:benchmark results1} show that our perturbations (trained from COCO, ILSVRC-VID and the training splits of GOT-10k and LaSOT) can perform effective attacks on different datasets including VOT2016, VOT2018, VOT2019 and UAV123. This demonstrates the transferability of the proposed method across different datasets.
+}
 
 \textit{2. The paper attacks the video tracking assumed that the training data is available which in practice may not be available. Also, even though we know the video content only but without the ground truth box information, then how can we use the proposed approach to generate effective approach. If not, then the practicability of the approach is quite limited.}
 
