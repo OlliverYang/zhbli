@@ -197,11 +197,15 @@ What's more, our method can perform universal attack, both with respect to the d
 \textit{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
 \textbf{
-Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Sec. IV. F, as shown in Table \ref{tab:untargeted} and Table \ref{tab:targeted}. 
+Thanks for your advice and we have added experiments as you suggested. Specifically, we compare with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 2 new tables that demonstrate the untargeted and targeted attack results respectively. 
+The table demonstrating the untargeted attack result is included in Section IV.F of the revised manuscript and referred to as Table IX.
+The table demonstrating the targeted attack result is included in Section IV.F of the revised manuscript and referred to as Table X. 
 % 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
-We do not compare with PAT because they only experimented on private data and not on the public datasets.}
+We do not compare with PAT because they only experimented on private data and not on the public datasets.
+}
 
 \begin{table}[h]
+    \renewcommand\thetable{IX} 
     \centering
     \caption{Untargeted attack: Precision score on OTB2015.}
     \begin{tabular}{@{}ccccc@{}}
@@ -220,6 +224,7 @@ We do not compare with PAT because they only experimented on private data and no
 \end{table}
 
 \begin{table}[h]
+    \renewcommand\thetable{X} 
     \centering
     \caption{Targeted attack: Precision score on OTB2015.}
     \begin{tabular}{@{}ccc@{}}
@@ -233,6 +238,10 @@ We do not compare with PAT because they only experimented on private data and no
     \end{tabular}
     \label{tab:targeted}
 \end{table}
+
+\textbf{
+As can be seen from Table IX and Table X, CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for Siamese trackers. Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
+}
 
 \textit{3. “However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real-time.” But you are not real-time as well. Why do you mention this part? You also didn’t show the response time of your system.}
 
