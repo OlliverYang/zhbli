@@ -406,9 +406,13 @@ The implication for improving the tracking robustness is to make the tracker awa
 
 \textit{4. I suggest the authors to add the table to summarize the characteristics of the used datasets.}
 
-\textbf{Thanks for your advice and we have added the table to summarize the characteristics of the used datasets in Sec. IV. A, as shown in Table \ref{tab:dataset}:}
+\textbf{Thanks for the insightful comment. As suggested, we have added a new table to summarize the characteristics of the used datasets.
+The new table is included in Section IV.A of the revised manuscript and referred as Table \ref{tab:dataset}:}
 
 \begin{table}[h]
+    \centering
+    \renewcommand\tabcolsep{2.5pt} % 调整表格列间的长度
+    \footnotesize
     \caption{Characteristics of the datasets used to train and evaluate the proposed attack method.}
     \begin{tabular}{lrccccc} \toprule
     \multicolumn{2}{c}{Dataset}                            & Videos & Total frames & Frame rate & Object classes & Num. of attributes \\ \midrule
@@ -430,11 +434,17 @@ The implication for improving the tracking robustness is to make the tracker awa
 \textit{5. The paper contains some grammar mistakes and typos, the authors need to improve it by double check.}
 
 \textbf{
-Thanks for your advice and we changed the errors in the manuscript:
-Our perturbations also generalize well to SiamFC++-ShuffleNet, in despite of the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
-Our perturbations also generalize well to SiamFC++-ShuffleNet, despite the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
-SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers.
-SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks on Siamese trackers.}
+Thanks for the good comment. We have carefully checked through the whole text and corrected the grammar mistakes and typos. 
+Specifically, we have replaced ``Our perturbations also generalize well to SiamFC++-ShuffleNet, in despite of the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.'' with}
+``
+\uline{Our perturbations also generalize well to SiamFC++-ShuffleNet, despite the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.}
+''
+\textbf{in Section IV.E of the revised manuscript.
+We have also replaced ``SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks to Siamese trackers.'' with}
+``
+\uline{SPARK computes incremental perturbations by using information from the past frames to perform targeted attacks on Siamese trackers.}
+''
+\textbf{in Section II.B of the revised manuscript.}
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref.bib}
