@@ -203,11 +203,13 @@ What's more, our method can perform universal attack, both with respect to the d
 \textit{2. Your baseline approaches are not state-of-the-art algorithms. Why not compare to PAT \cite{PAT}, RTAA \cite{RTAA}, SPARK \cite{SPARK} and TTP \cite{TTP}. “However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time.” If that is the case, it should be easy to achieve better performance than their approach. I think the experiments should including the methods of untargeted attack.}
 
 \textbf{
-Thanks for your advice and we have added experiments as you suggested. We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 2 new tables that demonstrate the untargeted and targeted attack results respectively. 
-The table demonstrating the untargeted attack result is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:untargeted}.
-The table demonstrating the targeted attack result is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:targeted}. 
+Thanks for your advice and we have added experiments as you suggested. We have compared with state-of-the-art attack methods including RTAA, SPARK, TTP, CSA and FAN in both targeted and untargeted attack settings in Section IV. F. Specifically, we have removed the original Table VII included in Section IV.F of the previous manuscript, and added 3 new tables that demonstrate the untargeted and targeted attack results respectively. 
+The table demonstrating the untargeted attack result on OTB2015 is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:untargeted}.
+The table demonstrating the targeted attack result on OTB2015 is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:targeted}. 
+The table demonstrating the untargeted attack result on VOT2016/2018 is included in Section IV.F of the revised manuscript and referred to as Table \ref{tab:sota_vot}. 
 % 我们没有与 PAT 对比，因为他们仅在私有数据上进行了实验，未在公开数据集上进行实验。
 We do not compare with PAT because they only experimented on private data and not on the public datasets.
+The detailed analysis is added in Section IV.F of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.
 }
 
 \begin{table}[h]
@@ -245,12 +247,38 @@ We do not compare with PAT because they only experimented on private data and no
     \label{tab:targeted}
 \end{table}
 
-\textbf{
-As can be seen from Table \ref{tab:untargeted} and Table \ref{tab:targeted}, CSA reduces the accuracy score with respect to the real trajectory from 0.851 to 0.458. Due to the limitations of the algorithm design, CSA cannot perform targeted attacks for Siamese trackers. 
+\begin{table}[t]
+    \renewcommand\thetable{XII}
+    \centering
+    \renewcommand\tabcolsep{3.5pt} % 调整表格列间的长度
+    \footnotesize
+    \caption{Untargeted attack results on VOT2016 and VOT2018.}
+    \begin{tabular}{ccc|ccc|ccc}
+    \toprule
+    \multirow{2}{*}{Dataset} & \multirow{2}{*}{Method} & \multirow{2}{*}{Tracker} & \multicolumn{3}{c}{Before Attack} & \multicolumn{3}{|c}{Untargeted Attack} \\
+                             &                         &                          & Accuracy   & Robustness  & EAO    & Accuracy    & Robustness    & EAO     \\ \midrule
+    \multirow{2}{*}{VOT2016} & RTAA                    & DaSiamRPN                & 0.625      & 0.224       & 0.439  & 0.521       & 1.613         & 0.078   \\
+                             & Ours                    & SiamFC++                 & 0.626      & 0.144       & 0.460  & 0.393       & 9.061         & 0.007   \\ \midrule
+    \multirow{5}{*}{VOT2018} & RTAA                    & DaSiamRPN                & 0.585      & 0.272       & 0.380  & 0.536       & 1.447         & 0.097   \\
+                             & FAN                     & SiamFC                   & 0.503      & 0.585       & 0.188  & 0.420       & -             & -       \\
+                             & CSA                     & SiamRPN                  & 0.570      & 0.440       & 0.261  & 0.430       & 1.900         & 0.076   \\
+                             & TTP                     & SiamRPN++                & 0.600      & 0.320       & 0.340  & 0.520       & 7.820         & 0.014   \\
+                             & Ours                    & SiamFC++                 & 0.587      & 0.183       & 0.426  & 0.342       & 8.981         & 0.007   \\ \bottomrule
+    \end{tabular}
+    \label{tab:sota_vot}
+\end{table}
+
+\uline{
+\textit{OTB2015 Dataset} We compare the attack method proposed in this paper with the latest attack methods, including CSA \cite{CSA}, RTAA \cite{RTAA}, SPARK \cite{SPARK}, FAN \cite{FAN} and TTP \cite{TTP}. We report the untargeted attack result and the targeted attack result on OTB2015.
 SPARK \cite{SPARK} reduces the accuracy score with respect to the real trajectory from 0.851 to 0.064. However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time.
 RTAA \cite{RTAA} reduces the accuracy score with respect to the real trajectory from 0.880 to 0.050. However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
-Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. 
-Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
+Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
+}
+
+\uline{
+\textit{VOT2016/2018 Dataset} We compare the untargeted attack result with CSA \cite{CSA}, RTAA \cite{RTAA}, FAN \cite{FAN} and TTP \cite{TTP} on VOT2016 and VOT2018 (Table \ref{tab:sota_vot}). 
+RTAA reduces the accuracy with respect to the real trajectory from 0.625 to 0.521 on VOT2016.
+CSA \cite{CSA} is a Siamese tracking attack method called cooling-shrinking attack. CSA can suppress the peak region on the heat map reflecting the target location, which is used to attack the tracker's targeting ability. CSA can also simultaneously force the tracker's predicted bounding box to shrink, which is used to attack the bounding box regression capability of the tracker. However, this method requires running a generative network for each frame to obtain adversarial information, making it difficult to meet the demand for real-time tracking. CSA reduces the EAO with respect to the real trajectory from 0.261 to 0.076 on VOT2018. Compared to CSA, our method can achieve better untargeted attack results on VOT2018 with an EAO of 0.007.
 }
 
 \begin{table}[t]
@@ -422,6 +450,7 @@ Note that although the constraint on the perturbation value is relaxed, the prop
 }
 
 \begin{figure}[t]
+    \renewcommand\thefigure{5}
     \centering
     \subfigure[Baseline-1]{\label{fig:imperceptibleb}\includegraphics[width=0.3\textwidth]{imperceptible/UAP.jpg}}
     \subfigure[Baseline-2]{\label{fig:imperceptiblec}\includegraphics[width=0.3\textwidth]{imperceptible/AP.jpg}}
