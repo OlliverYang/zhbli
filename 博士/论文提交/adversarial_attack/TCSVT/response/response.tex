@@ -36,7 +36,7 @@
 \date{}
 \maketitle
 
-\noindent Dear Associate Editor:
+\noindent Dear Editors:
 
 We would like to express our heartfelt gratitude to you and the reviewers for the insightful and helpful comments. 
 % 指出是主编建议修改后重投的。
@@ -417,7 +417,18 @@ As shown in Figure \ref{fig:vis}, both FAN \cite{FAN} and our method can perform
 The SSIM of OTB2015 perturbed by FAN drops to 0.92, while the SSIM perturbed by our method drops to 0.56.
 By relaxing the constraint on the value of the perturbation, we can achieve better targeted attack performance on OTB2015.
 Our method achieves a precision score of 0.795, compared to 0.420 for FAN.
+% 注意，虽然我们放松了扰动的值，但相比于基于补丁的对抗攻击方法，仍然具有更好的不可感知性，如图*所示。
+Note that although the constraint on the perturbation value is relaxed, the proposed perterbations still have better imperceptibility compared to the naive adversarial patch, as shown in Figure \ref{fig:imperceptible} (b) and (c).
 }
+
+\begin{figure}[t]
+    \centering
+    \subfigure[Baseline-1]{\label{fig:imperceptibleb}\includegraphics[width=0.3\textwidth]{imperceptible/UAP.jpg}}
+    \subfigure[Baseline-2]{\label{fig:imperceptiblec}\includegraphics[width=0.3\textwidth]{imperceptible/AP.jpg}}
+    \subfigure[Ours]{\label{fig:imperceptibled}\includegraphics[width=0.3\textwidth]{imperceptible/Ours.jpg}}
+    \caption{Visualization of perturbations on search images. Baseline-1 generates perturbations added to the whole search image and cannot perform targeted attacks. Baseline-2 pastes an obviously noticeable patch on the search image, which raises the risk of being suspected. Our method adds a small universal patch to the search image to perform targeted attacks.}
+    \label{fig:imperceptible}
+  \end{figure}
 
 \textbf{
 (2) To the best of our knowledge, our work is the first attempt to generate video-agnostic perturbations to attack Siamese trackers. Besides FGSM \cite{FGSM} and Brown et al.'s work \cite{patch}, other adversarial example generation methods such as C\&W \cite{carlini2017towards} and PGD \cite{PGD} can also be integrated into our attacking system to further improve the attack effect.
