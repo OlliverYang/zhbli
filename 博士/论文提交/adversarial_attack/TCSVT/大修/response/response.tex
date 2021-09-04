@@ -77,11 +77,80 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textit{This paper addresses the task of attacking Siamese network-based trackers in a simple yet effective fashion. Unlike other methods that operate in the video-specific attacking regime (which resides on network inference for generating perturbations while tracking), this method is the first to perform universal targeted attacks for Siamese trackers utilizing both the translucent perturbation and the adversarial patch together. By adding the perturbation to the template and adding the patch to the search image while performing tracking, this work fools the Siamese trackers to the fake target region and thus makes them fail in tracking the real target object.
-Overall, this is an interesting paper, and it is well written and organized. As it is a resubmitted manuscript, I notice that the authors have made substantial changes to the previous manuscript, which are able to appropriately respond to the comments made by the previous reviewers. Although the template perturbation and adversarial patch are both easy to observe for human eyes as the previous reviewers have pointed out, and the SSIMs for them are also lower than the video-specific attacking method, e.g., FAN [6], this reviewer believes that this proposed new framework can be a new configuration of adversarial attack on visual tracking for its achieved balance between the attack efficiency and the perturbation perceptibility. This new configuration will attract increasing attention from the visual tracking attack community to study on more efficient attack methods.
-In addition, I suggest the authors add more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. The experimental results show that it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.
-A small question is that it will be better if the authors can provide some pseudo code for the untargeted attack and targeted attack processes in addition to the training process. This will facilitate the understanding of the attacking process while performing tracking. In addition, the font size in Fig. 9 is too small to read on my computer, which needs to be improved.
-Also, some recent papers are valued to be referred (2020-2021), to ehahnce the quality.}
+\textit{This paper addresses the task of attacking Siamese network-based trackers in a simple yet effective fashion. Unlike other methods that operate in the video-specific attacking regime (which resides on network inference for generating perturbations while tracking), this method is the first to perform universal targeted attacks for Siamese trackers utilizing both the translucent perturbation and the adversarial patch together. By adding the perturbation to the template and adding the patch to the search image while performing tracking, this work fools the Siamese trackers to the fake target region and thus makes them fail in tracking the real target object. Overall, this is an interesting paper, and it is well written and organized. As it is a resubmitted manuscript, I notice that the authors have made substantial changes to the previous manuscript, which are able to appropriately respond to the comments made by the previous reviewers. Although the template perturbation and adversarial patch are both easy to observe for human eyes as the previous reviewers have pointed out, and the SSIMs for them are also lower than the video-specific attacking method, e.g., FAN \cite{FAN}, this reviewer believes that this proposed new framework can be a new configuration of adversarial attack on visual tracking for its achieved balance between the attack efficiency and the perturbation perceptibility. This new configuration will attract increasing attention from the visual tracking attack community to study on more efficient attack methods.}
+
+\textbf{Many thanks for your positive comments on the strength of our paper and thenovelty of the proposed attack method.}
+
+%%%% 问题 1.1 %%%%
+\textit{In addition, I suggest the authors add more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. The experimental results show that it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.}
+
+\textbf{This question needs to be discussed with Jin Gao.}
+
+%%%% 问题 1.2 %%%%
+\textit{A small question is that it will be better if the authors can provide some pseudo code for the untargeted attack and targeted attack processes in addition to the training process. This will facilitate the understanding of the attacking process while performing tracking.}
+
+\textbf{...}
+
+\begin{algorithm}[tb]
+    \caption{Targeted Attack Process}
+    \label{alg:algorithm_targeted_attack}
+    \textbf{Input}: Imperceptible perturbation $\delta$, and adversarial patch $p$, and Siamese tracker $f$.\\
+    \textbf{Output}: 123
+    \begin{algorithmic}[1] %[1] enables line numbers
+    \STATE Let $k = 0$.
+    \WHILE{$k < N$}
+    \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+    \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
+    \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
+    \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
+    \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
+    \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
+    \STATE $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
+    \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}, \tilde{\textbf z}).$
+    \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
+    \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
+    \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
+    \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
+    \STATE $k = k + 1.$
+    \ENDWHILE
+    \STATE \textbf{return} $\delta_N, p_N.$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[tb]
+    \caption{Untargeted Attack Process}
+    \label{alg:algorithm_untargeted_attack}
+    \textbf{Input}: Imperceptible perturbation $\delta$, and adversarial patch $p$, and Siamese tracker $f$.\\
+    \textbf{Output}: 123
+    \begin{algorithmic}[1] %[1] enables line numbers
+    \STATE Let $k = 0$.
+    \WHILE{$k < N$}
+    \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
+    \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
+    \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
+    \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
+    \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
+    \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
+    \STATE $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
+    \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}, \tilde{\textbf z}).$
+    \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
+    \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
+    \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
+    \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
+    \STATE $k = k + 1.$
+    \ENDWHILE
+    \STATE \textbf{return} $\delta_N, p_N.$
+    \end{algorithmic}
+    \label{alg}
+  \end{algorithm}
+
+%%%% 问题 1.3 %%%%
+\textit{In addition, the font size in Fig. 9 is too small to read on my computer, which needs to be improved.}
+
+\textbf{...}
+
+%%%% 问题 1.4 %%%%
+\textit{Also, some recent papers are valued to be referred (2020-2021), to ehahnce the quality.}
 
 \textbf{...}
 
@@ -106,23 +175,28 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textit{In this paper, the authors train a universal adversarial patch to add on both template and search regions of a Siamese based tracker to deteriorate its original performance. The proposed perturbations are video-agnostic, leading to a low computational cost during attack. The experiment validations show that the proposed method achieves favorable attack results on OTB2015, GOT-10k, LaSOT, UAV123, VOT2016, VOT2018 and VOT2019. In addition, the generated perturbations transfer well on other Siamese trackers as well. The idea of this paper is interesting and the experiments are thorough. However, there are some concerns over the implementation, performance and writing.}
+\textit{In this paper, the authors train a universal adversarial patch to add on both template and search regions of a Siamese based tracker to deteriorate its original performance. The proposed perturbations are video-agnostic, leading to a low computational cost during attack. The experiment validations show that the proposed method achieves favorable attack results on OTB2015, GOT-10k, LaSOT, UAV123, VOT2016, VOT2018 and VOT2019. In addition, the generated perturbations transfer well on other Siamese trackers as well. The idea of this paper is interesting and the experiments are thorough.}
 
 \textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
 %%%% 问题 2.1 %%%%
-\textit{1. The authors state that training with Ep. 4 leads to an obvious patch on the images while using Eq.5 into the training process results in a less obvious patch. The reviewer considers that giving a constraint (e.g. $l_inf$) on the $p_x$ in Eq.4 can make the perturbation imperceptible intuitively. Please give more analysis on this setting. Besides, the reviewer hopes to know the reason why give an extra perturbation on the template region. The perturbations on template and search regions look similar, while the authors say that they are different. Please state the difference between the patch application operator on search examples and the operator on template examples. In addition, the denotations of $A_paste$ in Eq.4 and $A_add$ in Eq.5 seem like the same one.}
+\textit{However, there are some concerns over the implementation, performance and writing. 1. The authors state that training with Ep. 4 leads to an obvious patch on the images while using Eq.5 into the training process results in a less obvious patch. The reviewer considers that giving a constraint (e.g. $l_inf$) on the $p_x$ in Eq.4 can make the perturbation imperceptible intuitively. Please give more analysis on this setting.}
 
-\textbf{
-...
-}
+\textbf{...}
+
+\textit{Besides, the reviewer hopes to know the reason why give an extra perturbation on the template region. The perturbations on template and search regions look similar, while the authors say that they are different. Please state the difference between the patch application operator on search examples and the operator on template examples.}
+
+\textbf{...}
+
+\textit{In addition, the denotations of $A_paste$ in Eq.4 and $A_add$ in Eq.5 seem like the same one.}
+
+\textbf{...}
+
 
 %%%% 问题 2.2 %%%%
 \textit{2. I agree with reviewer 3, the ground truth boxes are inaccessible to trackers during the inference. It seems that the authors use the ground truth boxes to generate the fake trajectory in lines 51-57 on page 7. Please clarify it.}
 
-\textbf{
-...
-}
+\textbf{...}
 
 %%%% 问题 2.3 %%%%
 \textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of p and $\delta$.}
@@ -168,16 +242,11 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method.}
-
-\textbf{...}
 
 %%%% 问题 3.1 %%%%
-\textit{1. As stated in the paper, the proposed method " does not require gradient optimization
-or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
+\textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method. 1. As stated in the paper, the proposed method " does not require gradient optimization or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
 
 \textbf{...}
-
 
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
@@ -228,11 +297,11 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textit{This paper proposes a universal targeted attacks method on Siamese visual tracking task. It seems that the method is feasible and somewhat novel. My major concern is that the writing and organization need to be carefully modified and optimized.}
+\textit{This paper proposes a universal targeted attacks method on Siamese visual tracking task. It seems that the method is feasible and somewhat novel.}
 
 \textbf{...}
 
-\textit{Besides, 1. Authors are focused on the anchor-free tracker in the experiments, but the anchor-free Siamese trackers are not well mentioned. I suggest the authors to include the discussion of state-of-the-art of other similar approaches (e.g., FCOT, SiamCAR, OCEAN, et. al.).}
+\textit{My major concern is that the writing and organization need to be carefully modified and optimized. Besides, 1. Authors are focused on the anchor-free tracker in the experiments, but the anchor-free Siamese trackers are not well mentioned. I suggest the authors to include the discussion of state-of-the-art of other similar approaches (e.g., FCOT, SiamCAR, OCEAN, et. al.).}
 
 \textbf{...}
 
