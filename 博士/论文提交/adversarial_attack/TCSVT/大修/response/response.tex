@@ -89,60 +89,28 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 1.2 %%%%
 \textit{A small question is that it will be better if the authors can provide some pseudo code for the untargeted attack and targeted attack processes in addition to the training process. This will facilitate the understanding of the attacking process while performing tracking.}
 
-\textbf{...}
-
 \begin{algorithm}[tb]
-    \caption{Targeted Attack Process}
-    \label{alg:algorithm_targeted_attack}
-    \textbf{Input}: Imperceptible perturbation $\delta$, and adversarial patch $p$, and Siamese tracker $f$.\\
-    \textbf{Output}: 123
+    \caption{Attack Process}
+    \label{alg:algorithm_attack}
+    \textbf{Input}: Imperceptible perturbation $\delta$, adversarial patch $p$, Siamese tracker $f$, video $V=\{I_i\}_1^T$, $b^{gt}_1$ is the position of the real target in the first frame. $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.\\
+    \textbf{Output}: $B^{pred}=\{b^{pred}_i\}_1^{T}$
     \begin{algorithmic}[1] %[1] enables line numbers
-    \STATE Let $k = 0$.
-    \WHILE{$k < N$}
-    \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
-    \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
-    \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-    \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
-    \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-    \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
-    \STATE $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
-    \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}, \tilde{\textbf z}).$
-    \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
-    \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-    \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
-    \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
-    \STATE $k = k + 1.$
+      \STATE Generate the clean template image $\textbf{z}_1$ according to $I_1$ and $b^{gt}_1$.
+      \STATE Generate the perturbed template image $\tilde{\textbf z}_1=\textbf z_1+\delta$.
+      \STATE Let $i = 2$.
+    \WHILE{$i \le T$}
+    \STATE Generate clean search image $\textbf{x}_i$ according to $I_i$ and $b^{pred}_{i-1}$.
+    \STATE $b^{fake}_i=\{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}$
+    \STATE Generate the perturbed searach image $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
+    \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}_i, \tilde{\textbf z}_1).$
+    \STATE Generate the predicted bounding box $b^{pred}_t$ according to $\textbf{C, R, Q}$.
+    \STATE $i = i + 1.$
     \ENDWHILE
     \STATE \textbf{return} $\delta_N, p_N.$
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[tb]
-    \caption{Untargeted Attack Process}
-    \label{alg:algorithm_untargeted_attack}
-    \textbf{Input}: Imperceptible perturbation $\delta$, and adversarial patch $p$, and Siamese tracker $f$.\\
-    \textbf{Output}: 123
-    \begin{algorithmic}[1] %[1] enables line numbers
-    \STATE Let $k = 0$.
-    \WHILE{$k < N$}
-    \STATE Randomly pick a video $V\in \mathcal{V}$. The corresponding ground truth is $B^{gt}=\{b^{gt}_i\}^T_1$.
-    \STATE Randomly pick paired frames $I_t, I_s$ from $V$.
-    \STATE Generate template image $\textbf{z}$ according to $I_t$ and $b^{gt}_t$.
-    \STATE $\tilde{\textbf{z}} = \textbf{z} + \delta_k.$
-    \STATE Generate search image $\textbf{x}$ according to $I_s$ and $b^{gt}_s$.
-    \STATE Calculate the \textit{fake target} position $\{x_0, y_0, x_1, y_1\}$ with respect to the search image.
-    \STATE $\tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}).$
-    \STATE $\textbf{C, R, Q} = f(\tilde {\textbf x}, \tilde{\textbf z}).$
-    \STATE Generate fake labels $\textbf{C}^*,\textbf{R}^*,\textbf{Q}^*$ using $\{x_0, y_0, x_1, y_1\}$.
-    \STATE Calculate loss $L(\textbf{C, R, Q}, \textbf{C}^*, \textbf{R}^*, \textbf{Q}^*)$ using Equ. \ref{eq:loss}.
-    \STATE $\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L).$
-    \STATE $p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L).$
-    \STATE $k = k + 1.$
-    \ENDWHILE
-    \STATE \textbf{return} $\delta_N, p_N.$
-    \end{algorithmic}
-    \label{alg}
-  \end{algorithm}
+\textbf{Both the targeted attack and untargeted attack process follow the same steps as shown in Alg. \ref{alg:algorithm_attack}. The difference between the target attack and the untargeted attack is the evaluation. For the targeted attack, we compare the AO between $B^{pred}=\{b^{pred}_i\}_1^{T}$ and $B^{fake}=\{b^{fake}_i\}_1^{T}$. For the untargeted attack, we compare the AO between $B^{pred}=\{b^{pred}_i\}_1^{T}$ and $B^{gt}=\{b^{gt}_i\}_1^{T}$.}
 
 %%%% 问题 1.3 %%%%
 \textit{In addition, the font size in Fig. 9 is too small to read on my computer, which needs to be improved.}
