@@ -118,6 +118,7 @@ In addition, point-to-point responses to your comments are given below and highl
 \newgeometry{left=1cm,right=1cm,top=1cm,bottom=1cm}
 
 \begin{figure*}[t!]
+  \renewcommand\thefigure{9}
   \begin{center}
     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_BC.png}
     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_DEF.png}
@@ -170,15 +171,15 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 2.1 %%%%
 \textit{However, there are some concerns over the implementation, performance and writing. 1. The authors state that training with Ep. 4 leads to an obvious patch on the images while using Eq.5 into the training process results in a less obvious patch. The reviewer considers that giving a constraint (e.g. $l_inf$) on the $p_x$ in Eq.4 can make the perturbation imperceptible intuitively. Please give more analysis on this setting.}
 
-\textbf{...}
+\textbf{Sorry that we did not clarify the meaning of paste. If we paste the perturbation, we means we use a patch to replace the original image, which means the patch and the original image is discrete (even if we give a constraint).}
 
 \textit{Besides, the reviewer hopes to know the reason why give an extra perturbation on the template region. The perturbations on template and search regions look similar, while the authors say that they are different. Please state the difference between the patch application operator on search examples and the operator on template examples.}
 
-\textbf{...}
+\textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z})$ is similar. The only difference is that, $A_{\text{add}}$ means add the perterbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
 
 \textit{In addition, the denotations of $A_paste$ in Eq.4 and $A_add$ in Eq.5 seem like the same one.}
 
-\textbf{...}
+\textbf{Sorry that we make the wrong citation and not clarify the meaning of add and paste. If we paste the perturbation, we means we use a patch to replace the original image, which means the patch and the original image is discrete (even if we give a constraint). The final pixel value is changed from the original value to a new value. If we add a patch onto the image, the final pixel value is the original value plus a new value.}
 
 
 %%%% 问题 2.2 %%%%
@@ -187,14 +188,14 @@ In addition, point-to-point responses to your comments are given below and highl
 \textbf{...}
 
 %%%% 问题 2.3 %%%%
-\textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of p and $\delta$.}
+\textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.}
 
 \textbf{...}
 
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{...}
+\textbf{Need to be discussed with (at least conformed by) JinGao: What is the similar random pattern ?}
 
 %%%% 问题 2.5 %%%%
 \textit{
@@ -206,7 +207,7 @@ In addition, point-to-point responses to your comments are given below and highl
 - On page 7, ‘.(see Table I)’ is a typo.
 }
 
-\textbf{...}
+\textbf{Thanks for your advice and we have changed this errors.}
 
 %%%%%%%%%%%%%%%%% 审稿人 3 %%%%%%%%%%%%%%%%%
 \clearpage
@@ -247,11 +248,21 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textit{4. I suggest adding the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion.}
 
-\textbf{...}
+\textbf{
+Advantages:
+  (1) Because our video-agnostic feature, we are fast, no need to network interferes or gradient calculation.
+  (2) Good transferability to other trackers.
+Disadvantages:
+  (1) Physical attack.
+  (2) Not imperceptible.
+Future work:
+  (1) We need to do the physical attack.
+  (2) We need to be imperceptible.
+}
 
 \textit{5. Some of the experiments require more explanations. For example, transferability has been investigated by different backbones \& architectures. It's needed to mention these experiments are with/without the training phase or not.}
 
-\textbf{...}
+\textbf{Thanks for point out this. These }
 
 \textit{6. In experiments, I suggest considering two scenarios of different directions and trajectories.}
 
