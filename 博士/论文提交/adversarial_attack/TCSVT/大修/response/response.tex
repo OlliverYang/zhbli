@@ -185,12 +185,33 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 2.2 %%%%
 \textit{2. I agree with reviewer 3, the ground truth boxes are inaccessible to trackers during the inference. It seems that the authors use the ground truth boxes to generate the fake trajectory in lines 51-57 on page 7. Please clarify it.}
 
-\textbf{...}
+\textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.}
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{@{}lllll@{}}
+  \toprule
+         & \multicolumn{2}{l}{Untargeted Attack} & \multicolumn{2}{l}{Targeted Attack} \\
+         & AO                & SR                & AO               & SR               \\ \midrule
+  track2 & 0.1747            & 0.1442            & 0.8448           & 0.8972           \\ \bottomrule        
+  \end{tabular}
+  \end{table}
 
 %%%% 问题 2.3 %%%%
 \textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.}
 
-\textbf{...}
+\textbf{Thanks for your advice and we have conducted the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$. As we can see, only use one of them is not useful, because they are trained together.}
+
+\begin{table}[]
+  \centering
+  \begin{tabular}{@{}lllll@{}}
+  \toprule
+                & \multicolumn{2}{l}{Untargeted Attack} & \multicolumn{2}{l}{Targeted Attack} \\
+                & AO                & SR                & AO               & SR               \\ \midrule
+  Only Template & 0.5097            & 0.5669            & 0.1555           & 0.1064           \\
+  Only Search   & 0.7137            & 0.8414            & 0.1599           & 0.1320           \\ \bottomrule
+  \end{tabular}
+\end{table}
 
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
@@ -262,11 +283,11 @@ Future work:
 
 \textit{5. Some of the experiments require more explanations. For example, transferability has been investigated by different backbones \& architectures. It's needed to mention these experiments are with/without the training phase or not.}
 
-\textbf{Thanks for point out this. These }
+\textbf{Thanks for point out this. These experiments do not need the training phase.}
 
 \textit{6. In experiments, I suggest considering two scenarios of different directions and trajectories.}
 
-\textbf{...}
+\textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.}
 
 \textit{7. There are still some typo and grammar mistakes in the paper.}
 
@@ -306,7 +327,7 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textit{2. The model is trained based on Eq.11 and Eq.12. It is not clear why the sign function is introduced. It is also suggested to describe the derivation of these two equations in detail.}
 
-\textbf{...}
+\textbf{The sign function is the FGSM method.}
 
 \textit{3. The format of all the Tables is suggested to be unified.}
 
