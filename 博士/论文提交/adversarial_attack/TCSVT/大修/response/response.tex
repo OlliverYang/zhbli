@@ -32,7 +32,7 @@
 \setstretch{1.5}
 \linespread{1}
 \title{Response to Reviewers of TCSVT-07024-2021: A Simple and Strong Baseline for Universal Targeted Attacks on Siamese Visual Tracking}
-\author{Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li,\\ Pengpeng Liang, Weiming Hu, Stephen J. Maybank}
+\author{Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li,\\ Pengpeng Liang, Weiming Hu}
 \date{}
 \maketitle
 
@@ -40,12 +40,14 @@
 
 When we revised the paper, we carefully considered and followed all the comments and suggestions provided by you and the reviewers. To summarize, we have made the following revisions:
 
-(1) ...
+(1) We adding the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion.
+
+(2) We add 3-5 papers published in the IEEE Transactions on Circuits and Systems forVideo Technology, which are most closely related to your manuscript; b) what isdistinctive / new about your current manuscript related to these previously publishedpapers.
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
 \noindent Yours sincerely,\\
-\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu, Stephen J. Maybank
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
 \\
@@ -65,7 +67,7 @@ Thank you very much for your thorough review. Your insightful comments are very 
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
 \noindent Yours sincerely,\\
-\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu, Stephen J. Maybank
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
 \\
@@ -152,7 +154,7 @@ Thank you very much for your thorough review. Your insightful comments are very 
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
 \noindent Yours sincerely,\\
-\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu, Stephen J. Maybank
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
 \\
@@ -240,7 +242,7 @@ Thank you very much for your thorough review. Your insightful comments are very 
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
 \noindent Yours sincerely,\\
-\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu, Stephen J. Maybank
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
 \\
@@ -256,7 +258,9 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 3.1 %%%%
 \textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method. 1. As stated in the paper, the proposed method " does not require gradient optimization or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
 
-\textbf{...}
+\textbf{Thanks for your advices. Our patch is obvious (SSIM=0.56). We think the main reason is that we have to learn useful information in such small regions 64*64 as a fake target. While the information of the real target is not changed. So it may be top heat map on the real object, so the network will work hard to create a fake target, which lead to high perturbation values. But, if we can break the target information, it will be easy to attack.
+Our solution is attack the whole image. Y channel, CbCr channel. 
+}
 
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
@@ -274,11 +278,19 @@ Advantages:
   (1) Because our video-agnostic feature, we are fast, no need to network interferes or gradient calculation.
   (2) Good transferability to other trackers.
 Disadvantages:
-  (1) Physical attack.
+  (1) Physical attack. We are the digital attack, which means ... Physical attack is ... The advantage of it is ... Our work assumes a threat model in which the adversary can feed data directly into the machine learning classifier. This is not always the case for systems operating in the physical world, for example those which are using signals from cameras and other sensors as input.
+  % 这不就是 ICCV2019 的工作吗？它们也通用？好像是。EOT是通用的吗？
   (2) Not imperceptible.
+  % 防御？
 Future work:
   (1) We need to do the physical attack.
   (2) We need to be imperceptible.
+  % 使用同一个扰动同时攻击多个视觉任务，包括图像分类，检测，视频目标跟踪和分割。
+  Use a single perturbation to attack multi vision task, including image classification, object detection and video object tracking/segementation.
+  % 以更小的扰动取得更高的攻击效果。（呼应缺点之：扰动大）
+  Use more imperceptible perturbations to achieve high attack performance.
+  % 本文所提出的对抗性信息被添加在数字图像上，从而影响跟踪器的跟踪效果。然而所提出的对抗性信息难以用于执行孪生跟踪器的物理攻击，即将对抗扰动打印出来添加到物理世界的真实目标上，从而影响孪生跟踪系统的性能。因为对抗扰动的打印过程可能改变扰动的值，且相机传感器可能无法感知较小的扰动。可能的解决方案是借助EOT生成针对相机距离和角度具有鲁棒性的物理扰动，使得在各种成像条件下，跟踪系统都无法对带有对抗性信息的真实目标进行正确跟踪。
+  % 通过 *** 方式（比如，借助 *** 信息）实现物理攻击。
 }
 
 \textit{5. Some of the experiments require more explanations. For example, transferability has been investigated by different backbones \& architectures. It's needed to mention these experiments are with/without the training phase or not.}
@@ -305,7 +317,7 @@ Thank you very much for your thorough review. Your insightful comments are very 
 In addition, point-to-point responses to your comments are given below and highlighted using bold font in line with your comments in order to facilitate cross-referencing.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
 \noindent Yours sincerely,\\
-\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu, Stephen J. Maybank
+\noindent Zhenbang Li, Yaya Shi, Jin Gao, Shaoru Wang, Bing Li, Pengpeng Liang, Weiming Hu
 \\
 \\
 \\
