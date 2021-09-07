@@ -218,7 +218,11 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{Need to be discussed with (at least conformed by) JinGao: What is the similar random pattern ?}
+\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Specifically, the mean value of the template perturbation is ***, the standard deviation of the template image is ***. The mean value of the search patch is ***, the standard deviation of the search image is ***. We create the gaussian noise.
+'FGT-AO', 'FGT-SR-50', 'GT-AO', 'GT-SR-50'
+0.14250828600526147, 0.10118303356737521, 0.7604903420033434, 0.8957391555256324
+mean z=0.05680246651172638, std z=6.4726996421813965, mean x=-0.12454431504011154, std x=9.011011123657227
+}
 
 %%%% 问题 2.5 %%%%
 \textit{
@@ -259,8 +263,19 @@ In addition, point-to-point responses to your comments are given below and highl
 \textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method. 1. As stated in the paper, the proposed method " does not require gradient optimization or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
 
 \textbf{Thanks for your advices. Our patch is obvious (SSIM=0.56). We think the main reason is that we have to learn useful information in such small regions 64*64 as a fake target. While the information of the real target is not changed. So it may be top heat map on the real object, so the network will work hard to create a fake target, which lead to high perturbation values. But, if we can break the target information, it will be easy to attack.
-Our solution is attack the whole image. Y channel, CbCr channel. 
+Our solution is attack the whole image. Y channel, CbCr channel.
+As we can see, the SSIM of the search image is changed from 0.56 to 0.85. The SSIM of the template image is changed from 0.79 to 0.79. 
 }
+
+\begin{figure}[t]
+  \centering
+  \subfigure[SSIM=0.85]{\label{fig:a}\includegraphics[width=0.15\textwidth]{images_imperceptible/2_adv_search_img_fgt.jpg}}
+  \subfigure[SSIM=0.56]{\label{fig:a1}\includegraphics[width=0.15\textwidth]{images_imperceptible/64.jpg}}
+  \subfigure[SSIM=0.79]{\label{fig:b}\includegraphics[width=0.15\textwidth]{images_imperceptible/16384_adv_template_img.jpg}}
+  \subfigure[SSIM=0.79]{\label{fig:b}\includegraphics[width=0.15\textwidth]{images_imperceptible/template.jpg}}
+  \caption{YCbCr Attack.}
+  \label{fig:patch_size_vis}
+\end{figure}
 
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
@@ -331,11 +346,11 @@ In addition, point-to-point responses to your comments are given below and highl
 \newpage
 \textit{This paper proposes a universal targeted attacks method on Siamese visual tracking task. It seems that the method is feasible and somewhat novel.}
 
-\textbf{...}
+\textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
 \textit{My major concern is that the writing and organization need to be carefully modified and optimized. Besides, 1. Authors are focused on the anchor-free tracker in the experiments, but the anchor-free Siamese trackers are not well mentioned. I suggest the authors to include the discussion of state-of-the-art of other similar approaches (e.g., FCOT, SiamCAR, OCEAN, et. al.).}
 
-\textbf{...}
+\textbf{Thanks for your advice and we have test the transferability to the other anchor free tracker OCEAN.}
 
 \textit{2. The model is trained based on Eq.11 and Eq.12. It is not clear why the sign function is introduced. It is also suggested to describe the derivation of these two equations in detail.}
 
