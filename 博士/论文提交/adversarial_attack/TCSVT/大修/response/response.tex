@@ -42,17 +42,34 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 
 (1) We have added the advantages \& limitations of the proposed method after experimental analysis and the future work to the conclusion.
 
-(2) We have added 3 papers published in the IEEE Transactions on Circuits and Systems forVideo Technology, which are most closely related to our manuscript, and analysed what is distinctive / new about our current manuscript related to these previously published papers.
+(2) We have added 3 papers published in the IEEE Transactions on Circuits and Systems for Video Technology, which are most closely related to our manuscript, and analysed what is distinctive / new about our current manuscript related to these previously published papers.
 
-% 我们的工作和数字水印类似，都是向视频帧中增加 slightly perturbed（modifying the pixel values。）。但是我们的目的不同。数字水印的目的是通过检测是否存在扰动，从而判断该视频是否是正版视频，从而进行版权保护，而我们通过添加扰动来降低跟踪效果。
-\cite{9343885}
+Research topics relavant to this paper includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9303455} and adversarial defense \cite{9169672}.
+% 1 什么是数字水印（通过轻微扰动使得）。我们的工作和数字水印类似，都是向视频帧中增加 slightly perturbed（modifying the pixel values。）。但是我们的目的不同。数字水印的目的是通过检测是否存在扰动，从而判断该视频是否是正版视频，从而进行版权保护，而我们通过添加扰动来降低跟踪效果。
+A digital watermark is a kind of marker covertly embedded in image data.
+Both digital watermarking methods \cite{9343885} and adversarial attack methods (slightly) modify the pixel values of images. However, they share different goals. The purpose of digital watermarking is to determine whether the video is a genuine video by detecting the presence of scrambling and thus copyright protection, and we reduce the tracking effect by adding scrambling.
+% % 数字隐写
+% Image steganography is used to transmit secret messages beneath the contents of digital images without arousing
+% suspicions. Both image steganography and adversarial attacks 
+% 2 人脸欺诈指的是使用假脸希望得到错误身份。我们的工作和人脸欺诈类似，都希望欺骗机器学习系统。然而人脸欺诈在真实环境中用假脸欺骗算法（物理攻击），我们是数字攻击，直接修改网络的输入。
+3D face presentation attacks \cite{9303455} aim to fool the face recognition system, where an imposter tries to be authenticated as a genuine client by presenting fake biometric traits to system sensors. 
+Both the face presentation attack methods and our attack method all aim to fool the computer vision algorithms.
+% 不直接访问模型的直接输入，而是通过化妆等方法改变传感器的输入，从而间接影响模型输入。
+Most 3D face presentation attack methods do not directly modify pixels values, the way of generating face artifacts includs wearing wearable facial masks [3], building 3D facial models [4], and through facial makeup to change the 
+The adversary is able to place face artifacts in the physical environment seen by the camera, thereby indirectly changing the algorithm input to perform the attack.
+While in this paper, the adversary has direct access to the actual data fed into the model. In other words, the adversary can choose specific float32 values as input for the model.
+% 3 图像分类的白盒攻击和防御，而我们针对的是跟踪的攻击，更加复杂，对实时性有更高要求。
+Defenses against adversarial attacks are aimed to build a robust classifier so that it correctly identifies adversarial images. For example, Wang et. al. \cite{9169672} builds a robust classification system that can be viewed as a structural black box. After adding a buffer to the classification system, attackers can be efficiently deceived. The real evaluation results of the generated adversarial examples are often contrary to what the attacker thinks. However, this paper focus on the image classification task, while we focus on attacking the visual object tracking task, which is more difficult.
 
-% 人脸欺诈指的是使用假脸希望得到错误身份。我们的工作和人脸欺诈类似，都希望欺骗机器学习系统。然而人脸欺诈在真实环境中用假脸欺骗算法（物理攻击），我们是数字攻击，直接修改网络的输入。
-Face presentation attacks \cite{9303455}: an imposter tries to be authenticated as a genuine client by presenting fake
 
-% 图像分类的白盒攻击和防御，而我们针对的是跟踪的攻击，更加复杂，对实时性有更高要求。
-dsfds \cite{9169672} fds
+% 4 高晋1 2021 是一个相关滤波算法
+\cite{9376997} proposes a correlation filtering algorithm based on the visual memory multi-template update strategy.
 
+% 5 高晋2 2021 是一个相关滤波算法
+\cite{9132673} constructs a fuzzy aided detection module to boost the tracking system.
+
+% 6 综述 2021
+for detail information about tracking, please refer to \cite{9339950}.
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]

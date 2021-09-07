@@ -102,6 +102,34 @@ In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas 
 
 Adversarial attacks \cite{9169672} to image classification were first investigated in \cite{intriguing} with the aim of identifying the vulnerability of modern deep networks to imperceptible perturbations. 
 Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating,zhang2020adversarial,morris2020textattack,jin2020bert} and object detection \cite{wei2019transferable}.
+\iffalse
+\uline{% 加这么一大段，是不是太没必要了？AE要求，指出本文工作与其他工作的独特之处。理想的应该是，某文章用了非通用攻击方法，而我们用了通用攻击方法。我觉得，应该做的是分析别人具体工作与我工作的区别，而不是两个研究方向之间的区别。
+% 在相关工作中，辨析与近似研究方向的区别，也是可以的吧？
+Research topics related to adversarial attacks includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9303455} and adversarial defense \cite{9169672}.
+% 1 什么是数字水印（通过轻微扰动使得）。我们的工作和数字水印类似，都是向视频帧中增加 slightly perturbed（modifying the pixel values。）。但是我们的目的不同。数字水印的目的是通过检测是否存在扰动，从而判断该视频是否是正版视频，从而进行版权保护，而我们通过添加扰动来降低跟踪效果。
+A digital watermark is a kind of marker covertly embedded in image data.
+Both digital watermarking methods \cite{9343885} and adversarial attack methods (slightly) modify the pixel values of images. However, they share different goals. The purpose of digital watermarking is to determine whether the video is a genuine video by detecting the presence of scrambling and thus copyright protection, and we reduce the tracking effect by adding scrambling.
+% % 数字隐写
+% Image steganography is used to transmit secret messages beneath the contents of digital images without arousing
+% suspicions. Both image steganography and adversarial attacks 
+% 2 人脸欺诈指的是使用假脸希望得到错误身份。我们的工作和人脸欺诈类似，都希望欺骗机器学习系统。然而人脸欺诈在真实环境中用假脸欺骗算法（物理攻击），我们是数字攻击，直接修改网络的输入。
+3D face presentation attacks \cite{9303455} aim to fool the face recognition system, where an imposter tries to be authenticated as a genuine client by presenting fake biometric traits to system sensors. 
+Both the face presentation attack methods and our attack method all aim to fool the computer vision algorithms.
+% 不直接访问模型的直接输入，而是通过化妆等方法改变传感器的输入，从而间接影响模型输入。
+Most 3D face presentation attack methods do not directly modify pixels values, the way of generating face artifacts includs wearing wearable facial masks [3], building 3D facial models [4], and through facial makeup to change the 
+The adversary is able to place face artifacts in the physical environment seen by the camera, thereby indirectly changing the algorithm input to perform the attack.
+While in this paper, the adversary has direct access to the actual data fed into the model. In other words, the adversary can choose specific float32 values as input for the model.
+% 3 图像分类的白盒攻击和防御，而我们针对的是跟踪的攻击，更加复杂，对实时性有更高要求。
+Defenses against adversarial attacks are aimed to build a robust classifier so that it correctly identifies adversarial images. For example, Wang et. al. \cite{9169672} builds a robust classification system that can be viewed as a structural black box. After adding a buffer to the classification system, attackers can be efficiently deceived. The real evaluation results of the generated adversarial examples are often contrary to what the attacker thinks. However, this paper focus on the image classification task, while we focus on attacking the visual object tracking task, which is more difficult.
+}
+\fi
+\uline{
+Research topics related to adversarial attacks includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9303455} and adversarial defense \cite{9169672}.
+Xiong et. al. \cite{9343885} generate digital watermarking by slightly modifying the pixel values of videos frame to protect video content from unauthorized access. Compared with \cite{9343885}, our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
+Jia et. al. \cite{9294085} generate 3D face artifacts to fool the face recognition system. Compared with \cite{9294085}, our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
+Wang et. al. \cite{9169672} propose white-box attack/defense methods for image classifiers. Compared with \cite{9169672}, we focus on attacking the object tracking networks instead of the image classification networks.
+}
+
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
 
 \textit{White box attacks v.s. Black box attacks} In the white box attack setting \cite{meng2019white}, the adversary has full knowledge of the model including model type, model architecture and values of all parameters and trainable weights. In the black box setting \cite{cheng2018query,li2019nattack,papernot2017practical,li2020projection}, the adversary has limited or no knowledge about the model under attack \cite{kurakin2018adversarial}. In this paper, we focus on the white box attack for Siamese trackers. However, although we train perturbations using the parameters of the SiamFC++ \cite{SiamFC++} network, we surprisingly find that the trained perturbations can perform black box attacks on other trackers such as SiamRPN \cite{SiamRPN} and SiamRPN++ \cite{SiamRPN++}.
