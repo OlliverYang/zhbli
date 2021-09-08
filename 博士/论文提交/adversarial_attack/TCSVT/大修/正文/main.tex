@@ -499,9 +499,8 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
   \caption{Overall attack results on OTB-15, GOT-Val and LaSOT.}
   \begin{tabular}{rrccc}
   \toprule
-  \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
-  \cmidrule{3-5}
-                            &                         & Real Traj. & Real Traj. & Fake Traj.     \\ 
+  \multirow{2}{*}{Benchmarks} & \multirow{2}{*}{Metrics} & Before    & Targeted & Untargeted  \\
+                            &                         & Attack & Attack & Attack     \\ 
   \midrule
   \multirow{2}{*}{OTB-15} 
   & AO   & 0.642 & 0.063 & 0.759\\
@@ -572,7 +571,7 @@ What's more, our method can perform universal attack, both with respect to the d
 
 \begin{table}[t]
   \centering
-  \caption{Contribution of each loss on GOT-Val.}
+  \caption{Analysis of the impact of each loss component on GOT-Val.}
   \begin{tabular}{ccccccc} 
   \toprule
   \multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{Trageted Attack}          & \multicolumn{2}{c}{Untargeted Attack}           \\ 
@@ -606,7 +605,7 @@ What's more, our method can perform universal attack, both with respect to the d
 
 \begin{table}[t]
   \centering
-  \caption{Transferability to different backbones on GOT-Val.}
+  \caption{Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.}
   \begin{tabular}{rcccccc} 
   \toprule
   \multirow{2}{*}[-2pt]{Backbone} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}  \\ 
@@ -623,7 +622,7 @@ What's more, our method can perform universal attack, both with respect to the d
 \end{table}
 \begin{table}[t!]
   \centering
-  \caption{Transferability to different tracking architectures on OTB2015.}
+  \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.}
   \begin{tabular}{rcccc} 
   \toprule
   \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\
