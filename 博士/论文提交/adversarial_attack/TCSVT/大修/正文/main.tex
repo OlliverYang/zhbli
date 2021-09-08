@@ -79,7 +79,7 @@ Recently, the robustness of Siamese trackers has attracted much attention in the
 
 Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
   
-In this paper, we make the first attempt in finding the universal perturbations (Figure \ref{fig:UAP}) that fool a state-of-the-art Siamese tracker, \ie, SiamFC++ \cite{SiamFC++}, in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal perturbation to the template image and adding a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory (as shown in Figure \ref{fig:1}), so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{GOT-10k}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. benchmarks demonstrate the effectiveness and efficiency of our approach.
+In this paper, we make the first attempt in finding the universal perturbations (Figure \ref{fig:UAP}) that fool a state-of-the-art Siamese tracker, \ie, SiamFC++ \cite{SiamFC++}, in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal perturbation to the template image and adding a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory (as shown in Figure \ref{fig:1}), so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \uline{\cite{LaSOT}}, UAV123 \cite{UAV123}, \uline{VOT2016} \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. benchmarks demonstrate the effectiveness and efficiency of our approach.
 
 % To sum up, the main contributions of this paper are:
 % \begin{itemize}
@@ -185,7 +185,7 @@ In this section, we introduce our video-agnostic targeted attack framework for S
  
 \subsection{Problem Definition}
 
-Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$. $B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame. The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state. In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z_1$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame. At each time-step, the template image $\textbf z_1$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network and then fused using a channel-wise correlation operation:
+Let $V=\{I_i\}_1^T$ denote the frames of a video sequence of length $T$. $B^{gt}=\{b^{gt}_i\}_1^T$ is used to represent the target's ground-truth position in each frame. The visual object tracking aims to predict the position $B^{pred}=\{b^{pred}_i\}_1^T$ of this target in the subsequent frames given its initial state. In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get \uline{a} template image $\textbf z_1$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame. At each time-step, the template image $\textbf z_1$ and the search image $\textbf x_i$ are first passed individually through a shared backbone network and then fused using a channel-wise correlation operation:
 \begin{equation}
   \text{Feat}_{j}(\mathbf{z}_1, \mathbf{x}_i)=\psi_{j}(\phi(\mathbf{z}_1)) \star \psi_{j}(\phi(\mathbf{x}_i)), j \in\{\mathrm{cls}, \mathrm{reg}\}
 \end{equation}
@@ -220,7 +220,7 @@ To achieve universal targeted attacks, one feasible way is to paste a small (uni
 %where $m$ is a binary mask and $m_{x,y}=1$ at all spatial locations under the fake ground bounding box $b^{fake}$ which is variable during training according to the patch position.
 % $\odot$ is element-wise multiplication. 
 where $A_{\text{paste}}$ is a patch application operator \cite{patch} which pastes the adversarial patch $p_\textbf{x}$ into the search image according to $b^{fake}_{\textbf{x}}$. Both $b^{fake}_{\textbf{x}}$ and $y^{fake}$ are variable during training.
-Note that this vanilla adversarial patch method uses the clean template image during training. However, CNN attacks are usually expected imperceptible but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
+Note that this vanilla adversarial patch method uses the clean template image during training. However, CNN attacks are usually expected \uline{imperceptibly} but the above method has to paste an obviously noticeable fake target patch to tracking frames, which raises the risk of being suspected.
 
 %\uline{
 To overcome all the shortcomings of the above methods, we propose to train a translucent perturbation $\delta$ for the template image $\textbf z$, and a translucent patch $p$ for the search image $\textbf x$. 
@@ -286,7 +286,7 @@ The perturbed search image is generated as follows:
 \tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
 \end{equation}
 where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. 
-$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
+\uline{$A_{add}$} adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
 
 \textit{Generating Fake Labels} The fake lables are composed of three parts: fake classification label $\textbf{C}^*$, fake regression label $\textbf{R}^*$ and fake quality estimation label $\textbf{Q}^*$.
 
@@ -387,7 +387,7 @@ The tracker then takes $\tilde{\textbf z}_1=\textbf z_1+\delta$ and $\tilde{ \te
 
 \textit{Evaluation Benchmarks} We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, \ie, OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, 
 %\uline{
-UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. 
+UAV123 \cite{UAV123}, \uline{VOT2016} \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. 
 %}
 Generally speaking, OTB2015 is a typical tracking benchmark which is widely used for evaluation for several years. 
 GOT-10k has the advantage of magnitudes wider coverage of object classes. 
@@ -412,7 +412,7 @@ Because the annotations of GOT-10k's test data are kept private, we only use its
 
 In our evaluation, the backbone Siamese network of our base tracker SiamFC++ \cite{SiamFC++} adopts GoogLeNet \cite{GoogLeNet}.
 We implement our approach in Pytorch and train our perturbations using three GTX 1080Ti GPUs.
-We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set. (see Table \ref{tab:dataset})
+We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.
 We train the perturbations for 32768 iterations with a mini-batch of 96 images (32 images per GPU).
 The learning rate of the template perturbation $\epsilon_1$ is set to 0.1, and for the adversarial patch it is $\epsilon_2 = 0.1$.
 We generate training samples following the practice in SiamFC++.
