@@ -421,16 +421,14 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 
 \begin{table}[t]
   \centering
-  \caption{Compared with baselines on perturbed GOT-Val dataset.}
-  \begin{tabular}{@{}lcc@{}}
-    \toprule
-    \multirow{2}{*}[-2pt]{Methods}  & \multicolumn{2}{c}{AO}\\ \cmidrule{2-3}
-          & Real Traj. & Fake Traj.\\ \midrule
-  %Baseline-1 \cite{DBLP:conf/iclr/KurakinGB17a}  & ?          & ?\\
+  \caption{Comparison of attack performance with 2 baseline methods on GOT-Val in terms of AO. Baseline1 performs untargeted attacks based on the UAP \cite{UAP} method. Baseline2 performs targeted attacks based on the adversarial patch \cite{patch} method.}
+  \begin{tabular}{@{}rcc@{}}
+  \toprule
+  Methods & Untargeted Attack & Targeted Attack \\ \midrule
   Baseline-1 \cite{UAP}  & 0.09          & -\\
   Baseline-2 \cite{patch}   & 0.23       & 0.78\\
-    Ours & 0.15       & 0.84\\ \bottomrule
-    \end{tabular}
+  Ours & 0.15       & 0.84\\ \bottomrule
+  \end{tabular}
   \label{tab:imperceptible}
 \end{table}
   
@@ -447,20 +445,20 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \begin{table*}
   \centering
   \caption{Influence of the training iteration number on GOT-Val.}
-  \begin{tabular}{cc|ccccccccccccccc} 
+  \begin{tabular}{rcccccccccccccccc} 
   \toprule
-  \multicolumn{2}{c|}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  \\ 
+  \multicolumn{2}{r}{Iterations}     & 1     & 2     & 4     & 8     & 16    & 32    & 64    & 128   & 256   & 512   & 1024  & 2048  & 4096  & 8192  \\ 
   \midrule
-  \multirow{2}{*}{Fake Traj.} & AO    &  0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.15 & 0.18 & 0.47 & 0.73 & 0.78 & 0.82 & 0.84 & 0.84  \\
+  \multirow{2}{*}{Untargeted Attack} & AO    &  0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.14 & 0.15 & 0.18 & 0.47 & 0.73 & 0.78 & 0.82 & 0.84 & 0.84  \\
                               & SR    &  0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.1 & 0.11 & 0.15 & 0.49 & 0.78 & 0.84 & 0.88 & 0.89 & 0.89    \\ 
   \midrule
-  \multirow{2}{*}{Real Traj.} & AO   & 0.76 & 0.77 & 0.76 & 0.76 & 0.76 & 0.76 & 0.75 & 0.73 & 0.48 & 0.27 & 0.22 & 0.17 & 0.15 & 0.15    \\
+  \multirow{2}{*}{Targeted Attack} & AO   & 0.76 & 0.77 & 0.76 & 0.76 & 0.76 & 0.76 & 0.75 & 0.73 & 0.48 & 0.27 & 0.22 & 0.17 & 0.15 & 0.15    \\
                               & SR   & 0.89 & 0.9 & 0.89 & 0.89 & 0.9 & 0.89 & 0.88 & 0.86 & 0.53 & 0.25 & 0.18 & 0.14 & 0.12 & 0.12    \\ 
   \midrule
-  \multicolumn{2}{c|}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
+  \multicolumn{2}{r}{SSIM of $\delta$}&   1 & 1 & 1 & 1 & 0.99 & 0.99 & 0.97 & 0.94 & 0.88 & 0.84 & 0.82 & 0.81 & 0.8 & 0.79\\
   \midrule
   % \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.97 & 0.98 & 0.98 & 0.98 & 0.98\\
-  \multicolumn{2}{c|}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.93 & 0.78 & 0.56 & 0.50 & 0.51 & 0.52 & 0.53 & 0.56\\
+  \multicolumn{2}{r}{SSIM of $p$}      &  0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.98 & 0.93 & 0.78 & 0.56 & 0.50 & 0.51 & 0.52 & 0.53 & 0.56\\
   \bottomrule
   \end{tabular}
   \label{tab:iter}
@@ -469,7 +467,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \begin{table}[h]
   \centering
   \caption{Overall attack results on VOT2016, VOT2018, VOT2019 and UAV123.}
-  \begin{tabular}{c c | c | c}
+  \begin{tabular}{rrcc}
   \toprule
   Benchmarks & Metrics & Before Attack    & Untargeted Attack  \\
   \midrule
@@ -499,7 +497,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
 \begin{table}[t]
   \centering
   \caption{Overall attack results on OTB-15, GOT-Val and LaSOT.}
-  \begin{tabular}{c c | c | c | c}
+  \begin{tabular}{rrccc}
   \toprule
   \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & Clean Videos    & \multicolumn{2}{c}{Perturbed Videos}  \\
   \cmidrule{3-5}
@@ -519,7 +517,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
   & AO         & 0.525 & 0.069 & 0.691\\
   %& Succ. rate  & 0.626 & 0.016 & 0.834\\
   \midrule
-  \multicolumn{2}{c|}{FPS} & 58 & 58 & 58\\
+  \multicolumn{2}{r}{FPS} & 58 & 58 & 58\\
   \bottomrule
   \end{tabular}
   \label{tab:benchmark results}
@@ -575,9 +573,9 @@ What's more, our method can perform universal attack, both with respect to the d
 \begin{table}[t]
   \centering
   \caption{Contribution of each loss on GOT-Val.}
-  \begin{tabular}{ccc|cc|cc} 
+  \begin{tabular}{ccccccc} 
   \toprule
-  \multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c|}{Fake Traj.}          & \multicolumn{2}{c}{Real Traj.}           \\ 
+  \multirow{2}{*}[-2pt]{$L_{\text{cls}}$}     & \multirow{2}{*}[-2pt]{$L_{\text{quality}}$} & \multirow{2}{*}[-2pt]{$L_{\text{reg}}$} & \multicolumn{2}{c}{Trageted Attack}          & \multicolumn{2}{c}{Untargeted Attack}           \\ 
   \cmidrule{4-7}
                          &                    &                    & AO                    & SR                    & AO                    & SR                     \\ 
   \midrule
@@ -609,11 +607,10 @@ What's more, our method can perform universal attack, both with respect to the d
 \begin{table}[t]
   \centering
   \caption{Transferability to different backbones on GOT-Val.}
-  \begin{tabular}{c|cc|cc|cc} 
+  \begin{tabular}{rcccccc} 
   \toprule
-  \multirow{3}{*}[-6pt]{Backbone} & \multicolumn{2}{c|}{Clean Videos}    & \multicolumn{4}{c}{Perturbed Videos}                                        \\ 
-  \cmidrule{2-7}
-                            & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c|}{Real Traj.} & \multicolumn{2}{c}{Fake Traj.}  \\ 
+  \multirow{2}{*}[-2pt]{Backbone} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}  \\ 
+  % \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
   \cmidrule{2-7}
                             & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
   \midrule
@@ -627,9 +624,9 @@ What's more, our method can perform universal attack, both with respect to the d
 \begin{table}[t!]
   \centering
   \caption{Transferability to different tracking architectures on OTB2015.}
-  \begin{tabular}{c|cc|cc} 
+  \begin{tabular}{rcccc} 
   \toprule
-  \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c|}{Clean Videos} & \multicolumn{2}{c}{Perturbed Videos}  \\
+  \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\
   \cmidrule{2-5}
                             & AO & Precision              & AO & Precision                   \\
   \midrule
@@ -677,9 +674,9 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 \begin{table}
     \centering
     \caption{Attack results with or without ground truth (GT) information on GOT-Val.}
-    \begin{tabular}{cccc}
+    \begin{tabular}{rccc}
         \toprule
-        \multirow{2}{*}{Metrics} & \multirow{2}{*}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}                                            \\
+        \multirow{2}{*}[-2pt]{Metrics} & \multirow{2}{*}[-2pt]{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\ \cmidrule{3-4}
                                  &                                & w/ GT information & w/o GT information \\ \midrule
         SR                       & 0.897                          & 0.123                                & 0.121                                     \\
         AO                       & 0.760                          & 0.153                                & 0.160                                     \\                              
@@ -690,8 +687,8 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 
 \begin{table}[t]
   \centering
-  \caption{Untargeted attack: Precision score on OTB2015.}
-  \begin{tabular}{@{}ccccc@{}}
+  \caption{State-of-the-art comparison of untargeted attack performance on OTB2015 in terms of precision score.}
+  \begin{tabular}{@{}rrccc@{}}
   \toprule
   \multirow{2}{*}[-1pt]{Method} & \multirow{2}{*}[-1pt]{Tracker} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Attack Cost\\per Frame(ms)\end{tabular}} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Before\\ Attack\end{tabular}} & \multirow{2}{*}[-1pt]{Untargeted Attack} \\
    &  &  &  &     \\ \midrule
@@ -708,8 +705,8 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 
 \begin{table}[t]
   \centering
-  \caption{Targeted attack: Precision score on OTB2015.}
-  \begin{tabular}{@{}ccc@{}}
+  \caption{State-of-the-art comparison of targeted attack performance on OTB2015 in terms of precision score.}
+  \begin{tabular}{@{}rrc@{}}
   \toprule
   Method & Tracker &  Targeted Attack \\
   \midrule
@@ -736,10 +733,10 @@ SiamRPN uses an RPN network to perform location regression and target classifica
   \centering
   %\renewcommand\tabcolsep{3.5pt} % 调整表格列间的长度
   %\footnotesize
-  \caption{Untargeted attack results on VOT2016 and VOT2018.}
-  \begin{tabular}{ccc|ccc|ccc}
+  \caption{State-of-the-art comparison of untargeted attack performance on VOT2016/2018 in terms of accuracy, robustness and expected average overlap (EAO).}
+  \begin{tabular}{rrrcccccc}
   \toprule
-  \multirow{2}{*}{Dataset} & \multirow{2}{*}{Method} & \multirow{2}{*}{Tracker} & \multicolumn{3}{c}{Before Attack} & \multicolumn{3}{|c}{Untargeted Attack} \\
+  \multirow{2}{*}[-2pt]{Dataset} & \multirow{2}{*}[-2pt]{Method} & \multirow{2}{*}[-2pt]{Tracker} & \multicolumn{3}{c}{Before Attack} & \multicolumn{3}{c}{Untargeted Attack} \\ \cmidrule{4-9}
                            &                         &                          & Accuracy   & Robustness  & EAO    & Accuracy    & Robustness    & EAO     \\ \midrule
   \multirow{2}{*}{VOT2016} & RTAA                    & DaSiamRPN                & 0.625      & 0.224       & 0.439  & 0.521       & 1.613         & 0.078   \\
                            & Ours                    & SiamFC++                 & 0.626      & 0.144       & 0.460  & 0.393       & 9.061         & 0.007   \\ \midrule
