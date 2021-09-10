@@ -193,23 +193,42 @@ In addition, point-to-point responses to your comments are given below and highl
 \textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
 %%%% 问题 2.1 %%%%
-\textit{However, there are some concerns over the implementation, performance and writing. 1. The authors state that training with Ep. 4 leads to an obvious patch on the images while using Eq.5 into the training process results in a less obvious patch. The reviewer considers that giving a constraint (e.g. $l_inf$) on the $p_x$ in Eq.4 can make the perturbation imperceptible intuitively. Please give more analysis on this setting.}
+\textit{However, there are some concerns over the implementation, performance and writing. 1. The authors state that training with Ep. 4 leads to an obvious patch on the images while using Eq.5 into the training process results in a less obvious patch. The reviewer considers that giving a constraint (e.g. $l_{\infty}$) on the $p_x$ in Eq.4 can make the perturbation imperceptible intuitively. Please give more analysis on this setting.
+Besides, the reviewer hopes to know the reason why give an extra perturbation on the template region. The perturbations on template and search regions look similar, while the authors say that they are different. Please state the difference between the patch application operator on search examples and the operator on template examples.
+In addition, the denotations of $A_{paste}$ in Eq.4 and $A_{add}$ in Eq.5 seem like the same one.
+}
 
-\textbf{Sorry that we did not clarify the meaning of paste. If we paste the perturbation, we means we use a patch to replace the original image, which means the patch and the original image is discrete (even if we give a constraint).}
+\textbf{
+Thanks for the good comment.
+Before analysis if giving constraint (e.g. $L_{\infty}$) on the $p_x$ in Eq.4 is really lead to imperceptible or not, let us first clarify the concept of the $A_{paste}$ and $A_{add}$, which is not tell good in the previous manuscript. 
+% 解释paste（说明不需要加 constraint）
+If we paste the perturbation to the image, we means we use a patch to replace the original image, which means the patch and the original image is discrete. The final pixel value is changed from the original value to a new value.
+As a result, even though the perturbation is small, when we paste it to the image, it shows nearly black but not imperceptible.
+% 解释加法
+The operator $A_{add}$ means to apply additive noise, where the injecting small perturbations into the image. Often need constraint. the injected noise are small and sometimes invisible. If we add a patch onto the image, the final pixel value is the original value plus a new value.
+For your convenience of cross checking, the new added text is shown as follows:
+}
 
-\textit{Besides, the reviewer hopes to know the reason why give an extra perturbation on the template region. The perturbations on template and search regions look similar, while the authors say that they are different. Please state the difference between the patch application operator on search examples and the operator on template examples.}
+\textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z}$ is similar. The only difference is that, $A_{\text{add}}$ means add the perterbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
 
-\textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z})$ is similar. The only difference is that, $A_{\text{add}}$ means add the perterbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
-
-\textit{In addition, the denotations of $A_paste$ in Eq.4 and $A_add$ in Eq.5 seem like the same one.}
-
-\textbf{Sorry that we make the wrong citation and not clarify the meaning of add and paste. If we paste the perturbation, we means we use a patch to replace the original image, which means the patch and the original image is discrete (even if we give a constraint). The final pixel value is changed from the original value to a new value. If we add a patch onto the image, the final pixel value is the original value plus a new value.}
+\uline{
+If we paste the perturbation to the image, we means we use a patch to replace the original image, which means the patch and the original image is discret. Even though the perturbation is small, when we paste it to the image, it shows black but not imperceptible.
+% 解释加法
+The operator $A_{add}$ means to apply additive noise, where the injecting small perturbations into the input samples. Often need constraint. the injected noise are small and sometimes invisible.  
+}
 
 
 %%%% 问题 2.2 %%%%
 \textit{2. I agree with reviewer 3, the ground truth boxes are inaccessible to trackers during the inference. It seems that the authors use the ground truth boxes to generate the fake trajectory in lines 51-57 on page 7. Please clarify it.}
 
-\textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.}
+\textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.
+For your convenience, the new text is added as following:}
+
+\uline{
+Let us now turn to targeted attacks. In this context, we consider two scenarios:
+1. The attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by (3, 3) pixels in each consecutive frames, corresponding to the four directions 45, -45, 135, -135.
+2. The attacker seeks for the tracker to follow a more complicated trajectory. ...
+}
 
 \begin{table}[t]
   \centering
@@ -225,17 +244,22 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 2.3 %%%%
 \textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.}
 
-\textbf{Thanks for your advice and we have conducted the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$. As we can see, only use one of them is not useful, because they are trained together.}
+\textbf{Thanks for your advice and we have conducted the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$. As we can see, only use one of them is not useful, because they are trained together. For your convenience of cross review, the new text is given as follows.}
+
+\uline{To see the impact of $p$ and $\delta$, we add the ablation study on only adding perterbations on the template images or the search regions. The result is shown in table \ref{table:one_branch}. Experiment results shows that only train in one branch is not useful. For the untargeted attack, the only template result is 0.50, the only search result is 0.71. While both attack is 0.**. For the targeted attack, the only template result is 0.16, the only search attack is 0.16, while both attack is 0.**.}
 
 \begin{table}[]
   \centering
   \caption{q2eq23}
+  \label{table:one_branch}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
                 & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\
                 & AO                & SR                & AO               & SR               \\ \midrule
   Only Template & 0.5097            & 0.5669            & 0.1555           & 0.1064           \\
-  Only Search   & 0.7137            & 0.8414            & 0.1599           & 0.1320           \\ \bottomrule
+  Only Search   & 0.7137            & 0.8414            & 0.1599           & 0.1320           \\
+  Both          &                   &                   &                  &                  \\
+  \bottomrule
   \end{tabular}
 \end{table}
 
@@ -254,7 +278,7 @@ mean z=0.05680246651172638, std z=6.4726996421813965, mean x=-0.1245443150401115
 
 \textit{- On page 2, ‘1016’ $\rightarrow$ ‘2016’ in line 56. There is a same one in line 47 on page 6.}
 
-\textit{- The denotation of $B_x^fake$ in Eq.4 is not clear enough, even though it can be inferred by the later part.}
+\textit{- The denotation of $B_x^{fake}$ in Eq.4 is not clear enough, even though it can be inferred by the later part.}
 
 \textit{- On page 4, ‘imperceptible’ $\rightarrow$ ‘imperceptibly’ in line 57.}
 
