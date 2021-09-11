@@ -239,16 +239,16 @@ Let us now turn to targeted attacks. In this context, we consider two scenarios:
 2. The attacker seeks for the tracker to follow a more complicated trajectory. ...
 }
 
-\begin{table}[t]
-  \centering
-  \caption{rewrq}
-  \begin{tabular}{@{}rcccc@{}}
-  \toprule
-         & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\
-         & AO                & SR                & AO               & SR               \\ \midrule
-  track2 & 0.1747            & 0.1442            & 0.8448           & 0.8972           \\ \bottomrule        
-  \end{tabular}
-  \end{table}
+% \begin{table}[t]
+%   \centering
+%   \caption{rewrq}
+%   \begin{tabular}{@{}rcccc@{}}
+%   \toprule
+%          & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\
+%          & AO                & SR                & AO               & SR               \\ \midrule
+%   track2 & 0.1747            & 0.1442            & 0.8448           & 0.8972           \\ \bottomrule        
+%   \end{tabular}
+% \end{table}
 
 %%%% 问题 2.3 %%%%
 \textit{3. For the experiments, the authors should conduct the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.}
@@ -259,7 +259,7 @@ Let us now turn to targeted attacks. In this context, we consider two scenarios:
 
 \begin{table}[]
   \centering
-  \caption{q2eq23}
+  \caption{Attack performance when only use the template/search perturbation.}
   \label{table:one_branch}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
@@ -275,10 +275,32 @@ Let us now turn to targeted attacks. In this context, we consider two scenarios:
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Specifically, the mean value of the template perturbation is ***, the standard deviation of the template image is ***. The mean value of the search patch is ***, the standard deviation of the search image is ***. We create the gaussian noise.
-'FGT-AO', 'FGT-SR-50', 'GT-AO', 'GT-SR-50'
-0.14250828600526147, 0.10118303356737521, 0.7604903420033434, 0.8957391555256324
-mean z=0.05680246651172638, std z=6.4726996421813965, mean x=-0.12454431504011154, std x=9.011011123657227
+\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image.
+For your convenience of cross checking, the new added text is show as follows:
+%Specifically, the mean value of the template perturbation is ***, the standard deviation of the template image is ***. The mean value of the search patch is ***, the standard deviation of the search image is ***. We create the gaussian noise.
+%'FGT-AO', 'FGT-SR-50', 'GT-AO', 'GT-SR-50'
+%0.14250828600526147, 0.10118303356737521, 0.7604903420033434, 0.8957391555256324
+%mean z=0.05680246651172638, std z=6.4726996421813965, mean x=-0.12454431504011154, std x=9.011011123657227
+}
+
+\begin{table}[t]
+  \centering
+  \caption{Attack performance using the gaussian random noise. The mean value is set to zero. The noise is added to both the template and the search image, position and size is the same of original setting. We not train.}
+  \begin{tabular}{@{}rccccc@{}}
+  \toprule
+  \multirow{2}{*}[-2pt]{STD} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                             &                            & AO                & SR                & AO               & SR               \\ \midrule
+  0.1 & 0.1747            & 0.1442            & 0.8448           & 0.8972           &       \\
+  1.0 & 0.1747            & 0.1442            & 0.8448           & 0.8972           & \\
+  10.0 & 0.1747            & 0.1442            & 0.8448           & 0.8972          & \\
+  \bottomrule        
+  \end{tabular}
+  \label{table:noise}
+\end{table}
+
+\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noise. The mean value is set to zero. The noise is added to both the template and the search image, position and size is the same of original setting. We not train.
+% 实验结果的分析
+As shown in Table \ref{table:noise}, if we add small or midiam noise, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
 }
 
 %%%% 问题 2.5 %%%%
