@@ -54,12 +54,16 @@ Wang et. al. \cite{9169672} propose white-box attack/defense methods for image c
 }
 
 % 4 高晋1 2021 是一个相关滤波算法
-Liu et. al. \cite{9376997} propose a correlation filtering tracking algorithm based on the visual memory multi-template update strategy.
+\uline{Liu et. al. \cite{9376997} propose a correlation filtering tracking algorithm based on the visual memory multi-template update strategy.}
 % 5 高晋2 2021 是一个相关滤波算法
 Liu et. al. \cite{9132673} construct a fuzzy aided detection module to boost the correlation filtering tracking system.
 
 % 6 综述 2021
-A comprehensive survey of the related trackers is beyond the scope of this paper, so we only briefly review two aspects that are most relevant to our work. Please refer to \cite{9339950} for A thorough survey on visual object tracking methods.
+\uline{A comprehensive survey of the related trackers is beyond the scope of this paper, so we only briefly review two aspects that are most relevant to our work. Please refer to \cite{9339950} for A thorough survey on visual object tracking methods.}
+
+(4) We have added a new experiment to attack in the YCbCr color space to reduce the perceptibility.
+
+(5) We have added a new way to generate the fake trajectory.
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
 \indent We are looking forward to your reply.\\[10pt]
@@ -366,11 +370,27 @@ In addition, point-to-point responses to your comments are given below and highl
 \newpage
 
 %%%% 问题 3.1 %%%%
-\textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method. 1. As stated in the paper, the proposed method " does not require gradient optimization or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
+\textit{This paper employs the universal perturbation attacks on Siamese visual trackers. There are still the following concerns about the proposed method. 1. As stated in the paper, the proposed method ``does not require gradient optimization or network inference". However, this is a double-edged sword since it resulted in suspicious attacks. Prior works commonly train a network to prevent not only suspicious attacks but also modifying every pixel. I think it's a major problem with this work. I suggest considering a proper strategy to remove/reduce it.}
 
-\textbf{Thanks for your advices. Our patch is obvious (SSIM=0.56). We think the main reason is that we have to learn useful information in such small regions 64*64 as a fake target. While the information of the real target is not changed. So it may be top heat map on the real object, so the network will work hard to create a fake target, which lead to high perturbation values. But, if we can break the target information, it will be easy to attack.
-Our solution is attack the whole image. Y channel, CbCr channel.
-As we can see, the SSIM of the search image is changed from 0.56 to 0.85. The SSIM of the template image is changed from 0.79 to 0.79. 
+\textbf{
+Thanks for your advice.
+% 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
+The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
+% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
+Other methods add perturbations over the entire search image, whereas we have to add perturbations over a very small region of 64*64, which increases the learning difficulty and makes the perturbation values large.
+% 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
+% 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of 64*64 in the CbCr channel.
+% 介绍什么是 YCbCr
+Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
+% 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
+We choose YCbCr color space since its color channels are less correlated and quite independent than RGB.
+% 解释为什么在CbCr上做局部攻击在Y上做全图攻击，而不是其他方式：有研究证明Y通道可感知性更强而CbCr弱一些。因为我们希望补丁区域扰动值更小，所以我们在CbCr做局部攻击。
+While considering the color sensitivity of HVS, the CbCr channels are least sensitive that the Y channel. This means that the patch added in the CbCr channels has better performance of transparency.
+% 实验细节：迭代了多少次？损失函数各项的权重是什么？模板图像怎么操作。
+% 实验结果。
+The experimental result is shown in Table. As we can see, ...
+For your convenience of cross checking, the new next is added as following.
 }
 
 \begin{figure}[t]
@@ -382,6 +402,25 @@ As we can see, the SSIM of the search image is changed from 0.56 to 0.85. The SS
   \caption{YCbCr Attack.}
   \label{fig:patch_size_vis}
 \end{figure}
+
+\uline{
+% 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
+The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
+% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
+Other methods add perturbations over the entire search image, whereas we have to add perturbations over a very small region of 64*64, which increases the learning difficulty and makes the perturbation values large.
+% 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
+% 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of 64*64 in the CbCr channel.
+% 介绍什么是 YCbCr
+Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
+% 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
+We choose YCbCr color space since its color channels are less correlated and quite independent than RGB.
+% 解释为什么在CbCr上做局部攻击在Y上做全图攻击，而不是其他方式：有研究证明Y通道可感知性更强而CbCr弱一些。因为我们希望补丁区域扰动值更小，所以我们在CbCr做局部攻击。
+While considering the color sensitivity of HVS, the CbCr channels are least sensitive that the Y channel. This means that the patch added in the CbCr channels has better performance of transparency.
+% 实验细节：迭代了多少次？损失函数各项的权重是什么？模板图像怎么操作。
+% 实验结果。
+The experimental result is shown in Table. As we can see, ...
+}
 
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
@@ -438,6 +477,12 @@ The main limitation of our work is the perturbation values are not as small as o
 \textit{6. In experiments, I suggest considering two scenarios of different directions and trajectories.}
 
 \textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.}
+
+\uline{
+Let us now turn to targeted attacks. In this context, we consider two scenarios:
+1. The attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by (3, 3) pixels in each consecutive frames, corresponding to the four directions 45, -45, 135, -135.
+2. The attacker seeks for the tracker to follow a more complicated trajectory. ...
+}
 
 \textit{7. There are still some typo and grammar mistakes in the paper.}
 
