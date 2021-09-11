@@ -22,6 +22,7 @@
 \usepackage{multirow}  % for multirow command used in the table
 \usepackage{setspace}
 \usepackage{ulem}  % 用于添加下划线
+\usepackage{enumitem}
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -511,7 +512,7 @@ The main limitation of our work is the perturbation values are not as small as o
 
 \uline{
 Let us now turn to targeted attacks. In this context, we consider two scenarios:}
-\begin{itemize}
+\begin{itemize}[itemsep= 0 pt,topsep = 0 pt]
   \item[] \uline{1. The attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by (3, 3) pixels in each consecutive frames, corresponding to the four directions 45, -45, 135, -135.}
   \item[] \uline{2. The attacker seeks for the tracker to follow a more complicated trajectory. ...}
 \end{itemize}
