@@ -54,9 +54,9 @@ Wang et. al. \cite{9169672} propose white-box attack/defense methods for image c
 }
 
 % 4 高晋1 2021 是一个相关滤波算法
-\uline{Liu et. al. \cite{9376997} propose a correlation filtering tracking algorithm based on the visual memory multi-template update strategy.}
+\uline{Liu et. al. \cite{9376997} propose a correlation filtering tracking algorithm based on the visual memory multi-template update strategy.
 % 5 高晋2 2021 是一个相关滤波算法
-Liu et. al. \cite{9132673} construct a fuzzy aided detection module to boost the correlation filtering tracking system.
+Liu et. al. \cite{9132673} construct a fuzzy aided detection module to boost the correlation filtering tracking system.}
 
 % 6 综述 2021
 \uline{A comprehensive survey of the related trackers is beyond the scope of this paper, so we only briefly review two aspects that are most relevant to our work. Please refer to \cite{9339950} for A thorough survey on visual object tracking methods.}
@@ -443,11 +443,43 @@ The experimental result is shown in Table. As we can see, ...
 
 \textit{3. The descriptions of figures and tables are not self-explanatory.}
 
-\textbf{...}
+\textbf{Thanks for your advice and we have replaced the descriptions of figures and tables. The modification is shown as follows for the convience of cross checking.}
+
+% table 2
+\textbf{We have replaced ``Compared with baselines on perturbed GOT-Val dataset.'' with}
+\uline{``Comparison of attack performance with 2 baseline methods on GOT-Val in terms of AO. Baseline1 performs untargeted attacks based on the UAP \cite{UAP} method. Baseline2 performs targeted attacks based on the adversarial patch \cite{patch} method.''}
+\textbf{in Section of the revised manuscript.}
+
+% table 6
+\textbf{We have replaced ``Contribution of each loss on GOT-Val.'' with}
+\uline{``Analysis of the impact of each loss component on GOT-Val.''}
+\textbf{in Section of the revised manuscript.}
+
+% table 7
+\textbf{We have replaced ``Transferability to different backbones on GOT-Val.'' with}
+\uline{``Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, i.e., ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.''}
+\textbf{in Section of the revised manuscript.}
+
+% table 8
+\textbf{We have replaced ``Transferability to different tracking architectures on OTB2015.'' with}
+\uline{``Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.''}
+\textbf{in Section of the revised manuscript.}
+
+% table 10
+\textbf{We have replaced ``Untargeted attack: Precision score on OTB2015.'' with}
+\uline{``State-of-the-art comparison of untargeted attack performance on OTB2015 in terms of precision score.''}
+\textbf{in Section of the revised manuscript.}
+
+% table 11
+\textbf{We have replaced ``Targeted attack: Precision score on OTB2015.'' with}
+\uline{``State-of-the-art comparison of targeted attack performance on OTB2015 in terms of precision score.''}
+\textbf{in Section of the revised manuscript.}
 
 \textit{4. I suggest adding the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion.}
 
-\textbf{
+\textbf{Thanks for the good commenet. As suggested, we have added the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion. For the convenience of your cross checking, the new added text is as follows:}
+
+\uline{
 Compared with other attack method, our method has two key advantages. First,
   % 通用的，也就是不需要进行网络推断或者梯度计算，因此使得可以在不消耗计算资源的同时执行攻击成为可能。
 because our video-agnostic feature, we are fast, no need to network interferes or gradient calculation, making it possible to attack a real-world online-tracking system when we can not get access to the limited computational resources.
@@ -469,17 +501,20 @@ The main limitation of our work is the perturbation values are not as small as o
 
 \textit{5. Some of the experiments require more explanations. For example, transferability has been investigated by different backbones \& architectures. It's needed to mention these experiments are with/without the training phase or not.}
 
-\textbf{Thanks for point out this. These experiments do not need the training phase.}
+\textbf{Thanks for point out this. These experiments do not need the training phase and we have added text to clarify this. For your convenience of cross checking, the new added text is as follows:}
+
+\uline{These experiments do not need the training phase.}
 
 \textit{6. In experiments, I suggest considering two scenarios of different directions and trajectories.}
 
 \textbf{We generate new trajectory without the test GT: we let the fake box run straight to border of the image, speed and derection is random.}
 
 \uline{
-Let us now turn to targeted attacks. In this context, we consider two scenarios:
-1. The attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by (3, 3) pixels in each consecutive frames, corresponding to the four directions 45, -45, 135, -135.
-2. The attacker seeks for the tracker to follow a more complicated trajectory. ...
-}
+Let us now turn to targeted attacks. In this context, we consider two scenarios:}
+\begin{itemize}
+  \item[] \uline{1. The attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by (3, 3) pixels in each consecutive frames, corresponding to the four directions 45, -45, 135, -135.}
+  \item[] \uline{2. The attacker seeks for the tracker to follow a more complicated trajectory. ...}
+\end{itemize}
 
 \textit{7. There are still some typo and grammar mistakes in the paper.}
 
