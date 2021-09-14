@@ -93,8 +93,8 @@ In this paper, we make the first attempt in finding the universal perturbations 
 \subsection{Siamese Visual Tracking}
 
 Siamese visual tracking is a fundamental research direction in template matching-based tracking besides the correlation filter-based methods. Both of them are aimed to ``causally'' estimate the positions of a template cropped from the initial video frame in the subsequent frames.
+%\uline{A comprehensive survey of the related trackers is beyond the scope of this paper, so we only briefly review two aspects that are most relevant to our work. Please refer to \cite{9339950} for a thorough survey on visual object tracking methods.} 
 \uline{
-A comprehensive survey of the related trackers is beyond the scope of this paper, so we only briefly review two aspects that are most relevant to our work. Please refer to \cite{9339950} for A thorough survey on visual object tracking methods. 
 % 4 高晋1 2021 是一个相关滤波算法
 Liu et. al. \cite{9376997} propose a correlation filtering tracking algorithm based on the visual memory multi-template update strategy.
 % 5 高晋2 2021 是一个相关滤波算法
@@ -105,6 +105,8 @@ Siamese trackers formulate visual tracking as learning cross-correlation similar
 Recently, some Siamese trackers~\cite{SiamFC++,SiamRPN,SiamRPN++} have demonstrated a significant performance improvement in visual tracking. 
 In particular, SiamRPN \cite{SiamRPN} consists of one Siamese subnetwork for feature extraction and another region proposal subnetwork including the classification and regression branches separately. Based on its success in the decomposition of classification and state estimation, SiamRPN++ \cite{SiamRPN++} further breaks the restriction of strict translation invariance through a simple yet effective spatial aware sampling strategy and successfully trains a ResNet-driven Siamese tracker with significant performance gains. Apart from these anchor-based methods, an anchor-free tracker SiamFC++ \cite{SiamFC++} is further designed by considering non-ambiguous scoring, prior target scale/ratio distribution, knowledge-free and estimation quality assessment guidelines.
 In our experiments, we are focused on the anchor-free SiamFC++ tracker, whereas the transferability of our generated adversarial attacks to the previous anchor-based trackers is also studied.
+\uline{
+A comprehensive survey of the related trackers is beyond the scope of this paper, please refer to \cite{9339950} for a thorough survey on visual object tracking methods.} 
 
 \subsection{Adversarial Attacks}
 
