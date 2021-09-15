@@ -110,48 +110,32 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 1.1 %%%%
 \textit{In addition, I suggest the authors add more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. The experimental results show that it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.}
 
-\begin{table}[t]
-  \centering
-  \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information.}
-  \begin{tabular}{rrccc}
-  \toprule
-  \multirow{2}{*}{Benchmarks} & \multirow{2}{*}{Metrics} & Before    & Targeted & Untargeted  \\
-                            &                         & Attack & Attack & Attack     \\ 
-  \midrule
-  \multirow{2}{*}{OTB-15} 
-  & AO   & 0.642 & 0.063 & 0.759\\
-  & Precision & 0.861 & 0.092 & 0.795\\
-  \midrule
-  \multirow{2}{*}{GOT-Val} 
-  & SR & 0.897 & 0.123 & 0.890\\
-  & AO & 0.760 & 0.153 & 0.840 \\
-  \midrule
-  \multirow{3}{*}{LaSOT} 
-  & Precision  & 0.514 & 0.046 & 0.605\\
-  & Norm. Prec.& 0.551 & 0.048 & 0.702\\
-  & AO         & 0.525 & 0.069 & 0.691\\
-  %& Succ. rate  & 0.626 & 0.016 & 0.834\\
-  \midrule
-  \multicolumn{2}{r}{FPS} & 58 & 58 & 58\\
-  \bottomrule
-  \end{tabular}
-  \label{tab:benchmark results}
-\end{table}
+\textbf{Thanks for the good comment. As suggessted, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Specifically, we evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
+% 新增加的实验结果分析位于某处，展示如下。
+The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
+
+\uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
+Experimental results are shown in Table \ref{tab:agent_GT}.
+In terms of AO on GOT-Val, the untargeted attack performance is 0.153 when the ground truth is used to train perturbations and 0.160 when the ground truth is not used.
+In terms of the precision score on OTB-2015, the targeted attack performance is 0.795 when the ground truth is used to train perturbations and 0.794 when the ground truth is not used.
+In terms of the normalized precision score on LaSOT, the targeted attack performance is 0.702 when the ground truth is used to train perturbations and 0.666 when the ground truth is not used.
+Therefore, it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.
+}
 
 \begin{table}[t]
   \centering
   \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information.}
   \begin{tabular}{rrcccc}
   \toprule
-  \multirow{2}{*}{Benchmarks} & \multirow{2}{*}{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+  \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
                               &                          & w/ GT  & \multicolumn{1}{l}{w/o GT}  & w/ GT  & \multicolumn{1}{l}{w/o GT} \\ \midrule
   \multirow{2}{*}{OTB-15}     & AO                       & 0.063  & 0.056                       & 0.759  & 0.752                      \\
                               & Precision                & 0.092  & 0.080                       & 0.795  & 0.794                      \\ \midrule
   \multirow{2}{*}{GOT-Val}    & SR                       & 0.123  & 0.121                       & 0.890  & 0.893                      \\
                               & AO                       & 0.153  & 0.160                       & 0.840  & 0.833                      \\ \midrule
-  \multirow{3}{*}{LaSOT}      & Precision                & 0.046  &                             & 0.605  &                            \\
-                              & Norm. Prec.              & 0.048  &                             & 0.702  &                            \\
-                              & AO                       & 0.069  &                             & 0.691  &                            \\ \bottomrule
+  \multirow{3}{*}{LaSOT}      & Precision                & 0.046  & 0.043                       & 0.605  & 0.531                      \\
+                              & Norm. Prec.              & 0.048  & 0.044                       & 0.702  & 0.660                      \\
+                              & AO                       & 0.069  & 0.063                       & 0.691  & 0.646                      \\ \bottomrule
   \end{tabular}
   \label{tab:agent_GT}
 \end{table}
@@ -430,11 +414,11 @@ In addition, point-to-point responses to your comments are given below and highl
 Thanks for your advice.
 % 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
 The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
-% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
-Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of 64*64, which increases the learning difficulty and makes the perturbation values large.
+% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在$64 \times 64$这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
+Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64 \times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of 64*64 in the CbCr channel.
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
@@ -462,21 +446,21 @@ For your convenience in cross-checking, the new text is given as follows.}
   \label{table:pertrub}
   \begin{tabular}{@{}rcccccc@{}}
   \toprule
-  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Way to perturb\\ the search image\end{tabular}} & \multirow{2}{*}[-2pt]{SSIM of $\delta$} & \multirow{2}{*}[-2pt]{SSIM of $p$} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{4-7}
-                                                         &                                  &                                  & AO                & SR                & AO               & SR               \\ \midrule
-  GRB Attack                                             & 0.56                             & 0.79                             & 0.246             & 0.227             & 0.682            & 0.756            \\
-  YCbCr Attack                                           & 0.78                             & 0.79                             & 0.153             & 0.123             & 0.840            & 0.890            \\ \bottomrule        
+  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Way to perturb\\ the search image\end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} & \multicolumn{2}{c}{SSIM} \\ \cmidrule{2-7}
+                                                         & AO                                      & SR                               & AO                & SR                   & $\delta$          & $p$  \\ \midrule
+  GRB Attack                                             & 0.246                                   & 0.227                            & 0.682             & 0.756                & 0.56              & 0.79 \\
+  YCbCr Attack                                           & 0.153                                   & 0.123                            & 0.840             & 0.890                & 0.78              & 0.79 \\ \bottomrule        
   \end{tabular}
 \end{table}
 
 \uline{\textit{Attack in YCbCr Space}
 % 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
 The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
-% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
-Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of 64*64, which increases the learning difficulty and makes the perturbation values large.
+% 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在$64 \times 64$这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
+Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64 \times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of 64*64 in the CbCr channel.
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。

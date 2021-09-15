@@ -722,33 +722,38 @@ What's more, our method can perform universal attack, both with respect to the d
 It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 64-by-64, 32-by-32 and 16-by-16 (Figure \ref{fig:patch_size_vis}) to test the efficiency of their attacks. We evaluate the AO score of SiamFC++ on the perturbed GOT-Val dataset.
 As shown in Figure \ref{fig:patch_size_table}, the 32-by-32 patch can make the AO score drop dramatically to 0.146 and its area only accounts for 1\% of the search image area.
 
-%\uline{
 \textit{Ablation Study: Performance w/o ground truth information} Our perterbations are trained using datasets with ground truth box information.
 % 然而实际上我们可能仅知道视频内容而不知道边框信息。这时我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框。预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
-However, we may only know the video content but without the ground truth box information in practice. When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method. To verify this, we run the off-the-shelf SiamFC++ tracker on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations. We evaluate the attack performance on GOT-10k validation set. Experimental results is shown in Table \ref{tab:agent}. 
-% 使用GT训练结果是0.153, 不适用GT训练结果是0.160。
-As can been seen in Table \ref{tab:agent}, the AO is 0.153 when the ground truth is used to train perturbations and 0.160 when the ground truth is not used.
-% 因此，使用跟踪器预测结果代替 ground truth 进行训练是有效的。
+However, we may only know the video content but without the ground truth box information in practice. When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method. To verify this, we run the off-the-shelf SiamFC++ tracker on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations.
+\uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
+Experimental results are shown in Table \ref{tab:agent_GT}.
+In terms of AO on GOT-Val, the untargeted attack performance is 0.153 when the ground truth is used to train perturbations and 0.160 when the ground truth is not used.
+In terms of the precision score on OTB-2015, the targeted attack performance is 0.795 when the ground truth is used to train perturbations and 0.794 when the ground truth is not used.
+In terms of the normalized precision score on LaSOT, the targeted attack performance is 0.702 when the ground truth is used to train perturbations and 0.666 when the ground truth is not used.
 Therefore, it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.
-%}
+}
+
+\begin{table}[t]
+  \centering
+  \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information.}
+  \begin{tabular}{rrcccc}
+  \toprule
+  \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                              &                          & w/ GT  & \multicolumn{1}{l}{w/o GT}  & w/ GT  & \multicolumn{1}{l}{w/o GT} \\ \midrule
+  \multirow{2}{*}{OTB-15}     & AO                       & 0.063  & 0.056                       & 0.759  & 0.752                      \\
+                              & Precision                & 0.092  & 0.080                       & 0.795  & 0.794                      \\ \midrule
+  \multirow{2}{*}{GOT-Val}    & SR                       & 0.123  & 0.121                       & 0.890  & 0.893                      \\
+                              & AO                       & 0.153  & 0.160                       & 0.840  & 0.833                      \\ \midrule
+  \multirow{3}{*}{LaSOT}      & Precision                & 0.046  & 0.043                       & 0.605  & 0.531                      \\
+                              & Norm. Prec.              & 0.048  & 0.044                       & 0.702  & 0.660                      \\
+                              & AO                       & 0.069  & 0.063                       & 0.691  & 0.646                      \\ \bottomrule
+  \end{tabular}
+  \label{tab:agent_GT}
+\end{table}
 
 \uline{\textit{Ablation Study: An alternative way to generate the fake} 
 \textit{trajectory}
 Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.}
-
-\begin{table}
-    \centering
-    \caption{Attack results with or without ground truth (GT) information on GOT-Val.}
-    \begin{tabular}{rccc}
-        \toprule
-        \multirow{2}{*}[-2pt]{Metrics} & \multirow{2}{*}[-2pt]{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\ \cmidrule{3-4}
-                                 &                                & w/ GT information & w/o GT information \\ \midrule
-        SR                       & 0.897                          & 0.123                                & 0.121                                     \\
-        AO                       & 0.760                          & 0.153                                & 0.160                                     \\                              
-        \bottomrule
-    \end{tabular}
-    \label{tab:agent}
-\end{table}
 
 \uline{\textit{One Branch Attack} To see the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The result is shown in table \ref{table:one_branch}. Experiment results shows that only adding the perturbation to one branch is not useful.
 % 对比无目标攻击性能。
