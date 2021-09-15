@@ -363,7 +363,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
 %Following SiamFC++, we assign 1 to $\textbf{C}_{x, y}^{*}$ if $(x, y)$ is considered as a positive sample, and 0 if as a negative sample.
   
 \textit{Optimization}
-\uline{Before introducing the proposed method, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}

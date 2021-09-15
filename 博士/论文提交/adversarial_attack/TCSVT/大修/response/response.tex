@@ -490,9 +490,11 @@ As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the sear
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
 
-\textbf{Thanks for the good comment. For your convenience in cross-checking, the new text is given as follows.}
+\textbf{Thanks for the good comment. As suggested, we have explained in detail the perturbation update process in offline training.
+The detailed analysis is added in Section III.B of the revised manuscript.
+For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the proposed method, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing the the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
@@ -710,9 +712,11 @@ SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking
 
 \textit{2. The model is trained based on Eq.11 and Eq.12. It is not clear why the sign function is introduced. It is also suggested to describe the derivation of these two equations in detail.}
 
-\textbf{Thanks for the good comment. For your convenience in cross-checking, the new text is given as follows.}
+\textbf{Thanks for the good comment. As suggested, we have explained in detail the perturbation update process in offline training.
+The detailed analysis is added in Section III.B of the revised manuscript.
+For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the proposed method, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing the the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
