@@ -53,7 +53,7 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 % (4) We have used a new way to generate the fake trajectory.
 
 % 消融实验：噪声攻击。
-(4) We have added a new experiment to evaluate the attack performance of random gaussian noise.
+(4) We have added a new experiment to evaluate the attack performance of random gaussian noises.
 
 % 消融实验
 (5) We have added a new experiment to evaluate the attack performance when only adding the perturbation to the search/template branch.
@@ -249,7 +249,7 @@ Thus, even if we add constraints to the patch so that the perturbation values ar
 
 % 解释加法
 \textbf{
-The operator $A_{add}$ means to apply additive noise, where the injecting small perturbations into the image. Often need constraint. the injected noise are small and sometimes invisible. If we add a patch onto the image, the final pixel value is the original value plus a new value.}
+The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the image. Often need constraint. the injected noises are small and sometimes invisible. If we add a patch onto the image, the final pixel value is the original value plus a new value.}
 
 \textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z}$ is similar. The only difference is that, $A_{\text{add}}$ means add the perturbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
 
@@ -258,7 +258,7 @@ The operator $A_{add}$ means to apply additive noise, where the injecting small 
 \uline{
 $A_{paste}$ means that, in the region where the perturbation is pasted, the pixel values of the original image is replaced with the pixel values of the perturbation.
 % 解释加法
-The operator $A_{add}$ means to apply additive noise, where the injecting small perturbations into the input samples. Often need constraint. the injected noise are small and sometimes invisible.  
+The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the input samples. Often need constraint. the injected noises are small and sometimes invisible.  
 }
 
 
@@ -329,7 +329,7 @@ For your convenience in cross-checking, the new text is given as follows.
 
 \begin{table}[t]
   \centering
-  \caption{Attack performance using the gaussian random noise. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noise is added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
+  \caption{Attack performance using the gaussian random noises. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noises are added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
   \begin{tabular}{@{}rccccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
@@ -341,9 +341,9 @@ For your convenience in cross-checking, the new text is given as follows.
   \label{table:noise}
 \end{table}
 
-\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noise. The mean value is set to zero. The noise is added to both the template and the search image, position and size is the same of original setting. We not train.
+\uline{\textit{Ablation Study: Attack performance of the random noises} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noises. The mean value is set to zero. The noises are added to both the template and the search image, position and size is the same of original setting. We not train.
 % 实验结果的分析
-As shown in Table \ref{table:noise}, if we add small or midiam noise, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
+As shown in Table \ref{table:noise}, if we add small or midiam noises, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
 }
 
 %%%% 问题 2.5 %%%%

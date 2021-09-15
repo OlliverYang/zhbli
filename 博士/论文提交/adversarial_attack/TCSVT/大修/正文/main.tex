@@ -252,7 +252,7 @@ After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textb
   \end{gathered}
 \end{equation}
 where $A_{\text{add}}$ is a patch application operator which adds the patch into the search image according to $b^{fake}_{\textbf{x}}$.
-\uline{The operator $A_{add}$ means to apply additive noise, where the injecting small perturbations into the input samples. Often need constraint. the injected noise are small and sometimes invisible.}
+\uline{The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the input samples. Often need constraint. the injected noises are small and sometimes invisible.}
 
 Our attacks on Siamese visual tracking with both the template and search images as input, enable us to exploit both the perturbation generation method \cite{FGSM} and adversarial patch generation method \cite{patch} simultaneously. However, applying both of the above methods to trackers is non-trivial. In this paper, we demonstrate that the perturbations and the adversarial patch are both indispensable for attacking trackers and can be jointly optimized in an end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding to diverse directions and uses them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours. On the other hand, the perturbation applied to the template image is optimized to find the fake target, cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target (see Figure \ref{fig:1}).
 
@@ -777,9 +777,9 @@ For the targeted attack, only attacking the templat/search branch leads to the A
   \end{tabular}
 \end{table}
 
-\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noise. The mean value is set to zero. The noise is added to both the template and the search image, position and size is the same of original setting. We not train.
+\uline{\textit{Ablation Study: Attack performance of the random noises} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noises. The mean value is set to zero. The noises are added to both the template and the search image, position and size is the same of original setting. We not train.
 % 实验结果的分析
-As shown in Table \ref{table:noise}, if we add small or midiam noise, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
+As shown in Table \ref{table:noise}, if we add small or midiam noises, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
 }
 
 \uline{\textit{Attack in YCbCr Space}
