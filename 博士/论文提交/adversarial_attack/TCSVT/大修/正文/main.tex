@@ -839,6 +839,8 @@ As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the sear
 
 \subsection{Transferability Analysis}
 
+\uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN and SiamRPN++.}
+
 \textit{Transferability to Different Backbones} We evaluate the transferability of our attacks when applying the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.496. 
 %\uline{
@@ -889,15 +891,17 @@ RTAA reduces the accuracy with respect to the real trajectory from 0.625 to 0.52
 CSA \cite{CSA} is a Siamese tracking attack method called cooling-shrinking attack. CSA can suppress the peak region on the heat map reflecting the target location, which is used to attack the tracker's targeting ability. CSA can also simultaneously force the tracker's predicted bounding box to shrink, which is used to attack the bounding box regression capability of the tracker. However, this method requires running a generative network for each frame to obtain adversarial information, making it difficult to meet the demand for real-time tracking. CSA reduces the EAO with respect to the real trajectory from 0.261 to 0.076 on VOT2018. Compared to CSA, our method can achieve better untargeted attack results on VOT2018 with an EAO of 0.007.
 %}
 
+\uline{Compared with other attack methods, our method has two key advantages. First, because our video-agnostic feature, we are fast, no need to network interferes or gradient calculation, making it possible to attack a real-world online-tracking system when we can not get access to the limited computational resources. Second, the proposed perturbations show good transferability to other anchor free or anchor based trackers. The main limitation of our work is the values of our universal perturbations are not as small as other non-universal perturbations due to the task difficulty.}
+
 % 结论
 \section{Conclusion}
 
 In this paper, we propose a video-agnostic targeted attack method for Siamese trackers. 
 We aim to attack the tracker by adding a perturbation to the template image and adding a \textit{fake target}, \ie, a small adversarial patch, into the search image adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations.
 Experiments on several popular datasets show that our method can effectively fool the Siamese trackers in a targeted attack manner.
-
-By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
-The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
+\uline{In future work, we expect that it will be possible to demonstrate the existence of a single perturbation to attack multi vision tasks, including image classification, object detection and video object tracking/segementation.}
+% By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
+% The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
 
 % 引文
 \normalem
