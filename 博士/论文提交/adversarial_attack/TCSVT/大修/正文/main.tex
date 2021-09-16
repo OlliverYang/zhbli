@@ -65,15 +65,15 @@ Visual tracking, adversarial attacks, Siamese networks.
   \label{fig:UAP}
 \end{figure}
 
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.85\textwidth]{images_imperceptible/1_v8.pdf}
+  \includegraphics[width=0.485\textwidth]{images_imperceptible/1_v8.pdf}
   \caption{An illustration of our attacks to SiamFC++ on some example tracking sequences from GOT-10k benchmark. Our approach generates the video-agnostic perturbations which can force SiamFC++ to follow a complicated trajectory at virtually no cost. This is realized by off-line training the perturbations so that the tracker mistakenly believes the \textit{fake target} area contains the object to be tracked (see the top heatmap). Moreover, the quality assessment branch in SiamFC++ is also misled to confirm this result (see the bottom heatmap). The \textit{fake target} size is gradually decreased.} 
   %Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations. 
   %Red represents the ground-truth bounding box, and green represents the predicted bounding box by the tracker.
   %The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
   \label{fig:1}
-\end{figure*}
+\end{figure}
 
 Recently, the robustness of Siamese trackers has attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK,chen2020one}. However, these attack methods still need to craft the perturbations for each video independently based on either iterative optimization or adversarial network inference, for which the adequacy of additional computational resources may be not ensured by the computationally intensive tracking systems. 
 
@@ -120,32 +120,11 @@ A comprehensive survey of the related trackers is beyond the scope of this paper
 
 Adversarial attacks \cite{9169672} to image classification were first investigated in \cite{intriguing} with the aim of identifying the vulnerability of modern deep networks to imperceptible perturbations. 
 Recent studies also emerge to investigate the adversarial attacks to other diverse types of tasks such as natural language processing \cite{generating,zhang2020adversarial,morris2020textattack,jin2020bert} and object detection \cite{wei2019transferable}.
-\iffalse
-\uline{% 加这么一大段，是不是太没必要了？AE要求，指出本文工作与其他工作的独特之处。理想的应该是，某文章用了非通用攻击方法，而我们用了通用攻击方法。我觉得，应该做的是分析别人具体工作与我工作的区别，而不是两个研究方向之间的区别。
-% 在相关工作中，辨析与近似研究方向的区别，也是可以的吧？
-Research topics related to adversarial attacks includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9303455} and adversarial defense \cite{9169672}.
-% 1 什么是数字水印（通过轻微扰动使得）。我们的工作和数字水印类似，都是向视频帧中增加 slightly perturbed（modifying the pixel values。）。但是我们的目的不同。数字水印的目的是通过检测是否存在扰动，从而判断该视频是否是正版视频，从而进行版权保护，而我们通过添加扰动来降低跟踪效果。
-A digital watermark is a kind of marker covertly embedded in image data.
-Both digital watermarking methods \cite{9343885} and adversarial attack methods (slightly) modify the pixel values of images. However, they share different goals. The purpose of digital watermarking is to determine whether the video is a genuine video by detecting the presence of scrambling and thus copyright protection, and we reduce the tracking effect by adding scrambling.
-% % 数字隐写
-% Image steganography is used to transmit secret messages beneath the contents of digital images without arousing
-% suspicions. Both image steganography and adversarial attacks 
-% 2 人脸欺诈指的是使用假脸希望得到错误身份。我们的工作和人脸欺诈类似，都希望欺骗机器学习系统。然而人脸欺诈在真实环境中用假脸欺骗算法（物理攻击），我们是数字攻击，直接修改网络的输入。
-3D face presentation attacks \cite{9303455} aim to fool the face recognition system, where an imposter tries to be authenticated as a genuine client by presenting fake biometric traits to system sensors. 
-Both the face presentation attack methods and our attack method all aim to fool the computer vision algorithms.
-% 不直接访问模型的直接输入，而是通过化妆等方法改变传感器的输入，从而间接影响模型输入。
-Most 3D face presentation attack methods do not directly modify pixels values, the way of generating face artifacts includs wearing wearable facial masks [3], building 3D facial models [4], and through facial makeup to change the 
-The adversary is able to place face artifacts in the physical environment seen by the camera, thereby indirectly changing the algorithm input to perform the attack.
-While in this paper, the adversary has direct access to the actual data fed into the model. In other words, the adversary can choose specific float32 values as input for the model.
-% 3 图像分类的白盒攻击和防御，而我们针对的是跟踪的攻击，更加复杂，对实时性有更高要求。
-Defenses against adversarial attacks are aimed to build a robust classifier so that it correctly identifies adversarial images. For example, Wang et. al. \cite{9169672} builds a robust classification system that can be viewed as a structural black box. After adding a buffer to the classification system, attackers can be efficiently deceived. The real evaluation results of the generated adversarial examples are often contrary to what the attacker thinks. However, this paper focus on the image classification task, while we focus on attacking the visual object tracking task, which is more difficult.
-}
-\fi
 \uline{
-Research topics related to adversarial attacks includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9303455} and adversarial defense \cite{9169672}.
-Xiong et. al. \cite{9343885} generate digital watermarking by slightly modifying the pixel values of videos frame to protect video content from unauthorized access. Compared with \cite{9343885}, our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
-Jia et. al. \cite{9294085} generate 3D face artifacts to fool the face recognition system. Compared with \cite{9294085}, our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
-Wang et. al. \cite{9169672} propose white-box attack/defense methods for image classifiers. Compared with \cite{9169672}, we focus on attacking the object tracking networks instead of the image classification networks.
+Research topics related to adversarial attacks includes digital watermarking \cite{9343885}, 3D face presentation attacks \cite{9294085} and adversarial defense \cite{9169672}.
+Xiong et. al. \cite{9343885} propose to generate digital watermarking by slightly modifying the pixel values of videos frame to protect video content from unauthorized access. Compared with \cite{9343885}, our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
+Jia et. al. \cite{9294085} propose to generate 3D face artifacts to attack the face recognition network. Compared with \cite{9294085}, our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
+Wang et. al. \cite{9169672} propose the white-box attack/defense methods for image classifiers. Compared with \cite{9169672}, we focus on attacking the object tracking networks instead of the image classification networks.
 }
 
 Scenarios of possible adversarial attacks can be categorized along different dimensions.
@@ -192,12 +171,12 @@ However, SPARK needs to generate distinct adversarial examples for every search 
 % 方法
 \section{Method}
 
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.7\textwidth]{images_imperceptible/network_v5.pdf}
+  \includegraphics[width=0.49\textwidth]{images_imperceptible/network_v5.pdf}
   \caption{The training pipeline of the proposed method. We aim to train an imperceptible perturbation $\delta$ for the template image $\textbf z$, and an adversarial patch $p$ for the search image $\textbf x$. After adding $\delta$ to $\textbf z$ and adding the \textit{fake target} $p$ into $\textbf x$, the tracker outputs the location and size of the \textit{fake target} instead of the real target.}
   \label{fig:net}
-\end{figure*}
+\end{figure}
 
 In this section, we introduce our video-agnostic targeted attack framework for Siamese trackers. We aim to attack the tracker by adding a perturbation to the template image and adding a \textit{fake target}, i.e., an adversarial patch, into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Below, we formalize our targeted attacks to SiamFC++ \cite{SiamFC++}, and then introduce our perturbation strategy in detail.
  
@@ -283,12 +262,12 @@ Our attacks on Siamese visual tracking with both the template and search images 
   \label{alg}
 \end{algorithm}
 
-\begin{figure*}[t]
+\begin{figure}[t]
   \centering
-  \includegraphics[width=0.8\textwidth]{images_imperceptible/vis_v6.pdf}
+  \includegraphics[width=0.49\textwidth]{images_imperceptible/vis_v7.pdf}
   \caption{Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).}
-  \label{fig:vis}
-\end{figure*}
+  \label{fig:vis1}
+\end{figure}
 
 \subsection{Generating Video-Agnostic Perturbations}\label{generate}
 
@@ -464,9 +443,9 @@ Characteristics of the above datasets are summarized in Table \ref{tab:dataset}.
 %}
 
 \textit{Generating the Fake Trajectory} We need to predefine a specific trajectory $B^{fake}=\{b^{fake}_i\}_1^{T}$ for each video to achieve targeted attack in the online-tracking phase, which we call the \textit{fake trajectory}. We denote the \textit{real trajectory} as $B^{gt}=\{b^{gt}_i\}_1^T$ with the bounding box ground truth.
-It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 2 pixels apart (Figure \ref{fig:vis}).
+It is possible to manually label arbitrary $B^{fake}$ for each video, however, it will be time-consuming in our experimental evaluation. So we generate $B^{fake}$ based on $B^{gt}$. Specifically, the \textit{fake trajectory} follows the \textit{real trajectory} and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 2 pixels apart (Figure \ref{fig:vis1}).
 %The size of $b^{fake}_0$ is the same as $B^{gt}_0$ and the size of $b^{fake}_i$
-%The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$ (Figure \ref{fig:vis}). 
+%The bounding box size of the \textit{fake trajectory} gradually changes from the size of $b^{gt}_1$ to $64\times 64$ (Figure \ref{fig:vis1}). 
 Because the annotations of GOT-10k's test data are kept private, we only use its validation set for our evaluation and denote it as GOT-Val. Note that the target position of the first frame is pre-defined in the academic study of object tracking, while in practical application, the target position of the first frame is often obtained by running an object detector on this frame. In this scenario, once the target position of the first frame is obtained, we can put the adversarial patch near the target to mislead the tracker. In the next frames, we can specify an arbitrary \textit{fake trajectory} to place the adversarial patch.
 
 \textit{Image Quality Assessment} We use structural similarity (SSIM) \cite{SSIM} to evaluate the quality of the generated template perturbation $\delta$ and $p$. It is difficult to be found when SSIM is close to 1 (see Table \ref{tab:iter}).
@@ -597,7 +576,7 @@ We compare our attack method with two baseline methods (See Table \ref{tab:imper
 
 \subsection{Attack Results on the Evaluation Benchmarks}
 
-\textit{Overall Attack Results} We test the performance of our targeted attack method on the evaluation benchmarks and gather the overall results in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}. It is shown that the base tracker SiamFC++ can achieve state-of-the-art performance on all the evaluation benchmarks and run in real time (at about 58 fps on a GTX 1080Ti GPU). However this real-time performance requires the computationally intensive tracking system to occupy most of the computational resources, and thus it is appealing to develop a virtually costless attack method to fool the tracking system without scrambling for the resources. As shown in Table \ref{tab:benchmark results}, our attack method can satisfy this appealing demand and fool the SiamFC++ tracker effectively by misleading the tracker to follow a predefined \textit{fake trajectory}. Moreover, the high AO and Precision performance with respect to the \textit{fake trajectory} indicates a more effective attack without raising any suspicion (see Figure \ref{fig:vis}).
+\textit{Overall Attack Results} We test the performance of our targeted attack method on the evaluation benchmarks and gather the overall results in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}. It is shown that the base tracker SiamFC++ can achieve state-of-the-art performance on all the evaluation benchmarks and run in real time (at about 58 fps on a GTX 1080Ti GPU). However this real-time performance requires the computationally intensive tracking system to occupy most of the computational resources, and thus it is appealing to develop a virtually costless attack method to fool the tracking system without scrambling for the resources. As shown in Table \ref{tab:benchmark results}, our attack method can satisfy this appealing demand and fool the SiamFC++ tracker effectively by misleading the tracker to follow a predefined \textit{fake trajectory}. Moreover, the high AO and Precision performance with respect to the \textit{fake trajectory} indicates a more effective attack without raising any suspicion (see Figure \ref{fig:vis1}).
 
 % \begin{figure}[t]
 %   \centering
@@ -612,17 +591,17 @@ To verify whether the perturbations generated for the template images are diffic
 
 \begin{figure}[t]
   \centering
-  \subfigure[FAN]{\label{fig:a}\includegraphics[width=0.48\textwidth]{images_imperceptible/FAN.pdf}}
-  \subfigure[Ours]{\label{fig:b}\includegraphics[width=0.48\textwidth]{images_imperceptible/Ours.pdf}}
+  \subfigure[FAN]{\label{fig:a1}\includegraphics[width=0.48\textwidth]{images_imperceptible/FAN.pdf}}
+  \subfigure[Ours]{\label{fig:b1}\includegraphics[width=0.48\textwidth]{images_imperceptible/Ours.pdf}}
   \caption{The results under targeted attacks compared with FAN \cite{FAN}.  FAN crafts the perturbations for each video independently, which comes at a non-negligible computational cost. To achieve video-agnostic universal attack on Siamese trackers, we relax the constraint on the value of the perturbation, achieving a balance between the attack efficiency and the perturbation perceptibility.}
-  \label{fig:vis}
+  \label{fig:vis_fan}
 \end{figure}
 
 %\uline{
 % 为了进一步分析扰动的可感知性，我们在图中与FAN进行了对比。
-To further analyze the perceptibility of perturbations, we compare our method with FAN in Figure \ref{fig:vis}.
+To further analyze the perceptibility of perturbations, we compare our method with FAN in Figure \ref{fig:vis_fan}.
 % We visualize the perturbed frames ($3^{rd}$ row of Figure \ref{fig:vis}) of OTB2015 dataset, Singer2 video. 
-As shown in Figure \ref{fig:vis}, both FAN \cite{FAN} and our method can perform targeted attack. 
+As shown in Figure \ref{fig:vis_fan}, both FAN \cite{FAN} and our method can perform targeted attack. 
 % 添加了由FAN生成的扰动的OTB的SSIM下降至0.92。添加了我们的扰动的OTB的SSIM下降至0.56。
 The SSIM of OTB2015 perturbed by FAN drops to 0.92, while the SSIM perturbed by our method drops to 0.56.
 % 这是因为FAN为每帧产生独立的扰动，而我们的扰动是通用的，因此我们的任务比FAN更难，导致我们的扰动值更大。
