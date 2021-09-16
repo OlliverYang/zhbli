@@ -806,9 +806,11 @@ For the targeted attack, only attacking the templat/search branch leads to the A
   \end{tabular}
   \label{table:noise}
 \end{table}
-\uline{\textit{Ablation Study: Attack performance of the random noises} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noises. The mean value is set to zero. The noises are added to both the template and the search image, position and size is the same of original setting. We not train.
+\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
+% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
+Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
 % 实验结果的分析
-As shown in Table \ref{table:noise}, if we add small or midiam noises, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
+As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
 }
 
 \begin{table}[t]
@@ -848,7 +850,7 @@ As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the sear
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=.3\textwidth]{images_imperceptible/1.pdf}
+  \includegraphics[width=0.48\textwidth]{images_imperceptible/1.pdf}
   \caption{\uline{Visualization of the perturbations.
   % 介绍什么是 RGB Attack
   Figure (a) demonstrates the pereturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.

@@ -327,28 +327,49 @@ For the targeted attack, only attacking the templat/search branch leads to the A
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image.
+\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
+% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
+Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
+% 实验结果的分析
+As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
 For your convenience in cross-checking, the new text is given as follows.
 }
+
+% \begin{table}[t]
+%   \renewcommand\thetable{XII}
+%   \centering
+%   \caption{Attack performance using the gaussian random noise. We replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.}
+%   \begin{tabular}{@{}rccccc@{}}
+%   \toprule
+%   \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+%                              &                            & AO                & SR                & AO               & SR               \\ \midrule
+%   1.0                        & 0.98                       & 0.760             & 0.896             & 0.142            & 0.101            \\
+%   10.0                       & 0.38                       & 0.761             & 0.898             & 0.143            & 0.102            \\
+%   100.0                      & 0.01                       & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
+%   \end{tabular}
+%   \label{table:noise}
+% \end{table}
 
 \begin{table}[t]
   \renewcommand\thetable{XII}
   \centering
-  \caption{Attack performance using the gaussian random noises. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noises are added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
-  \begin{tabular}{@{}rccccc@{}}
+  \caption{Attack performance using the gaussian random noise. We replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.}
+  \begin{tabular}{@{}rcccc@{}}
   \toprule
-  \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
-                             &                            & AO                & SR                & AO               & SR               \\ \midrule
-  1.0                        & 0.98                       & 0.760             & 0.896             & 0.142            & 0.101            \\
-  10.0                       & 0.38                       & 0.761             & 0.898             & 0.143            & 0.102            \\
-  100.0                      & 0.01                       & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
+  \multirow{2}{*}[-2pt]{std} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
+                             & AO                & SR                & AO               & SR               \\ \midrule
+  1.0                        & 0.760             & 0.896             & 0.142            & 0.101            \\
+  10.0                       & 0.761             & 0.898             & 0.143            & 0.102            \\
+  100.0                      & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
   \end{tabular}
   \label{table:noise}
 \end{table}
 
-\uline{\textit{Ablation Study: Attack performance of the random noises} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noises. The mean value is set to zero. The noises are added to both the template and the search image, position and size is the same of original setting. We not train.
+\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
+% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
+Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
 % 实验结果的分析
-As shown in Table \ref{table:noise}, if we add small or midiam noises, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
+As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
 }
 
 %%%% 问题 2.5 %%%%
