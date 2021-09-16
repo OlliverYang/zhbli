@@ -368,7 +368,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size, and clipping pixel values of intermediate results after each step to ensure that they are in an $\epsilon$-neighbourhood of the original image.  This leads to the Basic Iterative Method (BIM) introduced in \cite{kurakin2017adversarial}:}
+\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size, and clipping pixel values of intermediate results after each step to ensure that they are in an $\epsilon$-neighbourhood of the original image.  This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
@@ -376,7 +376,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
     \end{gathered}
 \end{equation}
 %\uline{where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.}
-\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{kurakin2017adversarial}:}
+\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
@@ -752,9 +752,25 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
   \label{tab:agent_GT}
 \end{table}
 
+\begin{table}[t]
+  \centering
+  \caption{Influence of different ways to generate the fake trajectory. One way is the fake trajectory to follow a fixed direction. The other way is the fake trajectory to follow the real target. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \begin{tabular}{@{}rcccc@{}}
+  \toprule
+  \multirow{2}{*}[-2pt]{Type of the Fake Trajectory} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
+                              & AO                & SR                & AO               & SR               \\ \midrule
+  Fixed direction             & 0.175             & 0.144             & 0.845            & 0.897            \\
+  Follow the real target      & 0.153             & 0.123             & 0.840            & 0.890            \\ \bottomrule        
+  \end{tabular}
+  \label{table:direction}
+\end{table}
 \uline{\textit{Ablation Study: An alternative way to generate the fake} 
 \textit{trajectory}
-Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.}
+Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+% 介绍在什么数据集上做的实验，用的什么评价指标。
+The attack performance is evaluated according to AO/SR on GOT-Val.
+% 分析实验结果。简单分析即可。
+As shown in Table \ref{table:direction}, our attack algorithm achieves effective attacks under two different fake trajectories. Specifically, when the fake trajectory follows a fixed direction, the AO of the untargeted attack is 0.175, and the AO of the targeted attack is 0.845.}
 
 \uline{\textit{One Branch Attack} To see the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The result is shown in table \ref{table:one_branch}. Experiment results shows that only adding the perturbation to one branch is not useful.
 % 对比无目标攻击性能。
@@ -762,13 +778,13 @@ For the untargeted attack, only attacking the template/search branch leads to th
 % 有目标
 For the targeted attack, only attacking the templat/search branch leads to the AO of 0.156/0.160, while attacking both branches leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
 
-\begin{table}[]
+\begin{table}[t]
   \centering
   \caption{Attack performance when only use the template/search perturbation.}
   \label{table:one_branch}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
-                & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\
+                & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
                 & AO                & SR                & AO               & SR               \\ \midrule
   Only Template & 0.510             & 0.567             & 0.156            & 0.106            \\
   Only Search   & 0.714             & 0.841             & 0.160            & 0.132            \\
@@ -777,11 +793,36 @@ For the targeted attack, only attacking the templat/search branch leads to the A
   \end{tabular}
 \end{table}
 
+\begin{table}[t]
+  \centering
+  \caption{Attack performance using the gaussian random noises. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noises are added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
+  \begin{tabular}{@{}rccccc@{}}
+  \toprule
+  \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                             &                            & AO                & SR                & AO               & SR               \\ \midrule
+  1.0                        & 0.98                       & 0.760             & 0.896             & 0.142            & 0.101            \\
+  10.0                       & 0.38                       & 0.761             & 0.898             & 0.143            & 0.102            \\
+  100.0                      & 0.01                       & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
+  \end{tabular}
+  \label{table:noise}
+\end{table}
 \uline{\textit{Ablation Study: Attack performance of the random noises} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions: the mean value and standard deviation is the same as the template/search image. Attack performance using the gaussian random noises. The mean value is set to zero. The noises are added to both the template and the search image, position and size is the same of original setting. We not train.
 % 实验结果的分析
 As shown in Table \ref{table:noise}, if we add small or midiam noises, it will not the tracking performance. Only very large pattern will have affact, but the SSIM is evry small.
 }
 
+\begin{table}[t]
+  \centering
+  \caption{Influence of different ways to perturb the search image. One way is adding a small patch on the RGB channel. The other way is adding perturbation on the whole search image on the Y channel and add a small patch on the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \label{table:pertrub}
+  \begin{tabular}{@{}rcccccc@{}}
+  \toprule
+  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Way to perturb\\ the search image\end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} & \multicolumn{2}{c}{SSIM} \\ \cmidrule{2-7}
+                                                         & AO                                      & SR                               & AO                & SR                   & $\delta$          & $p$  \\ \midrule
+  GRB Attack                                             & 0.246                                   & 0.227                            & 0.682             & 0.756                & 0.56              & 0.79 \\
+  YCbCr Attack                                           & 0.153                                   & 0.123                            & 0.840             & 0.890                & 0.78              & 0.79 \\ \bottomrule        
+  \end{tabular}
+\end{table}
 \uline{\textit{Attack in YCbCr Space}
 % 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
 The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
@@ -818,7 +859,7 @@ As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the sear
   The other steps of the training process are the same as the attack method in Section III.
   the YCbCr attack method can increase SSIM of the search image from 0.56 to 0.78. The template SSIM remains unchanged at 0.79.}
   }
-  \label{fig:YCbCr1}
+  \label{fig:YCbCr}
 \end{figure}
 
 \begin{table}[t]

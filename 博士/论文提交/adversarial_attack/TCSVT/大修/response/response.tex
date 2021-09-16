@@ -115,6 +115,7 @@ In addition, point-to-point responses to your comments are given below and highl
 The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{table}[t]
+  \renewcommand\thetable{IX}
   \centering
   \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information.}
   \begin{tabular}{rrcccc}
@@ -144,6 +145,7 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 \textit{A small question is that it will be better if the authors can provide some pseudo code for the untargeted attack and targeted attack processes in addition to the training process. This will facilitate the understanding of the attacking process while performing tracking.}
 
 \begin{algorithm}[t]
+    \renewcommand\thealgorithm{2}
     \caption{Attack Process}
     \label{alg:algorithm_attack}
     \textbf{Input}: The trained perturbations $\delta$ and $p$, Siamese tracker $f$, video $V=\{I_i\}_1^T$. $b^{gt}_1$ is the position of the real target in the first frame. $B^{fake}=\{b^{fake}_i\}_1^{T}$ is the trajectory we hope the tracker to output.\\
@@ -281,6 +283,7 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 }
 
 \begin{table}[t]
+  \renewcommand\thetable{X}
   \centering
   \caption{Influence of different ways to generate the fake trajectory. One way is the fake trajectory to follow a fixed direction. The other way is the fake trajectory to follow the real target. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
@@ -306,12 +309,13 @@ For the untargeted attack, only attacking the template/search branch leads to th
 For the targeted attack, only attacking the templat/search branch leads to the AO of 0.156/0.160, while attacking both branches leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
 
 \begin{table}[]
+  \renewcommand\thetable{XI}
   \centering
   \caption{Attack performance when only use the template/search perturbation.}
   \label{table:one_branch}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
-                & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\
+                & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
                 & AO                & SR                & AO               & SR               \\ \midrule
   Only Template & 0.510             & 0.567             & 0.156            & 0.106            \\
   Only Search   & 0.714             & 0.841             & 0.160            & 0.132            \\
@@ -328,6 +332,7 @@ For your convenience in cross-checking, the new text is given as follows.
 }
 
 \begin{table}[t]
+  \renewcommand\thetable{XII}
   \centering
   \caption{Attack performance using the gaussian random noises. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noises are added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
   \begin{tabular}{@{}rccccc@{}}
