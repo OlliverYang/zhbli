@@ -24,6 +24,7 @@
 \usepackage{ulem}  % 用于添加下划线
 \usepackage{enumitem}
 \usepackage{color}
+\usepackage{amssymb}  % 用于打对号
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -175,31 +176,35 @@ Both the targeted attack and untargeted attack process follow the same steps as 
 %%%% 问题 1.3 %%%%
 \textit{In addition, the font size in Fig. 9 is too small to read on my computer, which needs to be improved.}
 
-\textbf{Thanks for the good comment. As suggested, we have increased the font size of texts in Fig. \ref{fig:attr} to make it easier to read on the computer.}
+% \textbf{Thanks for the good comment. As suggested, we have increased the font size of texts in Fig. \ref{fig:attr} to make it easier to read on the computer.}
 
 
-\newgeometry{left=1cm,right=1cm,top=3cm,bottom=3cm}
+% \newgeometry{left=1cm,right=1cm,top=3cm,bottom=3cm}
 
-\begin{figure*}[t]
-  \renewcommand\thefigure{9}
-  \begin{center}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_BC.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_DEF.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_FM.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IPR.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IV.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_LR.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_MB.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OCC.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OPR.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OV.png}
-    \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_SV.png}
-  \end{center}
-      \caption{Untargeted attack results of the different trackers under the 11 attributes: out-of-view (OV), occlusion (OCC), illumination variation (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM), background clutters (BC), motion blur (MB), and in-plane rotation (IPR). The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.}
-  \label{fig:attr}
-\end{figure*}
+% \begin{figure*}[t]
+%   \renewcommand\thefigure{9}
+%   \begin{center}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_BC.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_DEF.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_FM.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IPR.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IV.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_LR.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_MB.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OCC.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OPR.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OV.png}
+%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_SV.png}
+%   \end{center}
+%       \caption{Untargeted attack results of the different trackers under the 11 attributes: out-of-view (OV), occlusion (OCC), illumination variation (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM), background clutters (BC), motion blur (MB), and in-plane rotation (IPR). The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.}
+%   \label{fig:attr}
+% \end{figure*}
 
-\restoregeometry
+% \restoregeometry
+
+\textbf{Sorry for the inconvenience of reading Fig. 9 caused by the small font size.
+We are willing to adjust Fig. 9 font size to make it easier to read on the computer, but because we have added many ablation experiments to revised manuscript, the total number of pages exceeds the maximum page limit for TCSVT (i.e., 14 pages). Therefore we have to remove the analysis of the attack performance for each attribute of the OTB as well as Fig. 9.
+}
 
 %%%% 问题 1.4 %%%%
 \textit{Also, some recent papers are valued to be referred (2020-2021), to enhance the quality.}
@@ -316,7 +321,9 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 \textbf{Thanks for your advice and we have conducted the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.
 The detailed analysis of new added experiment is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{\textit{Ablation Study: Only perturb the template or search image} To evaluate the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The result is shown in Table \ref{table:one_branch}. Experiment results shows that only adding the perturbation to one branch is not useful.
+\uline{\textit{Ablation Study: Only perturb the template or search image} To evaluate the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. 
+The attack performance is evaluated according to AO/SR on GOT-Val.
+The result is shown in Table \ref{table:one_branch}.
 % 对比无目标攻击性能。
 For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and the search image leads to the AO of 0.153, which is more effective.
 % 有目标
@@ -325,15 +332,15 @@ For the targeted attack, only perturbing the templat/search branch leads to the 
 \begin{table}[]
   \renewcommand\thetable{XI}
   \centering
-  \caption{Attack performance when only use the template/search perturbation.}
+  \caption{Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:one_branch}
-  \begin{tabular}{@{}rcccc@{}}
+  \begin{tabular}{@{}cccccc@{}}
   \toprule
-                & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
-                & AO                & SR                & AO               & SR               \\ \midrule
-  Only Template & 0.510             & 0.567             & 0.156            & 0.106            \\
-  Only Search   & 0.714             & 0.841             & 0.160            & 0.132            \\
-  Both          & 0.153             & 0.123             & 0.840            & 0.890            \\
+  \multirow{2}{*}[-2pt]{Template} & \multirow{2}{*}[-2pt]{Search} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                                  &                               & AO                & SR                & AO               & SR               \\ \midrule
+  \checkmark                      &                               & 0.510             & 0.567             & 0.156            & 0.106            \\
+                                  & \checkmark                    & 0.714             & 0.841             & 0.160            & 0.132            \\
+  \checkmark                      & \checkmark                    & 0.153             & 0.123             & 0.840            & 0.890            \\
   \bottomrule
   \end{tabular}
 \end{table}
