@@ -231,7 +231,8 @@ After adding $\delta$ to $\textbf z$ and adding the fake target $p$ into $\textb
   \end{gathered}
 \end{equation}
 where $A_{\text{add}}$ is a patch application operator which adds the patch into the search image according to $b^{fake}_{\textbf{x}}$.
-\uline{The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the input samples. Often need constraint. the injected noises are small and sometimes invisible.}
+\uline{$b^{fake} = \{x_0, y_0, x_1, y_1\}$ denotes the coordinates of the upper-left and lower-right corners of the fake target on the search image.}
+\uline{The operator $A_{add}$ means to apply the additive noise, where the injecting small perturbations into the input samples. Often need constraint. the injected noises are small and sometimes invisible.}
 
 Our attacks on Siamese visual tracking with both the template and search images as input, enable us to exploit both the perturbation generation method \cite{FGSM} and adversarial patch generation method \cite{patch} simultaneously. However, applying both of the above methods to trackers is non-trivial. In this paper, we demonstrate that the perturbations and the adversarial patch are both indispensable for attacking trackers and can be jointly optimized in an end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding to diverse directions and uses them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours. On the other hand, the perturbation applied to the template image is optimized to find the fake target, cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target (see Figure \ref{fig:1}).
 
@@ -284,7 +285,7 @@ The perturbed search image is generated as follows:
 \begin{equation}
 \tilde{\textbf x} = A_{\text{add}}(\textbf x, p_k, \{x_0, y_0, x_1, y_1\}),
 \end{equation}
-where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denote the coordinates of the upper-left and lower-right corners of the fake target on the search image. 
+where $ b^{fake} = \{x_0, y_0, x_1, y_1\}$ denotes the coordinates of the upper-left and lower-right corners of the fake target on the search image. 
 \uline{$A_{add}$} adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$. Subsequently, the SiamFC++ tracker takes $\tilde {\textbf x}$ and $\tilde{\textbf z}$ as input and predicts $\textbf{C, R, Q}$ in an anchor-free manner.
 
 \textit{Generating Fake Labels} The fake lables are composed of three parts: fake classification label $\textbf{C}^*$, fake regression label $\textbf{R}^*$ and fake quality estimation label $\textbf{Q}^*$.
