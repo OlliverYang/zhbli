@@ -383,6 +383,7 @@ During tracking the $i$-th frame of the video $V=\{I_i\}_1^T$, we need to add $p
 \tilde{\textbf x}_i = A_{\text{add}}(\textbf x_i, p, \{x_{0_i}, y_{0_i}, x_{1_i}, y_{1_i}\}).
 \end{equation}
 The tracker then takes $\tilde{\textbf z}_1=\textbf z_1+\delta$ and $\tilde{ \textbf x}_i$ as input, and the subsequent tracking procedure remains the same as SiamFC++.
+We outline this procedure in Algorithm \ref{alg:algorithm_attack}.
 
 \begin{table*}[t]
   \centering
