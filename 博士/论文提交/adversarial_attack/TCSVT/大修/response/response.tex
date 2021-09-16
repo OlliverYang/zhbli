@@ -244,30 +244,37 @@ In addition, the denotations of $A_{paste}$ in Eq.4 and $A_{add}$ in Eq.5 seem l
 
 \textbf{
 Thanks for the good comment.
-Before analysis if giving constraint (e.g. $L_{\infty}$) on the $p_x$ in Eq.4 is really lead to imperceptible or not, let us first clarify the concept of the $A_{paste}$ and $A_{add}$, which is not tell good in the previous manuscript.}
+Before analysis if giving constraint (e.g. $L_{\infty}$) on the $p_x$ in Eq.4 is really lead to imperceptible or not, let us first clarify the concept of the $A_{paste}$ and $A_{add}$, which which was not explained well in the previous manuscript.}
 
 \textbf{% 解释paste（说明不需要加 constraint）
 $A_{paste}$ means that,
 % we use the pixel value in in every place of the perturbation to replace the original image pixel value at the corresponding position.
 % The final pixel value is changed from the original value to a new value.
-in the region where the perturbation is pasted, the pixel values of the original image is replaced with the pixel values of the perturbation.
+in the region where the perturbation is pasted, the pixel values of the original image are replaced with the pixel values of the perturbation.
 % 说明加了约束也没用。
 % As a result, even though we add constraint to the perturbation and it is small, when we paste it to the image, it shows nearly black but not imperceptible.
-Thus, even if we add constraints to the patch so that the perturbation values are small, when the patch is pasted to the image, it will look like an almost black region, which is obvious rather than imperceptible.
+Thus, even if we add constraints to the patch so that the perturbation values are small, when the patch is pasted to the image, it will look like an almost black region, which is obvious rather than imperceptible.}
+% 解释加法
+\textbf{The operator $A_{add}$ refers to the injection of small additive noise into the image. The injected noises are small and sometimes invisible to human eyes.
+%In other words, in the region where the perturbation is added, the pixel values of the perturbation are added to the pixel values of the original image.
 }
 
-% 解释加法
-\textbf{
-The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the image. Often need constraint. the injected noises are small and sometimes invisible. If we add a patch onto the image, the final pixel value is the original value plus a new value.}
+%\textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z}$ is similar. The only difference is that, $A_{\text{add}}$ means add the perturbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
 
-\textbf{The operator $A_{\text{add}}(\textbf{x}, p_\textbf{x}, b^{fake}_{\textbf{x}})$ and $\textbf{z} + \delta_\textbf{z}$ is similar. The only difference is that, $A_{\text{add}}$ means add the perturbation to a specific region because the patch size is less than the image, while $+$ means add the perturbation to the full image because the size is the same.}
-
+\textbf{Next, let us explain the difference between the patch $p$ added to the search image and the perturbation $\delta$ added to the template image. $p$ has a smaller size of $64\times 64$, and added to a larger ($303\times 303$) search image as a fake target.
+$\delta$ is the same size ($127\times 127$) as the template image.
+% p 通常被加到搜索图像的背景区域，并不会改变真实前景目标区域的像素值。因此如果我们不扰动模板图像的话，总会在真实目标区域有较高的预测。
+The adversarial patch is usually added to the background region of the search image and does not change the pixel values in the foreground region where the real target exists. Therefore if we do not add the perturbation to the template image, the response values of the region where the real target exists on the heatmaps are always high. Thus it is necessary to perturb the template image to cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target.
+}
 \textbf{For your convenience of cross checking, the new added text is shown as follows:}
 
 \uline{
-$A_{paste}$ means that, in the region where the perturbation is pasted, the pixel values of the original image is replaced with the pixel values of the perturbation.
+$A_{paste}$ means that, in the region where the perturbation is pasted, the pixel values of the original image are replaced with the pixel values of the perturbation.
 % 解释加法
-The operator $A_{add}$ means to apply additive noises, where the injecting small perturbations into the input samples. Often need constraint. the injected noises are small and sometimes invisible.  
+The operator $A_{add}$ refers to the injection of small additive noise into the image. The injected noises are small and sometimes invisible to human eyes.}
+
+\uline{
+The adversarial patch is usually added to the background region of the search image and does not change the pixel values in the foreground region where the real target exists. Therefore if we do not add the perturbation to the template image, the response values of the region where the real target exists on the heatmaps are always high. Thus it is necessary to perturb the template image to cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target.
 }
 
 
