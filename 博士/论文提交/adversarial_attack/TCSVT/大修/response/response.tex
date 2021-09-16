@@ -436,12 +436,17 @@ For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{figure}[t]
   \centering
-  \subfigure[SSIM=0.85]{\label{fig:a}\includegraphics[width=0.15\textwidth]{images_imperceptible/2_adv_search_img_fgt.jpg}}
-  \subfigure[SSIM=0.56]{\label{fig:a1}\includegraphics[width=0.15\textwidth]{images_imperceptible/64.jpg}}
-  \subfigure[SSIM=0.79]{\label{fig:b}\includegraphics[width=0.15\textwidth]{images_imperceptible/16384_adv_template_img.jpg}}
-  \subfigure[SSIM=0.79]{\label{fig:b1}\includegraphics[width=0.15\textwidth]{images_imperceptible/template.jpg}}
-  \caption{YCbCr Attack.}
-  \label{fig:YCbCr}
+  \includegraphics[width=.8\textwidth]{images_imperceptible/1.pdf}
+  \caption{Visualization of the perturbations.
+  % 介绍什么是 RGB Attack
+  Figure (a) demonstrates the pereturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.
+  % 介绍什么是 YCbCr Attack
+  Figure (b) demonstrates the perturbations trained by the YCbCr attack represents the attack method: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
+  For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
+  The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network.
+  The other steps of the training process are the same as the attack method in Section III.
+  the YCbCr attack method can increase SSIM of the search image from 0.56 to 0.78. The template SSIM remains unchanged at 0.79.}
+  \label{fig:YCbCr1}
 \end{figure}
 
 \begin{table}[t]
@@ -464,20 +469,26 @@ The shortcoming of our method is the more conspicuous perturbation values compar
 Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64 \times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add the pereturbation over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.%The perturbed search image is then converted into RGB color space and fed into the tracking network.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
 We choose YCbCr color space since its color channels are less correlated and quite independent than RGB \cite{8630918}.
 % 解释为什么在CbCr上做局部攻击在Y上做全图攻击，而不是其他方式：有研究证明Y通道可感知性更强而CbCr弱一些。因为我们希望补丁区域扰动值更小，所以我们在CbCr做局部攻击。
 While considering the color sensitivity of human vision system, the CbCr channels are least sensitive that the Y channel \cite{8630918}. This means that the patch added in the CbCr channels has better performance of transparency.
+% 介绍模板图像
+For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
+The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network.
 % 实验细节：迭代了多少次？损失函数各项的权重是什么？模板图像怎么操作。
+The other steps of the training process are the same as the attack method in Section III.
 % 实验结果。
 The experimental result is shown in Table \ref{table:pertrub}. As we can see,
 % 分析攻击性能
 the attack performance is slightly degraded. In terms of AO on GOT-VAL, the targeted attack performance changes from 0.840 to 0.680, and the untargeted attack performance changes from 0.153 to 0.246.
 % 分析可感知性
-As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the search image from 0.56 to 0.78. The template SSIM remains unchanged at 0.79.
+% As shown in Figure \ref{fig:YCbCr}, 
+As shown in Table \ref{table:perturb},
+our new method can increase SSIM of the search image from 0.56 to 0.78. The template SSIM remains unchanged at 0.79.
 }
 
 % \begin{table}[]
