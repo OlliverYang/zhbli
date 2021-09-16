@@ -53,10 +53,10 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 % (4) We have used a new way to generate the fake trajectory.
 
 % 消融实验：噪声攻击。
-(4) We have added a new experiment to evaluate the attack performance of random gaussian noises.
+(4) We have added a new experiment to evaluate the attack performance of the gaussian random noise.
 
 % 消融实验
-(5) We have added a new experiment to evaluate the attack performance when only adding the perturbation to the search/template branch.
+(5) We have added a new experiment to evaluate the attack performance when only adding the perturbation to the search/template image.
 
 % 引用论文
 (6) We have added 3 papers published in the IEEE Transactions on Circuits and Systems for Video Technology, which are most closely related to our manuscript, and analysed what is distinctive / new about our current manuscript related to these previously published papers.
@@ -302,11 +302,11 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 \textbf{Thanks for your advice and we have conducted the ablation study on only adding perturbations on the template images or the search regions to show the impact of $p$ and $\delta$.
 The detailed analysis of new added experiment is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{\textit{Ablation Study: One Branch Attack} To evaluate the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The result is shown in Table \ref{table:one_branch}. Experiment results shows that only adding the perturbation to one branch is not useful.
+\uline{\textit{Ablation Study: Only perturb the template or search image} To evaluate the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The result is shown in Table \ref{table:one_branch}. Experiment results shows that only adding the perturbation to one branch is not useful.
 % 对比无目标攻击性能。
-For the untargeted attack, only attacking the template/search branch leads to the AO of 0.510/0.714, while attacking both branches leads to the AO of 0.153, which is more effective.
+For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and the search image leads to the AO of 0.153, which is more effective.
 % 有目标
-For the targeted attack, only attacking the templat/search branch leads to the AO of 0.156/0.160, while attacking both branches leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
+For the targeted attack, only perturbing the templat/search branch leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
 
 \begin{table}[]
   \renewcommand\thetable{XI}
@@ -478,7 +478,7 @@ For your convenience in cross-checking, the new text is given as follows.}
 \begin{table}[t]
   \centering
   \caption{Influence of different ways to perturb the search image. One way is adding a small patch on the RGB channel. The other way is adding perturbation on the whole search image on the Y channel and add a small patch on the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
-  \label{table:pertrub}
+  \label{table:perturb}
   \begin{tabular}{@{}rcccccc@{}}
   \toprule
   \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Way to perturb\\ the search image\end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} & \multicolumn{2}{c}{SSIM} \\ \cmidrule{2-7}
@@ -508,7 +508,7 @@ The perturbed template and search images are then converted into RGB color scpac
 % 实验细节：迭代了多少次？损失函数各项的权重是什么？模板图像怎么操作。
 The other steps of the training process are the same as the attack method in Section III.
 % 实验结果。
-The experimental result is shown in Table \ref{table:pertrub}. As we can see,
+The experimental result is shown in Table \ref{table:perturb}. As we can see,
 % 分析攻击性能
 the attack performance is slightly degraded. In terms of AO on GOT-VAL, the targeted attack performance changes from 0.840 to 0.680, and the untargeted attack performance changes from 0.153 to 0.246.
 % 分析可感知性
