@@ -814,10 +814,10 @@ As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack th
 % 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
 The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
 % 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
-Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of 64*64, which increases the learning difficulty and makes the perturbation values large.
+Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64\times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of 64*64 in the CbCr channel.
+To reduce perceptibility while achieving the targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
