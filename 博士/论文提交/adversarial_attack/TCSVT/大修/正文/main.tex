@@ -509,7 +509,7 @@ In Equ. \ref{eq:loss}, we set $\alpha=1, \beta=1, \gamma=1, \eta=0.005$, and $\s
   \label{tab:iter}
 \end{table*}
 
-\begin{table}[h]
+\begin{table}[t]
   \centering
   \caption{Overall attack results on VOT2016, VOT2018, VOT2019 and UAV123.}
   \begin{tabular}{rrcc}
@@ -648,39 +648,6 @@ What's more, our method can perform universal attack, both with respect to the d
 %   \label{fig:patch_size_vis}
 % \end{figure}
 
-\begin{table}[t]
-  \centering
-  \caption{Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.}
-  \begin{tabular}{rcccccc} 
-  \toprule
-  \multirow{2}{*}[-2pt]{Backbone} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}  \\ 
-  % \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
-  \cmidrule{2-7}
-                            & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
-  \midrule
-  GoogLeNet                 & 0.760 & 0.897                        & 0.153 & 0.123                        & 0.840 & 0.890                        \\
-  AlexNet                   & 0.720 & 0.850                        & 0.496 & 0.577                        & 0.327 & 0.336                        \\
-  ShuffleNet                & 0.766 & 0.888                        & 0.496 & 0.557                        & 0.409 & 0.426                       \\
-  \bottomrule
-  \end{tabular}
-  \label{tab:backbone}
-\end{table}
-\begin{table}[t!]
-  \centering
-  \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.}
-  \begin{tabular}{rcccc} 
-  \toprule
-  \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\
-  \cmidrule{2-5}
-                            & AO & Precision              & AO & Precision                   \\
-  \midrule
-  SiamRPN++                 & 0.676   & 0.879                  & 0.418   & 0.556                       \\
-  SiamRPN                   & 0.666   & 0.876                  & 0.483   & 0.643                       \\
-  \bottomrule
-  \end{tabular}
-  \label{tab:arch}
-\end{table}
-
 \textit{Ablation Study: Influence of Training Loss} We implemented a series of experiments to analyze the contribution of each loss component. In Table \ref{tab:loss}, we report the attack results on the GOT-Val dataset. The AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.747 when adversarial information is generated using only quality assessment loss, indicating that quality assessment loss can cause a slight degradation in the performance of the tracker. This is because the perturbation information generated using quality assessment loss interferes with the tracker's ability to select the best target. However, the tracker's AO score with respect to the fake trajectory is only 0.148, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to follow the specified trajectory. When the adversarial information is generated using only regression loss, the AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.243, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the accurate bounding box position. When adversarial information is generated using only classification loss, the tracker's AO score decreases from 0.760 to 0.282 with respect to the real trajectory and the AO with respect to the fake trajectory is up to 0.643. This is because the perturbation information generated using classification loss causes the tracker to localize to the fake target instead of the real target's location. In conclusion, all loss terms are beneficial, and the classification/regression term is more important than the quality assessment term.
 
 % \begin{figure*}[t!]
@@ -759,7 +726,6 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 
 %%%%%%%% 消融实验：单分支 %%%%%%%%
 \begin{table}[t]
-  \renewcommand\thetable{XI}
   \centering
   \caption{Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:one_branch}
@@ -869,16 +835,53 @@ For the template image, we convert it into YCbCr color space, then add the pertu
 
 \uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN and SiamRPN++.}
 
+%%%%%%%% 不同backbone的可迁移性 %%%%%%%%
+\begin{table}[t]
+  \centering
+  \caption{Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.}
+  \begin{tabular}{rcccccc} 
+  \toprule
+  \multirow{2}{*}[-2pt]{Backbone} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}  \\ 
+  % \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+  \cmidrule{2-7}
+                            & AO    & SR                           & AO    & SR                           & AO    & SR                           \\ 
+  \midrule
+  GoogLeNet                 & 0.760 & 0.897                        & 0.153 & 0.123                        & 0.840 & 0.890                        \\
+  AlexNet                   & 0.720 & 0.850                        & 0.496 & 0.577                        & 0.327 & 0.336                        \\
+  ShuffleNet                & 0.766 & 0.888                        & 0.496 & 0.557                        & 0.409 & 0.426                       \\
+  \bottomrule
+  \end{tabular}
+  \label{tab:backbone}
+\end{table}
 \textit{Transferability to Different Backbones} We evaluate the transferability of our attacks when applying the perturbations to two more different backbones of SiamFC++, \ie, ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.
 The experimental results are shown in Table \ref{tab:backbone}. In the case of SiamFC++-AlexNet, the AO with respect to the \textit{real trajectory} drops from 0.72 to 0.496. 
 %\uline{
 Our perturbations also generalize well to SiamFC++-ShuffleNet, despite the customized components such as pointwise group convolution and channel shuffle operations in ShuffleNet.
 %}
 
-\textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++} to verify the transferability to different tracking architectures.
-SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.483 and the performance of SiamRPN++ is decreased from 0.676 to 0.418.
+%%%%%%%% 不同跟踪器的可迁移性 %%%%%%%%
+\begin{table}[t]
+  \centering
+  \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.}
+  \begin{tabular}{rcccc} 
+  \toprule
+  \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\
+  \cmidrule{2-5}
+                            & AO & Precision              & AO & Precision                   \\
+  \midrule
+  SiamRPN++                 & 0.676   & 0.879                  & 0.418   & 0.556                       \\
+  SiamRPN                   & 0.666   & 0.876                  & 0.483   & 0.643                       \\
+  Ocean                     & 0.672   & 0.902             & 0.237 & 0.282     \\ \bottomrule
+  \end{tabular}
+  \label{tab:arch}
+\end{table}
+\uline{\textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to three more tate-of-the-art trackers: SiamRPN \cite{SiamRPN}, SiamRPN++ \cite{SiamRPN++} and Ocean \cite{zhang2020ocean}. SiamRPN and SiamRPN++ are ahchor-based trackers, and Ocean is an anchor-free tracker.
+%SiamRPN uses an RPN network to perform location regression and target classification on the response maps. SiamRPN++ performs layer-wise and depth-wise aggregation to improve accuracy based on the effective training using the ResNet backbone. 
+The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.483 and the performance of SiamRPN++ is decreased from 0.676 to 0.418.
+In the case of Ocean, the AO with respect to the \textit{real trajectory} drops from 0.902 to 0.282.
 %We further analyze the performance of our attack method with respect to 11 attributes in OTB-2015 \cite{OTB}. As suggested in OTB \cite{OTB}, the attributes consist of out-of-view (OV), occlusion (OCC), illumination variation (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM), background clutters (BC), motion blur (MB), and in-plane rotation (IPR). Figure \ref{fig:attr} illustrates the untargeted attack results of the aforementioned trackers under the 11 attributes. 
 The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
+}
 
 \begin{table*}[t]
   \centering

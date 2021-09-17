@@ -116,7 +116,7 @@ In addition, point-to-point responses to your comments are given below and highl
 The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{table}[t]
-  \renewcommand\thetable{IX}
+  \renewcommand\thetable{VII}
   \centering
   \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information. w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.}
   \begin{tabular}{rrcccc}
@@ -304,7 +304,7 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 }
 
 \begin{table}[t]
-  \renewcommand\thetable{X}
+  \renewcommand\thetable{VIII}
   \centering
   \caption{Influence of different ways to generate the fake trajectory.
   The first row represents that the attacker forces the tracker to follow a fixed direction in a video.
@@ -334,7 +334,7 @@ For the untargeted attack, only perturbing the template/search image leads to th
 For the targeted attack, only perturbing the template/search image leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that perturbing both the and the search image can achieve better attack performance than only perturbing the template/search image.}
 
 \begin{table}[]
-  \renewcommand\thetable{XI}
+  \renewcommand\thetable{IX}
   \centering
   \caption{Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:one_branch}
@@ -376,7 +376,7 @@ For your convenience in cross-checking, the new text is given as follows.
 % \end{table}
 
 \begin{table}[t]
-  \renewcommand\thetable{XII}
+  \renewcommand\thetable{X}
   \centering
   \caption{Attack performance using the gaussian random noise. We replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
@@ -506,7 +506,7 @@ For your convenience in cross-checking, the new text is given as follows.}
 \end{figure}
 
 \begin{table}[t]
-  \renewcommand\thetable{XIII}
+  \renewcommand\thetable{XI}
   \centering
   \caption{Influence of different ways to perturb the search image. The first row demonstrates the the attack performance of the RGB attack method, i.e., the attack attack method proposed in Section III. The second row demonstrates the attack performance of YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:perturb}
@@ -747,9 +747,8 @@ SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking
 
 \textbf{Besides, we have evaluated the transferability to the anchor free tracker OCEAN in Setcion IV.E of the revised manuscript. For your convenience of cross review, the new text is given as follows.}
 
-\uline{We evaluate the transferability to Ocean on OTB2015 in terms of success. As shown in table \ref{tab:arch}, the tracking performance drops form 0.902 to 0.282.}
-
-\begin{table}[t!]
+\begin{table}[t]
+  \renewcommand\thetable{XV}
   \centering
   \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.}
   \begin{tabular}{rcccc} 
@@ -763,6 +762,8 @@ SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking
   \end{tabular}
   \label{tab:arch}
 \end{table}
+\uline{\textit{Transferability to Different Tracking Architectures} We evaluate the transferability of our attacks when applying the perturbations to three more tate-of-the-art trackers: SiamRPN \cite{SiamRPN}, SiamRPN++ \cite{SiamRPN++} and Ocean \cite{zhang2020ocean}. SiamRPN and SiamRPN++ are ahchor-based trackers, and Ocean is an anchor-free tracker. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the \textit{real trajectory} drops from 0.666 to 0.483 and the performance of SiamRPN++ is decreased from 0.676 to 0.418. In the case of Ocean, the AO with respect to the \textit{real trajectory} drops from 0.902 to 0.282. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
+}
 
 \textit{2. The model is trained based on Eq.11 and Eq.12. It is not clear why the sign function is introduced. It is also suggested to describe the derivation of these two equations in detail.}
 
