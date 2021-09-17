@@ -235,7 +235,7 @@ where $A_{\text{add}}$ is a patch application operator which adds the patch into
 \uline{The operator $A_{add}$ refers to the injection of small additive noise into the image. The injected noises are small and sometimes invisible to human eyes.}
 
 Our attacks on Siamese visual tracking with both the template and search images as input, enable us to exploit both the perturbation generation method \cite{FGSM} and adversarial patch generation method \cite{patch} simultaneously. However, applying both of the above methods to trackers is non-trivial. In this paper, we demonstrate that the perturbations and the adversarial patch are both indispensable for attacking trackers and can be jointly optimized in an end-to-end training manner. On the one hand, the small patch applied to the search image works as a fake target. It is crucial to design a strategy for the tracker to follow a predefined trajectory. For example, the TTP method \cite{TTP} pre-computes perturbations corresponding to diverse directions and uses them to force the tracker to follow the target trajectory. However, this method is sub-optimal because the tracker only predicts the approximation of the specified trajectory. As shown in experiments, the targeted attack performance of TTP is not as good as ours.
-\uline{On the other hand, the adversarial patch is usually added to the background region of the search image and does not change the pixel values in the foreground region where the real target exists. Therefore if we do not add the perturbation to the template image, the response values of the region where the real target exists on the heatmaps are always high. Thus it is necessary to perturb the template image to cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target. (see Figure \ref{fig:1}).}
+\uline{On the other hand, the adversarial patch is usually added to the background region of the search image and does not change the pixel values in the foreground region where the real target exists. Therefore if we do not add the perturbation to the template image, the response values of the region where the real target exists on the heatmaps are always high. Thus it is necessary to perturb the template image to cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the fake target.}
 
 \begin{algorithm}[tb]
   \caption{Training Process}
@@ -833,7 +833,7 @@ For the template image, we convert it into YCbCr color space, then add the pertu
 
 \subsection{Transferability Analysis}
 
-\uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN and SiamRPN++.}
+\uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN, SiamRPN++ and Ocean.}
 
 %%%%%%%% 不同backbone的可迁移性 %%%%%%%%
 \begin{table}[t]
