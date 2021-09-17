@@ -801,7 +801,7 @@ As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack th
 %%%%%%%% 消融实验：YCbCr攻击 %%%%%%%%
 \begin{table}[t]
   \centering
-  \caption{Influence of different ways to perturb the search image. One way is adding a small patch on the RGB channel. The other way is adding perturbation on the whole search image on the Y channel and add a small patch on the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of different ways to perturb the search image. The first row demonstrates the the attack performance of the RGB attack method, i.e., the attack attack method proposed in Section III. The second row demonstrates the attack performance of YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:perturb}
   \begin{tabular}{@{}rcccccc@{}}
   \toprule
