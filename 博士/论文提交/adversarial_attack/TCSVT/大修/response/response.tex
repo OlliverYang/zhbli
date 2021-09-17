@@ -287,14 +287,16 @@ The adversarial patch is usually added to the background region of the search im
 \textit{2. I agree with reviewer 3, the ground truth boxes are inaccessible to trackers during the inference. It seems that the authors use the ground truth boxes to generate the fake trajectory in lines 51-57 on page 7. Please clarify it.}
 
 \textbf{
-Thanks for the good comment. As suggest, we consider an alternative way to generate the \textit{fake trajectory} without the use of the ground truth boxes. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+Thanks for the good comment. As suggest, we consider an alternative way to generate the \textit{fake trajectory} without the use of the ground truth boxes.
+% 描述轨迹：一段视频中方向是固定的，不同视频中的方向随机挑一个。
+Specifically, the attacker forces the tracker to follow a fixed direction in a video. For each video, we assign a random direction from 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
 % 介绍在什么数据集上做的实验，用的什么评价指标。
 The attack performance is evaluated according to AO/SR on GOT-Val.
 The detailed analysis of new added experiment is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \uline{
 % 介绍轨迹生成方式
-\textit{Ablation Study: An alternative way to generate the fake trajectory}  Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+\textit{Ablation Study: An alternative way to generate the fake trajectory}  Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction in a video. For each video, we assign a random direction from 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
 % 介绍在什么数据集上做的实验，用的什么评价指标。
 The attack performance is evaluated according to AO/SR on GOT-Val.
 % 分析实验结果。简单分析即可。
@@ -660,12 +662,12 @@ The main limitation of our work is the values of our universal perturbations are
 
 \textit{6. In experiments, I suggest considering two scenarios of different directions and trajectories.}
 
-\textbf{Thanks for the good comment. As suggest, we consider an alternative way to generate the \textit{fake trajectory} without the use of the ground truth boxes. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+\textbf{Thanks for the good comment. As suggest, we consider an alternative way to generate the \textit{fake trajectory} without the use of the ground truth boxes. Specifically, the attacker forces the tracker to follow a fixed direction in a video. For each video, we assign a random direction from 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
 % 介绍在什么数据集上做的实验，用的什么评价指标。
 The attack performance is evaluated according to AO/SR on GOT-Val.
 The detailed analysis of new added experiment is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{\textit{Ablation Study: An alternative way to generate the fake trajectory} Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+\uline{\textit{Ablation Study: An alternative way to generate the fake trajectory} Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction in a video. For each video, we assign a random direction from 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
 % 介绍在什么数据集上做的实验，用的什么评价指标。
 The attack performance is evaluated according to AO/SR on GOT-Val.
 % 分析实验结果。简单分析即可。

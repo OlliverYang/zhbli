@@ -748,7 +748,8 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 \end{table}
 \uline{\textit{Ablation Study: An alternative way to generate the fake} 
 \textit{trajectory}
-Here, we consider an alternative way to generate the \textit{fake trajectory}. Specifically, the attacker forces the tracker to follow a fixed direction. We illustrate this with 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
+Here, we consider an alternative way to generate the \textit{fake trajectory}.
+Specifically, the attacker forces the tracker to follow a fixed direction in a video. For each video, we assign a random direction from 4 different directions, consisting of shifting the box by $(\pm 3, \pm 3)$ pixels in each consecutive frames, corresponding to the four directions $45^{\circ}, -45^{\circ}, 135^{\circ}, -135^{\circ}$.
 % 介绍在什么数据集上做的实验，用的什么评价指标。
 The attack performance is evaluated according to AO/SR on GOT-Val.
 % 分析实验结果。简单分析即可。
