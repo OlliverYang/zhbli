@@ -306,13 +306,15 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 \begin{table}[t]
   \renewcommand\thetable{X}
   \centering
-  \caption{Influence of different ways to generate the fake trajectory. One way is the fake trajectory to follow a fixed direction. The other way is the fake trajectory to follow the real target. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of different ways to generate the fake trajectory.
+  The first row represents that the attacker forces the tracker to follow a fixed direction in a video.
+  The second row represents that the fake trajectory follows the real trajectory. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{Type of the Fake Trajectory} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
                               & AO                & SR                & AO               & SR               \\ \midrule
   Fixed direction             & 0.175             & 0.144             & 0.845            & 0.897            \\
-  Follow the real target      & 0.153             & 0.123             & 0.840            & 0.890            \\ \bottomrule        
+  Follow the real trajectory      & 0.153             & 0.123             & 0.840            & 0.890            \\ \bottomrule        
   \end{tabular}
   \label{table:direction}
 \end{table}

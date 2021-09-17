@@ -736,7 +736,9 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 
 \begin{table}[t]
   \centering
-  \caption{Influence of different ways to generate the fake trajectory. One way is the fake trajectory to follow a fixed direction. The other way is the fake trajectory to follow the real target. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of different ways to generate the fake trajectory.
+  The first row represents that the attacker forces the tracker to follow a fixed direction in a video.
+  The second row represents that the fake trajectory follows the real trajectory. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{Type of the Fake Trajectory} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
