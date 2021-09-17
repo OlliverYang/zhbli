@@ -798,6 +798,7 @@ Specifically, we replace the trained perturbations with the gaussion random nois
 As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
 }
 
+%%%%%%%% 消融实验：YCbCr攻击 %%%%%%%%
 \begin{table}[t]
   \centering
   \caption{Influence of different ways to perturb the search image. One way is adding a small patch on the RGB channel. The other way is adding perturbation on the whole search image on the Y channel and add a small patch on the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
@@ -840,7 +841,7 @@ As shown in Figure \ref{fig:YCbCr}, our new method can increase SSIM of the sear
   % 介绍什么是 RGB Attack
   Figure (a) demonstrates the pereturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.
   % 介绍什么是 YCbCr Attack
-  Figure (b) demonstrates the perturbations trained by the YCbCr attack represents the attack method: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
+  Figure (b) demonstrates the perturbations trained by the YCbCr attack method: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
   For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
   The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network.
   The other steps of the training process are the same as the attack method in Section III.
