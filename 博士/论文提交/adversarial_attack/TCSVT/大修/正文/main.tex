@@ -773,7 +773,7 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
   \bottomrule
   \end{tabular}
 \end{table}
-\uline{\textit{Ablation Study: Only perturbing the template or search image} To evaluate the impact of $p$ and $\delta$, we add the ablation study on only adding perturbations on the template images or the search regions. The attack performance is evaluated according to AO/SR on GOT-Val. The result is shown in Table \ref{table:one_branch}. For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and the search image leads to the AO of 0.153, which is more effective. For the targeted attack, only perturbing the templat/search branch leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
+\uline{\textit{Ablation Study: Only perturb the template or search image} To analyze the impact of $p$ and $\delta$, we evaluate the attack performance when only adding perturbations on the template images or the search regions. The attack performance is evaluated according to AO/SR on GOT-Val. The result is shown in Table \ref{table:one_branch}. For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and the search image leads to the AO of 0.153, which is more effective. For the targeted attack, only perturbing the templat/search branch leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that attacking two branches can achieve better results than attacking one branch.}
 
 %%%%%%%% 消融实验：高斯噪声 %%%%
 \begin{table}[t]
@@ -808,7 +808,7 @@ As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack th
   YCbCr Attack                                           & 0.153                                   & 0.123                            & 0.840             & 0.890                & 0.78              & 0.79 \\ \bottomrule        
   \end{tabular}
 \end{table}
-\uline{\textit{Attack in YCbCr Space}
+\uline{\textit{Ablation Study: Attack in YCbCr Space}
 % 承认已有问题：相比于现有的目标跟踪攻击算法，我们方法的不足之处是扰动值较为显眼。
 The shortcoming of our method is the more conspicuous perturbation values compared to existing target tracking attack algorithms.
 % 解释我们的扰动显眼的原因：其他方法在整个搜索图像添加扰动，而我们必须要在64*64这个很小的区域内添加扰动，这增加了学习的难度，使得扰动值大。
