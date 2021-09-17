@@ -48,7 +48,7 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 (2) We have carefully considered and followed all the comments and suggestions related to the clarity of the writing, and made the new material a thoroughly revised manuscript.
 
 % 消融实验
-(3) We have added a new experiment to attack in the YCbCr color space to reduce the perceptibility of the pereturbations.
+(3) We have added a new experiment to attack in the YCbCr color space to reduce the perceptibility of the perturbations.
 
 % % 消融实验
 % (4) We have used a new way to generate the fake trajectory.
@@ -473,7 +473,7 @@ The shortcoming of our method is the more conspicuous perturbation values compar
 Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64 \times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
@@ -490,9 +490,9 @@ For your convenience in cross-checking, the new text is given as follows.}
   \includegraphics[width=.8\textwidth]{images_imperceptible/1.pdf}
   \caption{Visualization of the perturbations.
   % 介绍什么是 RGB Attack
-  Figure (a) demonstrates the pereturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.
+  Figure (a) demonstrates the perturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.
   % 介绍什么是 YCbCr Attack
-  Figure (b) demonstrates the perturbations trained by the YCbCr attack represents the attack method: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
+  Figure (b) demonstrates the perturbations trained by the YCbCr attack represents the attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
   For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
   The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network.
   The other steps of the training process are the same as the attack method in Section III.
@@ -520,7 +520,7 @@ The shortcoming of our method is the more conspicuous perturbation values compar
 Other methods add perturbations over the entire search image, whereas we need to add perturbations over a very small region of $64 \times 64$, which increases the learning difficulty and makes the perturbation values large.
 % 解释我们不用全图攻击的原因：我们仅在小区域内而不是在整个搜索图像上添加扰动，因为必须指定轨迹在哪。
 % 解决方案：为了既享受全图扰动带来的低感知性，以及局部扰动用于指定目标位置，我们考虑在不同的图像通道执行不同的扰动：首先将图像转为YCbCr通道，在Y通道做全图攻击，在CbCr通道做局部攻击。or: 为了在有目标攻击的同时降低可感知性，...
-To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add the pereturbation over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.%The perturbed search image is then converted into RGB color space and fed into the tracking network.
+To reduce perceptibility while having a targeted attack, we consider a new way to perturb the search image: first we convert the search image into YCbCr color space, then add the perturbation over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel.%The perturbed search image is then converted into RGB color space and fed into the tracking network.
 % 介绍什么是 YCbCr
 Different from RGB color space, YCbCr color space encodes a color image similar to human eyes’ retina, which separates the RGB components into a luminance component (Y) and two chrominance components (Cb as blue projection and Cr as red projection).
 % 解释为什么用YCbCr而不是RGB。选择 YCbCr 而不是 RGB 的原因是更加独立。
