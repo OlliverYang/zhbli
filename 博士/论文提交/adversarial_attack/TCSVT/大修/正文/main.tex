@@ -349,7 +349,7 @@ G I o U=I o U-\frac{|C \backslash(A \cup B)|}{|C|}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size, and clipping pixel values of intermediate results after each step to ensure that they are in an $\epsilon$-neighbourhood of the original image.  This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
