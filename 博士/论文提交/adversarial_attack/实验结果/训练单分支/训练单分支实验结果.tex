@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{booktabs}  % 用于表格 midrule
+\usepackage{multirow}  % for multirow command used in the table
+\usepackage{amssymb}  % 用于打对号
+\usepackage[UTF8]{ctex} % 用于写中文
+\usepackage{geometry} % 用于调整页边距
+\begin{document}
+'FGT-AO', 'FGT-SR-50', 'GT-AO', 'GT-SR-50'
+
+Targeted-AO Targeted-SR Untargeted-AO Untargeted-SR
+
+仅训练模板图像：
+
+[2048, 0.12810655212963665, 0.09012215062037127, 0.6364984295384835, 0.7554102144849476, 0, 0]
+
+仅训练搜索图像：
+
+[2048, 0.2735130864107231, 0.2637299220929114, 0.6361926671522051, 0.7478599596037319, 0, 0]
+
+
+
+\begin{table}[t]
+    \centering
+    \caption{不重新训练，仅把双分支训好的拿来用。Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
+    \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    \multirow{2}{*}[-2pt]{Template} & \multirow{2}{*}[-2pt]{Search} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                                    &                               & AO                & SR                & AO               & SR               \\ \midrule
+    \checkmark                      &                               & 0.510             & 0.567             & 0.156            & 0.106            \\
+                                    & \checkmark                    & 0.714             & 0.841             & 0.160            & 0.132            \\
+    \checkmark                      & \checkmark                    & 0.153             & 0.123             & 0.840            & 0.890            \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \caption{Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
+    \label{table:one_branch}
+    \begin{tabular}{@{}cccccc@{}}
+    \toprule
+    \multirow{2}{*}[-2pt]{Template} & \multirow{2}{*}[-2pt]{Search} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
+                                    &                               & AO                & SR                & AO               & SR               \\ \midrule
+    \checkmark                      &                               & 0.636             & 0.755             & 0.128            & 0.090            \\
+                                    & \checkmark                    & 0.636             & 0.748             & 0.274            & 0.264            \\
+    \checkmark                      & \checkmark                    & 0.153             & 0.123             & 0.840            & 0.890            \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\end{document}
