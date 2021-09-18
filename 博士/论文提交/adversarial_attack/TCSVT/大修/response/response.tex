@@ -546,7 +546,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{kurakin2017adversarial}:}
+\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
@@ -554,7 +554,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     \end{gathered}
 \end{equation}
 %\uline{where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.}
-\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{kurakin2017adversarial}:}
+\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
@@ -776,7 +776,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{kurakin2017adversarial}:}
+\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
@@ -784,7 +784,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     \end{gathered}
 \end{equation}
 %\uline{where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.}
-\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{kurakin2017adversarial}:}
+\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
