@@ -352,49 +352,39 @@ For the targeted attack, only perturbing the template/search image leads to the 
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
-% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
-Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
-% 实验结果的分析
-As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
+\textbf{To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions. 
+Specifically, we design two kinds of random patterns: (1) the random pattern similar to the trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
+We replace the trained perturbations with the random random pattern to attack SiamFC++\_GoogleNet. The experiment is performed on GOT-Val.
+As shown in Table \ref{table:noise}, random patterns cannot effectively attack the tracker.
 For your convenience in cross-checking, the new text is given as follows.
 }
-
-% \begin{table}[t]
-%   \renewcommand\thetable{XII}
-%   \centering
-%   \caption{Attack performance using the gaussian random noise. We replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.}
-%   \begin{tabular}{@{}rccccc@{}}
-%   \toprule
-%   \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
-%                              &                            & AO                & SR                & AO               & SR               \\ \midrule
-%   1.0                        & 0.98                       & 0.760             & 0.896             & 0.142            & 0.101            \\
-%   10.0                       & 0.38                       & 0.761             & 0.898             & 0.143            & 0.102            \\
-%   100.0                      & 0.01                       & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
-%   \end{tabular}
-%   \label{table:noise}
-% \end{table}
 
 \begin{table}[t]
   \renewcommand\thetable{X}
   \centering
-  \caption{Attack performance using the gaussian random noise. We replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.}
+  \caption{Attack performance using random patterns.
+  The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \label{table:noise}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
-  \multirow{2}{*}[-2pt]{std} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
-                             & AO                & SR                & AO               & SR               \\ \midrule
-  1.0                        & 0.760             & 0.896             & 0.142            & 0.101            \\
-  10.0                       & 0.761             & 0.898             & 0.143            & 0.102            \\
-  100.0                      & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
+  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Perturbations used to \\ perfrom attack \end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}\\ \cmidrule{2-5}
+                                                         & AO                                      & SR                               & AO                & SR                  \\ \midrule
+  Trained Perturbations                                  & 0.153                                   & 0.123                            & 0.840             & 0.890               \\
+  Similar Pattern                                         & 0.736                                   & 0.871                            & 0.153             & 0.118               \\
+  Gaussian Noise                                         & 0.740                                   & 0.875                            & 0.144             & 0.101               \\ \bottomrule        
   \end{tabular}
-  \label{table:noise}
 \end{table}
-
-\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
-% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
-Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
-% 实验结果的分析
-As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
+\begin{figure}[t]
+  \renewcommand\thefigure{8}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images_imperceptible/random_gaussian.pdf}
+  \caption{Visualization of random patterns.}
+  \label{fig:random}
+\end{figure}
+\uline{\textit{Ablation Study: Attack performance of random patterns} To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions (see Figure \ref{fig:random}). 
+Specifically, we design two kinds of random patterns: (1) the random pattern similar to the trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
+We replace the trained perturbations with the random random pattern to attack SiamFC++\_GoogleNet. The experiment is performed on GOT-Val.
+As shown in Table \ref{table:noise}, random patterns cannot effectively attack the tracker.
 }
 
 %%%% 问题 2.5 %%%%
@@ -490,7 +480,7 @@ The detailed analysis of new added experiment is added in Section IV.D of the re
 For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{figure}[t]
-  \renewcommand\thefigure{7}
+  \renewcommand\thefigure{9}
   \centering
   \includegraphics[width=.8\textwidth]{images_imperceptible/1.pdf}
   \caption{Visualization of the perturbations.
@@ -610,8 +600,8 @@ We utilize the Iterative Target Class Method to update the perturbation values d
 % \uline{``Influence of the Adversarial Patch Size. In our experiment, we produce three different sizes of the adversarial patch, namely, 64-by-64, 32-by-32 and 16-by-16 to test the efficiency of their attacks. We evaluate the AO score of SiamFC++ on the perturbed GOT-Val dataset.''}
 % \textbf{in Section IV.D of the revised manuscript.}
 
-% figure 3
-\textbf{In Figure III, we have replaced ``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).'' with}
+% figure 4
+\textbf{In Figure 4, we have replaced ``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).'' with}
 \uline{``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} $B^{fake}=\{b^{fake}_i\}_1^{T}$ (indicated by the yellow bounding box). The \textit{fake trajectory} follows the \textit{real trajectory} $B^{gt}=\{b^{gt}_i\}_1^T$ (indicated by the red bounding box) and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 2 pixels apart.''}
 
 
