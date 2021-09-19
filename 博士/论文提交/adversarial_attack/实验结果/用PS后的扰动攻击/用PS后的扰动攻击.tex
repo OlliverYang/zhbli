@@ -8,29 +8,23 @@
 \begin{document}
 \begin{table}[t]
     \centering
-    \caption{Attack performance using the random pattern.
+    \caption{Attack performance using the random patterns.
     The attack performance is evaluated according to AO/SR on GOT-Val.}
     \label{table:random}
     \begin{tabular}{@{}rcccc@{}}
     \toprule
     \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Perturbations used to \\ perfrom attack \end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}\\ \cmidrule{2-5}
                                                            & AO                                      & SR                               & AO                & SR                  \\ \midrule
-    Trained Perturbations                                             & 0.153                                   & 0.123                            & 0.840             & 0.890               \\
-    Random Pattern                                         & 0.736                                   & 0.871                            & 0.153             & 0.118               \\ \bottomrule        
+    Trained Perturbations                                  & 0.153                                   & 0.123                            & 0.840             & 0.890               \\
+    Similar Pattern                                         & 0.736                                   & 0.871                            & 0.153             & 0.118               \\
+    Gaussian Noise                                         & 0.740                                   & 0.875                            & 0.144             & 0.101               \\ \bottomrule        
     \end{tabular}
   \end{table}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.8\textwidth]{random.pdf}
-    \caption{Visualization of the random pattern.}
+    \includegraphics[width=0.8\textwidth]{random_gaussian.pdf}
+    \caption{Visualization of random patterns.}
     \label{fig:random}
 \end{figure}
-
-Untargeted AO, SR:
-0.7355267789379769, 0.8707800327017409
-
-Targeted AO, SR:
-0.15291608894028702, 0.11806290276041166
-
 \end{document}
