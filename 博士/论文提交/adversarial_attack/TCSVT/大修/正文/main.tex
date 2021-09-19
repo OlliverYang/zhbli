@@ -58,12 +58,25 @@ Visual tracking, adversarial attacks, Siamese networks.
 \section{Introduction}
 \IEEEPARstart{G}{iven} an arbitrary detected or annotated object of interest in the initial video frame, visual object tracking is aimed at {\it recognizing} and {\it localizing} other instances of the same object in subsequent frames. This paradigm of tracking visual objects from a single initial exemplar in the online-tracking phase has been broadly cast as a Siamese network-based one-shot problem recently \cite{DBLP:journals/tcsv/ShanZLZH21,DBLP:journals/tcsv/FanSZYL21,DBLP:journals/tcsv/LiPWK20,9258983}, which is termed as Siamese visual tracking and recognised as highly effective and efficient for visual tracking.
 
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.48\textwidth]{images_imperceptible/UAP.pdf}
-%   \caption{Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations except the mere addition operations.} 
-%   \label{fig:UAP}
-% \end{figure}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.48\textwidth]{images_imperceptible/UAP_small.pdf}
+  \caption{Being universal, the generated perturbations can be conveniently exploited to perturb videos on-the-fly without extra computations except the mere addition operations.} 
+  \label{fig:UAP}
+\end{figure}
+
+Recently, the robustness of Siamese trackers has attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK,chen2020one}. However, these attack methods still need to craft the perturbations for each video independently based on either iterative optimization or adversarial network inference, for which the adequacy of additional computational resources may be not ensured by the computationally intensive tracking systems. 
+
+Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
+  
+In this paper, we make the first attempt in finding the universal perturbations (Figure \ref{fig:UAP}) that fool a state-of-the-art Siamese tracker, \ie, SiamFC++ \cite{SiamFC++}, in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal perturbation to the template image and adding a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory (as shown in Figure \ref{fig:1}), so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \uline{\cite{LaSOT}}, UAV123 \cite{UAV123}, \uline{VOT2016} \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019} benchmarks demonstrate the effectiveness and efficiency of our approach.
+
+% To sum up, the main contributions of this paper are:
+% \begin{itemize}
+%   \item To the best of our knowledge, we are the first to perform universal targeted attacks for Siamese trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
+%   \item We demonstrate that the adversarial patch can be rather small: the 32-by-32 patch can make the AO score drop dramatically to 0.146 and its area only accounts for 1\% of the search image area.
+%   \item Although trained using the parameters of the SiamFC++ \cite{SiamFC++} network, the universal perturbations can perform black box attacks on other trackers such as SiamRPN \cite{SiamRPN} and SiamRPN++ \cite{SiamRPN++}.
+% \end{itemize}
 
 \begin{figure}[t]
   \centering
@@ -74,19 +87,6 @@ Visual tracking, adversarial attacks, Siamese networks.
   %The purple dashed box marks the universal adversarial patch. The left heatmap represents the probability of each spatial position to contain the \textit{fake target}, and the right heatmap represents the target state estimation quality.}
   \label{fig:1}
 \end{figure}
-
-Recently, the robustness of Siamese trackers has attracted much attention in the sense of testing their vulnerability to adversarial attacks, and the focus has been directed towards more efficient and low-cost attacks \cite{TTP,FAN,SPARK,chen2020one}. However, these attack methods still need to craft the perturbations for each video independently based on either iterative optimization or adversarial network inference, for which the adequacy of additional computational resources may be not ensured by the computationally intensive tracking systems. 
-
-Universal adversarial perturbations (UAPs) proposed in \cite{UAP} can fool most images from a data distribution in an image-agnostic manner. Being universal, UAPs can be conveniently exploited to perturb unseen data on-the-fly without extra computations. However, no existing work has touched the topic of attacking the Siamese trackers using UAPs, because it is hard to apply existing UAPs to attack Siamese trackers directly. The main reason lies in the fact that, (a) most UAPs are designed for typical neural networks with one image as input while Siamese networks accept both the template and search images, and (b) the goal of existing UAP methods is to disturb unary or binary model outputs for single instance while we need to use universal perturbations to mislead Siamese trackers to follow a specified trajectory.
-  
-In this paper, we make the first attempt in finding the universal perturbations that fool a state-of-the-art Siamese tracker, \ie, SiamFC++ \cite{SiamFC++}, in a targeted attack manner, which comes at virtually no cost in the online-tracking phase. Specifically, we aim to attack the trackers by adding a universal perturbation to the template image and adding a \textit{fake target}, \ie, a small universal adversarial patch, into the search image adhering to the predefined trajectory (as shown in Figure \ref{fig:1}), so that the tracker outputs the location and size of the \textit{fake target} instead of the real target. Our generated video-agnostic perturbations allow perturbing a novel video to come at no additional cost except the mere addition operations -- and not require gradient optimization or network inference. Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \uline{\cite{LaSOT}}, UAV123 \cite{UAV123}, \uline{VOT2016} \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019} benchmarks demonstrate the effectiveness and efficiency of our approach.
-
-% To sum up, the main contributions of this paper are:
-% \begin{itemize}
-%   \item To the best of our knowledge, we are the first to perform universal targeted attacks for Siamese trackers utilizing both the imperceptible perturbation and the adversarial patch together, which are jointly trained in an end-to-end manner.
-%   \item We demonstrate that the adversarial patch can be rather small: the 32-by-32 patch can make the AO score drop dramatically to 0.146 and its area only accounts for 1\% of the search image area.
-%   \item Although trained using the parameters of the SiamFC++ \cite{SiamFC++} network, the universal perturbations can perform black box attacks on other trackers such as SiamRPN \cite{SiamRPN} and SiamRPN++ \cite{SiamRPN++}.
-% \end{itemize}
 
 \section{Related Work}
 
@@ -743,25 +743,31 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and the search image leads to the AO of 0.153.
 For the targeted attack, only perturbing the template/search image leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that perturbing both the and the search image can achieve better attack performance than only perturbing the template/search image.}
 
-%%%%%%%% 消融实验：高斯噪声 %%%%
+%%%%%%%% 消融实验：随机扰动 %%%%
 \begin{table}[t]
   \centering
-  \caption{Attack performance using the gaussian random noises. The mean value is set to zero. The standard deviation (std) is changed from 0.1 to 100.0. The noises are added to both the template and the search image, position and size is the same of original setting. The experiment is performed on GOT-Val.}
-  \begin{tabular}{@{}rccccc@{}}
-  \toprule
-  \multirow{2}{*}[-2pt]{std} & \multirow{2}{*}[-2pt]{SSIM}& \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
-                             &                            & AO                & SR                & AO               & SR               \\ \midrule
-  1.0                        & 0.98                       & 0.760             & 0.896             & 0.142            & 0.101            \\
-  10.0                       & 0.38                       & 0.761             & 0.898             & 0.143            & 0.102            \\
-  100.0                      & 0.01                       & 0.715             & 0.850             & 0.152            & 0.112            \\ \bottomrule        
-  \end{tabular}
+  \caption{Attack performance using random patterns.
+  The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:noise}
+  \begin{tabular}{@{}rcccc@{}}
+  \toprule
+  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Perturbations used to \\ perfrom attack \end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack}\\ \cmidrule{2-5}
+                                                         & AO                                      & SR                               & AO                & SR                  \\ \midrule
+  Trained Perturbations                                  & 0.153                                   & 0.123                            & 0.840             & 0.890               \\
+  Similar Pattern                                         & 0.736                                   & 0.871                            & 0.153             & 0.118               \\
+  Gaussian Noise                                         & 0.740                                   & 0.875                            & 0.144             & 0.101               \\ \bottomrule        
+  \end{tabular}
 \end{table}
-\uline{\textit{Ablation Study: Attack performance of the random noise} To illustrate the effectiveness of the proposed method, we add a random pattern on the template and search regions. 
-% 我们使用高斯噪声代替训练好的扰动来攻击SiamFC++\_GoogleNet。我们在GOT-Val上进行实验。
-Specifically, we replace the trained perturbations with the gaussion random noise to attack SiamFC++\_GoogleNet. The mean value of the random noise is 0. The standard deviation is changed from 1.0 to 100.0. The experiment is performed on GOT-Val.
-% 实验结果的分析
-As shown in Table \ref{table:noise}, Gaussian noise cannot effectively attack the tracker even if the standard deviation is up to 100.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.48\textwidth]{images_imperceptible/random_gaussian.pdf}
+  \caption{Visualization of random patterns.}
+  \label{fig:random}
+\end{figure}
+\uline{\textit{Ablation Study: Attack performance of random patterns} To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions (see Figure \ref{fig:random}). 
+Specifically, we design two kinds of random patterns: (1) the random pattern similar to the trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
+We replace the trained perturbations with the random random pattern to attack SiamFC++\_GoogleNet. The experiment is performed on GOT-Val.
+As shown in Table \ref{table:noise}, random patterns cannot effectively attack the tracker.
 }
 
 %%%%%%%% 消融实验：YCbCr攻击 %%%%%%%%
