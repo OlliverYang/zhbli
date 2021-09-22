@@ -5,5 +5,5 @@ function trackers = config_tracker()
 % 13 trackers (ATOM, DiMP, C-RPN, SiamRPN++, DaSiamRPN, D-STRCF, SiamDW, GFSDCF, 
 % SiamMask, GlobalTrack, SPLT, ASRCF, LTMU) when performing evaluation using 
 % all 1,400 videos.
-trackers = {struct('name', 'DiMP18',      'publish', 'ICCV-19')};
+trackers = {struct('name', 'DiMP50',      'publish', 'ICCV-19')};
 end

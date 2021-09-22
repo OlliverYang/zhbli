@@ -13,13 +13,17 @@ for i = 1:numel(seqs) % for each sequence
     
     % load GT and the absent flags
     anno        = dlmread([path_anno s '.txt']);
-    absent_anno = dlmread([path_anno 'absent/' s '.txt']);
+    if strfind(path_anno, 'TLP') == 0
+        absent_anno = dlmread([path_anno 'absent/' s '.txt']);
+    else
+        absent_anno = zeros(size(anno, 1));
+    end
     
     for k = 1:num_tracker  % evaluate each tracker
         t = trackers{k};   % name of tracker
         if (strcmp(t.name, 'ATOM') || strcmp(t.name, 'DiMP18') || strcmp(t.name, 'DiMP'))
             idxNum = 5;
-        elseif (strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP'))
+        elseif (strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP')) || strcmp(t.name,'DiMP50')
             idxNum = 20;
         else
             idxNum = 1;
@@ -44,6 +48,8 @@ for i = 1:numel(seqs) % for each sequence
                 res = dlmread([rp_all t.name '_tracking_result/default_' num2str(idx-1,'%03d') '/' s '.txt']);
             elseif strcmp(t.name, 'DiMP18')
                 res = dlmread([rp_all t.name '_tracking_result/dimp18_' num2str(idx-1,'%03d') '/' s '.txt']);
+            elseif strcmp(t.name, 'DiMP50')
+                res = dlmread([rp_all t.name '_tracking_result/dimp50_' num2str(idx-1,'%03d') '/' s '.txt']);
             elseif strcmp(t.name, 'DiMP')
                 res = dlmread([rp_all t.name '50_tracking_result/dimp50_' num2str(idx-1,'%03d') '/' s '.txt']);
             elseif (strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP'))
@@ -69,7 +75,7 @@ for i = 1:numel(seqs) % for each sequence
 
             len_all = len_all + size(anno, 1);  % number of frames in the sequence
         end
-        if (strcmp(t.name, 'ATOM') || strcmp(t.name, 'DiMP18') || strcmp(t.name, 'DiMP') || strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP'))
+        if (strcmp(t.name, 'ATOM') || strcmp(t.name, 'DiMP18') || strcmp(t.name, 'DiMP') || strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP')) || strcmp(t.name, 'DiMP50')
             ave_success_rate_plot(k, i, :)     = sum(success_num_overlap)/(len_all + eps);
             ave_success_rate_plot_err(k, i, :) = sum(success_num_err)/(len_all + eps);
         else

@@ -71,7 +71,7 @@ for k = index_sort(1:rank_num)
     else
         tmpName{i} = [name_tracker_all{k} ' [' tmp ']'];
     end
-    if strcmp(name_tracker_all{k}, 'ECO_HC') || strcmp(name_tracker_all{k}, 'CSRDCF') || strcmp(name_tracker_all{k}, 'ECO') || strcmp(name_tracker_all{k}, 'SiamFC') || strcmp(name_tracker_all{k}, 'MDNet') || strcmp(name_tracker_all{k}, 'RLS_ATOM') || strcmp(name_tracker_all{k}, 'GD_ATOM') || strcmp(name_tracker_all{k}, 'RLS_DiMP') || strcmp(name_tracker_all{k}, 'RLS_DiMPmax') || strcmp(name_tracker_all{k}, 'GD_DiMP') || strcmp(name_tracker_all{k}, 'DiMP18') || strcmp(name_tracker_all{k}, 'ATOM') || strcmp(name_tracker_all{k}, 'DiMP') || strcmp(name_tracker_all{k}, 'SiamRPN++') || strcmp(name_tracker_all{k}, 'DaSiamRPN') || strcmp(name_tracker_all{k}, 'SiamMask') || strcmp(name_tracker_all{k}, 'LTMU')
+    if strcmp(name_tracker_all{k}, 'ECO_HC') || strcmp(name_tracker_all{k}, 'CSRDCF') || strcmp(name_tracker_all{k}, 'ECO') || strcmp(name_tracker_all{k}, 'SiamFC') || strcmp(name_tracker_all{k}, 'MDNet') || strcmp(name_tracker_all{k}, 'RLS_ATOM') || strcmp(name_tracker_all{k}, 'GD_ATOM') || strcmp(name_tracker_all{k}, 'RLS_DiMP') || strcmp(name_tracker_all{k}, 'RLS_DiMPmax') || strcmp(name_tracker_all{k}, 'GD_DiMP') || strcmp(name_tracker_all{k}, 'DiMP18') || strcmp(name_tracker_all{k}, 'ATOM') || strcmp(name_tracker_all{k}, 'DiMP') || strcmp(name_tracker_all{k}, 'SiamRPN++') || strcmp(name_tracker_all{k}, 'DaSiamRPN') || strcmp(name_tracker_all{k}, 'SiamMask') || strcmp(name_tracker_all{k}, 'LTMU') || strcmp(name_tracker_all{k}, 'DiMP50')
         h(i) = plot(threshold_set, bb, 'color', plot_style{i}.color, 'lineStyle', plot_style{i}.lineStyle,'lineWidth', 3,'Parent', tmp_axes);
         tmpNameplot{j} = tmpName{i};
         hplot(j) = h(i);

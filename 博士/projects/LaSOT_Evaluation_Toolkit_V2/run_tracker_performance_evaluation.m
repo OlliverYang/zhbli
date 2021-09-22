@@ -6,8 +6,9 @@ clc; clear; close all;
 addpath('./utils/');
 addpath('./sequence_evaluation_config/');
 
+dataset_name = 'TLP';
 tmp_mat_path  = './tmp_mat/';          % path to save temporary results
-path_anno     = './annos/';            % path to annotations
+path_anno     = './annos_TLP/';            % path to annotations
 path_att      = './annos/att/';        % path to attribute
 rp_all        = './tracking_results/'; % path to tracking results
 save_fig_path = './res_fig/';          % path to result figures
@@ -23,7 +24,14 @@ att_fig_name  = {'IV', 'POC', 'DEF', 'MB', 'CM', 'ROT', 'BC', ...
 % 'all' --- evaluation with the whole benchmark
 % 'test_set' --- evaluation with training subset
 % 'extension_test_set' --- evaluation on the extension set
-evaluation_dataset_type = 'test_set';
+% 'TLP' -- evaluation on TLP
+evaluation_dataset_type = 'TLP';
+
+if dataset_name == 'TLP'
+    att_name = {};
+    att_fig_name = {};
+    evaluation_dataset_type = 'TLP';
+end
 
 % use normalization or not
 norm_dst = true;         
@@ -45,11 +53,15 @@ end
 name_seq_all = cell(num_seq, 1);
 for i = 1:num_seq
     name_seq_all{i} = sequences{i};
-    seq_att         = dlmread(fullfile(path_att, [sequences{i} '.txt']));
-    if i == 1
-        att_all = zeros(num_seq, numel(seq_att));
+    if strcmp(dataset_name, 'TLP') == 0
+        seq_att         = dlmread(fullfile(path_att, [sequences{i} '.txt']));
+        if i == 1
+            att_all = zeros(num_seq, numel(seq_att));
+        end
+        att_all(i, :) = seq_att;
+    else
+        att_all(i, :) = 0;
     end
-    att_all(i, :) = seq_att;
 end
 
 % parameters for evaluation

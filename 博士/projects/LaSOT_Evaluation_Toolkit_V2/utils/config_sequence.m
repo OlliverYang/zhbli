@@ -8,6 +8,8 @@ switch type
         dataset_name = 'extension_testing_set.txt';
     case 'all'
         dataset_name = 'all_dataset.txt';
+    case 'TLP'
+        dataset_name = 'TLP.txt';
     otherwise
         error('Error in evaluation dataset type! Either ''testing_set'' or ''all''.')
 end
