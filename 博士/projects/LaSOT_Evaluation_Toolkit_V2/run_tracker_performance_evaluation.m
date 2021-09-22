@@ -34,7 +34,8 @@ if dataset_name == 'TLP'
 end
 
 % use normalization or not
-norm_dst = true;         
+norm_dst = false;
+disp("计算anno与pred的边框中心的距离时，不进行归一化");
 
 trackers   = config_tracker();
 sequences  = config_sequence(evaluation_dataset_type);
@@ -75,7 +76,7 @@ threshold_set_error   = 0:50;
 if norm_dst
     threshold_set_error = threshold_set_error / 100;
 end
-threshold_set_overlap = 0:0.05:1;
+threshold_set_overlap = 0:0.01:1;
 
 for i = 1:numel(metric_type_set)
     % error (for distance plots) or overlap (for success plots)

@@ -2,7 +2,7 @@ function eval_tracker(seqs, trackers, eval_type, name_tracker_all, tmp_mat_path,
 % evaluate each tracker
 num_tracker = numel(trackers);
 
-threshold_set_overlap = 0:0.05:1;
+threshold_set_overlap = 0:0.01:1;
 threshold_set_error   = 0:50;
 if norm_dst
     threshold_set_error = threshold_set_error / 100;
@@ -13,11 +13,7 @@ for i = 1:numel(seqs) % for each sequence
     
     % load GT and the absent flags
     anno        = dlmread([path_anno s '.txt']);
-    if strfind(path_anno, 'TLP') == 0
-        absent_anno = dlmread([path_anno 'absent/' s '.txt']);
-    else
-        absent_anno = zeros(size(anno, 1));
-    end
+    absent_anno = dlmread([path_anno 'absent/' s '.txt']);
     
     for k = 1:num_tracker  % evaluate each tracker
         t = trackers{k};   % name of tracker
