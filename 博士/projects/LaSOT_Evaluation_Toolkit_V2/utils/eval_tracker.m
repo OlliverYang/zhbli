@@ -12,8 +12,12 @@ for i = 1:numel(seqs) % for each sequence
     s    = seqs{i};      % name of sequence
     
     % load GT and the absent flags
-    anno        = dlmread([path_anno s '.txt']);
-    absent_anno = dlmread([path_anno 'absent/' s '.txt']);
+    anno = dlmread([path_anno s '.txt']);
+    if strfind(path_anno, 'TLP') == 0
+        absent_anno = dlmread([path_anno 'absent/' s '.txt']);
+    else
+        absent_anno = 1 - all(anno, 2);
+    end
     
     for k = 1:num_tracker  % evaluate each tracker
         t = trackers{k};   % name of tracker
@@ -69,7 +73,7 @@ for i = 1:numel(seqs) % for each sequence
                 success_num_err(idx, t_idx) = sum(err_center <= threshold_set_error(t_idx));
             end
 
-            len_all = len_all + size(anno, 1);  % number of frames in the sequence
+            len_all = len_all + sum(all(anno, 2));  % number of frames in the sequence
         end
         if (strcmp(t.name, 'ATOM') || strcmp(t.name, 'DiMP18') || strcmp(t.name, 'DiMP') || strcmp(t.name, 'RLS_ATOM') || strcmp(t.name, 'GD_ATOM') || strcmp(t.name, 'RLS_DiMP') || strcmp(t.name, 'GD_DiMP')) || strcmp(t.name, 'DiMP50')
             ave_success_rate_plot(k, i, :)     = sum(success_num_overlap)/(len_all + eps);
