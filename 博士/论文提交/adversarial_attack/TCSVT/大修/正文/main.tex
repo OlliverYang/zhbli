@@ -581,13 +581,6 @@ We compare our attack method with two baseline methods (See Table \ref{tab:imper
 
 \textit{Overall Attack Results} We test the performance of our targeted attack method on the evaluation benchmarks and gather the overall results in Table \ref{tab:benchmark results1} and Table \ref{tab:benchmark results}. It is shown that the base tracker SiamFC++ can achieve state-of-the-art performance on all the evaluation benchmarks and run in real time (at about 58 fps on a GTX 1080Ti GPU). However this real-time performance requires the computationally intensive tracking system to occupy most of the computational resources, and thus it is appealing to develop a virtually costless attack method to fool the tracking system without scrambling for the resources. As shown in Table \ref{tab:benchmark results}, our attack method can satisfy this appealing demand and fool the SiamFC++ tracker effectively by misleading the tracker to follow a predefined \textit{fake trajectory}. Moreover, the high AO and Precision performance with respect to the \textit{fake trajectory} indicates a more effective attack without raising any suspicion (see Figure \ref{fig:vis1}).
 
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.48\textwidth]{images_imperceptible/iter.png}
-%   \caption{Influence of the training iteration number on GOT-Val.} 
-%   \label{fig:iter}
-% \end{figure}
-
 \textit{Ablation Study: Influence of Training Iterations} Table \ref{tab:iter} demonstrates the influence of the number of training iterations on the attack performance. It can be observed that as the number of iterations increases, the AO score with respect to the fake trajectory increases significantly, while the AO score with respect to the real trajectory decreases significantly. This demonstrates the effectiveness of the end-to-end training process proposed in this paper. After about 8,000 training iterations, the resulting perturbation prevents the tracker from tracking most of the targets in GOT-Val, and the AO with respect to the real trajectory decreases from 0.760 to 0.153. Note that the AO decreases significantly faster at the beginning (training iterations less than 2048). This demonstrates the fast convergence capability of our end-to-end training scheme.
 
 To verify whether the perturbations generated for the template images are difficult to perceive, we evaluate the quality of the input images after the perturbations by the metric SSIM. As shown in Table \ref{tab:iter}, the SSIM value of the perturbed images gradually decreases as the training proceeds, which indicates that the difference between the perturbed images and the original images gradually increases due to the learned adversarial perturbation being added to the clean images. The SSIM value ranges from 0 to 1. If the SSIM is close to 1, the difference between the perturbed images and the original images is small. The SSIM value of the perturbed template image is 0.79, and the SSIM of the perturbed search image (calculated on the subregion where the patch is placed) is 0.56. 
@@ -639,34 +632,7 @@ What's more, our method can perform universal attack, both with respect to the d
   \label{fig:patch_size_table}
 \end{figure}
 
-% \begin{figure}[t]
-%   \centering
-%   \subfigure[64$\times$64]{\label{fig:a}\includegraphics[width=0.15\textwidth]{images_imperceptible/patch_size/64.jpg}}
-%   \subfigure[32$\times$32]{\label{fig:b}\includegraphics[width=0.15\textwidth]{images_imperceptible/patch_size/32.jpg}}
-%   \subfigure[16$\times$16]{\label{fig:c}\includegraphics[width=0.15\textwidth]{images_imperceptible/patch_size/16.jpg}}
-%   \caption{Adversarial patches of different sizes.}
-%   \label{fig:patch_size_vis}
-% \end{figure}
-
 \textit{Ablation Study: Influence of Training Loss} We implemented a series of experiments to analyze the contribution of each loss component. In Table \ref{tab:loss}, we report the attack results on the GOT-Val dataset. The AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.747 when adversarial information is generated using only quality assessment loss, indicating that quality assessment loss can cause a slight degradation in the performance of the tracker. This is because the perturbation information generated using quality assessment loss interferes with the tracker's ability to select the best target. However, the tracker's AO score with respect to the fake trajectory is only 0.148, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to follow the specified trajectory. When the adversarial information is generated using only regression loss, the AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.243, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the accurate bounding box position. When adversarial information is generated using only classification loss, the tracker's AO score decreases from 0.760 to 0.282 with respect to the real trajectory and the AO with respect to the fake trajectory is up to 0.643. This is because the perturbation information generated using classification loss causes the tracker to localize to the fake target instead of the real target's location. In conclusion, all loss terms are beneficial, and the classification/regression term is more important than the quality assessment term.
-
-% \begin{figure*}[t!]
-%   \begin{center}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_BC.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_DEF.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_FM.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IPR.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_IV.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_LR.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_MB.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OCC.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OPR.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_OV.png}
-%     \includegraphics[width=0.32\textwidth]{images_imperceptible/OTB2015/success_plot_OPE_OTB100_SV.png}
-%   \end{center}
-%       \caption{Untargeted attack results of the different trackers under the 11 attributes: out-of-view (OV), occlusion (OCC), illumination variation (IV), out-of-plane rotation (OPR), scale variation (SV),deformation (DEF), low resolution (LR), fast motion (FM), background clutters (BC), motion blur (MB), and in-plane rotation (IPR). The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.}
-%   \label{fig:attr}
-% \end{figure*}
 
 \textit{Ablation Study: Influence of the Adversarial Patch Size} 
 It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 64-by-64, 32-by-32 and 16-by-16 to test the efficiency of their attacks. We evaluate the AO score of SiamFC++ on the perturbed GOT-Val dataset.
@@ -804,39 +770,6 @@ For the template image, we convert it into YCbCr color space, then add the pertu
   \label{fig:YCbCr}
 \end{figure}
 
-\begin{table}[t]
-  \centering
-  \caption{State-of-the-art comparison of untargeted attack performance on OTB2015 in terms of precision score.}
-  \begin{tabular}{@{}rrccc@{}}
-  \toprule
-  \multirow{2}{*}[-1pt]{Method} & \multirow{2}{*}[-1pt]{Tracker} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Attack Cost\\per Frame(ms)\end{tabular}} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Before\\ Attack\end{tabular}} & \multirow{2}{*}[-1pt]{Untargeted Attack} \\
-   &  &  &  &     \\ \midrule
-  RTAA & DaSiamRPN & - & 0.880 & 0.050\\
-  SPARK & SiamRPN & 41.4 & 0.851 & 0.064\\
-  CSA & SiamRPN & 9 & 0.851 & 0.458\\
-  FAN & SiamFC & 10 & 0.720 & 0.180\\
-  TTP & SiamRPN++ & 8 & 0.910 & 0.080 \\
-  \midrule
-  Ours & SiamFC++ & $\sim 0$ & 0.861 & 0.092\\ \bottomrule
-  \end{tabular}
-  \label{tab:SOTA}
-\end{table}
-
-\begin{table}[t]
-  \centering
-  \caption{State-of-the-art comparison of targeted attack performance on OTB2015 in terms of precision score.}
-  \begin{tabular}{@{}rrc@{}}
-  \toprule
-  Method & Tracker &  Targeted Attack \\
-  \midrule
-  FAN & SiamFC  &0.420 \\
-  TTP & SiamRPN++ &0.692 \\
-  \midrule
-  Ours & SiamFC++  &0.795 \\ \bottomrule
-  \end{tabular}
-  \label{tab:SOTA1}
-\end{table}
-
 \subsection{Transferability Analysis}
 
 \uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN, SiamRPN++ and Ocean.}
@@ -889,10 +822,48 @@ In the case of Ocean, the AO with respect to the \textit{real trajectory} drops 
 The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
 }
 
+\subsection{Comparison with Other Methods}
+
+%%%%%%%% 在 OTB2015 上的 SOTA 对比 %%%%%%%%
+\begin{table}[t]
+  \centering
+  \caption{State-of-the-art comparison of untargeted attack performance on OTB2015 in terms of precision score.}
+  \begin{tabular}{@{}rrccc@{}}
+  \toprule
+  \multirow{2}{*}[-1pt]{Method} & \multirow{2}{*}[-1pt]{Tracker} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Attack Cost\\per Frame(ms)\end{tabular}} & \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Before\\ Attack\end{tabular}} & \multirow{2}{*}[-1pt]{Untargeted Attack} \\
+   &  &  &  &     \\ \midrule
+  RTAA & DaSiamRPN & - & 0.880 & 0.050\\
+  SPARK & SiamRPN & 41.4 & 0.851 & 0.064\\
+  CSA & SiamRPN & 9 & 0.851 & 0.458\\
+  FAN & SiamFC & 10 & 0.720 & 0.180\\
+  TTP & SiamRPN++ & 8 & 0.910 & 0.080 \\
+  \midrule
+  Ours & SiamFC++ & $\sim 0$ & 0.861 & 0.092\\ \bottomrule
+  \end{tabular}
+  \label{tab:SOTA}
+\end{table}
+\begin{table}[t]
+  \centering
+  \caption{State-of-the-art comparison of targeted attack performance on OTB2015 in terms of precision score.}
+  \begin{tabular}{@{}rrc@{}}
+  \toprule
+  Method & Tracker &  Targeted Attack \\
+  \midrule
+  FAN & SiamFC  &0.420 \\
+  TTP & SiamRPN++ &0.692 \\
+  \midrule
+  Ours & SiamFC++  &0.795 \\ \bottomrule
+  \end{tabular}
+  \label{tab:SOTA1}
+\end{table}
+\textit{OTB2015 Dataset} We compare the attack method proposed in this paper with the latest attack methods, including CSA \cite{CSA}, RTAA \cite{RTAA}, SPARK \cite{SPARK}, FAN \cite{FAN} and TTP \cite{TTP}. We report the untargeted attack result (Table \ref{tab:SOTA}) and the targeted attack result (Table \ref{tab:SOTA1}) on OTB2015.
+SPARK \cite{SPARK} reduces the accuracy score with respect to the real trajectory from 0.851 to 0.064. However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time.
+RTAA \cite{RTAA} reduces the accuracy score with respect to the real trajectory from 0.880 to 0.050. However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
+Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
+
+%%%% 在VOT上的SOTA对比 %%%%
 \begin{table*}[t]
   \centering
-  %\renewcommand\tabcolsep{3.5pt} % 调整表格列间的长度
-  %\footnotesize
   \caption{State-of-the-art comparison of untargeted attack performance on VOT2016/2018 in terms of accuracy, robustness and expected average overlap (EAO).}
   \begin{tabular}{rrrcccccc}
   \toprule
@@ -908,23 +879,6 @@ The results show good transferability of our attacks to different tracking archi
   \end{tabular}
   \label{tab:sota_vot}
 \end{table*}
-
-\subsection{Comparison with Other Methods}
-
-% \begin{figure}[t]
-%   \begin{center}
-%     \includegraphics[width=0.48\textwidth]{images_imperceptible/SOTA.png}
-%   \end{center}
-%   \caption{Precision score with respect to the \textit{real trajectory} on OTB2015.}
-%   \label{fig:SOTA}
-% \end{figure}
-
-\textit{OTB2015 Dataset} We compare the attack method proposed in this paper with the latest attack methods, including CSA \cite{CSA}, RTAA \cite{RTAA}, SPARK \cite{SPARK}, FAN \cite{FAN} and TTP \cite{TTP}. We report the untargeted attack result (Table \ref{tab:SOTA}) and the targeted attack result (Table \ref{tab:SOTA1}) on OTB2015.
-SPARK \cite{SPARK} reduces the accuracy score with respect to the real trajectory from 0.851 to 0.064. However, SPARK needs to generate distinct adversarial examples for every search image through heavy iterative schemes, which is time-consuming to attack online-tracking in real time.
-RTAA \cite{RTAA} reduces the accuracy score with respect to the real trajectory from 0.880 to 0.050. However, RTAA only performs the untargeted attacks for trackers, which is less challenging than the targeted attacks in this paper, as we aim to create arbitrary, complex trajectories at test time. 
-Recently, Liang et al. proposed a fast attack network (FAN) \cite{FAN} for attacking SiamFC trackers. To perform untargeted attacks, FAN proposes a drift loss that shifts the tracker's prediction of the target's position. The tracking error accumulates over time until the tracker loses the target completely. To perform targeted attacks, FAN proposes embedding feature loss for improving the similarity between the features of the adversarial sample and the features of regions specified by a particular trajectory. FAN can reduce the accuracy score with respect to the real trajectory from 0.720 to 0.180. However, the accuracy score with respect to fake trajectories is only 0.420. Similar to SCA, FAN also requires running a generative network for each frame to obtain adversarial information. Nakka et al. \cite{TTP} proposed the temporally transferable perturbations (TTP) for attacking the SiamRPN++ tracker. TTP generates a single adversarial perturbation from the template image and adds this perturbation to each search image of the video. TTP reduces the accuracy score with respect to the real trajectory from 0.910 to 0.080, which is effective for untargeted attacks. However, the accuracy score with respect to the fake trajectory is only 0.692, which demonstrates that TTP's performance of targeted attacks is limited. In addition, this method needs to run a generative network for each video to obtain adversarial information, thus requires the computational and storage resources of the object tracking platform, which makes it difficult to deploy the method to resource-constrained platforms. Our method can reduce the accuracy score with respect to real trajectories from 0.861 to 0.092. The accuracy score is up to 0.795 with respect to fake trajectories, which is significantly better than other methods, and only needs to perform the add operation to generate adversarial information for any video without gradient optimization or network inference.
-
-%\uline{
 \textit{VOT2016/2018 Dataset} We compare the untargeted attack result with CSA \cite{CSA}, RTAA \cite{RTAA}, FAN \cite{FAN} and TTP \cite{TTP} on VOT2016 and VOT2018 (Table \ref{tab:sota_vot}). 
 RTAA reduces the accuracy with respect to the real trajectory from 0.625 to 0.521 on VOT2016.
 CSA \cite{CSA} is a Siamese tracking attack method called cooling-shrinking attack. CSA can suppress the peak region on the heat map reflecting the target location, which is used to attack the tracker's targeting ability. CSA can also simultaneously force the tracker's predicted bounding box to shrink, which is used to attack the bounding box regression capability of the tracker. However, this method requires running a generative network for each frame to obtain adversarial information, making it difficult to meet the demand for real-time tracking. CSA reduces the EAO with respect to the real trajectory from 0.261 to 0.076 on VOT2018. Compared to CSA, our method can achieve better untargeted attack results on VOT2018 with an EAO of 0.007.
