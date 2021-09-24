@@ -651,7 +651,7 @@ Therefore, it is effective to use the predicted boxes instead of ground truth bo
 
 \begin{table}[t]
   \centering
-  \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information.}
+  \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information. w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.}
   \begin{tabular}{rrcccc}
   \toprule
   \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
