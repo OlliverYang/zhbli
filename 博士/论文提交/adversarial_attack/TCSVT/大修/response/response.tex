@@ -514,16 +514,6 @@ The shortcoming of our method is the more conspicuous perturbation values compar
 For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels. The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network. The other steps of the training process are the same as the attack method in Section III. The experimental result is shown in Table \ref{table:perturb}. As we can see, the performance of attacking the YCbCr color space is slightly degraded compared to attacking the RGB color space. Specifically, in terms of AO on GOT-Val, the targeted attack performance is 0.682, and the untargeted attack performance is 0.246. However, attacking the YCbCr color space brings better imperceptibility (see Figure \ref{fig:YCbCr}). Compared with attacking the RGB space, the SSIM of $p$ increases from 0.56 to 0.78. The SSIM of $\delta$ remains unchanged at 0.79.
 }
 
-% \begin{table}[]
-%   \begin{tabular}{lllllll}
-%   \caption{Performance of the new attack method. We can see SSIM increases.}
-%           & \multicolumn{2}{l}{Untargeted Attack} & \multicolumn{2}{l}{Targeted Attack} & \multirow{2}{*}{SSIM x} & \multirow{2}{*}{SSIM z} \\
-%           & AO                & SR                & AO               & SR               &                         &                         \\
-%   method1 & 0.1747            & 0.1442            & 0.8448           & 0.8972           & 0.56                    & 0.79                    \\
-%   method2 &                   &                   &                  &                  & 0.78                    & 0.79                   
-%   \end{tabular}
-% \end{table}
-
 %%%% 问题 3.2 %%%%
 \textit{2. The proposed method and offline training phase should be explained more clearly. For instance, the termination of offline training or offline optimization is missed affecting perturbation values.}
 
@@ -575,30 +565,25 @@ We utilize the Iterative Target Class Method to update the perturbation values d
 \uline{``Analysis of the impact of each loss component on GOT-Val.''}
 \textbf{in Section IV.D of the revised manuscript.}
 
-% table 7
-\textbf{In Table VII, we have replaced ``Transferability to different backbones on GOT-Val.'' with}
+% table 12
+\textbf{In Table XII, we have replaced ``Transferability to different backbones on GOT-Val.'' with}
 \uline{``Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, i.e., ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.''}
 \textbf{in Section IV.E of the revised manuscript.}
 
-% table 8
-\textbf{In Table VIII, we have replaced ``Transferability to different tracking architectures on OTB2015.'' with}
+% table 13
+\textbf{In Table XIII, we have replaced ``Transferability to different tracking architectures on OTB2015.'' with}
 \uline{``Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art anchor-based trackers: AlexNet-based SiamRPN \cite{SiamRPN} and ResNet-based SiamRPN++ \cite{SiamRPN++}.''}
 \textbf{in Section IV.E of the revised manuscript.}
 
-% table 10
-\textbf{In Table X, we have replaced ``Untargeted attack: Precision score on OTB2015.'' with}
+% table 14
+\textbf{In Table XIV, we have replaced ``Untargeted attack: Precision score on OTB2015.'' with}
 \uline{``State-of-the-art comparison of untargeted attack performance on OTB2015 in terms of precision score.''}
 \textbf{in Section IV.F of the revised manuscript.}
 
-% table 11
-\textbf{In Table XI, we have replaced ``Targeted attack: Precision score on OTB2015.'' with}
+% table 15
+\textbf{In Table XV, we have replaced ``Targeted attack: Precision score on OTB2015.'' with}
 \uline{``State-of-the-art comparison of targeted attack performance on OTB2015 in terms of precision score.''}
 \textbf{in Section IV.F of the revised manuscript.}
-
-% % figure 7
-% \textbf{In Figure VII, we have replaced ``Adversarial patches of different sizes.'' with}
-% \uline{``Influence of the Adversarial Patch Size. In our experiment, we produce three different sizes of the adversarial patch, namely, 64-by-64, 32-by-32 and 16-by-16 to test the efficiency of their attacks. We evaluate the AO score of SiamFC++ on the perturbed GOT-Val dataset.''}
-% \textbf{in Section IV.D of the revised manuscript.}
 
 % figure 4
 \textbf{In Figure 4, we have replaced ``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).'' with}
@@ -738,7 +723,7 @@ SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking
 \textbf{Besides, we have evaluated the transferability to the anchor free tracker OCEAN in Setcion IV.E of the revised manuscript. For your convenience of cross review, the new text is given as follows.}
 
 \begin{table}[t]
-  \renewcommand\thetable{XV}
+  \renewcommand\thetable{XIII}
   \centering
   \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more state-of-the-art trackers: SiamRPN \cite{SiamRPN}, SiamRPN++ \cite{SiamRPN++} and Ocean \cite{zhang2020ocean}.}
   \begin{tabular}{rcccc} 
