@@ -485,11 +485,11 @@ For your convenience in cross-checking, the new text is given as follows.}
   \includegraphics[width=.8\textwidth]{images_imperceptible/1.pdf}
   \caption{Visualization of the perturbations.
   % 介绍什么是 RGB Attack
-  Figure (a) demonstrates the perturbations trained by the RGB attack method, i.e., the attack attack method proposed in Section III.
+  Figure (a) demonstrates the perturbations trained by the RGB attack method, i.e., the attack method proposed in Section III.
   % 介绍什么是 YCbCr Attack
   Figure (b) demonstrates the perturbations trained by the YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
   For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
-  The perturbed template and search images are then converted into RGB color scpace and fed into the tracking network.
+  The perturbed template and search images are then converted into RGB color space and fed into the tracking network.
   The other steps of the training process are the same as the attack method in Section III.
   Attacking the YCbCr color space brings better imperceptibility. Compared with attacking the RGB space, the SSIM of $p$ increases from 0.56 to 0.78. The SSIM of $\delta$ remains unchanged at 0.79.}
   \label{fig:YCbCr}
@@ -498,7 +498,7 @@ For your convenience in cross-checking, the new text is given as follows.}
 \begin{table}[t]
   \renewcommand\thetable{XI}
   \centering
-  \caption{Influence of different ways to perturb the search image. The first row demonstrates the the attack performance of the RGB attack method, i.e., the attack attack method proposed in Section III. The second row demonstrates the attack performance of YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of different ways to perturb the search image. The first row demonstrates the attack performance of the RGB attack method, i.e., the attack attack method proposed in Section III. The second row demonstrates the attack performance of YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
   \label{table:perturb}
   \begin{tabular}{@{}rcccccc@{}}
   \toprule
@@ -531,7 +531,7 @@ For the template image, we convert it into YCbCr color space, then add the pertu
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
@@ -761,7 +761,7 @@ SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
     \vspace{-0.1cm}
