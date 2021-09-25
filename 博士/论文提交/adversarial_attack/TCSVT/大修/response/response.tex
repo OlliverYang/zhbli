@@ -593,7 +593,7 @@ The main limitation of our work is the values of our universal perturbations are
   % (1) We need to do the physical attack.
   % (2) We need to be imperceptible.
   % 使用同一个扰动同时攻击多个视觉任务，包括图像分类，检测，视频目标跟踪和分割。
-  In future work, we expect that it will be possible to demonstrate the existence of a single perturbation to attack multi vision tasks, including image classification, object detection and video object tracking/segementation.
+  In future work, we expect that it will be possible to demonstrate the existence of a single perturbation to attack multi vision tasks, including image classification, object detection and video object tracking/segmentation.
   % 以更小的扰动取得更高的攻击效果。（呼应缺点之：扰动大）
   % Use more imperceptible perturbations to achieve high attack performance.
   % 本文所提出的对抗性信息被添加在数字图像上，从而影响跟踪器的跟踪效果。然而所提出的对抗性信息难以用于执行孪生跟踪器的物理攻击，即将对抗扰动打印出来添加到物理世界的真实目标上，从而影响孪生跟踪系统的性能。因为对抗扰动的打印过程可能改变扰动的值，且相机传感器可能无法感知较小的扰动。可能的解决方案是借助EOT生成针对相机距离和角度具有鲁棒性的物理扰动，使得在各种成像条件下，跟踪系统都无法对带有对抗性信息的真实目标进行正确跟踪。
