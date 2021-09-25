@@ -208,7 +208,7 @@ As a consequence, universal adversarial perturbations \cite{UAP, shafahi2020univ
   \end{gathered}
 \end{equation}  
 where the input pair $(\textbf x,\textbf z)$ is randomly picked from the training set. 
-Note that universal adversarial perterbations are added to the whole image and $y^{fake}$ is kept constant during the training process.
+Note that universal adversarial perturbations are added to the whole image and $y^{fake}$ is kept constant during the training process.
 As shown in \cite{hirano2020simple}, this vanilla UAP method is limited to untargeted attacks.
 To achieve universal targeted attacks, one feasible way is to paste a small (universal) adversarial patch into the search images adhering to the predefined trajectory, so that the tracker outputs the location and size of the adversarial patch instead of the real target:
 \begin{equation}
@@ -638,7 +638,7 @@ What's more, our method can perform universal attack, both with respect to the d
 It's important to make the size of the adversarial patch small to avoid suspicion. In our experiment, we produce three different sizes of the adversarial patch, namely, 64-by-64, 32-by-32 and 16-by-16 to test the efficiency of their attacks. We evaluate the AO score of SiamFC++ on the perturbed GOT-Val dataset.
 As shown in Figure \ref{fig:patch_size_table}, the 32-by-32 patch can make the AO score drop dramatically to 0.146 and its area only accounts for 1\% of the search image area.
 
-\textit{Ablation Study: Performance w/o ground truth information} Our perterbations are trained using datasets with ground truth box information.
+\textit{Ablation Study: Performance w/o ground truth information} Our perturbations are trained using datasets with ground truth box information.
 % 然而实际上我们可能仅知道视频内容而不知道边框信息。这时我们可以在视频上运行需要被攻击的跟踪器，为每帧预测一个跟踪框。预测的跟踪框可被视为 ground truth 用于训练我们的攻击算法。
 However, we may only know the video content but without the ground truth box information in practice. When the ground truth box information of videos is not available, we can run the tracker (that needs to be attacked) on videos, generating one box for every frame. The predicted boxes can be considered as ground truth for training our attack method. To verify this, we run the off-the-shelf SiamFC++ tracker on videos in GOT-10k training set. The predicted bounding boxes are regarded as the ground truth box information of GOT-10k training set to train perturbations.
 \uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
@@ -759,9 +759,9 @@ For the template image, we convert it into YCbCr color space, then add the pertu
   \includegraphics[width=0.48\textwidth]{images_imperceptible/1.pdf}
   \caption{\uline{Visualization of the perturbations.
   % 介绍什么是 RGB Attack
-  Figure (a) demonstrates the pereturbations trained by the RGB attack method, i.e., the attack method proposed in Section III.
+  Figure (a) demonstrates the perturbations trained by the RGB attack method, i.e., the attack method proposed in Section III.
   % 介绍什么是 YCbCr Attack
-  Figure (b) demonstrates the perturbations trained by the YCbCr attack method: first we convert the search image into YCbCr color space, then add pereturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
+  Figure (b) demonstrates the perturbations trained by the YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
   For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
   The perturbed template and search images are then converted into RGB color space and fed into the tracking network.
   The other steps of the training process are the same as the attack method in Section III.
@@ -772,7 +772,7 @@ For the template image, we convert it into YCbCr color space, then add the pertu
 
 \subsection{Transferability Analysis}
 
-\uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perterbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN, SiamRPN++ and Ocean.}
+\uline{In this sub-section, we analyze the transferability of the proposed attack method. Specifically, the perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to other tracking networks including SiamFC++\_ShuffleNet, SiamFC++\_AlexNet, SiamPRN, SiamRPN++ and Ocean.}
 
 %%%%%%%% 不同backbone的可迁移性 %%%%%%%%
 \begin{table}[t]
