@@ -25,6 +25,8 @@
 \usepackage{enumitem}
 \usepackage{color}
 \usepackage{amssymb}  % 用于打对号
+\newcommand{\eg}{e.g.}
+\newcommand{\ie}{i.e.}
 \urlstyle{same}
 
 \newtheorem{example}{Example}
@@ -711,13 +713,13 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textbf{We have discussed several state-of-the-art anchor free Siamese trackers at the related work. For your convenience of cross review, the new text is given as follows.}
 
-\uline{
+\uline{In this anchor-free paradigm, many recent works (e.g., \cite{zhang2020ocean}, \cite{cui2020fully}, \cite{9157720}) are dedicated to more robust and efficient visual tracking based on various anchor-free settings.
 % Ocean
-Ocean \cite{zhang2020ocean} directly predicts the position and scale of target objects in an anchor-free fashion. Since each pixel in groundtruth boxes is well trained, the tracker is capable of rectifying inexact predictions of target objects during inference.
+Ocean \cite{zhang2020ocean} directly predicts the position and scale of target objects in an anchor-free fashion; since each sample position in groundtruth boxes is well trained, the tracker is capable of rectifying inexact predictions of target objects during inference.
 % FCOT
 FCOT \cite{cui2020fully} introduces an online regression model generator (RMG) based on the carefully designed anchor-free box regression branch, which enables the tracker to be more effective in handling target deformation during tracking procedure.
 %  SiamCAR
-SiamCAR \cite{9157720} is both proposal and anchor free, and decomposes tracking into two subproblems: one classification problem and one regression task. SiamCAR takes one unique response map to predict object location and bounding box directly.
+SiamCAR \cite{9157720} is both anchor and proposal free, and takes one unique response map to predict object location and bounding box directly; this setting significantly reduces the number of hyper-parameters, which keeps the tracker from complicated parameter tuning and makes the tracker significantly simpler, especially in training.
 }
 
 \textbf{Besides, we have evaluated the transferability to the anchor free tracker OCEAN in Setcion IV.E of the revised manuscript. For your convenience of cross review, the new text is given as follows.}
