@@ -523,35 +523,33 @@ For the template image, we convert it into YCbCr color space, then add the pertu
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~\cite{FGSM}, \cite{DBLP:conf/iclr/KurakinGB17a}). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~\cite{FGSM} and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
 \begin{equation}
-    I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
+    I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I J(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
-        I_{N+1}^{adv} = I_N^{adv}+\epsilon \cdot \text{ sign}(\nabla_I L(I_N^{adv},y_{true})),
+        I_{N+1}^{adv} = Clip_{I, \epsilon}\left\{I_N^{adv}+\epsilon \cdot \text{ sign}(\nabla_I J(I_N^{adv},y_{true}))\right\},
     \end{gathered}
 \end{equation}
-%\uline{where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.}
-\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where the pixel values of intermediate results are clipped after each step to ensure that they are in
+an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
-      I_{N+1}^{adv} = I_N^{adv}-\epsilon \cdot \text{ sign}(\nabla_I L(I_N^{adv},y_{target})).
+      I_{N+1}^{adv} = Clip_{I, \epsilon}\left\{I_N^{adv}-\epsilon \cdot \text{ sign}(\nabla_I J(I_N^{adv},y_{target}))\right\}.
   \end{gathered}
   \label{equ:itcm}
 \end{equation}
 
-\uline{
-We utilize the Iterative Target Class Method to update the perturbation values during the training process. At each training step, the perturbations are updated as follows:}
-
+\uline{We utilize this Iterative Target Class Method to update our perturbation values during the training process. To achieve a balance between the attack efﬁciency and the perturbation perceptibility, we constrain the perturbation values in the loss function of Eq.~(10) instead of using the clip operation. At each training step, our perturbations are updated as follows:}
 \begin{gather}
-  \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
-  p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
-  \end{gather}
+\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
+p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
+\end{gather}
 
 \textit{3. The descriptions of figures and tables are not self-explanatory.}
 
@@ -748,32 +746,32 @@ SiamCAR \cite{9157720} is both anchor and proposal free, and takes one unique re
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing the perturbation update process in offline training, we first revisit the popular adversarial example generation methods. One of the simplest methods to generate adversarial images $I^{adv}$ works by linearizing loss function in $L_{\infty}$ neighbourhood of a clean image and finds exact maximum of linearized function using following closed-form equation \cite{FGSM}:}
+\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~\cite{FGSM}, \cite{DBLP:conf/iclr/KurakinGB17a}). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~\cite{FGSM} and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
 \begin{equation}
-    I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
+    I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I J(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input image, and the values of the pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$. $L(I, y)$ is the cost function of the neural network for the attack purpose, given image $I$ and label $y$. $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to the Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
-        I_{N+1}^{adv} = I_N^{adv}+\epsilon \cdot \text{ sign}(\nabla_I L(I_N^{adv},y_{true})),
+        I_{N+1}^{adv} = Clip_{I, \epsilon}\left\{I_N^{adv}+\epsilon \cdot \text{ sign}(\nabla_I J(I_N^{adv},y_{true}))\right\},
     \end{gathered}
 \end{equation}
-%\uline{where $Clip_{I, \epsilon} \left\{ I' \right\}$ is the function which performs per-pixel clipping of the image $I'$, so that the result will be in $L_{\infty}$ $\epsilon$-neighbourhood of the source image $I$.}
-\uline{The BIM can be easily made into an attacker for a specific desired target class, called the Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where the pixel values of intermediate results are clipped after each step to ensure that they are in
+an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
-      I_{N+1}^{adv} = I_N^{adv}-\epsilon \cdot \text{ sign}(\nabla_I L(I_N^{adv},y_{target})).
+      I_{N+1}^{adv} = Clip_{I, \epsilon}\left\{I_N^{adv}-\epsilon \cdot \text{ sign}(\nabla_I J(I_N^{adv},y_{target}))\right\}.
   \end{gathered}
+  \label{equ:itcm}
 \end{equation}
 
-\uline{We utilize the Iterative Target Class Method to update the perturbation values during the training process. At each training step, the perturbations are updated as follows:}
-
+\uline{We utilize this Iterative Target Class Method to update our perturbation values during the training process. To achieve a balance between the attack efﬁciency and the perturbation perceptibility, we constrain the perturbation values in the loss function of Eq.~(10) instead of using the clip operation. At each training step, our perturbations are updated as follows:}
 \begin{gather}
-  \delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
-  p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
+\delta_{k+1} = \delta_{k} - \epsilon_1 \cdot \text{sign}(\nabla_{\delta_k}L)\\
+p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \end{gather}
 
 
