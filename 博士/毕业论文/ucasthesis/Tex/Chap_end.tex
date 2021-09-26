@@ -45,11 +45,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。
 为实现聚合时间信息的目的，我们在孪生网络的特征提取网络中沿时间维度 \cite{lin2019tsm} 移动通道特征。
 请注意，由于视频中目标的运动 \cite{zhu2017flow}，相邻帧中同一目标的特征通常不会在空间上对齐，因此仅对残差层 \cite{lin2019tsm} 进行时间平移，以保证孪生跟踪器的特征学习能力。
-与其他时间融合方法 \cite{tao2016siamese, gladh2016deep} 不同，本章采用的方法能够在大规模数据集上进行端到端的训练。
-%本章提出的时间聚合模块在孪生网络中进行了端到端的培训。
-%The proposed temporal aggregation module is trained end-to-end in the siamese network.
-%(This module enables our module to be trained end-to-end on large-scale datasets.)
-此外，本章采用的时间融合方法易于实现，而无需更改孪生跟踪架构或使用光流 \cite{zhu2018end} 信息。
+与其他时间融合方法 \cite{tao2016siamese, gladh2016deep} 不同，本章采用的方法能够在大规模数据集上进行端到端训练。此外，本章采用的时间融合方法易于实现，而无需更改孪生跟踪架构或使用光流 \cite{zhu2018end} 信息。
 
 %improve the generalization ability on bad object.
 %Our insight is that, if we only rely on the traditional training method, the bad image in the training data will be over wheeled by the easy cases. So the tracker shows bad performance when meeting with bad image during testing. To solve this problem, we take advantage of the recent progress in adversarial learning to increase the robustness of object features.
@@ -74,7 +70,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 
 \section{相关工作}
 \subsection{时间信息在视频动作识别中的应用}
-远程时间结构在理解动作视频的动态过程中起着重要的作用。但是，主流的卷积神经网络框架通常集中在表观信息和短期运动上，因此缺乏整合远程时间结构的能力。最近，有一些尝试 \cite{Motionlets} 来解决这个问题。这些方法主要依赖于具有预定采样间隔的密集时间采样。当将这种方法应用于长视频序列时，将导致过高的计算成本，这限制了其在现实世界中的应用，并存在丢失长视频中重要信息的风险。因此，在 文献 \cite{TSN} 中，Wang 等人基于远程时间结构建模的思想，提出了一种视频动作识别的新型框架。该框架结合了稀疏的时间采样策略和视频级别的监督，可以使用整个动作视频进行高效地学习。该框架采用稀疏采样方案在长视频序列上提取短视频片段，其中采样点沿时间维度均匀分布。在此基础上，采用分层结构聚合来自采样视频段的信息。因此，该算法能够对整个视频的远程时间结构进行建模。此外，这种稀疏的采样策略可以使用较低的成本保存视频信息，从而可以在合理的时间和计算资源预算下，在长视频序列上进行端到端学习。% Temporal Segment Networks: Towards Good Practices for Deep Action Recognition 1608
+远程时间结构在理解动作视频的动态过程中起着重要的作用。但是，主流的卷积神经网络框架通常集中在表观信息和短期运动上，因此缺乏整合远程时间结构的能力。最近，有一些尝试 \cite{Motionlets} 来解决这个问题。这些方法主要依赖于具有预定采样间隔的密集时间采样。当将这种方法应用于长视频序列时，将导致过高的计算成本，这限制了其在现实世界中的应用，并存在丢失长视频中重要信息的风险。因此，在 文献 \cite{TSN} 中，Wang 等人基于远程时间结构建模的思想，提出了一种视频动作识别的新型框架。该框架结合了稀疏的时间采样策略和视频级别的监督，可以使用整个动作视频进行高效学习。该框架采用稀疏采样方案在长视频序列上提取短视频片段，其中采样点沿时间维度均匀分布。在此基础上，采用分层结构聚合来自采样视频段的信息。因此，该算法能够对整个视频的远程时间结构进行建模。此外，这种稀疏的采样策略可以使用较低的成本保存视频信息，从而可以在合理的时间和计算资源预算下，在长视频序列上进行端到端学习。% Temporal Segment Networks: Towards Good Practices for Deep Action Recognition 1608
 在文献 \cite{TRN} 中，Zhou 等人认为时间关系推理使人类能够根据过去情况分析当前情况，并就下一步可能发生的情况提出假设。时间关系推理对于视频动作识别至关重要，它构成了描述事件的基础。因此，作者提出了一种有效且可解释的网络模块，即时间关系网络（temporal relational reasoning，TRN），该模块旨在学习和推理多个时间尺度上视频帧之间的时间依赖性。% Temporal Relational Reasoning in Videos 1711
 在文献 \cite{AdaFuse} 中，Meng 等人认为时间建模是有效的视频动作识别的关键。虽然了解时间信息可以提高动态动作的识别精度，但是消除时间冗余和重用过去的特征可以大大节省计算量，从而实现有效的动作识别。因此，作者提出了一种称为 AdaFuse 的自适应时间融合网络，该网络可以动态融合当前和过去特征图中的通道，以实现强大的时间建模，从而提高识别精度和效率。% ADAFUSE: ADAPTIVE TEMPORAL FUSION NETWORK FOR EFFICIENT ACTION RECOGNITION
 \subsection{时间信息在视频目标检测中的应用}
