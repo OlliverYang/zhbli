@@ -41,7 +41,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 %(We introduce a novel siamese tracking architecture equipped with a temporal aggregation module to make full use of inter-frame information.)
 %(In this work, to deal with the issues raised above, we propose a novel tracker to aggregate features of adjacent frames by ...)
 %(In this paper, we develop an end-to-end temporal aggregation module in siamese architecture to utilize both the power of siamese trackers and the inter-frame information.)
-我们提出了一种新型孪生跟踪体系结构，配备有时间聚合模块，该模块通过聚合相邻帧中的特征来改善每帧中目标的特征表示。
+我们提出了一种新型孪生跟踪架构，配备有时间聚合模块，该模块通过聚合相邻帧中的特征来改善每帧中目标的特征表示。
 这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。
 为实现聚合时间信息的目的，我们在孪生网络的特征提取网络中沿时间维度 \cite{lin2019tsm} 移动通道特征。
 请注意，由于视频中目标的运动 \cite{zhu2017flow}，相邻帧中同一目标的特征通常不会在空间上对齐，因此仅对残差层 \cite{lin2019tsm} 进行时间平移，以保证孪生跟踪器的特征学习能力。
