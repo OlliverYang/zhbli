@@ -347,7 +347,7 @@ For your convenience in cross-checking, the new text is given as follows.
   \caption{Visualization of the manually generated similar random patterns.}
   \label{fig:random}
 \end{figure}
-\uline{\textit{Use Other Similar Random Patterns.} To further illustrate the effectiveness of our proposed method, we manually generate similar random patterns and add them on the template and search regions (see Fig. \ref{fig:random}) to show their attack performance. 
+\uline{\textit{Use Other Similar Random Patterns.} ~To further illustrate the effectiveness of our proposed method, we manually generate similar random patterns and add them on the template and search regions (see Fig. \ref{fig:random}) to show their attack performance. 
 Specifically, we design two kinds of random patterns: (1) the random pattern similar to our trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
 We replace the trained perturbations with the above random patterns to attack SiamFC++\_GoogleNet, and experimentally evaluate them on GOT-Val.
 As shown in Table \ref{table:noise}, these random patterns cannot effectively attack the tracker.
@@ -384,7 +384,7 @@ As shown in Table \ref{table:noise}, these random patterns cannot effectively at
 ``\uline{However, CNN attacks are usually expected to be imperceptible whereas the above method has to paste an obviously noticeable \textit{fake target} patch into tracking frames, which raises the risk of being suspected.}''
 \textbf{in Section III.A of the revised manuscript.}
 
-\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.'' with}
+\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},$ $\frac{y_0+y_1}{2})$.'' with}
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
@@ -512,11 +512,13 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 \textbf{in Section IV.E of the revised manuscript.}
 
 \textbf{In Table XII, we have replaced ``Transferability to different backbones on GOT-Val.'' with}
-\uline{``Transferability to different backbones of our perturbations trained on SiamFC++\_GoogleNet. It is evaluated on GOT-Val.''}
+\uline{``Transferability to different backbones of our perturbations trained on SiamFC+}
+\uline{+\_GoogleNet. It is evaluated on GOT-Val.''}
 \textbf{in Section IV.F of the revised manuscript.}
 
 \textbf{In Table XIII, we have replaced ``Transferability to different tracking architectures on OTB2015.'' with}
-\uline{``Transferability to different tracking architectures of our perturbations trained on SiamFC++\_GoogleNet. It is evaluated on OTB2015.''}
+\uline{``Transferability to different tracking architectures of our pertur-
+bations trained on SiamFC++\_GoogleNet. It is evaluated on OTB2015.''}
 \textbf{in Section IV.F of the revised manuscript.}
 
 % table 14
@@ -585,7 +587,8 @@ Specifically, the attacker forces the tracker to follow a fixed direction in eac
 ``\uline{However, CNN attacks are usually expected to be imperceptible whereas the above method has to paste an obviously noticeable \textit{fake target} patch into tracking frames, which raises the risk of being suspected.}''
 \textbf{in Section III.A of the revised manuscript.}
 
-\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.'' with}
+\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},$
+$\frac{y_0+y_1}{2})$.'' with}
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
@@ -659,7 +662,8 @@ SiamCAR [22] is both anchor and proposal free, and takes one unique response map
   \end{tabular}
   \label{tab:arch}
 \end{table}
-\uline{\textit{Transferability to Different Tracking Architectures.} We also evaluate the transferability of our attacks when applying the perturbations to three more state-of-the-art trackers: SiamRPN [23], SiamRPN++ [24] and Ocean [20]. SiamRPN and SiamRPN++ are anchor-based trackers, and Ocean is an anchor-free tracker. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the real trajectory decreases from 0.666 to 0.483 and the performance of SiamRPN++ is decreased from 0.676 to 0.418. In the case of Ocean, the AO with respect to the real trajectory decreases from 0.902 to 0.282. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
+\uline{\textit{Transferability to Different Tracking Architectures.} We also evaluate the transferability of our attacks when applying the perturbations to three more state-of-the-art trackers: SiamRPN [23], SiamRPN++ [24] and Ocean [20]. SiamRPN and SiamRPN++ are anchor-
+based trackers, and Ocean is an anchor-free tracker. The experimental results are shown in Table \ref{tab:arch}. In the case of SiamRPN, the AO with respect to the real trajectory decreases from 0.666 to 0.483 and the performance of SiamRPN++ is decreased from 0.676 to 0.418. In the case of Ocean, the AO with respect to the real trajectory decreases from 0.902 to 0.282. The results show good transferability of our attacks to different tracking architectures, even if the generated perturbations are applied to anchor-based trackers.
 }
 
 \textit{2. The model is trained based on Eq.11 and Eq.12. It is not clear why the sign function is introduced. It is also suggested to describe the derivation of these two equations in detail.}
@@ -729,7 +733,8 @@ an $\epsilon$-neighbourhood of the original image. The BIM method can be easily 
 ``\uline{However, CNN attacks are usually expected to be imperceptible whereas the above method has to paste an obviously noticeable \textit{fake target} patch into tracking frames, which raises the risk of being suspected.}''
 \textbf{in Section III.A of the revised manuscript.}
 
-\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.'' with}
+\textbf{We have  replaced ``$A_add$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},$
+$\frac{y_0+y_1}{2})$.'' with}
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
