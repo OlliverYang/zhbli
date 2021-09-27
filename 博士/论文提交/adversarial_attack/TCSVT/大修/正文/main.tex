@@ -16,7 +16,7 @@
 \usepackage{amsmath}
 \newcommand{\eg}{e.g.}
 \newcommand{\ie}{i.e.}
-\renewcommand{\uline}{}
+%\renewcommand{\uline}{}
 
 % 题目
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -712,7 +712,9 @@ For the targeted attack, only perturbing the template/search image leads to the 
 
 \textit{Influence of Different Training Loss Components.} We implement a series of experiments to analyze the contribution of each loss component. In Table \ref{tab:loss}, we report the attack results on the GOT-Val dataset. The AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.747 when adversarial information is generated using only quality assessment loss, indicating that quality assessment loss can cause a slight degradation in the performance of the tracker.
 %This is because the perturbation information generated using quality assessment loss interferes with the tracker's ability to select the best target. 
-However, the tracker's AO score with respect to the \textit{fake trajectory} is only 0.148, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to follow the specified trajectory. When the adversarial information is generated using only regression loss, the AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.243, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the accurate bounding box position. When adversarial information is generated using only classification loss, the tracker's AO score decreases from 0.760 to 0.282 with respect to the real trajectory and the AO with respect to the \textit{fake trajectory} is up to 0.643. This is because the perturbation information generated using classification loss causes the tracker to localize to the fake target instead of the real target's location. In conclusion, all loss terms are beneficial, and the classification/regression term is more important than the quality assessment term.
+However, the tracker's AO score with respect to the \textit{fake trajectory} is only 0.148, indicating that the perturbations generated using quality assessment loss alone can barely cause the tracker to follow the specified trajectory.
+%When the adversarial information is generated using only regression loss, the AO score of the tracker with respect to the real trajectory decreases from 0.760 to 0.243, indicating that regression loss can cause a large degradation in the tracker's performance. This is because the perturbation information generated using regression loss corrupts the tracker's ability to predict the accurate bounding box position. 
+When adversarial information is generated using only classification loss, the tracker's AO score decreases from 0.760 to 0.282 with respect to the real trajectory and the AO with respect to the \textit{fake trajectory} is up to 0.643. This is because the perturbation information generated using classification loss causes the tracker to localize to the fake target instead of the real target's location. In conclusion, all loss terms are beneficial, and the classification/regression term is more important than the quality assessment term.
 
 \begin{table}[t]
   \centering
@@ -938,6 +940,9 @@ Extensive experiments on several popular datasets show that our method can effec
 \uline{In the future work, we expect that it will be possible to further reduce the possible suspicion by increasing the perturbation's imperceptibility while maintaining the attack efficiency.}
 % By studying the attack method of Siamese trackers, we argue that the disadvantage of Siamese trackers is that template matching-based tracking mechanism is vulnerable to attacks, i.e., if both the template and the search image are perturbed at the same time, then the tracking algorithm can easily be misled.
 % The implication for improving the tracking robustness is to make the tracker aware of the semantic information of the target being tracked, rather than relying on templates alone, so that the semantic information can be relied on to ensure tracking robustness.
+
+\section*{Acknowledgments}
+The authors would like to thank the reviewers for their constructive comments and suggestions.
 
 % 引文
 \normalem
