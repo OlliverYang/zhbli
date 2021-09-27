@@ -1,5 +1,4 @@
 %!TEX program = pdflatex
-%!BIB program = bibtex
 \documentclass[12pt]{article}
 \usepackage{geometry}
 % \geometry{left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm}
@@ -62,10 +61,10 @@ We would like to express our heartfelt gratitude to you and the reviewers for th
 (6) We have added 3 papers published in the IEEE Transactions on Circuits and Systems for Video Technology, which are most closely related to our manuscript, and analysed what is distinctive / new about our current manuscript related to these previously published papers. For your convenience in cross-checking, the new text is given as follows.
 
 \uline{
-Some recent research topics which are mostly related to adversarial attack also include digital watermarking \cite{9343885}, 3D face presentation attacks to the face recognition networks \cite{9294085} and adversarial defense for image classifiers \cite{9169672}.
-% Xiong et. al. \cite{9343885} propose to generate the digital watermarking by slightly modifying the pixel values of video frames to protect video content from unauthorized access. Compared with \cite{9343885}, our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
-% Jia et. al. \cite{9294085} propose to generate 3D face artifacts to attack the face recognition network. Compared with \cite{9294085}, our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
-% Wang et. al. \cite{9169672} propose the white-box attack/defense methods for image classifiers. Compared with \cite{9169672}, we focus on attacking the object tracking networks instead of the image classification networks.
+Some recent research topics which are mostly related to adversarial attack also include digital watermarking [33], 3D face presentation attacks to the face recognition networks [34] and adversarial defense for image classifiers [26].
+% Xiong et. al. [33] propose to generate the digital watermarking by slightly modifying the pixel values of video frames to protect video content from unauthorized access. Compared with [33], our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
+% Jia et. al. [34] propose to generate 3D face artifacts to attack the face recognition network. Compared with [34], our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
+% Wang et. al. [26] propose the white-box attack/defense methods for image classifiers. Compared with [26], we focus on attacking the object tracking networks instead of the image classification networks.
 }
 
 We hope that our revised manuscript is now appropriate for publication in IEEE Transactions on Circuits and Systems for Video Technology. Specific responses to all the comments of each reviewer are included in the rest of this document and highlighted using bold font after the comments of each reviewer for the convenience of cross-reference. To make the changes easier to identify where necessary, we also have underlined most of the revised parts in the manuscript and provide an underlined version for the convenience of second review.\\[10pt]
@@ -103,7 +102,7 @@ In addition, point-to-point responses to your comments are given below and highl
 \noindent Email: jin.gao@nlpr.ia.ac.cn
 
 \newpage
-\textit{This paper addresses the task of attacking Siamese network-based trackers in a simple yet effective fashion. Unlike other methods that operate in the video-specific attacking regime (which resides on network inference for generating perturbations while tracking), this method is the first to perform universal targeted attacks for Siamese trackers utilizing both the translucent perturbation and the adversarial patch together. By adding the perturbation to the template and adding the patch to the search image while performing tracking, this work fools the Siamese trackers to the fake target region and thus makes them fail in tracking the real target object. Overall, this is an interesting paper, and it is well written and organized. As it is a resubmitted manuscript, I notice that the authors have made substantial changes to the previous manuscript, which are able to appropriately respond to the comments made by the previous reviewers. Although the template perturbation and adversarial patch are both easy to observe for human eyes as the previous reviewers have pointed out, and the SSIMs for them are also lower than the video-specific attacking method, e.g., FAN \cite{FAN}, this reviewer believes that this proposed new framework can be a new configuration of adversarial attack on visual tracking for its achieved balance between the attack efficiency and the perturbation perceptibility. This new configuration will attract increasing attention from the visual tracking attack community to study on more efficient attack methods.}
+\textit{This paper addresses the task of attacking Siamese network-based trackers in a simple yet effective fashion. Unlike other methods that operate in the video-specific attacking regime (which resides on network inference for generating perturbations while tracking), this method is the first to perform universal targeted attacks for Siamese trackers utilizing both the translucent perturbation and the adversarial patch together. By adding the perturbation to the template and adding the patch to the search image while performing tracking, this work fools the Siamese trackers to the fake target region and thus makes them fail in tracking the real target object. Overall, this is an interesting paper, and it is well written and organized. As it is a resubmitted manuscript, I notice that the authors have made substantial changes to the previous manuscript, which are able to appropriately respond to the comments made by the previous reviewers. Although the template perturbation and adversarial patch are both easy to observe for human eyes as the previous reviewers have pointed out, and the SSIMs for them are also lower than the video-specific attacking method, e.g., FAN [6], this reviewer believes that this proposed new framework can be a new configuration of adversarial attack on visual tracking for its achieved balance between the attack efficiency and the perturbation perceptibility. This new configuration will attract increasing attention from the visual tracking attack community to study on more efficient attack methods.}
 
 \textbf{Many thanks for your positive comments on the strength of our paper and the novelty of the proposed attack method.}
 
@@ -203,10 +202,10 @@ We are willing to adjust Fig. 9 font size to make it easier to read on the compu
 
 \textbf{Thanks for the good comments. We have added several 2020-2021 related papers to enhance the quality of the revised manuscript. For your convenience of cross review, the new text is given as follows.}
 
-\uline{Some recent research topics which are mostly related to adversarial attack also include digital watermarking \cite{9343885}, 3D face presentation attacks to the face recognition networks \cite{9294085} and adversarial defense for image classifiers \cite{9169672}.
-% Xiong et. al. \cite{9343885} propose to generate the digital watermarking by slightly modifying the pixel values of video frames to protect video content from unauthorized access. Compared with \cite{9343885}, our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
-% Jia et. al. \cite{9294085} propose to generate 3D face artifacts to attack the face recognition network. Compared with \cite{9294085}, our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
-% Wang et. al. \cite{9169672} propose the white-box attack/defense methods for image classifiers. Compared with \cite{9169672}, we focus on attacking the object tracking networks instead of the image classification networks.
+\uline{Some recent research topics which are mostly related to adversarial attack also include digital watermarking [33], 3D face presentation attacks to the face recognition networks [34] and adversarial defense for image classifiers [26].
+% Xiong et. al. [33] propose to generate the digital watermarking by slightly modifying the pixel values of video frames to protect video content from unauthorized access. Compared with [33], our purpose of modifying pixel values of video frames is attacking the tracker, instead of detecting the illegal distribution of a digital movie.
+% Jia et. al. [34] propose to generate 3D face artifacts to attack the face recognition network. Compared with [34], our method directly modifies the input of the network instead of changing the input of cameras using 3D face artifacts.
+% Wang et. al. [26] propose the white-box attack/defense methods for image classifiers. Compared with [26], we focus on attacking the object tracking networks instead of the image classification networks.
 }
 
 %%%%%%%%%%%%%%%%% 审稿人 2 %%%%%%%%%%%%%%%%%
@@ -369,8 +368,8 @@ As shown in Table \ref{table:noise}, these random patterns cannot effectively at
 \textit{- On page 7, ‘.(see Table I)’ is a typo.}
 
 \textbf{Thanks for the good comment. We have carefully checked through the whole text and corrected the grammar mistakes and typos. Specifically,}
-\textbf{We have replaced ``Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{GOT-10k}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
-``\uline{Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019} benchmarks demonstrate the effectiveness and efficiency of our approach.}''
+\textbf{We have replaced ``Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [12], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16]. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
+``\uline{Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16] benchmarks demonstrate the effectiveness and efficiency of our approach.}''
 \textbf{in Section I of the revised manuscript.}
 
 \textbf{We have added the definition of $B_x^{fake}$ of Eq.4 as follows:}
@@ -389,12 +388,12 @@ As shown in Table \ref{table:noise}, these random patterns cannot effectively at
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
-\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.'' with}
-``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.}''
+\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16].'' with}
+``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16].}''
 \textbf{in Section IV.A of the revised manuscript.}
 
-\textbf{We have replaced ``We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set. (see Table I)'' with}
-``\uline{We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.}''
+\textbf{We have replaced ``We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set. (see Table I)'' with}
+``\uline{We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set.}''
 \textbf{in Section IV.B of the revised manuscript.}
 
 \textbf{We have mentioned the reinitialization of of VOT-toolkit in Section IV.A of the revised manuscript:}
@@ -466,12 +465,12 @@ For the template image, we also convert it into YCbCr color space, and then add 
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~\cite{FGSM}, \cite{DBLP:conf/iclr/KurakinGB17a}). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~\cite{FGSM} and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
+\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~[55], [56]). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~[55] and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I J(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in [56]:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
@@ -479,7 +478,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     \end{gathered}
 \end{equation}
 \uline{where the pixel values of intermediate results are clipped after each step to ensure that they are in
-an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
+an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method [56]:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
@@ -583,8 +582,8 @@ Specifically, the attacker forces the tracker to follow a fixed direction in eac
 \textit{7. There are still some typo and grammar mistakes in the paper.}
 
 \textbf{Thanks for the good comment. We have carefully checked through the whole text and corrected the grammar mistakes and typos. Specifically,}
-\textbf{We have replaced ``Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{GOT-10k}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
-``\uline{Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019} benchmarks demonstrate the effectiveness and efficiency of our approach.}''
+\textbf{We have replaced ``Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [12], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16]. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
+``\uline{Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16] benchmarks demonstrate the effectiveness and efficiency of our approach.}''
 \textbf{in Section I of the revised manuscript.}
 
 \textbf{We have replaced ``In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z_1$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame.'' with}
@@ -599,19 +598,19 @@ Specifically, the attacker forces the tracker to follow a fixed direction in eac
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
-\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.'' with}
-``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.}''
+\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16].'' with}
+``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16].}''
 \textbf{in Section IV.A of the revised manuscript.}
 
-\textbf{We have replaced ``We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set. (see Table I)'' with}
-``\uline{We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.}''
+\textbf{We have replaced ``We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set. (see Table I)'' with}
+``\uline{We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set.}''
 \textbf{in Section IV.B of the revised manuscript.}
 
 \textit{8. Missing key ref : "Deep Learning for Visual Tracking: A Comprehensive Survey," in IEEE Transactions on Intelligent Transportation Systems, 2021.}
 
 \textbf{Thanks for the good comment. We have cited this paper at Section II of the revised manuscript.  For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{A comprehensive survey of the related trackers is beyond the scope of this paper, please refer to \cite{9339950} for a thorough survey.}
+\uline{A comprehensive survey of the related trackers is beyond the scope of this paper, please refer to [25] for a thorough survey.}
 
 %%%%%%%%%%%%%%%%% 审稿人 4 %%%%%%%%%%%%%%%%%
 \clearpage
@@ -643,13 +642,13 @@ In addition, point-to-point responses to your comments are given below and highl
 
 \textbf{We have discussed several state-of-the-art anchor free Siamese trackers at the related work. For your convenience of cross review, the new text is given as follows.}
 
-\uline{In this anchor-free paradigm, many recent works (e.g., \cite{zhang2020ocean}, \cite{cui2020fully}, \cite{9157720}) are dedicated to more robust and efficient visual tracking based on various anchor-free settings.
+\uline{In this anchor-free paradigm, many recent works (e.g., [20], [21], [22]) are dedicated to more robust and efficient visual tracking based on various anchor-free settings.
 % Ocean
-Ocean \cite{zhang2020ocean} directly predicts the position and scale of target objects in an anchor-free fashion; since each sample position in groundtruth boxes is well trained, the tracker is capable of rectifying inexact predictions of target objects during inference.
+Ocean [20] directly predicts the position and scale of target objects in an anchor-free fashion; since each sample position in groundtruth boxes is well trained, the tracker is capable of rectifying inexact predictions of target objects during inference.
 % FCOT
-FCOT \cite{cui2020fully} introduces an online regression model generator (RMG) based on the carefully designed anchor-free box regression branch, which enables the tracker to be more effective in handling target deformation during tracking procedure.
+FCOT [21] introduces an online regression model generator (RMG) based on the carefully designed anchor-free box regression branch, which enables the tracker to be more effective in handling target deformation during tracking procedure.
 %  SiamCAR
-SiamCAR \cite{9157720} is both anchor and proposal free, and takes one unique response map to predict object location and bounding box directly; this setting significantly reduces the number of hyper-parameters, which keeps the tracker from complicated parameter tuning and makes the tracker significantly simpler, especially in training.
+SiamCAR [22] is both anchor and proposal free, and takes one unique response map to predict object location and bounding box directly; this setting significantly reduces the number of hyper-parameters, which keeps the tracker from complicated parameter tuning and makes the tracker significantly simpler, especially in training.
 }
 
 \textbf{Besides, we have evaluated the transferability to the anchor free tracker OCEAN in Setcion IV.E of the revised manuscript. For your convenience of cross review, the new text is given as follows.}
@@ -678,12 +677,12 @@ SiamCAR \cite{9157720} is both anchor and proposal free, and takes one unique re
 The detailed analysis is added in Section III.B of the revised manuscript.
 For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~\cite{FGSM}, \cite{DBLP:conf/iclr/KurakinGB17a}). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~\cite{FGSM} and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
+\uline{Before introducing our perturbation update process in offline training, we first revisit the popular adversarial example generation methods (\eg,~[55], [56]). One of the simplest methods to generate adversarial image $I^{adv}$ is FGSM~[55] and works by linearizing the loss function around the network weights and obtaining an optimal max-norm constrained perturbation for generating the adversarial image:}
 \begin{equation}
     I^{adv} = I + \epsilon \cdot \text{ sign} \bigl( \nabla_I J(I, y_{true})  \bigr),
     \vspace{-0.1cm}
 \end{equation}
-\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in \cite{DBLP:conf/iclr/KurakinGB17a}:}
+\uline{where $I$ is the input clean image, and the values of its pixels are integer numbers in the range [0, 255]. $y_{true}$ is the true label for the image $I$, $J(I, y_{true})$ is the cost function for training the neural network, and $\epsilon$ is a hyper-parameter to be chosen. A straightforward way to extend the above method is applying it multiple times with small step size. This leads to Basic Iterative Method (BIM) introduced in [56]:}
 \begin{equation}
     \begin{gathered}
         I_0^{adv} = I, \\
@@ -691,7 +690,7 @@ For your convenience in cross-checking, the new text is given as follows.}
     \end{gathered}
 \end{equation}
 \uline{where the pixel values of intermediate results are clipped after each step to ensure that they are in
-an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method \cite{DBLP:conf/iclr/KurakinGB17a}:}
+an $\epsilon$-neighbourhood of the original image. The BIM method can be easily made into an attacker for a specific desired target class, called Iterative Target Class Method [56]:}
 \begin{equation}
   \begin{gathered}
       I_0^{adv} = I,\\
@@ -715,13 +714,13 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \textit{(a) In the third line below Eq.7, $A_{a}dd$ should be $A_{add}$.}
 
-\textit{(b) In page 2, difference datasets GOT-10K[12], LaSOT \cite{LaSOT} cite the same reference.}
+\textit{(b) In page 2, difference datasets GOT-10K[12], LaSOT [12] cite the same reference.}
 
 \textit{(c) In page 3, Subsection A of Section 3, “to get an template image” should be “to get a template image”.}
 
 \textbf{Thanks for the good comment. We have carefully checked through the whole text and corrected the grammar mistakes and typos. Specifically,}
-\textbf{We have replaced ``Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{GOT-10k}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
-``\uline{Experiment results on OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019} benchmarks demonstrate the effectiveness and efficiency of our approach.}''
+\textbf{We have replaced ``Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [12], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16]. benchmarks demonstrate the effectiveness and efficiency of our approach.'' with}
+``\uline{Experiment results on OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16] benchmarks demonstrate the effectiveness and efficiency of our approach.}''
 \textbf{in Section I of the revised manuscript.}
 
 \textbf{We have replaced ``In SiamFC++, the tracker first transforms the paired reference frame $I_1$ and annotation $b_1^{gt}$ to get an template image $\textbf z_1$, and transforms the search frame $I_i$ to get the search image $\textbf x_i$ centered at the position estimated in the previous frame.'' with}
@@ -736,17 +735,17 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 ``\uline{$A_{add}$ adds the patch into the search image $\textbf x$ at location $(\frac{x_0+x_1}{2},\frac{y_0+y_1}{2})$.}''
 \textbf{in Section III.B of the revised manuscript.}
 
-\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, UAV123 \cite{UAV123}, VOT1016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.'' with}
-``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 \cite{OTB}, GOT-10k \cite{GOT-10k}, LaSOT \cite{LaSOT}, VOT2016 \cite{VOT2016}, VOT2018 \cite{VOT2018} and VOT2019 \cite{VOT2019}.}''
+\textbf{We have replaced ``We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], UAV123 [13], VOT1016 [14], VOT2018 [15] and VOT2019 [16].'' with}
+``\uline{We evaluate our video-agnostic perturbations for targeted attacks on several tracking benchmarks, i.e., OTB2015 [11], GOT-10k [12], LaSOT [13], VOT2016 [14], VOT2018 [15] and VOT2019 [16].}''
 \textbf{in Section IV.A of the revised manuscript.}
 
-\textbf{We have replaced ``We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set. (see Table I)'' with}
-``\uline{We adopt COCO \cite{COCO}, ILSVRC-VID \cite{VID} and the training splits of GOT-10k \cite{GOT-10k} and LaSOT \cite{LaSOT} as our training set.}''
+\textbf{We have replaced ``We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set. (see Table I)'' with}
+``\uline{We adopt COCO [63], ILSVRC-VID [64] and the training splits of GOT-10k [12] and LaSOT [13] as our training set.}''
 \textbf{in Section IV.B of the revised manuscript.}
 
-\normalem
-\bibliographystyle{IEEEtran}
-\bibliography{ref.bib}
+%\normalem
+% \bibliographystyle{IEEEtran}
+% \bibliography{ref.bib}
 
 \end{document}
 
