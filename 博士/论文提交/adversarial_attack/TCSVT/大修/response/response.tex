@@ -110,19 +110,19 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 1.1 %%%%
 \textit{In addition, I suggest the authors add more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. The experimental results show that it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.}
 
-\textbf{Thanks for the good comment. As suggessted, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Specifically, we evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
+\textbf{Thanks for the good comment. As suggessted, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Specifically, we evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
 % 新增加的实验结果分析位于某处，展示如下。
 The detailed analysis of new added experiments is added in Section IV.D of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{table}[t]
   \renewcommand\thetable{VII}
   \centering
-  \caption{Attack results on OTB-15, GOT-Val and LaSOT with or without the ground truth information. w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.}
+  \caption{Attack results on OTB2015, GOT-Val and LaSOT with or without the ground truth information. w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.}
   \begin{tabular}{rrcccc}
   \toprule
   \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
                               &                          & w/ GT  & \multicolumn{1}{l}{w/o GT}  & w/ GT  & \multicolumn{1}{l}{w/o GT} \\ \midrule
-  \multirow{2}{*}{OTB-15}     & AO                       & 0.063  & 0.056                       & 0.759  & 0.752                      \\
+  \multirow{2}{*}{OTB2015}     & AO                       & 0.063  & 0.056                       & 0.759  & 0.752                      \\
                               & Precision                & 0.092  & 0.080                       & 0.795  & 0.794                      \\ \midrule
   \multirow{2}{*}{GOT-Val}    & SR                       & 0.123  & 0.121                       & 0.890  & 0.893                      \\
                               & AO                       & 0.153  & 0.160                       & 0.840  & 0.833                      \\ \midrule
@@ -133,10 +133,10 @@ The detailed analysis of new added experiments is added in Section IV.D of the r
   \label{tab:agent_GT}
 \end{table}
 
-\uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB-2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
+\uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
 Experimental results are shown in Table \ref{tab:agent_GT}.
 In terms of AO on GOT-Val, the untargeted attack performance is 0.153 when the ground truth is used to train perturbations and 0.160 when the ground truth is not used.
-In terms of the precision score on OTB-2015, the targeted attack performance is 0.795 when the ground truth is used to train perturbations and 0.794 when the ground truth is not used.
+In terms of the precision score on OTB2015, the targeted attack performance is 0.795 when the ground truth is used to train perturbations and 0.794 when the ground truth is not used.
 In terms of the normalized precision score on LaSOT, the targeted attack performance is 0.702 when the ground truth is used to train perturbations and 0.660 when the ground truth is not used.
 Therefore, it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.
 }
