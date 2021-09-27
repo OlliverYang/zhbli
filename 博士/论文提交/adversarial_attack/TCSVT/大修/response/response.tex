@@ -538,25 +538,8 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \textbf{Thanks for the good commenet. As suggested, we have added the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion. For your convenience in cross-checking, the new text is given as follows.}
 
-\uline{
-In summary, compared with other attack methods, our method has two key advantages. First,
-  % 通用的，也就是不需要进行网络推断或者梯度计算，因此使得可以在不消耗计算资源的同时执行攻击成为可能。
-the proposed attack method does not require gradient optimization or network inference, making it possible to attack a real-world online-tracking system when we can not get access to the limited computational resources.
-Second, the proposed perturbations show good transferability to other anchor free or anchor based trackers. 
-  %(1) Physical attack. We are the digital attack, which means ... Physical attack is ... The advantage of it is ... Our work assumes a threat model in which the adversary can feed data directly into the machine learning classifier. This is not always the case for systems operating in the physical world, for example those which are using signals from cameras and other sensors as input.
-  % 这不就是 ICCV2019 的工作吗？它们也通用？好像是。EOT是通用的吗？
-The main limitation of our work is the values of our universal perturbations are not as small as other non-universal perturbations due to the task difficulty.
-% Future work:
-  % (1) We need to do the physical attack.
-  % (2) We need to be imperceptible.
-  % 使用同一个扰动同时攻击多个视觉任务，包括图像分类，检测，视频目标跟踪和分割。
-  In future work, we expect that it will be possible to demonstrate the existence of a single perturbation to attack multi vision tasks, including image classification, object detection and video object tracking/segmentation.
-  % 以更小的扰动取得更高的攻击效果。（呼应缺点之：扰动大）
-  % Use more imperceptible perturbations to achieve high attack performance.
-  % 本文所提出的对抗性信息被添加在数字图像上，从而影响跟踪器的跟踪效果。然而所提出的对抗性信息难以用于执行孪生跟踪器的物理攻击，即将对抗扰动打印出来添加到物理世界的真实目标上，从而影响孪生跟踪系统的性能。因为对抗扰动的打印过程可能改变扰动的值，且相机传感器可能无法感知较小的扰动。可能的解决方案是借助EOT生成针对相机距离和角度具有鲁棒性的物理扰动，使得在各种成像条件下，跟踪系统都无法对带有对抗性信息的真实目标进行正确跟踪。
-  % 通过 *** 方式（比如，借助 *** 信息）实现物理攻击。
-  % 防御？
-}
+\uline{In summary, compared with other attack methods, our method has two key advantages. First, the proposed attack method only needs to perform the addition operations to deploy the adversarial information for any novel video without gradient optimization or network inference, making it possible to attack a real-world online-tracking system when we can not get access to the limited computational resources. Second, the proposed perturbations show good transferability to other anchor-free or anchor-based trackers. The main limitation of our work is that the translucent perturbations my result in suspicious attacks.
+In the future work, we expect that it will be possible to further reduce the possible suspicion by increasing the perturbation's imperceptibility while maintaining the attack efficiency.}
 
 \textit{5. Some of the experiments require more explanations. For example, transferability has been investigated by different backbones \& architectures. It's needed to mention these experiments are with/without the training phase or not.}
 
