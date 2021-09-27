@@ -164,7 +164,7 @@ The RPN head includes two sibling 1 $\times$ 1 convolutional layers -- a classif
     f_{roi}^{i} = \mathcal{R}(b_{roi}^{i}, f_{corr}),
 \end{equation}
 其中 $b_{roi}^{i}$ 是候选区域 $i$ 的边界框。
-最后，每个 RoI 被分类为前景或背景。在测试期间，我们选择排名靠前的 $K$ 的 RoI 作为候选目标，这些目标将在轨迹预测模块中进行后处理。
+最后，每个 RoI 被分类为前景或背景。在测试期间，我们选择排名靠前的 $K$ 个 RoI 作为候选目标，这些目标将在轨迹预测模块中进行后处理。
 
 \iffalse
 The RoI Aligned features are fed into the global average pooling layer followed by two sibling output layers: one that produces softmax probability estimates over two classes (foreground or background) and another layer that outputs four real-valued numbers for the foreground class. These four values encode the refined bounding-box position for the RoI.
