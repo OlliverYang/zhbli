@@ -218,11 +218,11 @@ ECOhc \cite{danelljan2017eco} &  0.286&  0.276 &0.096 \\
 
 令 $H_{t}^{k} = \{h_{t-i}\}_{i=1:k}$ 表示历史轨迹信息，其中 $t$ 是当前帧的索引，$k$ 是历史长度，$h_{j} = \{x_{j}, y_{j}\}$ 是一个二维坐标，表示目标在帧 $j$ 中的位置。
 受姿态估计任务的启发，我们将 $h_{j}$ 表示为二维高斯热图 $m_{j} \in \mathbb R^{h \times w}$，其中二维高斯顶点位于目标位置 $(x_{j}, y_{j})$。
-为了对目标的轨迹信息进行建模，我们根据时间顺序将生成的 $k$ 热图进行串接，以获得通道维度为 $k$ 的轨迹张量 $\mathcal{M} \in \mathbb{R}^{k \times h \times w}$：
+为了对目标的轨迹信息进行建模，我们根据时间顺序将生成的 $k$ 个热图进行串接，以获得通道维度为 $k$ 的轨迹张量 $\mathcal{M} \in \mathbb{R}^{k \times h \times w}$：
 \begin{equation}
     \mathcal{M}_{t}^{k} = \mathcal{C}(m_{t-k}, m_{t-k+1}, ..., m_{t-1}),
 \end{equation}
-其中 $\mathcal{C}(\cdot)$ 表示串联操作。
+其中 $\mathcal{C}(\cdot)$ 表示串接操作。
 
 本章提出的轨迹预测模块不仅利用历史轨迹信息进行预测，还同时考虑当前帧的表观信息。
 为此，将当前帧 $I \in \mathbb{R}^{3 \times h \times w}$ 的 RGB 图像与轨迹张量串接起来，以获得增强的轨迹张量 $\mathcal{N} \in \mathbb{R}^{(3+k) \times h \times w}$，通道尺寸为 $3+k$：
