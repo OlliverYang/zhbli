@@ -264,6 +264,12 @@ The operator $A_\text{add}$ refers to the injection of our translucent adversari
 The adversarial patch is usually added to the background region of the search image and does not change the pixel values in the foreground region where the real target exists. Therefore if we do not add additional perturbation to the template image, the response values of the region where the real target exists on the heatmaps are always high. Thus it is necessary to perturb the template image to cooling down hot regions where the real target exists on the heatmaps and increasing the responses at the position of the \textit{fake target}.
 }
 
+\textbf{To further analyze the impact of $p$ and $\delta$ in our perturbations, we evaluate the attack performance when only adding perturbations on the template images or the search regions on GOT-Val. The detailed analysis of new added experiment is added in Section IV.E of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
+
+\uline{\textit{Only Perturb the Template or Search Image.} To analyze the impact of $p$ and $\delta$ in our perturbations, we evaluate the attack performance when only adding perturbations on the template images or the search regions on GOT-Val. The result is shown in Table \ref{table:one_branch}.
+For the untargeted attack, only perturbing the template/search image leads to the AO of 0.510/0.714, while perturbing both the template and search image leads to the AO of 0.153.
+For the targeted attack, only perturbing the template/search image leads to the AO of 0.156/0.160, while perturbing both the template and search image leads to the AO of 0.840. Experimental results show that perturbing both of them can achieve better attack performance than only perturbing the template/search image.}
+
 
 %%%% 问题 2.2 %%%%
 \textit{2. I agree with reviewer 3, the ground truth boxes are inaccessible to trackers during the inference. It seems that the authors use the ground truth boxes to generate the fake trajectory in lines 51-57 on page 7. Please clarify it.}
