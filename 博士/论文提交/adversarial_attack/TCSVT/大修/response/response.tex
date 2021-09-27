@@ -115,9 +115,10 @@ In addition, point-to-point responses to your comments are given below and highl
 The detailed analysis of new added experiments is added in Section IV.E of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{table}[t]
-  \renewcommand\thetable{VII}
+  \renewcommand\thetable{X}
   \centering
-  \caption{Attack results on OTB2015, GOT-Val and LaSOT with or without the ground truth information. w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.}
+  \caption{Attack results on OTB2015, GOT-Val and LaSOT with or without the groundtruth information.% w/ GT represents that we train perturbations using the groud truth bounding box information of the trainig dataset. w/o GT represents that we train perturbations using the predicted boxes instead of ground truth boxes of the training dataset.
+  }
   \begin{tabular}{rrcccc}
   \toprule
   \multirow{2}{*}[-2pt]{Benchmarks} & \multirow{2}{*}[-2pt]{Metrics} & \multicolumn{2}{c}{Unargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{3-6}
@@ -294,11 +295,9 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 }
 
 \begin{table}[t]
-  \renewcommand\thetable{VIII}
+  \renewcommand\thetable{XI}
   \centering
-  \caption{Influence of different ways to generate the fake trajectory.
-  The first row represents that the attacker forces the tracker to follow a fixed direction in a video.
-  The second row represents that the fake trajectory follows the real trajectory. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of two different ways to generate the fake trajectory: following a fixed direction in each video and following the real trajectory. It is evaluated on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{Type of the Fake Trajectory} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
@@ -324,9 +323,9 @@ For the untargeted attack, only perturbing the template/search image leads to th
 For the targeted attack, only perturbing the template/search image leads to the AO of 0.156/0.160, while perturbing both the template and the search image leads to the AO of 0.840. Experimental results show that perturbing both the template and the search image can achieve better attack performance than only perturbing the template/search image.}
 
 \begin{table}[t]
-  \renewcommand\thetable{IX}
+  \renewcommand\thetable{VIII}
   \centering
-  \caption{Attack performance when only adding the perturbation to the search/template image. The first row refers to only perturbing the template image. The second row refers to only perturb the search image. The third row refers to perturb both the template and the search image. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Attack performance comparison when only adding the perturbation on the search/template image. It is evaluated on GOT-Val.}
   \label{table:one_branch}
   \begin{tabular}{@{}cccccc@{}}
   \toprule
@@ -350,10 +349,9 @@ For your convenience in cross-checking, the new text is given as follows.
 }
 
 \begin{table}[t]
-  \renewcommand\thetable{X}
+  \renewcommand\thetable{VII}
   \centering
-  \caption{Attack performance using random patterns.
-  The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Attack performance comparison using other random patterns. It is evaluated on GOT-Val.}
   \label{table:noise}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
@@ -368,7 +366,7 @@ For your convenience in cross-checking, the new text is given as follows.
   \renewcommand\thefigure{9}
   \centering
   \includegraphics[width=0.8\textwidth]{images_imperceptible/random_gaussian.pdf}
-  \caption{Visualization of random patterns.}
+  \caption{Visualization of the manually generated similar random patterns.}
   \label{fig:random}
 \end{figure}
 \uline{\textit{Ablation Study: Attack performance of random patterns} To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions (see Figure \ref{fig:random}). 
@@ -473,26 +471,18 @@ For your convenience in cross-checking, the new text is given as follows.}
   \renewcommand\thefigure{8}
   \centering
   \includegraphics[width=.8\textwidth]{images_imperceptible/1.pdf}
-  \caption{Visualization of the perturbations.
-  % 介绍什么是 RGB Attack
-  Figure (a) demonstrates the perturbations trained by the RGB attack method, i.e., the attack method proposed in Section III.
-  % 介绍什么是 YCbCr Attack
-  Figure (b) demonstrates the perturbations trained by the YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. 
-  For the template image, we convert it into YCbCr color space, then add the perturbation over the entire template image in all YCbCr channels.
-  The perturbed template and search images are then converted into RGB color space and fed into the tracking network.
-  The other steps of the training process are the same as the attack method in Section III.
-  Attacking the YCbCr color space brings better imperceptibility. Compared with attacking the RGB space, the SSIM of $p$ increases from 0.56 to 0.78. The SSIM of $\delta$ remains unchanged at 0.79.}
+  \caption{Visualization of the perturbations in attacking the different RGB and YCbCr color spaces. Note that the perturbation of the search image in the Y channel results in SSIM value of 0.95 outside the added patch area, which slightly deteriorate the imperceptibility.}
   \label{fig:YCbCr}
 \end{figure}
 
 \begin{table}[t]
-  \renewcommand\thetable{XI}
+  \renewcommand\thetable{VI}
   \centering
-  \caption{Influence of different ways to perturb the search image. The first row demonstrates the attack performance of the RGB attack method, i.e., the attack attack method proposed in Section III. The second row demonstrates the attack performance of YCbCr attack method: first we convert the search image into YCbCr color space, then add perturbations over the entire search image in the Y channel, and add perturbations over a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Comparison between attacking the different RGB and YCbCr color spaces. Attacking the YCbCr color space means we first convert the search image into YCbCr color space, and then add a perturbation to the entire search image in the Y channel and a different perturbation to a very small region of $64 \times 64$ in the CbCr channel. The attack performance is evaluated on GOT-Val.}
   \label{table:perturb}
   \begin{tabular}{@{}rcccccc@{}}
   \toprule
-  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Way to perturb\\ the search image\end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} & \multicolumn{2}{c}{SSIM} \\ \cmidrule{2-7}
+  \multirow{2}{*}[-1pt]{\begin{tabular}[c]{@{}c@{}}Different Color\\ Space Attack\end{tabular}} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} & \multicolumn{2}{c}{SSIM} \\ \cmidrule{2-7}
                                                          & AO                                      & SR                               & AO                & SR                   & $\delta$          & $p$  \\ \midrule
   RGB Attack                                             & 0.153                                   & 0.123                            & 0.840             & 0.890                & 0.56              & 0.79 \\
   YCbCr Attack                                           & 0.246                                   & 0.227                            & 0.682             & 0.756                & 0.78              & 0.79 \\ \bottomrule        
@@ -542,24 +532,20 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 \textbf{Thanks for your advice and we have replaced the descriptions of figures and tables. The modification is shown as follows for the convience of cross checking.}
 
-% table 2
-\textbf{In Table II, we have replaced ``Compared with baselines on perturbed GOT-Val dataset.'' with}
-\uline{``Comparison of attack performance with 2 baseline methods on GOT-Val in terms of AO. Baseline1 performs untargeted attacks based on the UAP \cite{UAP} method. Baseline2 performs targeted attacks based on the adversarial patch \cite{patch} method.''}
+\textbf{In Table IV, we have replaced ``Compared with baselines on perturbed GOT-Val dataset.'' with}
+\uline{``Comparison of attack performance with 2 baseline methods on GOT-Val in terms of AO. Baseline-1 performs untargeted attacks based on the UAP [9] method. Baseline-2 performs targeted attacks based on the adversarial patch [50] method.''}
 \textbf{in Section IV.D of the revised manuscript.}
 
-% table 6
-\textbf{In Table VI, we have replaced ``Contribution of each loss on GOT-Val.'' with}
+\textbf{In Table IX, we have replaced ``Contribution of each loss on GOT-Val.'' with}
 \uline{``Analysis of the impact of each loss component on GOT-Val.''}
 \textbf{in Section IV.E of the revised manuscript.}
 
-% table 12
 \textbf{In Table XII, we have replaced ``Transferability to different backbones on GOT-Val.'' with}
-\uline{``Transferability to different backbones on GOT-Val. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to two more different backbones of SiamFC++, i.e., ShuffleNet \cite{ShuffleNet} and AlexNet \cite{AlexNet}.''}
+\uline{``Transferability to different backbones of our perturbations trained on SiamFC++\_GoogleNet. It is evaluated on GOT-Val.''}
 \textbf{in Section IV.F of the revised manuscript.}
 
-% table 13
 \textbf{In Table XIII, we have replaced ``Transferability to different tracking architectures on OTB2015.'' with}
-\uline{``Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to three more state-of-the-art trackers: SiamRPN \cite{SiamRPN}, SiamRPN++ \cite{SiamRPN++} and Ocean \cite{zhang2020ocean}.''}
+\uline{``Transferability to different tracking architectures of our perturbations trained on SiamFC++\_GoogleNet. It is evaluated on OTB2015.''}
 \textbf{in Section IV.F of the revised manuscript.}
 
 % table 14
@@ -574,7 +560,7 @@ p_{k+1} = p_{k} - \epsilon_2 \cdot \text{sign}(\nabla_{p_k}L),
 
 % figure 4
 \textbf{In Figure 4, we have replaced ``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} (indicated by the yellow targeted bounding box).'' with}
-\uline{``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} $B^{fake}=\{b^{fake}_i\}_1^{T}$ (indicated by the yellow bounding box). The \textit{fake trajectory} follows the \textit{real trajectory} $B^{gt}=\{b^{gt}_i\}_1^T$ (indicated by the red bounding box) and the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 2 pixels apart.''}
+\uline{``Results of targeted attacks where the tracker is forced to follow a predefined \textit{fake trajectory} $B^{fake}=\{b^{fake}_i\}_1^{T}$ (indicated by the yellow bounding boxes). The \textit{fake trajectory} follows the real trajectory $B^{gt}=\{b^{gt}_i\}_1^T$ (indicated by the red bounding boxes) except that the adjacent boundaries of $b^{fake}_i$ and $b^{gt}_i$ are 2 pixels apart.''}
 
 
 \textit{4. I suggest adding the advantages \& limitations of the proposed method after experimental analysis and future works to the conclusion.}
@@ -623,8 +609,7 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
 \begin{table}[t]
   \renewcommand\thetable{\ref{table:direction}}
   \centering
-  \caption{Influence of different ways to generate the fake trajectory. The first row represents that the attacker forces the tracker to follow a fixed direction in a video.
-  The second row represents that the fake trajectory follows the real trajectory. The attack performance is evaluated according to AO/SR on GOT-Val.}
+  \caption{Influence of two different ways to generate the fake trajectory: following a fixed direction in each video and following the real trajectory. It is evaluated on GOT-Val.}
   \begin{tabular}{@{}rcccc@{}}
   \toprule
   \multirow{2}{*}[-2pt]{Type of the Fake Trajectory} & \multicolumn{2}{c}{Untargeted Attack} & \multicolumn{2}{c}{Targeted Attack} \\ \cmidrule{2-5}
@@ -632,7 +617,6 @@ As shown in Table \ref{table:direction}, our attack algorithm achieves effective
   Fixed direction             & 0.175             & 0.144             & 0.845            & 0.897            \\
   Follow the real trajectory  & 0.153             & 0.123             & 0.840            & 0.890            \\ \bottomrule        
   \end{tabular}
-  %\label{table:direction1}
 \end{table}
 
 \textit{7. There are still some typo and grammar mistakes in the paper.}
@@ -712,15 +696,15 @@ SiamCAR \cite{9157720} is both anchor and proposal free, and takes one unique re
 \begin{table}[t]
   \renewcommand\thetable{XIII}
   \centering
-  \caption{Transferability to different tracking architectures on OTB2015. The original perturbations are trained on SiamFC++\_GoogleNet, then we directly apply the perturbations to three more state-of-the-art trackers: SiamRPN \cite{SiamRPN}, SiamRPN++ \cite{SiamRPN++} and Ocean \cite{zhang2020ocean}.}
+  \caption{Transferability to different tracking architectures of our perturbations trained on SiamFC++\_GoogleNet. It is evaluated on OTB2015.}
   \begin{tabular}{rcccc} 
   \toprule
   \multirow{2}{*}[-2pt]{Trackers} & \multicolumn{2}{c}{Before Attack} & \multicolumn{2}{c}{Untargeted Attack}  \\
   \cmidrule{2-5}
                             & AO & Precision              & AO    & Precision \\ \midrule
-  SiamRPN++                 & 0.676   & 0.879             & 0.418 & 0.556     \\
-  SiamRPN                   & 0.666   & 0.876             & 0.483 & 0.643     \\
-  Ocean                     & 0.672   & 0.902             & 0.237 & 0.282     \\ \bottomrule
+  SiamRPN++ [24]            & 0.676   & 0.879             & 0.418 & 0.556     \\
+  SiamRPN [23]              & 0.666   & 0.876             & 0.483 & 0.643     \\
+  Ocean [20]                & 0.672   & 0.902             & 0.237 & 0.282     \\ \bottomrule
   \end{tabular}
   \label{tab:arch}
 \end{table}
