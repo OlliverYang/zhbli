@@ -328,10 +328,10 @@ For the targeted attack, only perturbing the template/search image leads to the 
 %%%% 问题 2.4 %%%%
 \textit{4. As reviewer 1 and reviewer 2 say, the perturbations added to template regions and research regions are not imperceptible, which may be helpful to misguide the tracker. The reviewer considers that adding a similar random pattern on the template and search regions to further illustrate the effectiveness of the proposed method.}
 
-\textbf{To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions. 
-Specifically, we design two kinds of random patterns: (1) the random pattern similar to the trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
-We replace the trained perturbations with the random random pattern to attack SiamFC++\_GoogleNet. The experiment is performed on GOT-Val.
-As shown in Table \ref{table:noise}, random patterns cannot effectively attack the tracker.
+\textbf{To further illustrate the effectiveness of our proposed method, we manually generate similar random patterns and add them on the template and search regions (see Fig. \ref{fig:random}) to show their attack performance. 
+Specifically, we design two kinds of random patterns: (1) the random pattern similar to our trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
+We replace the trained perturbations with the above random patterns to attack SiamFC++\_GoogleNet, and experimentally evaluate them on GOT-Val.
+As shown in Table \ref{table:noise}, these random patterns cannot effectively attack the tracker.
 For your convenience in cross-checking, the new text is given as follows.
 }
 
@@ -356,10 +356,10 @@ For your convenience in cross-checking, the new text is given as follows.
   \caption{Visualization of the manually generated similar random patterns.}
   \label{fig:random}
 \end{figure}
-\uline{\textit{Ablation Study: Attack performance of random patterns} To illustrate the effectiveness of the proposed method, we add random patterns on the template and search regions (see Figure \ref{fig:random}). 
-Specifically, we design two kinds of random patterns: (1) the random pattern similar to the trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
-We replace the trained perturbations with the random random pattern to attack SiamFC++\_GoogleNet. The experiment is performed on GOT-Val.
-As shown in Table \ref{table:noise}, random patterns cannot effectively attack the tracker.
+\uline{\textit{Use Other Similar Random Patterns.} To further illustrate the effectiveness of our proposed method, we manually generate similar random patterns and add them on the template and search regions (see Fig. \ref{fig:random}) to show their attack performance. 
+Specifically, we design two kinds of random patterns: (1) the random pattern similar to our trained perturbations, and (2) the random pattern generated using zero-mean Gaussian noise with standard deviation 50.0.
+We replace the trained perturbations with the above random patterns to attack SiamFC++\_GoogleNet, and experimentally evaluate them on GOT-Val.
+As shown in Table \ref{table:noise}, these random patterns cannot effectively attack the tracker.
 }
 
 %%%% 问题 2.5 %%%%
