@@ -44,21 +44,11 @@
 
 We would like to express our heartfelt gratitude to you and the reviewers for the insightful and helpful comments. When we revised the paper, we carefully considered and followed all the comments and suggestions provided by you and the reviewers. To summarize, we have made the following revisions:
 
-(1) We have added the advantages \& limitations of the proposed method after experimental analysis and the future work to the conclusion.
+(1) We have carefully considered and followed all the comments and suggestions related to the clarity of the writing, and made the new material a thoroughly revised manuscript. Specifically, several state-of-the-art anchor-free trackers have been discussed in Section II. The algorithm for the attack process has been added in Section III.C. We have explained in detail the perturbation update process in offline training. We have also added the advantages and limitations of the proposed method after experimental analysis and the future work to the conclusion. The descriptions of figures and tables have been rewritten, and the format of all the tables has been unified.
 
-(2) We have carefully considered and followed all the comments and suggestions related to the clarity of the writing, and made the new material a thoroughly revised manuscript.
+(2) The experiments have also been thoroughly re-evaluated in Section IV. Specifically, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Besides the strategy to generate the fake trajectory following the real trajectory in Sec. III, we have also considered an alternative way to generate the fake trajectory. To analyze the impact of our perturbations, we have evaluated the attack performance when only adding perturbations on the template images or the search regions on GOT-Val. To further illustrate the effectiveness of our proposed method, we manually generate similar random patterns and add them on the template and search regions to show their attack performance. To reduce the perceptibility of the perturbations, we have examined a new strategy to perturb the search image.
 
-% 消融实验
-(3) We have added a new experiment to attack in the YCbCr color space to reduce the perceptibility of the perturbations.
-
-% 消融实验：噪声攻击。
-(4) We have added a new experiment to evaluate the attack performance of the random patterns.
-
-% 消融实验
-(5) We have added a new experiment to evaluate the attack performance when only adding the perturbation to the search/template image.
-
-% 引用论文
-(6) We have added 3 papers published in the IEEE Transactions on Circuits and Systems for Video Technology, which are most closely related to our manuscript, and analysed what is distinctive / new about our current manuscript related to these previously published papers. For your convenience in cross-checking, the new text is given as follows.
+(3) We have added 3 papers published in the IEEE Transactions on Circuits and Systems for Video Technology, which are most closely related to our manuscript, and analysed what is distinctive/new about our current manuscript related to these previously published papers. For your convenience in cross-checking, the new text is given as follows.
 
 \uline{
 Some recent research topics which are mostly related to adversarial attack also include digital watermarking [33], 3D face presentation attacks to the face recognition networks [34] and adversarial defense for image classifiers [26].
