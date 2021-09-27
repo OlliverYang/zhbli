@@ -110,9 +110,7 @@ In addition, point-to-point responses to your comments are given below and highl
 %%%% 问题 1.1 %%%%
 \textit{In addition, I suggest the authors add more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. The experimental results show that it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.}
 
-\textbf{Thanks for the good comment. As suggessted, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Specifically, we evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
-% 新增加的实验结果分析位于某处，展示如下。
-The detailed analysis of new added experiments is added in Section IV.E of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
+\textbf{Thanks for the good comment. As suggessted, we have added more experiments to demonstrate the practicability of the attack method when the ground truth box information is missing in the training data. Specifically, evaluate the untargeted and targeted attack performance using the following metrics on specific datasets: (1) AO and Precision on OTB2015, (2) SR and AO on GOT-Val, and (3) Precision, Normalized Precision and AO on LaSOT. The detailed analysis of new added experiments is added in Section IV.E of the revised manuscript. For your convenience in cross-checking, the new text is given as follows.}
 
 \begin{table}[t]
   \renewcommand\thetable{X}
@@ -134,13 +132,7 @@ The detailed analysis of new added experiments is added in Section IV.E of the r
   \label{tab:agent_GT}
 \end{table}
 
-\uline{We evaluate the untargeted and targeted attack performance on the following datasets and metrics: (1) AO and precision on OTB2015, (2) SR and AO on GOT-Val, and (3) precision, normalized precision and AO on LaSOT.
-Experimental results are shown in Table \ref{tab:agent_GT}.
-In terms of AO on GOT-Val, the untargeted attack performance is 0.153 when the ground truth is used to train perturbations and 0.160 when the ground truth is not used.
-In terms of the precision score on OTB2015, the targeted attack performance is 0.795 when the ground truth is used to train perturbations and 0.794 when the ground truth is not used.
-In terms of the normalized precision score on LaSOT, the targeted attack performance is 0.702 when the ground truth is used to train perturbations and 0.660 when the ground truth is not used.
-Therefore, it is effective to use the predicted boxes instead of ground truth boxes for training perturbations.
-}
+\uline{We evaluate the untargeted and targeted attack performance using the following metrics on specific datasets: (1) AO and Precision on OTB2015, (2) SR and AO on GOT-Val, and (3) Precision, Normalized Precision and AO on LaSOT. As shown in Table \ref{tab:agent_GT}, it is effective to use the predicted boxes instead of groundtruth boxes for training our perturbations, though the targeted attack performance is affected due to some ambiguous prediction results used for training.}
 
 %%%% 问题 1.2 %%%%
 \textit{A small question is that it will be better if the authors can provide some pseudo code for the untargeted attack and targeted attack processes in addition to the training process. This will facilitate the understanding of the attacking process while performing tracking.}
