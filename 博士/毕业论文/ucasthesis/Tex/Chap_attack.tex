@@ -156,7 +156,7 @@ r^{*}=x_{1}-\left(\left\lfloor\frac{s}{2}\right\rfloor+x s\right), \quad b^{*}=y
 
 如果仅使用分类得分选择最终的目标框，可能会导致定位精度的降低。因为 Jiang 等人 \cite{IoU-Net} 表明分类置信度与定位精度没有很好的相关性。根据 Luo 等人 \cite{ERF} 的分析，位于子窗口中心附近的像素在相应的输出特征上具有更高的重要性。因此，SiamFC++ 假设目标中心附近的特征像素将比其他像素具有更高的重要性。遵循 SiamFC++ 的设计，我们利用一个 $1 \times 1$ 卷积层进行质量评估，即学习预测边框与虚假目标标注框的交并比（intersection over union，IoU）得分：
 \begin{equation}
-\mathrm{IoU}^{*}=\frac{\text { Intersection }\left(B, B^{*}\right)}{\operatorname{Union}\left(B, B^{*}\right)}
+\mathrm{IoU}^{*}=\frac{\text { Intersection }\left(b, b^{*}\right)}{\operatorname{Union}\left(b, b^{*}\right)}
 \end{equation}
 
 测试时，用于最终目标框选择的得分通过质量评估得分与分类得分相乘得出。因此，远离目标中心的边界框将具有较低的权重。
