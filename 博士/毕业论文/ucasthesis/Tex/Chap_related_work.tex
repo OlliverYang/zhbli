@@ -32,7 +32,7 @@ RTT \cite{RTT} 尝试识别并利用对整个跟踪过程有益的可靠部件�
 与仅基于历史位置信息的卡尔曼滤波器或采用时间预测方法的现有跟踪方法相比，作者提出的循环卷积模型能够同时考虑历史位置信息及过去帧的鲁棒视觉特征。% spatially supervised recurrent convolutional neural networks for visual object tracking
 在文献 \cite{gordon2018re} 中，Gordon 等人提出了一种能够将时间信息整合到模型中的实时目标跟踪器。该跟踪器不专注于一组有限目标或在测试时训练一个模型来跟踪特定目标，而是在大量不同的目标上预先训练一个通用跟踪器，并进行实时的在线更新。%Re al-Time Recurrent Regression Networks for Visual Tracking of Generic Objects
 在文献 \cite{RecurrentFilter} 中，Yang 等人
-%通过保持目标表观并通过长短期记忆（LSTM）网络跟踪过滤器，
+%通过保持目标表观并通过长短期记忆（LSTM）网络跟踪滤波器，
 提出了循环滤波器学习算法。作者采用全卷积神经网络编码目标表观信息，同时保留目标的空间结构。作者认为，将 CNN 特征图展平为向量后传递给 LSTM 会使目标的结构变得模糊。因此，作者将 LSTM 的输入、输出单元和隐藏状态更改为特征图，并在网络中使用卷积层而不是全连接层。卷积 LSTM 的输出是一个滤波器，将其与下一帧的特征图进行卷积以生成目标响应图。%Recurrent Filter Learning for Visual Tracking
 在文献 \cite{PRNet} 中，Ma 等人认为图像中不同尺度的上下文提供了不同的空间关系线索，应以恰当方式进行充分利用进行视觉目标跟踪。为利用全面的上下文线索，作者提出了金字塔循环神经网络。在每种上下文尺度中，使用多达 8 个方向的 RNN 收集目标的上下文信息。每个定向 RNN 都可以提取目标各部分之间的上下文相关性，这使其对背景信息和相似物体更具判别性。 % Multi-Scale Recurrent Tracking via Pyramid Recurrent Network and Optical Flow
 \section{基于脉冲神经网络的跟踪器}% SiamSNN: Spike-based Siamese Network for Energy-Efficient and Real-time Object Tracking
