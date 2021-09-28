@@ -137,7 +137,7 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{跟踪框架}
-所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据文献 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times289\times 289}$。
+所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据文献 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times303\times 303}$。
 然后，将 $\textbf z_0$ 和 $\textbf x_0$ 发送到 SiamFC++ 网络以获得第一帧的跟踪预测。SiamFC++ \cite{SiamFC++} 中的跟踪损失计算如下：
 \begin{equation}
     L = L_{\text{cls}} + L_{\text{quality}} + L_{\text{reg}},
@@ -205,7 +205,7 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
 \subsection{实验设置}
 \textbf{网络架构设计}：本章所采用的基线孪生目标跟踪网络主要由四个子网络组成，分别是用于共享特征提取的主干网络，用于预测边框位置的回归子网络，用于判断目标出现可能性的分类分支，以及用于预测边框质量的质量评估分支。网络结构如图 \ref{fig:MTP_SiamFC++} 所示。主干网由 5 个卷积层和 8 个 Inception 块 \cite{GoogLeNet} 构成，可为模板图像和搜索图像提取高层语义信息，以提升跟踪精度。
 
-\textbf{训练数据}：为了提高特征表示的泛化能力和判别力，同时避免在稀缺的跟踪数据上过度拟合，基线网络的离线训练数据集包括 ILSVRC-VID/DET \cite{VID}、COCO \cite{COCO}、YoutubeBB \cite{real2017youtube}、LaSOT \cite{LaSOT} 和 GOT-10k \cite{GOT-10k}。
+\textbf{训练数据}：为了提高特征表示的泛化能力和判别能力，同时避免在稀缺的跟踪数据上过度拟合，基线网络的离线训练数据集包括 ILSVRC-VID/DET \cite{VID}、COCO \cite{COCO}、YoutubeBB \cite{real2017youtube}、LaSOT \cite{LaSOT} 和 GOT-10k \cite{GOT-10k}。
 其中，大规模视觉识别挑战赛（imagenet large scale visual recognition challenge，ILSVRC）数据集包含超过 4000 个视频序列以及约 130 万个矩形框标注，具有较为丰富多样的视频场景分布。
 COCO 数据集是一个大型的、丰富的物体检测、分割和图像描述数据集。该数据集以场景理解为目标，主要从复杂的日常场景中截取，图像中的目标通过精确的分割进行位置的标定。图像包括 91 类目标，328000 幅图像和 2500000 个标签。
 YoutubeBB 数据集是带有高质量单目标边框注释的大规模数据集，从 240000 段 YouTube 视频中提取大约 380000 个时长 15 秒至 20 秒的视频片段。所选择的视频大多以手持设备（如手机摄像头）拍摄，未进行编辑和后处理。所有视频片段标注有高精度的分类标签，并以 1 帧每秒的帧率进行人工边框标注。该数据集的目的是推动机器学习的进展，以促进视频理解。
