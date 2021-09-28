@@ -158,7 +158,7 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 \end{itemize}
 % TSM: Temporal Shift Module for Efficient Video Understanding
 
-在本章中，我们将该模块入到基于孪生网络的视觉目标跟踪算法中。具体来说，我们将时间聚合模块插入孪生特征提取器的最后一个阶段。
+在本章中，我们将该模块插入到基于孪生网络的视觉目标跟踪算法中。具体来说，我们将时间聚合模块插入孪生特征提取器的最后一个阶段。
 % We have to cite TSM, because we use this idea.
 为了对时间信息进行建模，一批图像是同一视频中的几个相邻帧，并按时间排序，因此我们可以将批次维度视为时间维度。假设特征提取器最后阶段的特征图表示为 $f \in \mathbb R ^ {T \times C \times H \times W}$。
 对于时刻 $t \leq T$，我们首先将特征 $f^t \in \mathbb R ^ {C \times H \times W}$ 沿通道维度分为三部分：$f_{1:K}^t \in \mathbb R ^ {K \times H \times W}$，$f_{(K+1):2K}^t \in \mathbb R ^ {K \times H \times W}$ 和 $f_{(2K+1):C}^t \in \mathbb R ^ {(C-2K) \times H \times W}$。
