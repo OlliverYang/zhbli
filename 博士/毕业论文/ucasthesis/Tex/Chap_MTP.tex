@@ -52,11 +52,11 @@
     s_\theta(\textbf y,\textbf x)=(w_\theta \star \phi(\textbf x))(\textbf y),
     \label{equ:dcf}
 \end{equation}
-其中 $\phi(\textbf x)$ 是从搜索图像 $\textbf x$ 中提取的特征。
+其中 $\phi(\textbf x)$ 是从搜索图像 $\textbf x$ 中提取的特征，$\star$ 表示相关操作。
 
 与 DCF 相比，孪生跟踪器采用双流体系结构。一个流根据模板图像 $\textbf z$ 提取目标的特征 $\phi_\theta(\textbf z)$，该模板图像是根据真实边界框从第一帧裁剪而来的。另一个流接收较大的搜索图像 $\textbf x$ 作为输入，并输出搜索特征 $\phi_\theta(\textbf x)$。这两个输出进行互相关以预测目标置信度得分：
 \begin{equation}
-    s_\theta(\textbf y,\textbf x)=(\phi_\theta(\textbf z) * \phi_\theta(\textbf x))(\textbf y).
+    s_\theta(\textbf y,\textbf x)=(\phi_\theta(\textbf z) \star \phi_\theta(\textbf x))(\textbf y).
     \label{equ:siamese}
 \end{equation}
 
