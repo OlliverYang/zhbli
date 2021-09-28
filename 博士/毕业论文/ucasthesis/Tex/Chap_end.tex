@@ -258,7 +258,7 @@ The loss function of stage 1 is:
 \label{fig:end_uav20l}
 \end{figure}
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
-在本章种，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别性。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
+在本章中，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别性。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
 然后，我们旨在最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
 具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示细化阶段中的分类层和回归层。
 根据文献 \cite{lee2019drop}，按如下方式计算对抗性 Dropout 掩码：
