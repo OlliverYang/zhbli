@@ -41,7 +41,7 @@
 在文献 \cite{TGGAN} 中，为了避免漂移问题并执行在线自适应，Guo 等人使用条件 GAN 架构 \cite{cGAN} 来学习目标的通用表观分布。在跟踪阶段，使用学习到的 GAN 生成器生成目标模板。生成器将第一帧中的真实目标模板和随机矢量作为输入，并输出生成的目标模板。生成的模板被真实目标模板约束，因此不会漂移。同时，生成的模板可以模拟目标可能产生的表观变化。跟踪时，选择最适合当前目标表观的生成模板。通过这些策略，可以在线更新目标模板，同时避免漂移。%Generating Reliable Online Adaptive Templates for Visual Tracking
 
 \section{自适应信息增强的视觉目标跟踪算法}
-在本节中，我们通过直接操纵模板像素为孪生跟踪器提供一种新的模型自适应方法。我们首先回顾与基于模板匹配的主流跟踪器的跟踪过程。遵循文献 \cite{Danelljan_2020_CVPR}，我们将目标跟踪形式化为基于置信度的回归问题，给定一个输出-输入对 $(\textbf y,\textbf x)$，该问题学习函数 $s_\theta:\mathcal{Y\times X\rightarrow \mathbb R}$，并预测标量置信度得分 $s_\theta(\textbf y,\textbf x)\in\mathbb R$。算法的最终预测 $f(\textbf x)=\textbf y^*$ 如下：
+在本节中，我们通过直接操纵模板像素为孪生跟踪器提供一种新的模型自适应方法。我们首先回顾基于模板匹配的主流跟踪器的跟踪过程。遵循文献 \cite{Danelljan_2020_CVPR}，我们将目标跟踪形式化为基于置信度的回归问题，给定一个输出-输入对 $(\textbf y,\textbf x)$，该问题学习函数 $s_\theta:\mathcal{Y\times X\rightarrow \mathbb R}$，并预测标量置信度得分 $s_\theta(\textbf y,\textbf x)\in\mathbb R$。算法的最终预测 $f(\textbf x)=\textbf y^*$ 如下：
 \begin{equation}
     f(\textbf x) = \arg\max_{\textbf y\in \mathcal Y}s_\theta (\textbf y,\textbf x),
 \end{equation}
