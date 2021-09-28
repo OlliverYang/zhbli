@@ -281,7 +281,7 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 \subsection{实验设置}
 \textbf{网络架构设计}：本章所提出的用于对相关滤波跟踪器提供语义引导信息的分割网络 InstMask 主要由两个子网络构成，分别是用于获取语义信息的特征提取网络和用于生成分割模板的解码网络。它们的网络结构如表 \ref{tab:InstMask} 所示，特征提取网络包含一个主干块和三个残差块，可以快速将搜索图像的分辨率下降到较低尺度，以提升计算效率。
 
-\textbf{训练数据}：为了提高分割结果的泛化能力，同时避免在稀缺的跟踪数据上过度拟合，InstMask 的离线训练过程在大规模图像分割数据集 COCO2017 \cite{COCO} 的训练数据集上进行。该数据集以场景理解为目的，主要从复杂的日常场景中截取，图像中的目标通过精确的分割进行位置的标定，包含超过 33 万张图片和 80 个类别。该数据集被广泛使用在最近提出的图像分割算法 \cite{He2018MaskR} 的训练中。
+\textbf{训练数据}：为了提高分割结果的泛化能力，同时避免在稀缺的跟踪数据上过度拟合，InstMask 的离线训练过程在大规模图像分割数据集 COCO2017 \cite{COCO} 的训练数据集上进行。该数据集以场景理解为目的，主要从复杂的日常场景中截取，图像中的目标通过精确的分割进行位置的标定，包含超过 33 万张图片和 80 个类别。该数据集被广泛使用在最近提出的图像分割算法 \cite{he2017mask} 的训练中。
 
 \textbf{优化器参数设定}：本章使用动量为 0.9 的随机梯度下降（stochastic gradient descent，SGD）优化器从随机初始化的网络参数开始训练，并将权值衰减参数设置为 0.00005。学习率从 $10^{-2}$ 指数衰减到 $10^{-4}$。该模型经过 50 个迭代周期的训练，每个批量大小为 32 个样本。
 
@@ -342,9 +342,9 @@ GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据集。
 我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
-我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{Valmadre2017EndtoEndRL}，ECOhc \cite{danelljan2017eco}，CFNetc5 \cite{Valmadre2017EndtoEndRL}，CFNetc1 \cite{Valmadre2017EndtoEndRL}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
+我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{valmadre2017end}，ECOhc \cite{danelljan2017eco}，CFNetc5 \cite{valmadre2017end}，CFNetc1 \cite{valmadre2017end}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
 如图 \ref{fig:IGCF_got10k} 所示，本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所列出的其他跟踪算法。
-在 CFNet \cite{Valmadre2017EndtoEndRL} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
+在 CFNet \cite{valmadre2017end} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
 而本章提出的网络 InstMask 基于 ResNet 设计，具有更多卷积层，可有效提取图像的高层语义信息，因此取得了更好的跟踪性能。
 
 \subsection{基于数据集 DAVIS2016 的评测结果分析}

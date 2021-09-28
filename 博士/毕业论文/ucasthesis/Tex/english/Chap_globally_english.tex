@@ -35,7 +35,7 @@ Therefore, even if the tracker makes a mistake due to \HL{the challenging target
 \HL{Specifically,} the motion \HL{patterns} are automatically learned from the trajectory dataset \HL{in the training phase instead of} the hand-crafted features or rules \cite{iswanto2017visual}\HL{; in the testing phase,} we can use the position information of any number of historical frames instead of just the previous frame for prediction.
 
 \iffalse
-Another advantage of this globally spatial-temporal perception mechanism is that it use the RoI Align \cite{He2018MaskR} operation to enable the tracker to take advantage of deeper networks \HL{for feature learning, which is not acceptable for the popular local mechanism-based SiamFC \cite{SiamFC} and SiamRPN \cite{SiamRPN} trackers, because the padding in their network structures} will destroy the strict translation invariance \cite{SiamFC}. \HL{Specifically}, the entire template image and search image in our tracker are sent to the same backbone network to extract features,  \HL{and} then the object features are obtained \HL{using} the RoI Align operation from the template features according to the ground truth of the \HL{initial frame}. The object features and the search \HL{image} features are cross-correlated by channel to obtain \HL{a fusion feature map}, which \HL{is} sent to the subsequent tracking \HL{modules}. \HL{Since this new} solution has no restrictions on the \HL{translation invariance, we} can use the powerful ResNet \cite{he2016deep} as the backbone network \HL{to accurately model the discrimination between the foreground object and background clutters.}
+Another advantage of this globally spatial-temporal perception mechanism is that it use the RoI Align \cite{he2017mask} operation to enable the tracker to take advantage of deeper networks \HL{for feature learning, which is not acceptable for the popular local mechanism-based SiamFC \cite{SiamFC} and SiamRPN \cite{SiamRPN} trackers, because the padding in their network structures} will destroy the strict translation invariance \cite{SiamFC}. \HL{Specifically}, the entire template image and search image in our tracker are sent to the same backbone network to extract features,  \HL{and} then the object features are obtained \HL{using} the RoI Align operation from the template features according to the ground truth of the \HL{initial frame}. The object features and the search \HL{image} features are cross-correlated by channel to obtain \HL{a fusion feature map}, which \HL{is} sent to the subsequent tracking \HL{modules}. \HL{Since this new} solution has no restrictions on the \HL{translation invariance, we} can use the powerful ResNet \cite{he2016deep} as the backbone network \HL{to accurately model the discrimination between the foreground object and background clutters.}
 \fi
 
 \iffalse
@@ -106,12 +106,12 @@ Compared with Siam R-CNN \cite{voigtlaender2019siam}, whose backbone and RPN are
 %The transplant from a detection task to a tracking task using faster RCNN is straightforward and easy to implement.
 %, which is another advantage of our tracking module. 
 To describe our tracking component, we we first briefly revisit faster RCNN. It consists of a feature extractor followed by two detection stages: the RPN head and the RoI head.
-The feature extractor $\phi_{1}$ is a variant of ResNet50. The first stage uses a region proposal network (RPN) to slide on the last feature map of the backbone layers and predict whether there is an object or not and also predict the bounding box of those objects. The second stage (\textit{i.e.}, RoI head) is run for each region proposed by the RPN by performing RoI Align \cite{He2018MaskR} to extract deep features from this proposed region. 
+The feature extractor $\phi_{1}$ is a variant of ResNet50. The first stage uses a region proposal network (RPN) to slide on the last feature map of the backbone layers and predict whether there is an object or not and also predict the bounding box of those objects. The second stage (\textit{i.e.}, RoI head) is run for each region proposed by the RPN by performing RoI Align \cite{he2017mask} to extract deep features from this proposed region. 
 Each RoI (Region of Interest) is classified as a specific category using a classification layer and the bounding box is refined using a regression layer.
 Please refer to \cite{ren2015faster} for more detailed information.
 
 For the task of object tracking, there are two inputs to the feature extractor $\phi_{1}$: the template image $z$ and the search image $x$. According to the design of the siamese architecture, the two inputs share the same network parameters to extract features.
-After generating the template feature $f_{z} = \phi_{1}(z)$ and search feature $f_{x} = \phi_{1}(x)$, we crop the object feature $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$ by the RoI Align operation \cite{He2018MaskR} from the template features according to the ground truth of the target:
+After generating the template feature $f_{z} = \phi_{1}(z)$ and search feature $f_{x} = \phi_{1}(x)$, we crop the object feature $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$ by the RoI Align operation \cite{he2017mask} from the template features according to the ground truth of the target:
 \begin{equation}
     f_{obj} = \mathcal{R}(b_{obj}, f_{z}),
 \end{equation}
@@ -139,7 +139,7 @@ Two 1 $\times$ 1 convolutions with channel dimension 1024 are added on top of th
 
 The RPN head includes two sibling 1 $\times$ 1 convolutional layers -- a classification layer with channel dimension 2$k$, and a regression layer with channel dimension 4$k$, where $k$ is the number of maximum possible proposals for each location. The RPN head takes the fusion feature as input and simultaneously regress region bounds and objectness scores for each anchor.
 \fi
-%The RoI head is run for each region proposed by the RPN by performing RoI Align \cite{He2018MaskR} to extract deep features from this proposed region.
+%The RoI head is run for each region proposed by the RPN by performing RoI Align \cite{he2017mask} to extract deep features from this proposed region.
 At a second stage, the RoI Align operation is performed on the fusion feature $f_{corr}$, generating a small feature map with a channel dimension of 2048 and a fixed spatial extent of 7 $\times$ 7 for every RoI:
 \begin{equation}
     f_{roi}^{i} = \mathcal{R}(b_{roi}^{i}, f_{corr}),

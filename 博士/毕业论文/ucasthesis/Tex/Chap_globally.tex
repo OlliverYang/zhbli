@@ -27,7 +27,7 @@
 在跟踪过程中，所提出的跟踪器始终能够感知整个图像中的目标。
 因此，即使跟踪器由于具有挑战性的目标表观变化而犯了一个错误，一旦目标的表观恢复正常，跟踪器便可以及时检索目标。尤其是在长期跟踪中目标离开画面的情况下，当目标从任何位置重新进入画面时，跟踪器便可以继续工作。
 
-所提出的全局感知机制的另一个优势是，跟踪器可以结合 RoI Align \cite{He2018MaskR} 操作，利用更深的网络进行特征学习，而这对于流行的基于局部搜索机制的 SiamFC \cite{SiamFC} 和 SiamRPN \cite{SiamRPN} 跟踪器来说是难以实现的，因为其网络结构中的填充操作将破坏严格的平移不变性 \cite{SiamRPN++}，因此仅可以使用浅层神经网络进行特征学习。在本章提出的跟踪器中，我们将整个模板图像和搜索图像送入相同的主干网络以提取特征，然后根据初始帧的真实标注信息使用 RoI Align 操作从模板特征中提取目标特征。通过逐通道互相关操作将目标特征和搜索图像特征进行融合，以获得融合特征图，该融合特征图被送入后续的跟踪模块以得到最终的跟踪位置。由于该跟踪框架对平移不变性没有任何限制，因此可以使用具有较强特征提取能力的 ResNet \cite{he2016deep} 作为主干网络来提高跟踪器对前景目标与背景噪声之间的判别性。
+所提出的全局感知机制的另一个优势是，跟踪器可以结合 RoI Align \cite{he2017mask} 操作，利用更深的网络进行特征学习，而这对于流行的基于局部搜索机制的 SiamFC \cite{SiamFC} 和 SiamRPN \cite{SiamRPN} 跟踪器来说是难以实现的，因为其网络结构中的填充操作将破坏严格的平移不变性 \cite{SiamRPN++}，因此仅可以使用浅层神经网络进行特征学习。在本章提出的跟踪器中，我们将整个模板图像和搜索图像送入相同的主干网络以提取特征，然后根据初始帧的真实标注信息使用 RoI Align 操作从模板特征中提取目标特征。通过逐通道互相关操作将目标特征和搜索图像特征进行融合，以获得融合特征图，该融合特征图被送入后续的跟踪模块以得到最终的跟踪位置。由于该跟踪框架对平移不变性没有任何限制，因此可以使用具有较强特征提取能力的 ResNet \cite{he2016deep} 作为主干网络来提高跟踪器对前景目标与背景噪声之间的判别性。
 
 除了上述全局空间感知机制外，本章还提出了一种轨迹预测模型来减轻近似物体的干扰，以解决端到端训练的孪生网络跟踪器难以区分表观近似目标的问题。与简单设计的手工策略 \cite{SiamFC, SiamRPN} 不同，本章提出的基于卷积神经网络的轨迹预测模型经过端到端训练，可以使用目标的历史轨迹信息和当前帧中的目标表观信息来预测目标在当前帧中的位置分布。
 具体来说，目标的运动模式是在训练阶段从大规模轨迹数据集自动学习的，而不是基于手工制作的特征或规则 \cite{iswanto2017visual}；在测试阶段，我们可以使用任意数量的历史帧位置信息，而不是仅基于上一帧的目标位置进行预测。
@@ -126,11 +126,11 @@ In addition, two steps of regressions achieve accurate localization even for obj
 %, which is another advantage of our tracking module. 
 为了描述本章提出的跟踪框架，我们首先简要回顾一下 Faster RCNN。该目标检测网络包括一个特征提取器，其后是两个检测模块：候选区域生成模块和区域细化模块。
 特征提取器 $\phi_{1}$ 是 ResNet50 的变体。第一阶段（候选区域生成模块）使用区域生成网络（region proposal network，RPN）在特征提取网络的最后一个特征图上执行滑动窗口操作，在判断每个空间位置是否存在目标的同时，预测这些目标的边界框。
-在第二阶段（区域细化模块）中，对于区域生成网络生成的每个候选区域，利用 RoI Align \cite{He2018MaskR} 操作提取尺度相同的深度特征。
+在第二阶段（区域细化模块）中，对于区域生成网络生成的每个候选区域，利用 RoI Align \cite{he2017mask} 操作提取尺度相同的深度特征。
 使用分类层将每个候选区域（region of interest，RoI）分类为特定类别，并使用回归层对边界框位置进行进一步微调。
 
 对于目标跟踪任务，特征提取器 $\phi_{1}$ 有两个输入：模板图像 $\textbf z$ 和搜索图像 $\textbf x$。根据孪生架构的设计，两个输入共享相同的网络参数以提取特征。
-在生成模板特征 $f_{\textbf z} = \phi_{1}(\textbf z)$ 和搜索特征 $f_{\textbf x} = \phi_{1}(\textbf x)$ 之后，利用 RoI Align 操作 \cite{He2018MaskR}，根据目标的真实标注框，在模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
+在生成模板特征 $f_{\textbf z} = \phi_{1}(\textbf z)$ 和搜索特征 $f_{\textbf x} = \phi_{1}(\textbf x)$ 之后，利用 RoI Align 操作 \cite{he2017mask}，根据目标的真实标注框，在模板特征中裁剪得到目标特征 $f_{obj} \in \mathbb{R}^{1024 \times 7 \times 7}$：
 \begin{equation}
     f_{obj} = \mathcal{R}(b_{obj}, f_{\textbf z}),
 \end{equation}
@@ -158,7 +158,7 @@ Two 1 $\times$ 1 convolutions with channel dimension 1024 are added on top of th
 
 The RPN head includes two sibling 1 $\times$ 1 convolutional layers -- a classification layer with channel dimension 2$k$, and a regression layer with channel dimension 4$k$, where $k$ is the number of maximum possible proposals for each location. The RPN head takes the fusion feature as input and simultaneously regress region bounds and objectness scores for each anchor.
 \fi
-%The RoI head is run for each region proposed by the RPN by performing RoI Align \cite{He2018MaskR} to extract deep features from this proposed region.
+%The RoI head is run for each region proposed by the RPN by performing RoI Align \cite{he2017mask} to extract deep features from this proposed region.
 在第二阶段，对融合特征 $f_{corr}$ 执行 RoI Align 操作，为每个 RoI 生成一个小特征图，其通道尺寸为 2048，空间分辨率固定为 7 $\times$ 7：
 \begin{equation}
     f_{roi}^{i} = \mathcal{R}(b_{roi}^{i}, f_{corr}),
