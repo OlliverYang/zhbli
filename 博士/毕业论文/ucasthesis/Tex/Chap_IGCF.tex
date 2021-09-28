@@ -156,7 +156,7 @@ ECO 跟踪器 \cite{danelljan2017eco} 在 DCF 公式中引入分解卷积算子�
 在训练期间，训练集中的每个样本 $k$ 包含（1）RGB 图像补丁 $x_k$，目标位于图像补丁中心附近，（2）图像补丁所对应的二进制分割模板 $m_{k}$。
 接下来，我们描述 InstMask 的网络结构和训练过程。
 
-\textbf{网络结构} 表 \ref{tab:InstMask} 和图 \ref{fig:IGCF_net} 中展示了 InstMask 的网络结构。InstMask 的主干是基于 ResNet50 \cite{He2016DeepRL} 构建的，它由一个主干块和三个残差块组成。
+\textbf{网络结构} 表 \ref{tab:InstMask} 和图 \ref{fig:IGCF_net} 中展示了 InstMask 的网络结构。InstMask 的主干是基于 ResNet50 \cite{he2016deep} 构建的，它由一个主干块和三个残差块组成。
 InstMask 的输入是一个尺寸为 160$\times$160$\times$3 的图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图依次送入 3 个残差块，分别生成大小为 40$\times$40$\times$256，20$\times$20$\times$512，10$\times$10$\times$1024 的特征图。随后，将获得的特征图送入三个卷积层以生成长度为 3136 的向量，该向量具有全局感受野，能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割模板。InstMask 是一个轻量级的网络，配备有 InstMask 的 IGCF 跟踪器可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，能够较好地平衡跟踪准确性和速度，使跟踪器在包括自动驾驶、机器人技术和增强现实等实际应用中进行部署成为可能。
 
 \textbf{训练} 在训练期间，将空间分辨率为 56$\times$56 的模板上采样至原始图像大小 160$\times$160。令 $l$ 表示大小为 $w \times h$ 的真实二值分割模板。损失计算如下：

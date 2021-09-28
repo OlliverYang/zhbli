@@ -21,7 +21,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 实际上，视频具有关于目标的丰富信息，并且这种时间信息是视频理解和跟踪的重要基础。
 例如，在视频目标检测中，FGFA~\cite{zhu2017flow} 在特征级别上利用了时间一致性。该算法通过沿运动路径聚合相邻帧的特征来改善每帧特征，从而提高了视频识别精度。
 在视频目标分割中，STCNN~\cite{xu2019spatiotemporal} 引入了时间模块，该模块着重于捕获动态表观和运动线索以提供目标分割的指导信息。
-在基于判别性相关滤波器的目标跟踪中，FlowTrack~\cite{zhu2018end} 专注于利用连续帧中丰富的流信息来改善特征表示和跟踪精度。
+在基于判别性相关滤波器的目标跟踪中，FlowTrack~\cite{FlowTrack} 专注于利用连续帧中丰富的流信息来改善特征表示和跟踪精度。
 但是，如何在孪生跟踪器中利用时间信息尚未得到广泛研究。
 
 \begin{figure*}[t]
@@ -45,7 +45,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。
 为实现聚合时间信息的目的，我们在孪生网络的特征提取网络中沿时间维度 \cite{lin2019tsm} 移动通道特征。
 请注意，由于视频中目标的运动 \cite{zhu2017flow}，相邻帧中同一目标的特征通常不会在空间上对齐，因此仅对残差层 \cite{lin2019tsm} 进行时间平移，以保证孪生跟踪器的特征学习能力。
-与其他时间融合方法 \cite{tao2016siamese, gladh2016deep} 不同，本章采用的方法能够在大规模数据集上进行端到端训练。此外，本章采用的时间融合方法易于实现，而无需更改孪生跟踪架构或使用光流 \cite{zhu2018end} 信息。
+与其他时间融合方法 \cite{tao2016siamese, gladh2016deep} 不同，本章采用的方法能够在大规模数据集上进行端到端训练。此外，本章采用的时间融合方法易于实现，而无需更改孪生跟踪架构或使用光流 \cite{FlowTrack} 信息。
 
 %improve the generalization ability on bad object.
 %Our insight is that, if we only rely on the traditional training method, the bad image in the training data will be over wheeled by the easy cases. So the tracker shows bad performance when meeting with bad image during testing. To solve this problem, we take advantage of the recent progress in adversarial learning to increase the robustness of object features.
@@ -79,7 +79,7 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 \subsection{时间信息在视觉目标跟踪中的应用}
 大多数现有的相关滤波跟踪器仅考虑当前帧的表观特征，几乎无法从运动和帧间信息中受益。在诸如部分遮挡和形变之类的挑战中，缺少时间信息会降低跟踪性能。目标跟踪所处理的是视频信息，因此时序信息很重要。
 %以前有很多工作利用时序信息进行目标跟踪。
-在文献 \cite{DeepMotion} 中，Gladh 等人首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动特征对视觉目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视觉目标跟踪。
+在文献 \cite{gladh2016deep} 中，Gladh 等人首次提出将表观信息与深度运动特征融合以进行视觉跟踪。表观特征仅对单帧中的静态信息进行编码，而深度运动特征则对基于光流的多帧信息进行整合。因此，运动特征可以捕获与表观特征互补的场景动态特征。因此，作者研究了深度运动特征对视觉目标跟踪的影响，并提出将表观特征与深度运动特征进行融合，以进行视觉目标跟踪。
 该方法虽然利用光流提高了视觉目标跟踪算法的性能，但采用的是在动作识别任务中预训练的深层光流网络，并没有在视觉目标跟踪任务中进行端到端训练，因此没有获得最佳跟踪效果。
 为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出在深度学习框架中共同训练光流网络和跟踪网络，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
 

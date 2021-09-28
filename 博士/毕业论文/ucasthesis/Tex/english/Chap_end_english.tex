@@ -35,7 +35,7 @@ However, all above siamese algorithms perform tracking based on features cropped
 Actually, the video has rich information about the target and such temporal information is an important basis for video understanding and tracking.
 For example, in video object detection, FGFA \cite{zhu2017flow} leverages temporal coherence on feature level. It improves the per-frame features by aggregation of nearby features along the motion paths, and thus improves the video recognition accuracy.
 In video object segmentation, STCNN \cite{xu2019spatiotemporal} introduces a temporal coherence module, which focuses on capturing the dynamic appearance and motion cues to provide the guidance of object segmentation.
-In discriminative correlation filter-based object tracking, FlowTrack \cite{zhu2018end} focuses on making use of the rich flow information in consecutive frames to improve the feature representation and the tracking accuracy. 
+In discriminative correlation filter-based object tracking, FlowTrack \cite{FlowTrack} focuses on making use of the rich flow information in consecutive frames to improve the feature representation and the tracking accuracy. 
 However, how to utilize the temporal information in siamese trackers has not been widely studied yet. 
 
 \begin{figure*}[t]
@@ -62,7 +62,7 @@ Note that features of the same object are usually not spatially aligned across f
 Different from other temporal fusion methods \cite{tao2016siamese, gladh2016deep}, the proposed method is able to be trained end-to-end on large-scale datasets.
 %The proposed temporal aggregation module is trained end-to-end in the siamese network.
 %(This module enables our module to be trained end-to-end on large-scale datasets.)
-Additionally, our temporal fusion method is easy to implement, without changing the siamese tracking architecture or using optical flow \cite{zhu2018end}.
+Additionally, our temporal fusion method is easy to implement, without changing the siamese tracking architecture or using optical flow \cite{FlowTrack}.
 
 %improve the generalization ability on bad object.
 %Our insight is that, if we only rely on the traditional training method, the bad image in the training data will be over wheeled by the easy cases. So the tracker shows bad performance when meeting with bad image during testing. To solve this problem, we take advantage of the recent progress in adversarial learning to increase the robustness of object features.
