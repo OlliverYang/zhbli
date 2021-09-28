@@ -313,7 +313,7 @@ VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的�
 我们将本章提出的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
 这些跟踪器可以分为三类：Struck 和 EBT 是传统的跟踪器。SRDCF，CSRDCF，TGPRfSRDCF，Staple 和 SAMF 是基于 DCF 的跟踪器。DeepSRDCF 和 TCNN 是基于 CNN 的跟踪器。
 跟踪器的 EAO 得分如图 \ref{fig:vot15} 所示。与其他列出的方法相比，本章提出的方法可实现 0.342 的 EAO。
-Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 相比于 Struck 在 EAO 指标上提升了 0.096，这表明 DCF 框架的出色表现以及 IGCF 的有效性。
+Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 相比于 Struck 在 EAO 指标上提升了 0.096，这表明了 DCF 框架的出色表现以及 IGCF 的有效性。
 CSRDCF 使用目标和背景的颜色直方图生成目标模板，以限制相关滤波器的学习，而 IGCF 使用神经网络生成模板。因此，IGCF 相比于 CSRDCF 在 EAO 指标上提升了 0.022。这表明，与使用底层图像特征生成的模板相比，使用深层卷积特征生成的语义模板更有利于滤波器的学习。
 DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征。但是，所使用的深层特征并不专用于实例分割。相比之下，InstMask 在针对实例分割而设计的 COCO 分割数据集上进行了训练。在 VOT2015 上，IGCF 相比于 DeepSRCDF 在 EAO 指标上提升了 0.024，这反映了提出的 InstMask 和 IGSC 模块的有效性。
 
