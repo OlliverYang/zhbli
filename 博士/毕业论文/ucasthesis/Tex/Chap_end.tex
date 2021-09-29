@@ -1,5 +1,5 @@
 \chapter{时间信息增强的视觉目标跟踪算法研究}\label{chap:end}
-在上一章中，我们研究了如何为基于孪生网络的视觉目标跟踪算法提供更丰富的空间信息以克服跟踪的累计误差。然而，如何在基于孪生网络的视觉目标跟踪算法中利用\textbf{时间信息}尚未得到广泛研究。在本章中，我们提出了一种新型孪生跟踪体系结构，配备有一个时间聚合模块，该模块通过聚合来自相邻帧的时间信息来改善每帧的特征。这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。此外，我们在孪生网络中整合了对抗性 Dropout 模块，以端到端的方式学习更具判别性的目标特征。本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了所提出的时间信息增强的视觉目标跟踪算法的有效性。
+上一章主要研究了如何为基于孪生网络的视觉目标跟踪算法提供更丰富的空间信息以克服跟踪的累计误差。然而，如何在基于孪生网络的视觉目标跟踪算法中利用\textbf{时间信息}尚未得到广泛研究。本章旨在提出一种新型孪生跟踪体系结构，配备有一个时间聚合模块，该模块通过聚合来自相邻帧的时间信息来改善每帧的特征。这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。此外，本章在孪生网络中整合了对抗性 Dropout 模块，以端到端的方式学习更具判别性的目标特征。本章通过在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 数据集上的大量实验结果，证明了所提出的时间信息增强的视觉目标跟踪算法的有效性。
 
 \section{引言}
 视觉目标跟踪的目的是在视频序列每一帧中估计任意目标的状态。 
@@ -36,35 +36,21 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
     \label{fig:SiamTFA}
 \end{figure*}
 
-% key words: temporal modeling, model the temporal information, temporal fusion, inter-frame information, improve the feature representation, temporal aggregation, poor object appearance
-在本章中，我们旨在充分利用孪生跟踪器中的时间信息。
-%(We introduce a novel siamese tracking architecture equipped with a temporal aggregation module to make full use of inter-frame information.)
-%(In this work, to deal with the issues raised above, we propose a novel tracker to aggregate features of adjacent frames by ...)
-%(In this paper, we develop an end-to-end temporal aggregation module in siamese architecture to utilize both the power of siamese trackers and the inter-frame information.)
-我们提出了一种新型孪生跟踪架构，配备有时间聚合模块，该模块通过聚合相邻帧中的特征来改善每帧中目标的特征表示。
+本章旨在充分利用孪生跟踪器中的时间信息，提出了一种新型孪生跟踪架构，配备有时间聚合模块，该模块通过聚合相邻帧中的特征来改善每帧中目标的特征表示。
 这种时间聚合策略使孪生跟踪器可以处理由于运动模糊等原因导致的目标表观信息退化现象。
-为实现聚合时间信息的目的，我们在孪生网络的特征提取网络中沿时间维度 \cite{lin2019tsm} 移动通道特征。
+为实现聚合时间信息的目的，在孪生网络的特征提取网络中沿时间维度 \cite{lin2019tsm} 移动通道特征。
 请注意，由于视频中目标的运动 \cite{zhu2017flow}，相邻帧中同一目标的特征通常不会在空间上对齐，因此仅对残差层 \cite{lin2019tsm} 进行时间平移，以保证孪生跟踪器的特征学习能力。
 与其他时间融合方法 \cite{tao2016siamese, gladh2016deep} 不同，本章采用的方法能够在大规模数据集上进行端到端训练。此外，本章采用的时间融合方法易于实现，而无需更改孪生跟踪架构或使用光流 \cite{FlowTrack} 信息。
 
-%improve the generalization ability on bad object.
-%Our insight is that, if we only rely on the traditional training method, the bad image in the training data will be over wheeled by the easy cases. So the tracker shows bad performance when meeting with bad image during testing. To solve this problem, we take advantage of the recent progress in adversarial learning to increase the robustness of object features.
-%Our method employs adversarial Dropout to increase the robustness of object features. 
-%注意，由于该模块在文章中占据次要位置，所以不应该写目前方法存在的缺点，而应该直接写用了这个模块后起到的作用。
-%感觉概括性的优点不太好想，所以可以多些几句实现细节。这就要求我们弄懂代码原理。
-为了提高目标特征的鲁棒性，我们在孪生跟踪网络中进一步整合了一个对抗性 Dropout \cite{park2018adversarial} 模块。
-% add adversarial Dropout to enforce the tracker to learn difficult cases. 
-% (We further propose a adversarial training module to enforce the tracker to learn difficult cases. The motivation is that ... This is achieved by computing the adversarial masks based on diversity maximum. This simple form of feature selection improves the discrimination power of the tracker.)
-%Specifically, we calculate the diversity of two Dropouts, and make the loss max to learn the difficult Dropout mask.
+为了提高目标特征的鲁棒性，本章在孪生跟踪网络中进一步整合了一个对抗性 Dropout \cite{park2018adversarial} 模块。
 具体而言，首先根据散度最大化预测对抗性 Dropout 模板。
-然后，我们旨在最大程度地减小随机删除的特征和对抗删除的特征之间的差异。
-%The effect of this module can be interpreted from both the Dropout and from the adversarial training perspectives.
+然后，最大程度地减小随机删除的特征和对抗删除的特征之间的差异。
 该模块具有 Dropout 和对抗训练的双重优势：Dropout 使基于孪生网络的视觉目标跟踪器在训练过程中随机断开神经元，以防止目标特征的过拟合；而对抗训练则使基于孪生网络的视觉目标跟踪器学习困难的情况。
 
 总体来说，本章的贡献有三个方面：
 \begin{itemize}
-\item 在本章中，我们提出了一种新型孪生跟踪体系结构，配备有时间聚合模块，可通过聚合相邻帧的特征来改善每帧中目标的特征表示。
-\item 我们在孪生网络跟踪器中进一步引入了对抗性 Dropout 模块，以提高孪生跟踪网络的特征判别能力。
+\item 本章提出了一种新型孪生跟踪体系结构，配备有时间聚合模块，可通过聚合相邻帧的特征来改善每帧中目标的特征表示。
+\item 本章在孪生网络跟踪器中进一步引入了对抗性 Dropout 模块，以提高孪生跟踪网络的特征判别能力。
 \item 在 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 跟踪数据集上的大量实验结果，证明了基于时间信息增强的跟踪系统的有效性（图 \ref{fig:end_vis}）。
 \end{itemize}
 
@@ -84,67 +70,30 @@ SiamRPN++~\cite{SiamRPN++} 引入了一种简单而有效的采样策略，以�
 为了解决这一问题，FlowTrack \cite{FlowTrack} 首次提出在深度学习框架中共同训练光流网络和跟踪网络，从而利用连续帧中丰富的光流信息进一步提高特征表示和跟踪精度。首先，作者将包括光流估计、特征提取、特征聚合和相关滤波器跟踪在内的各个组件制定为网络中的特殊层。然后，按照光流的引导，以指定的时间间隔对历史特征图进行扭曲并与当前特征图进行聚合，从而捕获视频中的时间信息。
 
 \section{孪生网络跟踪器的端到端时间聚合}
-%应该提及我们的跟踪器的损失函数包括：对抗性损失，加上常规跟踪损失。
-%In this section, we will introduce the proposed tracking method, SiamTFA (Fig. \ref{fig:SiamTFA}). 
-%The main feature is:
-%(1) A strong backbone. Use FPN and new-proposed feature modulation.
-%(2) Equipped with 2 useful module: temporal aggregation module and adversarial Dropout module to improve the robustness of features.
-%In the following, three sub-section will be introduced: (1) Overview of tracking (2) Temporal aggregation module (3) Adversarial Dropout module.
-%网络结构怎么描述？可以参考ATOM。
-%Our SiamTFA bases on a strong feature extractor -- FPN.
-%We insert our temporal aggregation module in the backbone. Details of this module will be introduced at sec 3.2.
-%Be robust to object size.
-%FPN: handle different object size.
-%modulator vector: handle different template object size.
-%xcorr depth-wise: stage1 merge.
-%element wise product: stage2 merge
-% 介绍输入
-%The input of the network is ... We use notations ... to denote ..., respectively. ... has a size of ...
-%SiamTFA is composed of ... and ...
-%Inspired by the great success of siamese trackers \cite{SiamRPN++, Wang2018SiamMask}, we also construct our SiamTFA based on the siamese architecture.
-%在本节中，我们将介绍基于孪生体系结构的跟踪方法，图 \ref{fig:SiamTFA}），其灵感来自孪生跟踪器 \cite{SiamRPN++, Wang2018SiamMask} 的巨大成功。
 本文提出的跟踪网络（图 \ref{fig:SiamTFA}）基于孪生跟踪架构 \cite{SiamRPN++, Wang2018SiamMask}，将图像对作为输入，包括模板图像和搜索图像。模板图像是根据真实边界框从初始帧裁剪的图像块。搜索图像是视频序列中的某一帧。两个输入共享相同的特征提取器和网络参数。
-受两阶段检测框架 \cite{ren2015faster} 启发，本章提出的孪生跟踪器也是一种两阶段方法。第一阶段旨在生成在视觉上类似于给定模板目标的候选目标区域。在该阶段，我们引入一个时间聚合模块
-%(Fig. \ref{fig:TSM}) 
-以增强时间信息（第 \ref{sec:stage1} 节）。第二阶段旨在从候选目标区域中确定跟踪的最终结果。
-% select the target from candidate proposals. 
-在该阶段，我们引入一个对抗性 Dropout 模块以学习更具判别性的特征（第 \ref{sec:stage2}节）。
+受两阶段检测框架 \cite{ren2015faster} 启发，本章提出的孪生跟踪器也是一种两阶段方法。第一阶段旨在生成在视觉上类似于给定模板目标的候选目标区域。在该阶段，引入一个时间聚合模块以增强时间信息（第 \ref{sec:stage1} 节）。第二阶段旨在从候选目标区域中确定跟踪的最终结果。在该阶段，引入一个对抗性 Dropout 模块以学习更具判别性的特征（第 \ref{sec:stage2}节）。
 
 \subsection{时间聚合模块}
 \label{sec:stage1}
-% Note that 'stage1' and 'stage2' is a local term. You should introduce the global architecture which includes 'stage1' and 'stage2' first.
-% You need to say something about ‘siamese' and the 'input'.
 候选目标生成阶段包括三个组件：（1）特征提取器，（2）时间聚合模块和（3）特征调制模块。
 特征提取器分别为搜索图像和模板图像生成搜索特征和模板特征。时间聚合模块被集成到特征提取器中以利用时间信息。特征调制模块聚合搜索特征和模板特征以识别候选目标。
 
-\textbf{特征提取器} 为了处理目标的尺度变化，我们使用 ResNet50-FPN \cite{lin2017feature} 作为特征提取器。
-% You need to describe FPN here. What is FPN?
+\textbf{特征提取器} 为了处理目标的尺度变化，本章使用 ResNet50-FPN \cite{lin2017feature} 作为特征提取器。
 \textbf{F}eature \textbf{P}yramid \textbf{N}etwork（FPN）利用深层卷积网络固有的多尺度金字塔层次结构来构建具有较小计算成本的特征金字塔。
-%与现有目标跟踪的工作不同，我们提出采用特征金字塔架构作为目标跟踪网络的特征提取器。因为特征金字塔具有很多优点。例如使图像金字塔的每个级别特征化的主要优点是，它会产生多尺度特征表示，其中所有级别在语义上都很强大，包括高分辨率级别。众所周知，
 特征金字塔是目标检测领域用于检测不同尺度目标的重要组件。
-%但是最近的深度学习目标检测器避免了金字塔表示，部分原因是它们需要大量计算和内存。在本章中，
-然而传统的特征金字塔方法往往需要消耗大量计算资源和内存空间。为了解决这一问题，FPN 
-%利用深层卷积网络固有的多尺度金字塔层次结构来构建具有较小计算成本的特征金字塔，
-开发了具有横向连接的自上而下的体系结构，以构建各种尺度的高级语义特征图。
+然而传统的特征金字塔方法往往需要消耗大量计算资源和内存空间。为了解决这一问题，FPN 开发了具有横向连接的自上而下的体系结构，以构建各种尺度的高级语义特征图。
 FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显著的性能改进。
-%为了避免金字塔造成的计算量增加，FPN 自然地利用卷积神经网络中金字塔形状的特征层次结构，创建在各个尺度上具有强大语义的特征金字塔。为了实现此目标，我们依靠通过自上而下的路径和横向连接将低分辨率，语义上强的特征与高分辨率，语义上弱的特征相结合的体系结构（图1（d））。结果是一个功能金字塔，在所有级别上都具有丰富的语义，并且可以从单个输入图像比例快速构建。换句话说，我们展示了如何创建网络内特征金字塔，这些特征金字塔可用于替换特征化的图像金字塔而不会牺牲表示能力，速度或内存。% Feature Pyramid Networks for Object Detection
-因此，我们将 FPN 体系结构引入孪生网络跟踪器当中。所提出的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出不同尺度的特征图。
-%The input of the feature extractor is an image pair consists of a template image and a search image. The search image is resized to min size 800. The template is cropped according to ground truth bounding box and resized into 400*400. According to the siamese architecture, the template/search image share the same parameters. 
-%For the search image, we got 5 different features and they have strides of \{4, 8, 16, 32, 64\} pixels with respect to the input image. For template branch, we use the last layer of FPN with size 7*7. 
-我们将搜索图像的输出特征图表示为 $F_{\textbf x} = \{f_{\textbf x}^i\}_{i=1:5}$，特征图的步幅分别为 \{4, 8, 16, 32, 64\} 像素。
-对于模板图像，我们使用 FPN 最后阶段的输出作为模板特征，其空间大小为 $7 \times 7$。
-%Different from traditional trackers, our template/search features have temporal information. The reason is because we insert the temporal shift module into the backbone, which will be introduced next.
+因此，本章将 FPN 体系结构引入孪生网络跟踪器当中。所提出的孪生 FPN 将模板图像和搜索图像作为输入。对于搜索图像，FPN 以完全卷积的方式在多个级别上输出不同尺度的特征图。
+搜索图像的输出特征图表示为 $F_{\textbf x} = \{f_{\textbf x}^i\}_{i=1:5}$，特征图的步幅分别为 \{4, 8, 16, 32, 64\} 像素。
+对于模板图像，使用 FPN 最后阶段的输出作为模板特征，其空间大小为 $7 \times 7$。
 
 \textbf{时间聚合模块}
-%Different from traditional trackers, we use the rich information about the same object instance by 
 大多数基于孪生网络的视觉目标跟踪算法 \cite{SiamRPN++, Wang2018SiamMask} 使用静止图像预测目标的位置，% However, tracking on single frame generates unstable results and fails when appearance is pool \cite{zhu2017flow}. 
 这限制了孪生跟踪器的能力。
 一方面，基于单帧进行跟踪可能会产生不稳定的结果，从而导致在目标表观发生退化时跟踪失败（图 \ref{fig:end_vis}）；另一方面，
 在时间上相邻的帧可以提供有关目标的更多信息。
-%the video has rich information about the target. 
-因此，我们旨在通过聚合相邻帧的特征来改善每帧中的目标特征。
-相比于三维卷积神经网络，传统的二维卷积神经网络消耗的计算资源相对较少，但无法捕获时间关系。基于三维卷积神经网络的方法可以提取时间维度的特征，但计算量大，因此部署成本高。在本章所设计的跟踪器中，我们引入了一种性能高、速度快的通用时间移位模块（temporal shift module，TSM）\cite{lin2019tsm}。具体来说，该模块可以实现三维卷积神经网络的性能，同时保持二维卷积神经网络的复杂性。时间移位模块沿时间维度移动部分通道，因此可以在相邻帧之间交换信息。该模块可以直接插入二维卷积神经网络中，在不增加计算量和参数量的情况下实现时间建模。具体来说，神经网络中的特征激活可以表示为 $f \in \mathbb R^{N\times C\times T\times H\times W}$，其中 $N$ 是批次大小，$C$ 是通道数，$T$ 是时间维度，$H$ 和 $W$ 是空间分辨率。传统的二维卷积神经网络在不同的时间 $T$ 上独立运行，因此无法进行时间建模。而时间移位模块沿时间维度向前或向后移动通道，使得来自相邻帧的信息在移位后与当前帧混合在一起。
-%我们的直觉是：卷积运算由移位和乘法累加组成。我们将时间维度偏移±1，并将乘积从时间维度折叠到通道维度。为了实时了解在线视频，将来的框架不能转移到现在，因此我们使用单向TSM（图1c）进行在线视频理解。
+因此，本章旨在通过聚合相邻帧的特征来改善每帧中的目标特征。
+相比于三维卷积神经网络，传统的二维卷积神经网络消耗的计算资源相对较少，但无法捕获时间关系。基于三维卷积神经网络的方法可以提取时间维度的特征，但计算量大，因此部署成本高。在本章所设计的跟踪器中，引入了一种性能高、速度快的通用时间移位模块（temporal shift module，TSM）\cite{lin2019tsm}。具体来说，该模块可以实现三维卷积神经网络的性能，同时保持二维卷积神经网络的复杂性。时间移位模块沿时间维度移动部分通道，因此可以在相邻帧之间交换信息。该模块可以直接插入二维卷积神经网络中，在不增加计算量和参数量的情况下实现时间建模。具体来说，神经网络中的特征激活可以表示为 $f \in \mathbb R^{N\times C\times T\times H\times W}$，其中 $N$ 是批次大小，$C$ 是通道数，$T$ 是时间维度，$H$ 和 $W$ 是空间分辨率。传统的二维卷积神经网络在不同的时间 $T$ 上独立运行，因此无法进行时间建模。而时间移位模块沿时间维度向前或向后移动通道，使得来自相邻帧的信息在移位后与当前帧混合在一起。
 尽管移位运算不会增加计算量，但仅简单地平移通道信息会带来两个主要的问题：
 \begin{itemize}
 \item 效率不高：移位运算在理论上不会增加计算量，但会导致数据移动。数据移动的额外成本不可忽略，并且会导致延迟增加。这种现象在占用大量内存空间的视频理解神经网络中更加严重。
@@ -156,76 +105,36 @@ FPN 作为通用的特征提取器，为多种计算机视觉应用带来了显�
 \item 采用局部移位策略：为了有效的时间融合，只移位一小部分通道，而不是移位所有通道。这种策略显著降低了数据移动成本。
 \item 将时间移位模块插入残差分支内，以便保留当前帧的激活，这不会损害二维卷积神经网络的空间特征学习能力。
 \end{itemize}
-% TSM: Temporal Shift Module for Efficient Video Understanding
 
-在本章中，我们将该模块插入到基于孪生网络的视觉目标跟踪算法中。具体来说，我们将时间聚合模块插入孪生特征提取器的最后一个阶段。
-% We have to cite TSM, because we use this idea.
-为了对时间信息进行建模，一批图像是同一视频中的几个相邻帧，并按时间排序，因此我们可以将批次维度视为时间维度。假设特征提取器最后阶段的特征图表示为 $f \in \mathbb R ^ {T \times C \times H \times W}$。
-对于时刻 $t \leq T$，我们首先将特征 $f^t \in \mathbb R ^ {C \times H \times W}$ 沿通道维度分为三部分：$f_{1:K}^t \in \mathbb R ^ {K \times H \times W}$，$f_{(K+1):2K}^t \in \mathbb R ^ {K \times H \times W}$ 和 $f_{(2K+1):C}^t \in \mathbb R ^ {(C-2K) \times H \times W}$。
+本章提出，将该模块插入到基于孪生网络的视觉目标跟踪算法中。具体来说，将时间聚合模块插入孪生特征提取器的最后一个阶段。
+为了对时间信息进行建模，一批图像是同一视频中的几个相邻帧，并按时间排序，因此可以将批次维度视为时间维度。假设特征提取器最后阶段的特征图表示为 $f \in \mathbb R ^ {T \times C \times H \times W}$。
+对于时刻 $t \leq T$，首先将特征 $f^t \in \mathbb R ^ {C \times H \times W}$ 沿通道维度分为三部分：$f_{1:K}^t \in \mathbb R ^ {K \times H \times W}$，$f_{(K+1):2K}^t \in \mathbb R ^ {K \times H \times W}$ 和 $f_{(2K+1):C}^t \in \mathbb R ^ {(C-2K) \times H \times W}$。
 然后，按照文献 \cite{lin2019tsm} 沿时间维度移动通道：
-% Then The aggregated function at time $t$ is:
 \begin{equation}
     f_{agg}^t = \mathcal{C}(f_{{1:K}}^{t-1}, f_{(K+1):2K}^{t+1}, f_{(2K+1):C}^{t}),
 \end{equation}
 其中 $\mathcal{C}(\cdot)$ 是串接操作。根据文献 \cite{lin2019tsm}，移位操作仅在残差层执行，以保留孪生跟踪器的空间特征学习能力。
-请注意，聚合特征 $f_{agg}^t$ 具有与 $f^t$ 相同的形状，因此我们可以将此模块直接插入到主干网络中，而无需更改网络的其他部分。
+请注意，聚合特征 $f_{agg}^t$ 具有与 $f^t$ 相同的形状，因此可以将此模块直接插入到主干网络中，而无需更改网络的其他部分。
 而且，此操作仅需要进行数据移动，并且可以端到端进行训练。
-% Say the effect of this module.
-%After performing such channel fusion, rich target information in adjacent frames can be aggregated into the current frame. For example, if the current frame is blurred, target information that is not blurred in adjacent frames can be used.
-
-\iffalse
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.7\textwidth]{Img/end/TSM_v1.pdf}
-    \caption{时间聚合模块示意图。}
-    \label{fig:TSM}
-\end{figure}
-\fi
 
 \textbf{特征调制模块} 在获得模板特征 $f_{\textbf z}$ 和搜索图像的特征金字塔 $F_{\textbf x} = \{f_{\textbf x}^i\}_{i=1:5}$ 之后，对其进行调制以生成特定于目标的特征。
 具体而言，使用全局平均池化操作根据 $f_{\textbf z}$ 生成调制矢量 $f_{avg}$，该调制矢量携带目标特定的表观信息。
-%The search feature pyramid is $F = \{f_1, f_2, f_3\}$. 
-%For $f_{x}^{i} \in F_{x}$, t
 调制后的特征金字塔 $F_{mod} = \{f_{mod}^i\}_{i=1:5}$ 的生成方式如下：
 \begin{equation}
     f_{mod}^i = f^i_{\textbf x} \star f_{avg},
 \end{equation}
 其中 $\star$ 是逐通道互相关操作 \cite{SiamRPN++}。
-%So we get the modulated feature pyramid $F_{mod} = \{f_{mod}^i\}_{i=1:5}$. 
-%Then we predict proposals on $F_{mod}$.
 每个调制后的特征图都被送入两个并行的全连接层中——通道尺寸为 $4k$ 的边框回归层和通道尺寸为 $2k$ 的边框分类层，其中 $k$ 是每个空间位置的最大候选目标数量。
-% anchor 这个概念是必备的，所以是得讲一下。
-%相对于一组锚定义了目标/背景标准和边界框回归。
-我们根据文献 \cite{lin2017feature} 将具有相同尺度的锚框分配给每个不同的金字塔层级。%有关锚框设置的详细信息，请参阅 \cite{lin2017feature}。
-% For every modulated layer, we attach a classification layer and a regression layer to make predict.
-\iffalse
-The loss function of stage 1 is:
-\begin{equation}
-    \mathcal{L}_1 = 
-\end{equation}
-\fi
-% you need to say how we get the candidates. Faster R-CNN already says it.
-%The generated proposes with top-K classification scores is send to stage2.
-我们使用得分最高的前 $N$ 个候选目标区域送入细化阶段进行后处理。
+在本章中，根据文献 \cite{lin2017feature} 将具有相同尺度的锚框分配给每个不同的金字塔层级，使用得分最高的前 $N$ 个候选目标区域送入细化阶段进行后处理。
 
 \subsection{对抗性 Dropout 模块}
-%stage 1 的网络结构已经交代清楚了，就是一个FPN。和调制，和分类/回归层。那么stage的网络结构也应该交代清楚：roi align + 特征融合 + 对抗 + 分类/回归层。
 \label{sec:stage2}
-% 首先你要讲一下stage2在全局中的作用。
 细化阶段旨在从候选目标区域中选择目标。
-% 或许该讲一下stage2的输入包括：真实目标特征+候选区域。
-% The input of stage 2 consists of: (1) The target feature is $f_{z} \in \mathbb R ^{256 \times 7 \times 7}$. (2) The candidate boxes generated from stage 1.
-% Stage 2 compose of a feature merge module, a adversarial Dropout module, a classifier layer $h^{cls}$ and a regression layer $h^{reg}$. 
 这些候选目标的特征使用 RoI Align \cite{he2017mask} 操作从搜索特征金字塔 $F_{\textbf x}$ 中裁剪出来，然后与目标特征 $f_{\textbf z}$ 进行融合：
 \begin{equation}
     \mathcal{X} = \mathcal{R}(b, F_{\textbf x}) \odot f_{\textbf z},
 \end{equation}
 其中 $\mathcal{R}$ 表示 RoI Align 操作，$\odot$ 表示逐元素相乘操作，$b$ 表示候选目标区域，$\mathcal{X}$ 表示候选目标区域 $b$ 的融合特征。
-%where $x' \in \mathbb R ^{256 \times 7 \times 7}$.
-%$x' \in \mathbb R ^{256 \times 7 \times 7}$ is the feature of an RoI cropped from unmodulated feature pyramid using RoIAlign \cite{he2017mask}.
-%The merged feature of a candidate target is:$x = x' \odot x_0$, where $\odot$ represents the element-wise multiplication. $x$ is the merged feature of that RoI.
-% Maybe you need to say why you do the merge again.
-% The modulation in stage 1 and the feature merge in stage 2 play different part in the tracking process. The modulation aims to detect the similar appearance in the whole image. The
 
 \begin{figure}[t]
     \centering
@@ -234,15 +143,7 @@ The loss function of stage 1 is:
     \label{fig:end_got10k}
 \end{figure}
 
-\iffalse
-\begin{figure}[t]
-\centering
-\caption{本章提出的跟踪算法与相关算法在 UAV20L \cite{mueller2016benchmark} 数据集上的跟踪成功率曲线以及精度曲线展示。}
-\includegraphics[width=1.0\textwidth]{Img/end/UAV20L.pdf}
-\end{figure}
-\fi
-
-\textbf{对抗性 Dropout} 特征融合之后，我们使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
+\textbf{对抗性 Dropout} 特征融合之后，本章算法使用对抗性 Dropout \cite{park2018adversarial, lee2019drop} 来提高 $\mathcal{X}$ 的判别能力。
 之所以使用这一模块，是因为 Dropout 是一种简单而有效的正则化方法，可以在训练过程中随机丢弃一部分神经元。Srivastava 等人 \cite{srivastava2014dropout} 指出， Dropout 具有整合网络的多个子集的作用。 Park 等人 \cite{park2016analysis} 着重指出了卷积层上的 Dropout 效果。Tompson 等人 \cite{tompson2015efficient} 指出，卷积层的激活通常被同一特征图中的类似激活所包围；因此，丢弃单个神经元在卷积层中没有强大的作用。取而代之的是，他们提出了空间 Dropout 的方法，即丢弃整个特征图，而不是单个神经元。 Hou 等人 \cite{hou2019weighted} 在空间 Dropout 的基础上，提出了一种加权的通道 Dropout 方案，该方案对各个通道使用可变的丢弃率，其中丢弃率取决于通道的平均激活值。加权通道 Dropout 仅应用于网络的较深层，在这些较深的层中，激活具有很高的特异性。
 \begin{figure}[t]
 \begin{minipage}{0.48\textwidth}
@@ -258,8 +159,7 @@ The loss function of stage 1 is:
 \label{fig:end_uav20l}
 \end{figure}
 对抗性 Dropout 是一种用于监督和半监督学习的有效正则化方法。具体来说，Park 等人 \cite{park2018adversarial} 定义了两种类型的对抗性 Dropout：监督对抗性 Dropout（SAdD）和虚拟对抗性 Dropout（VAdD）。如果存在真实标注信息，可以使用 SAdD 最大化模型预测与真实标注信息之间的差异。另一方面，如果没有标签，则使用 VAdD 最大化输入的两个独立预测之间的差异。% Drop to Adapt: Learning Discriminative Features for Unsupervised Domain Adaptation
-在本章中，我们引入对抗性 Dropout 以提高被跟踪目标的特征判别性。我们首先根据散度最大化预测对抗性 Dropout 掩码。将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征。
-然后，我们旨在最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
+在本章中，通过引入对抗性 Dropout 以提高被跟踪目标的特征判别性：首先根据散度最大化预测对抗性 Dropout 掩码，将该掩码应用于 $\mathcal{X}$，以获得对抗性 Dropout 的特征；然后，最大程度地减少随机 Dropout 的特征和对抗性 Dropout 的特征之间的差异。
 具体而言，令 $h^{cls}$ 和 $h^{reg}$ 分别表示细化阶段中的分类层和回归层。
 根据文献 \cite{lee2019drop}，按如下方式计算对抗性 Dropout 掩码：
 \begin{equation}
@@ -275,10 +175,7 @@ $\delta_{e}$ 是一个超参数，用于控制相对于 $\mathbf{m}^{s}$ 的扰�
 $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
 为了计算 $\mathbf{m}^{adv}$，文献 \cite{park2018adversarial} 通过在计算过程中进行适当放松来优化 0/1 背包问题。
-%有关详细信息，请参考 \cite{park2018adversarial}。
-%Then, we use the mask to Dropout the feature, then send it to the classifier.
-%We also send the clean feature to the classifier, and wish the loss minimum:
-在生成 $\mathbf{m}^{adv}$ 之后，我们的目标是使关于 $\mathcal{X}$ 的两个预测分布之间的差异最小化：一个采用随机 Dropout 掩码 $\mathbf{m}^{s}$ 获得，另一个采用对抗性 Dropout 掩码 $\mathbf{m}^{adv}$ 获得 \cite{lee2019drop}：
+在生成 $\mathbf{m}^{adv}$ 之后，最小化 $\mathcal{X}$ 的两个预测分布之间的差异：一个采用随机 Dropout 掩码 $\mathbf{m}^{s}$ 获得，另一个采用对抗性 Dropout 掩码 $\mathbf{m}^{adv}$ 获得 \cite{lee2019drop}：
 \begin{equation}
     \mathcal{L}_{adv} = \mathbb E[D_{KL}[h^{cls}(\mathcal{X} \odot\mathbf{m}^{s})||h^{cls}(\mathcal{X} \odot\mathbf{m}^{adv}))]],
 \end{equation}
@@ -286,23 +183,10 @@ $D[p, p'] \geq 0$ 测量两个分布 $p$ 和 $p'$ 之间的差异。
 
 最后，对于每个候选目标区域，分类层在两个类别（前景或背景）上生成 softmax 概率估计，而回归层为前景类别输出四个实数值，用于编码候选目标区域的精确边界框位置。
 网络的整体损失函数是：
-%The RoI Aligned features are fed into the global average pooling layer followed by two sibling output layers: one that produces softmax probability estimates over two classes (foreground or background) and another layer that outputs four real-valued numbers for the foreground class. These four values encode the refined bounding-box position for the RoI.
-%We get the final tracking result as follows: The classification layer $h^{cls}$ predicts a score for a RoI, the regression layer $h^{reg}$ has shape * and predicts a 4-d vector for it.
-%The RoI with the top score is the final box.
 \begin{equation}
 \mathcal{L} = \mathcal{L}_{cls}^{stage1} + \mathcal{L}_{cls}^{stage2} + \mathcal{L}_{reg}^{stage1}+\mathcal{L}_{reg}^{stage2} +  \lambda \mathcal{L}_{adv},
 \end{equation}
 其中 $\lambda$ 是用于平衡对抗损失和分类/回归损失的超参数。$\mathcal{L}_{cls}^{\cdot}$ 是交叉熵损失，$\mathcal{L}_{reg}^{\cdot}$ 是回归分支的平滑 $L1$ 损失。在测试过程中，具有最高分类得分的区域被选择为预测目标。
-
-
-\iffalse
-{classification/regression} The structure of $f^{cls}$ is ... The structure of $f^{reg}$ is ...
-Suppose $B^*_t$ is the target bounding box at frame $t$, which is estimated through:
-\begin{equation}
-B^*_t = h^{reg}(\mathop{\arg\max}\limits_{x \in \mathcal{X}}h^{cls}(x)), 
-\end{equation}
-where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
-\fi
 
 \begin{table}[t]
 \centering
@@ -328,7 +212,7 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
     \label{fig:end_vis}
 \end{figure}
 
-在本章中我们提出的时间信息增强的跟踪算法提高了基于孪生网络的视觉目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于退化的目标表观具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。我们在视觉目标跟踪数据集 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
+本章提出的时间信息增强的跟踪算法提高了基于孪生网络的视觉目标跟踪器的特征表示能力，从而提高了跟踪鲁棒性与准确性。同时，在对抗性 Dropout 模块的引导下学习对于退化的目标表观具有判别能力的特征，通过端到端的网络离线训练使得整个孪生网络跟踪算法的跟踪性能得到大幅度提升。本章在视觉目标跟踪数据集 GOT-10k \cite{GOT-10k} 和 UAV20L \cite{mueller2016benchmark} 上验证了方法的有效性并与当前最好的跟踪算法进行了比较。
 \subsection{实验设置}
 
 \begin{figure}[t]
@@ -361,21 +245,6 @@ where $\mathcal{B}_t^1$ is a set of proposals generated from stage 1.
 
 本章所提出的时间信息增强的孪生网络跟踪器使用 Pytorch 在 Python 中实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
-
-%下面我们介绍本章提出的端到端孪生跟踪网络在离线训练时的参数设置。
-
-%本章提出的网络在 GOT-10k \cite{GOT-10k} 的训练集上进行训练，而主干网络在 ImageNet 上进行了预训练。
-%我们应用动量​​为 0.9 的随机梯度下降作为优化方法，并将权重衰减设置为 0.0005。
-%学习率从 $10^{-2}$ 降至 $10^{-4}$。
-%批次大小设置为 2，并对网络进行了 90000 次迭代训练。
-%本章提出的跟踪器是使用 PyTorch 在 Python 中实现的。
-%First stage, we select 4000 proposals to send to stage2, the positive/negative rate is 1:3.
-%To shift channels $K=2$.
-%Because of the memory limit, the batch size is 2.
-%To calculate the loss, $\lambda = 1$.
-%For both training and testing, the size of a template image is 
-% 其实有些对不上。按论文上讲，第一阶段是找到若干候选框。第二阶段是得到唯一结果。实际上是，第一阶段得到若干候选框，第二阶段进一步筛选得到约10个候选框（这才是真正的相似目标），然后按IoU和得分来选择最终结果。
-% For test, we select top 100 proposals to send to stage2. The we use NMS to select top 10 object. 
 \subsection{基于数据集 GOT-10k 的评测结果分析}
 \begin{table}[t]
 \centering
@@ -399,26 +268,21 @@ MDNet \cite{MDNet} &  0.299&  0.303 &0.099 \\
 \end{tabular}
 \label{table:end_got10k}
 \end{table}
-在本节中，我们在 GOT-10k \cite{GOT-10k} 数据集上评估本章提出的算法。
-% Say something about this dataset.
+本节在 GOT-10k \cite{GOT-10k} 数据集上评估本章提出的算法。
 GOT-10k 是最近提出的目标跟踪数据集，包含超过 10000 个视频序列，目标由矩形边界框注释。
-%Note that the classes between training and test sets are zero-overlapped. 
-%This one-shot protocol avoids the evaluation bias towards familiar objects. 
-GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别和 32 种运动模式。我们使用文献 \cite{GOT-10k} 中提出的平均重叠（AO）分数和成功率（SR）作为性能指标。AO 表示所有真实边界框和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
+GOT-10k 测试集包括 180 段视频序列，具有 84 种不同的目标类别和 32 种运动模式，并使用文献 \cite{GOT-10k} 中提出的平均重叠（AO）分数和成功率（SR）作为性能指标。AO 表示所有真实边界框和估计边界框之间重叠的平均值，而 SR 表示重叠超过 0.5/0.75 的成功跟踪帧的百分比。
 
 \textbf{创新点有效性验证}
-为了分析本章提出的时间聚合模块和对抗性 Dropout 模块的有效性，我们训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:end_ablition} 第一行）在我们最终提出的跟踪器中同时剔除了时间聚合模块和对抗性 Dropout 模块。变体 2（参见表 \ref{table:end_ablition} 第二行）在我们最终提出的跟踪器中剔除对抗性 Dropout 模块，仅保留时间聚合模块。表 \ref{table:end_ablition} 的第三行表示我们最终提出的跟踪器，同时配备有时间聚合模块和对抗性 Dropout 模块。
-我们在 GOT-10k 测试集上对上述三个跟踪器的性能进行了对比。
+为了分析本章提出的时间聚合模块和对抗性 Dropout 模块的有效性，本组实验训练了两个跟踪网络的变体。变体 1（参见表 \ref{table:end_ablition} 第一行）在本章最终提出的跟踪器中同时剔除了时间聚合模块和对抗性 Dropout 模块。变体 2（参见表 \ref{table:end_ablition} 第二行）在本章最终提出的跟踪器中剔除对抗性 Dropout 模块，仅保留时间聚合模块。表 \ref{table:end_ablition} 的第三行表示本章最终提出的跟踪器，同时配备有时间聚合模块和对抗性 Dropout 模块。
+本组实验在 GOT-10k 测试集上对上述三个跟踪器的性能进行了对比。
 从第一行可以看出，变体 1 的 AO 值为 0.542，具有较好的跟踪性能。这是因为主干网络采用了特征金字塔网络，可充分利用目标的底层和高层信息，对于大目标在较高尺度上进行预测，对于小目标在较低尺度上进行预测，从而提高了跟踪性能。然而，该跟踪器仅利用单帧图像进行跟踪，未利用视频中的时间信息，因此当目标表观发生退化时具有较差的性能。
 从第二行可以看出，变体 2 的 AO 值为 0.561，相比于变体 1，AO 性能提高了 1.9％。
 这是因为时间聚合模块通过聚合来自相邻帧的时间信息以改善每帧特征。
-%The RPN stage rapidly filters out most background samples, and the RoI head adopts a fixed foreground-to-background ratio to maintain a manageable balance between foreground and background.
 从第三行中可以看出，通过添加对抗性 Dropout 模块，跟踪器的 AO 进一步增加了 1.6％。
-%This is because the proposed motion model can effectively predict the position distribution of the target, effectively avoiding the adverse effects of distractors. 
 这是因为对抗性 Dropout 模块提高了本章提出的孪生跟踪网络的特征判别能力。
 
 \textbf{与其他跟踪算法的比较}
-我们将本章提出的方法与多个主流跟踪器进行了比较。
+本组实验将本章提出的方法与多个主流跟踪器进行了比较。
 表 \ref{table:end_got10k} 和图 \ref{fig:end_got10k} 中显示了这些跟踪器的性能。
 与所对比的方法相比，本章提出的方法实现了 0.577 的 AO 值。
 
@@ -427,16 +291,16 @@ SiamMask \cite{Wang2018SiamMask} 是最近提出的孪生跟踪器。它同时�
 然而，SiamMask 是基于局部搜索机制的：在以上一帧的目标位置为中心的小邻域内搜索目标，且未充分利用时间信息。相比之下，本章提出的跟踪算法使用全局搜索机制，始终能够感知整个图像上的目标，且能充分利用时间信息。因此，本章提出的跟踪器的 AO 得分高出 SiamMask 11.8％，这体现了时间聚合模块的有效性。
 
 \subsection{基于数据集 UAV20L 的评测结果分析}
-在本小节中，我们在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
+本组实验在 UAV20L \cite{mueller2016benchmark} 长期跟踪数据集中评估跟踪器。
 它包含从低空鸟瞰视角捕获的 20 个高清视频序列，平均序列长度为 2934 帧。
 在此实验中，使用两种评价指标对跟踪器进行比较：精确度和成功率。精确度表示预测边界框中心与相应的真实边界框中心之间的距离。成功率表示预测边界框与真实边界框的边框重叠。
 在图 \ref{fig:end_uav20l} 中可以看出，本章提出的算法具有较好的跟踪性能。
-在成功图中，我们的跟踪器获得的 AUC 得分为 0.606，
-在精度图中，我们的跟踪器的得分为 0.804，超过了所列出的其他跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
+在成功图中，本章提出的跟踪器获得的 AUC 得分为 0.606，
+在精度图中，本章提出的跟踪器的得分为 0.804，超过了所列出的其他跟踪算法，例如 SiamRPN \cite{SiamRPN} 和 PTAV \cite{fan2018parallel}。这证明了本章提出的跟踪器在长期跟踪情况下的有效性。
 
-此外，我们在 UAV20L 数据集上进行了基于属性的分析（参见图 \ref{fig:end_uav20l_attr_1} 和图 \ref{fig:end_uav20l_attr_2}）。UAV20L 包含常见的视觉跟踪挑战。其中，宽高比变化（aspect ratio change，ARC）表示第一帧中目标的宽高比与至少后续一帧中目标宽高比的比值超出区间 $[0.5, 2]$；背景混杂（background clutter，BC）表示目标附近的背景表观与目标表观近似；相机运动（camera motion，CM）表示相机的突然运动；快速运动（fast motion，FM）表示目标标注框在相邻两帧之间的位移超过 20 像素；完全遮挡（full occlusion，FOC）表示目标被完全遮挡；光照变化（illumination variation，IV）表示目标的光照发生显著变化；低分辨率（low resolution，LR）表示至少有一个真实标注框的分辨率小于 400 像素；视线外（out-of-view，OV）表示目标的某些部分离开视线；部分遮挡（partial occlusion，POC）表示目标被部分遮挡；相似目标（similar object，SOB）表示目标附近有相似形状或相同类型的目标；尺度变化（scale variation，SV）表示目标的初始边界框和至少一个后续边界框的尺度比率超出范围 $[0.5, 2]$；视点改变（viewpoint change，VC）表示视点会显著影响目标表观。
+此外，本组实验在 UAV20L 数据集上进行了基于属性的分析（参见图 \ref{fig:end_uav20l_attr_1} 和图 \ref{fig:end_uav20l_attr_2}）。UAV20L 包含常见的视觉跟踪挑战。其中，宽高比变化（aspect ratio change，ARC）表示第一帧中目标的宽高比与至少后续一帧中目标宽高比的比值超出区间 $[0.5, 2]$；背景混杂（background clutter，BC）表示目标附近的背景表观与目标表观近似；相机运动（camera motion，CM）表示相机的突然运动；快速运动（fast motion，FM）表示目标标注框在相邻两帧之间的位移超过 20 像素；完全遮挡（full occlusion，FOC）表示目标被完全遮挡；光照变化（illumination variation，IV）表示目标的光照发生显著变化；低分辨率（low resolution，LR）表示至少有一个真实标注框的分辨率小于 400 像素；视线外（out-of-view，OV）表示目标的某些部分离开视线；部分遮挡（partial occlusion，POC）表示目标被部分遮挡；相似目标（similar object，SOB）表示目标附近有相似形状或相同类型的目标；尺度变化（scale variation，SV）表示目标的初始边界框和至少一个后续边界框的尺度比率超出范围 $[0.5, 2]$；视点改变（viewpoint change，VC）表示视点会显著影响目标表观。
 与所列出的方法相比，本章提出的方法在所有属性下均取得了最好的跟踪结果。
 在文献 \cite{fan2018parallel} 中，Fan 等人提出了并行跟踪与验证（parallel tracking and verifying，PTAV）跟踪框架。PTAV 由跟踪器和验证器两个模块组成，在两个单独的线程上并行工作。跟踪器旨在提供实时跟踪预测，在大多数时间表现良好；验证器检查跟踪结果并在必要时校正跟踪结果。通过两个模块的合作，PTAV 既具有较高的跟踪效率，也具有较强的跟踪性能。因此，该算法在光照变化、宽高比变化等属性上得分较高。尽管如此，PTAV 与本文提出的算法仍具有较大差距。比如在光照变化属性中，PTAV 的成功率为 0.430，而本章提出的算法成功率为 0.630。可能的原因是 PTAV 仅基于单帧图像执行跟踪，而本章提出的跟踪器融合了相邻帧中目标的表观信息，更能克服由于光照变化而造成的目标表观退化现象。
 
 \section{本章小结}
-在本章中，我们提出了一种时间信息增强的视觉目标跟踪算法。该算法主要在特征提取方面对基于孪生网络的视觉目标跟踪算法进行优化。首先，我们从基于孪生网络的在线视频跟踪算法鲁棒性不足问题出发，将时间信息引入在线视觉目标跟踪中。通过来自相邻帧的目标表观信息的聚合，使得目标表观特征更加丰富，弥补基于孪生网络的视觉目标跟踪算法局限于从单帧提取目标表观，对目标表观表示能力不足的缺点，从而提高跟踪的效果，实现鲁棒的跟踪。在端到端时间聚合的基础上，我们通过引入对抗性 Dropout 模块，并通过在大规模数据集上端到端训练，使得孪生网络跟踪器在目标由于运动模糊等导致的表观不佳的情况下具有更好的表现，从而进一步提高跟踪的鲁棒性。我们在目前流行的视觉目标跟踪评测库上进行了算法的对比实验以及成分分析实验，从而验证算法改进的有效性。
+本章提出了一种时间信息增强的视觉目标跟踪算法。该算法主要在特征提取方面对基于孪生网络的视觉目标跟踪算法进行优化。首先，从基于孪生网络的在线视频跟踪算法鲁棒性不足问题出发，将时间信息引入在线视觉目标跟踪中。通过来自相邻帧的目标表观信息的聚合，使得目标表观特征更加丰富，弥补基于孪生网络的视觉目标跟踪算法局限于从单帧提取目标表观，对目标表观表示能力不足的缺点，从而提高跟踪的效果，实现鲁棒的跟踪。在端到端时间聚合的基础上，通过引入对抗性 Dropout 模块，并通过在大规模数据集上端到端训练，使得孪生网络跟踪器在目标由于运动模糊等导致的表观不佳的情况下具有更好的表现，从而进一步提高跟踪的鲁棒性。本章在目前流行的视觉目标跟踪评测库上进行了算法的对比实验以及成分分析实验，从而验证算法改进的有效性。
