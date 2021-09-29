@@ -1,7 +1,7 @@
 \chapter{语义信息引导的视觉目标跟踪算法研究}\label{chap:IGCF}
 
 对于视觉目标跟踪算法而言，判别表观学习具有极其重要的地位。在缺少目标类别先验的情况下，跟踪任意类别的目标通常需要在线进行目标前景与背景的判别信息学习，同时目标大小、形状、视角以及背景场景中光照、遮挡物、嘈杂干扰等都会随着时间发生剧烈变化。
-基于传统相关滤波器（correlation filter，CF）的跟踪器通常仅依靠岭回归进行表观模型的建模，而不会感知目标在语义级别的信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，本章提出了实例引导的相关滤波器（instance guided correlation filter，IGCF），以提高跟踪的鲁棒性。具体来说，本章提出一个深层卷积神经网络（即 InstMask），旨在为目标生成实例级别的分割模板，该模板用于约束相关滤波器的学习。在实例级分割的基础上，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试数据库上进行的广泛实验验证了我们所提出的实例引导的相关滤波跟踪器的有效性。%，在单个 CPU 内核上的运行速度可达 5 帧每秒。
+基于传统相关滤波器（correlation filter，CF）的跟踪器通常仅依靠岭回归进行表观模型的建模，而不会感知目标在语义级别的信息。这种语义信息的缺乏可能导致跟踪漂移或跟踪器完全失效。为了解决这一问题，本章提出了实例引导的相关滤波器（instance guided correlation filter，IGCF），以提高跟踪的鲁棒性。具体来说，本章提出一个深层卷积神经网络（即 InstMask），旨在为目标生成实例级别的分割模板，该模板用于约束相关滤波器的学习。在实例级分割的基础上，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。在几个具有挑战性的基准测试数据库上进行的广泛实验验证了本章所提出的实例引导的相关滤波跟踪器的有效性。
 
 \section{引言}
 目标跟踪是计算机视觉中的重要研究方向之一。给定视频起始帧中的目标位置，跟踪的目的是估计后续帧中目标的状态。尽管研究人员在该领域进行了长期的努力 \cite{Leang2018OnlineFO, Wang2019VisualOT, Zhang2018UsingFL}，但在低功耗平台上仍难以实现可接受的跟踪精度和速度。另外，跟踪过程中的遮挡、照明变化、表观变化和快速运动等现象，使得目标跟踪算法难以在自动驾驶、机器人技术和增强现实等现实应用中进行部署和应用。
@@ -17,10 +17,10 @@
 \label{fig:IGCF_vis_coco}
 \end{figure}
 
-在本章中，我们提出了实例引导的相关滤波器（IGCF）来解决上述问题。具体而言，我们设计了一个深层卷积神经网络（即 InstMask），旨在准确生成目标实例级别的语义分割模板。我们利用 COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:IGCF_vis_coco}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
-与常见的目标分割任务不同，我们设计了一种新的网络结构和训练方法，使得 InstMask 能够识别位于搜索图像中心附近的显著目标。值得注意的是，InstMask 可以识别任意类别的目标，而不仅限于识别训练集中出现的类别中的目标。此外，我们的网络中包括一个 $1 \times 1$ 卷积层，可以利用全局感受野从目标附近获取上下文信息，从而增加了分割的准确性。配备有轻量级分割网络 InstMask 的相关滤波跟踪算法可在具有单个 CPU 核心的计算平台上以 5 FPS 的速度运行，能够在精度和速度之间取得平衡。
+本章提出了实例引导的相关滤波器（IGCF）来解决上述问题。具体而言，设计了一个深层卷积神经网络（即 InstMask），旨在准确生成目标实例级别的语义分割模板，并利用 COCO2017 \cite{COCO} 对 InstMask 进行了离线的端到端训练（参见图 \ref{fig:IGCF_vis_coco}）。实例级别的语义分割模板可以抑制背景噪声的干扰，从而显式约束相关滤波器的学习过程。
+与常见的目标分割任务不同，本章设计了一种新的网络结构和训练方法，使得 InstMask 能够识别位于搜索图像中心附近的显著目标。值得注意的是，InstMask 可以识别任意类别的目标，而不仅限于识别训练集中出现的类别中的目标。此外，该网络中包括一个 $1 \times 1$ 卷积层，可以利用全局感受野从目标附近获取上下文信息，从而增加了分割的准确性。配备有轻量级分割网络 InstMask 的相关滤波跟踪算法可在具有单个 CPU 核心的计算平台上以 5 FPS 的速度运行，能够在精度和速度之间取得平衡。
 
-此外，我们注意到，为满足跟踪自适应性要求而在线更新的相关滤波器与满足鲁棒性要求的离线 InstMask 模块是独立且互补的。因此，两个组件的输出可以集成在一起，以进一步提高跟踪性能。具体而言，基于实例级别的分割，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。分割模板的几何中心用于校正相关滤波器的预测偏差。所提出的跟踪框架 IGCF 的体系结构如图 \ref{fig:IGCF} 所示。
+此外，本章指出，为满足跟踪自适应性要求而在线更新的相关滤波器与满足鲁棒性要求的离线 InstMask 模块是独立且互补的。因此，两个组件的输出可以集成在一起，以进一步提高跟踪性能。具体而言，基于实例级别的分割，本章进一步提出了一种自校正机制来缓解相关滤波跟踪器的漂移问题。分割模板的几何中心用于校正相关滤波器的预测偏差。所提出的跟踪框架 IGCF 的体系结构如图 \ref{fig:IGCF} 所示。
 
 \begin{figure*}
     \centering
@@ -29,7 +29,7 @@
     \label{fig:IGCF}
 \end{figure*}
 
-我们在三个跟踪数据库上进行了全面的实验：VOT2015 \cite{Kristan2015TheVO}、VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。我们的 IGCF 跟踪器在跟踪精度与跟踪速度方面取得了良好的平衡。最后，我们在视频目标分割数据集 DAVIS2016 \cite{Perazzi2016} 上进行了定性实验，以展示我们算法具有视频目标分割能力。
+本章在三个跟踪数据库上进行了全面的实验：VOT2015 \cite{Kristan2015TheVO}、VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。本章提出的 IGCF 跟踪器在跟踪精度与跟踪速度方面取得了良好的平衡。最后，在视频目标分割数据集 DAVIS2016 \cite{Perazzi2016} 上进行了定性实验，以展示本章提出的算法具有视频目标分割能力。
 
 \section{相关工作}
 几十年来，视觉目标跟踪一直是主流的计算机视觉研究方向之一。视觉目标跟踪的目的是在给定目标在第一帧中位置的情况下，确定目标在视频后续帧中的位置。
@@ -130,7 +130,7 @@ ECO 跟踪器 \cite{danelljan2017eco} 在 DCF 公式中引入分解卷积算子�
     \label{fig:IGCF_net}
 \end{figure*}
 
-在本章中，我们使用被跟踪目标的分割模板来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特点：
+本章使用被跟踪目标的分割模板来约束相关滤波器的学习。出于效率和性能方面的考虑，理想的分割方法应具有三个关键特点：
 
 \begin{itemize}
 \item 与跟踪过程的无缝集成；
@@ -139,8 +139,8 @@ ECO 跟踪器 \cite{danelljan2017eco} 在 DCF 公式中引入分解卷积算子�
 \end{itemize}
 
 以前大多数用于生成空间约束的方法都依赖于手工设计的规则或低级图像特征（例如颜色直方图）。
-在本章中，我们提出了 InstMask 网络，该网络为目标生成准确的实例分割模板。我们使用数据驱动的方法对 InstMask 进行离线端到端训练，以从分割训练集（例如 COCO2017 \cite{COCO}）中学习语义信息。实例级别的语义分割模板可以通过抑制背景信息来约束相关滤波器的学习。在实例级分割的基础上，我们进一步提出了一种自校正机制来减轻相关滤波跟踪器的漂移问题。与传统的相关滤波跟踪方法相比，此方法可显著提高目标跟踪精度。
-与以前的生成分割模板的方法不同，我们不依赖于边缘、超像素或其他形式的低级信息。相反，我们模型的核心是卷积神经网络。通过利用在 ImageNet \cite{ImageNet} 上训练的强大卷积特征表示并拟合 COCO 中的大量分割训练数据，我们能够为目标生成准确的语义分割模板，以限制相关跟踪器的学习。
+本章提出了 InstMask 网络，该网络为目标生成准确的实例分割模板，并使用数据驱动的方法进行离线端到端训练，以从分割训练集（例如 COCO2017 \cite{COCO}）中学习语义信息。实例级别的语义分割模板可以通过抑制背景信息来约束相关滤波器的学习。在实例级分割的基础上，本章进一步提出了一种自校正机制来减轻相关滤波跟踪器的漂移问题。与传统的相关滤波跟踪方法相比，此方法可显著提高目标跟踪精度。
+与以前的生成分割模板的方法不同，本章算法不依赖于边缘、超像素或其他形式的低级信息。相反，本章所提模型的核心是卷积神经网络。通过利用在 ImageNet \cite{ImageNet} 上训练的强大卷积特征表示并拟合 COCO 中的大量分割训练数据，本章算法能够为目标生成准确的语义分割模板，以限制相关跟踪器的学习。
 值得注意的是，将现有的实例分割方法集成到跟踪器中从而为相关滤波器的学习提供空间约束是次优的。通用分割算法通常具有复杂的网络结构，因此很难在跟踪精度和速度之间取得平衡。相比之下，本文提出的分割网络是专为跟踪而设计的，配备有 InstMask 的 IGCF 跟踪器可在 CPU 上以 5 FPS 的速度运行。
 
 当在第 $i$ 帧中跟踪时，需要获得第 $i$ 帧中目标的分割模板以约束相关滤波器的学习。
@@ -154,7 +154,7 @@ ECO 跟踪器 \cite{danelljan2017eco} 在 DCF 公式中引入分解卷积算子�
 \end{itemize}
 
 在训练期间，训练集中的每个样本 $k$ 包含（1）RGB 图像补丁 $x_k$，目标位于图像补丁中心附近，（2）图像补丁所对应的二进制分割模板 $m_{k}$。
-接下来，我们描述 InstMask 的网络结构和训练过程。
+接下来，本节描述 InstMask 的网络结构和训练过程。
 
 \textbf{网络结构} 表 \ref{tab:InstMask} 和图 \ref{fig:IGCF_net} 中展示了 InstMask 的网络结构。InstMask 的主干是基于 ResNet50 \cite{he2016deep} 构建的，它由一个主干块和三个残差块组成。
 InstMask 的输入是一个尺寸为 160$\times$160$\times$3 的图像补丁。它被发送到主干块，生成尺寸为 40$\times$40$\times$64 的特征图。然后将特征图依次送入 3 个残差块，分别生成大小为 40$\times$40$\times$256，20$\times$20$\times$512，10$\times$10$\times$1024 的特征图。随后，将获得的特征图送入三个卷积层以生成长度为 3136 的向量，该向量具有全局感受野，能够感知有关目标的所有上下文信息。最后，将此向量尺寸调整为 56$\times$56，以获得最终的分割模板。InstMask 是一个轻量级的网络，配备有 InstMask 的 IGCF 跟踪器可以在具有 Intel E5-2620 CPU 内核的平台上以 5 FPS 运行，能够较好地平衡跟踪准确性和速度，使跟踪器在包括自动驾驶、机器人技术和增强现实等实际应用中进行部署成为可能。
@@ -165,10 +165,9 @@ L = \frac{1}{wh} \sum_{xy}{log(1+e^{-l_{x,y}P_{x,y}})},
 \end{equation}
 其中 $l_{x,y} \in \{ \pm 1 \}$ 是目标的分割模板在位置 $(x,y)$ 上的标签，而 $P_{x,y}$ 是 InstMask 在位置 $(x,y)$ 上的预测。
 
-我们采用 COCO2017 \cite{COCO} 实例分割数据集对 InstMask 进行训练。
+本章采用 COCO2017 \cite{COCO} 实例分割数据集对 InstMask 进行训练。
 与许多只能预测训练集中出现的类别的分割网络不同，提出的 InstMask 在训练过程中会忽略类别信息，并作为与类别无关的分割网络工作。实际上，InstMask 能够在搜索区域中检测到显著目标。尽管 InstMask 使用仅有 80 个类别的 COCO 数据集 \cite{COCO} 进行训练，但是网络能够对训练集中未出现的目标类别进行分割，如图 \ref{fig:IGSC} 所示。
-在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，我们执行数据增强。具体来说，我们考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
-%InstMask 离线训练。
+在训练期间，输入图像大小设置为 160$\times$160，目标位于图像的中心，大小为 112$\times$112。为了增强网络的通用性，执行数据增强。具体来说，考虑平移（$\pm$16 像素），缩放变形（ $2^{\pm 1/4}$）以及水平翻转。
 在跟踪过程中，InstMask 仅执行前向传播过程，而不会进行梯度的后向传播。这不仅可以防止漂移，还可以满足实时跟踪要求。
 
 测试时，使用阈值 $b$ 根据 $P\in [0, 1]$ 生成模板 $m$：
@@ -180,7 +179,7 @@ m_{x,y} = \left\{ \begin{array}{ll}
 \end{equation}
 $P$ 是从 InstMask 生成的概率图。元素 $P_{x,y}$ 是像素 $(x,y)$ 属于目标的概率。
 
-尽管我们的模型与 CSRDCF \cite{Lukezic2017DiscriminativeCF} 具有相似性，但实现原理却不同。
+尽管本章提出的模型与 CSRDCF \cite{Lukezic2017DiscriminativeCF} 具有相似性，但实现原理却不同。
 在 
 CSR-DCF 
 \cite{Lukezic2017DiscriminativeCF} 
@@ -204,8 +203,8 @@ CSR-DCF
 
 InstMask 允许学习更好的滤波器，并有助于校正不良的跟踪结果。
 在 DCF 模块中，滤波器 $h$ 和特征 $f$ 之间的最大相关位置被认为是当前帧中的目标位置。但是，由于在线更新，相关滤波器很容易漂移。
-InstMask 的结果是根据从 COCO 数据集中获取的网络参数生成的。但是，由于 InstMask 不会在线更新，因此我们不能仅依靠目标的语义分割模板来产生最终的跟踪结果。
-为了利用两个结果的优点并克服它们的缺点，我们提出了实例引导的自校正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒性。具体而言，利用 $m$ 获得目标的几何中心：
+InstMask 的结果是根据从 COCO 数据集中获取的网络参数生成的。但是，由于 InstMask 不会在线更新，因此不能仅依靠目标的语义分割模板来产生最终的跟踪结果。
+为了利用两个结果的优点并克服它们的缺点，本章提出了实例引导的自校正（instance guided self-correction，IGSC）组件。IGSC 结合了实例分割和相关滤波结果，以提高跟踪的鲁棒性。具体而言，利用 $m$ 获得目标的几何中心：
 \begin{equation}
 c_{m} = Centroid(m),
 \end{equation}
@@ -287,14 +286,13 @@ w_t = (1-\eta)w_{t-1} + \eta \tilde{w},
 
 本章所提出的用于对相关滤波跟踪器提供语义引导信息的分割网络 InstMask 使用 MatConvNet \cite{MatConvNet} 在 MATLAB 平台上实现，所有实验在装配有 Intel(R) Xeon(R) CPU E5-2630 v4 @ 2.20GHz 和 NVIDIA TITAN 1080Ti GPU 的工作站上执行。
 
-我们在三个具有挑战性的目标跟踪数据集上对提出的跟踪器 IGCF 进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。最后，我们在视频目标分割数据集 DAVIS \cite{Perazzi2016} 上进行了定性实验。
+本章在三个具有挑战性的目标跟踪数据集上对提出的跟踪器 IGCF 进行了全面评估：VOT2015 \cite{Kristan2015TheVO}，VOT2016 \cite{Kristan2016TheVO} 和 GOT-10k \cite{GOT-10k}。请注意，用于训练 InstMask 组件的视频与评估数据集之间没有重叠。最后，在视频目标分割数据集 DAVIS \cite{Perazzi2016} 上进行了定性实验。
 
 \subsection{基于数据集 VOT2015 的评测结果分析}
-在本节中，我们使用视觉目标跟踪工具包的最新版本进行实验对比。该工具包采用基于目标重置的跟踪性能评估方法。评估算法一旦检测到跟踪器发生错误跟踪（即跟踪器预测和真实目标标签的重叠率为 0），就会在错误帧后的第五帧重新初始化跟踪器。
-%测评性能使用期望平均重叠率（EAO）来度量排序，EAO 指标同时定量反映算法的鲁棒性和准确性。
+在本节中，使用视觉目标跟踪工具包的最新版本进行实验对比。该工具包采用基于目标重置的跟踪性能评估方法。评估算法一旦检测到跟踪器发生错误跟踪（即跟踪器预测和真实目标标签的重叠率为 0），就会在错误帧后的第五帧重新初始化跟踪器。
 VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的视频。该数据集是通过先进的序列选择方法从 300 多个序列中构建的，该序列选择方法优先考虑难以追踪的目标并最大化视觉属性多样性成本函数。
 在 VOT2015 中，使用三个指标来评估跟踪器的性能：（1）准确性，（2）鲁棒性和（3）EAO（期望平均重叠）。准确性衡量跟踪器预测的边界框与真值边界框的重叠程度。鲁棒性衡量跟踪器在跟踪过程中失去目标（即跟踪失败）的次数。EAO 结合了准确性和鲁棒性来评估跟踪器的整体性能。
-由于本章算法在 VOT 数据集中主要采用 EAO 进行度量，我们引述 VOT2015 中对于 EAO 的具体定义。以一个序列长度为 $T_s$ 帧的跟踪视频为例，跟踪算法在序列首帧进行初始化，并一直跟踪到视频结束。如果跟踪器偏离目标真实位置，则假定它将一直保持偏离，直到序列结束。跟踪器在每一帧与真实目标位置之间的重叠率记作 $\Phi^i$，跟踪失败之后的所有图像帧的重叠率都记为 0，则跟踪器在该视频跟踪中的平均重叠率为：
+由于本章算法在 VOT 数据集中主要采用 EAO 进行度量，现引述 VOT2015 中对于 EAO 的具体定义。以一个序列长度为 $T_s$ 帧的跟踪视频为例，跟踪算法在序列首帧进行初始化，并一直跟踪到视频结束。如果跟踪器偏离目标真实位置，则假定它将一直保持偏离，直到序列结束。跟踪器在每一帧与真实目标位置之间的重叠率记作 $\Phi^i$，跟踪失败之后的所有图像帧的重叠率都记为 0，则跟踪器在该视频跟踪中的平均重叠率为：
 \begin{figure}[t]
     \centering
     \includegraphics[width=1.0\textwidth]{Img/IGCF/vot/eao_rank_vot2016.png}
@@ -304,13 +302,13 @@ VOT2015 \cite{Kristan2015TheVO} 跟踪数据集包含 60 个具有挑战性的�
 \begin{equation}
 \Phi^{T_{s}}=\frac{1}{T_{s}} \sum_{i=1}^{T_{s}} \Phi^{i}
 \end{equation}
-通过对许多段长度为 $T_s$ 的视频平均重叠率进行平均，我们可以得到帧长度为 $T_s$ 的视频的期望平均重叠率 $\hat{\Phi}^{T_{s}}$，类似于 OTB 数据中的平均重叠率曲线图，我们计算一段视频长度间隔 $[T_{lo}, T_{hi}]$ 内的期望平均重叠率的均值，即可稳定估计跟踪算法的期望平均重叠率：
+通过对许多段长度为 $T_s$ 的视频平均重叠率进行平均，可以得到帧长度为 $T_s$ 的视频的期望平均重叠率 $\hat{\Phi}^{T_{s}}$，类似于 OTB 数据中的平均重叠率曲线图。通过计算一段视频长度间隔 $[T_{lo}, T_{hi}]$ 内的期望平均重叠率的均值，即可稳定估计跟踪算法的期望平均重叠率：
 \begin{equation}
 \hat{\Phi}=\frac{1}{T_{h i}-T_{l o}} \sum_{T_{s}=T_{l o}}^{T_{h i}} \hat{\Phi}^{T_{s}}
 \end{equation}
 平均期望重叠率指标同时考虑了算法的精度以及跟踪丢失情况。
 
-我们将本章提出的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
+本组实验将本章提出的算法与以下跟踪器进行了比较：CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}，Staple \cite{Bertinetto2016StapleC}， EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}.
 这些跟踪器可以分为三类：Struck 和 EBT 是传统的跟踪器。SRDCF，CSRDCF，TGPRfSRDCF，Staple 和 SAMF 是基于 DCF 的跟踪器。DeepSRDCF 和 TCNN 是基于 CNN 的跟踪器。
 跟踪器的 EAO 得分如图 \ref{fig:vot15} 所示。与其他列出的方法相比，本章提出的方法可实现 0.342 的 EAO。
 Struck 使用核化结构输出支持向量机（SVM），可以在线学习以进行自适应跟踪。相反，IGCF 基于强大的相关滤波器。因此，IGCF 相比于 Struck 在 EAO 指标上提升了 0.096，这表明了 DCF 框架的出色表现以及 IGCF 的有效性。
@@ -327,7 +325,7 @@ DeepSRDCF 在 SRDCF 框架中结合了来自预训练网络的深层卷积特征
 \subsection{基于数据集 VOT2016 的评测结果分析}
 VOT2016 \cite{Kristan2016TheVO} 数据集包含来自 VOT2015 的 60 个序列，具有改进的注释。VOT2016 的评估指标与 VOT2015 相同，即准确性、鲁棒性和 EAO。
 
-我们将所提出的算法与以下跟踪器进行了比较：
+本组实验将所提出的算法与以下跟踪器进行了比较：
 CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}，TGPRfSRDCF \cite{gao2018tracking}，DeepSRDCF \cite{Danelljan2015ConvolutionalFF}，TCNN \cite{nam2016modeling}， Staple \cite{Bertinetto2016StapleC}，EBT \cite{Zhu2016BeyondLS}，NSAMF \cite{Hua2015OnlineOT} 和 Struck \cite{Hare2011StruckSO}。图 \ref{fig:vot16} 显示了 VOT2016 上 EAO 的性能。本章所提方法的 EAO 得分为 0.330，与所列出的方法相比，具有更好的跟踪效果。
 
 \begin{figure}[t!]
@@ -339,19 +337,19 @@ CSRDCF \cite{Lukezic2017DiscriminativeCF}，SRDCF \cite{Danelljan2015LearningSR}
 
 \subsection{基于数据集 GOT-10k 的评测结果分析}
 GOT-10k \cite{GOT-10k} 是近期提出的用于通用目标跟踪的数据集。该数据集具有超过 10000 个真实运动目标的视频片段和超过 150 万个手动标记的边界框，包含了现实世界中的 563 类运动目标和 87 种运动模式。
-我们在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
+本组实验在 GOT-10k 测试子集上评估跟踪器，包括 180 段视频，具有 84 个目标类别和 32 个运动模式。
 GOT-10k 的评估指标是平均重叠（AO），它表示所有真实边界框和估计边界框之间重叠的平均值。
 
-我们将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{valmadre2017end}，ECOhc \cite{danelljan2017eco}，CFNetc5 \cite{valmadre2017end}，CFNetc1 \cite{valmadre2017end}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
+本组实验将本文提出的 IGCF 算法与以下跟踪器进行了比较：CFNetc2 \cite{valmadre2017end}，ECOhc \cite{danelljan2017eco}，CFNetc5 \cite{valmadre2017end}，CFNetc1 \cite{valmadre2017end}， BACF \cite{Galoogahi2017LearningBC}，MEEM \cite{Zhang2014MEEMRT}，DAT \cite{Possegger2015InDO}，DSST \cite{Danelljan2014AccurateSE}，SAMF \cite{Li2014ASA}，Staple \cite{Bertinetto2016StapleC}，SRDCFdecon \cite{Danelljan2016AdaptiveDO}，SRDCF \cite{Danelljan2015LearningSR}，fDSST \cite{Danelljan2017DiscriminativeSS}，CSK \cite{Henriques2012ExploitingTC}，KCF \cite{henriques2014high-speed}，L1APG \cite{Bao2012RealTR}，LK \cite{Shi1994GoodFT} 和 IVT \cite{Ross2007IncrementalLF}。
 如图 \ref{fig:IGCF_got10k} 所示，本章提出的方法在 GOT-10k 测试集上的 AO 得分为 0.299，优于所列出的其他跟踪算法。
 在 CFNet \cite{valmadre2017end} 中，Valmadre 等人将相关滤波器表示为深度神经网络中的一个可微层，以端到端方式学习相关滤波跟踪器的特征表示。作者采用一个不对称的孪生网络，利用训练图像学习线性模板，并通过互相关在测试图像上搜索目标位置。CFNetc2 在 GOT-10k 测试集上的 AO 得分为 0.293，取得了较好的跟踪结果，说明端到端学习有利于提高跟踪性能。然而，该方法仅利用 2 层卷积网络提取图像特征，使用更多卷积层时（如 5 层）反而会导致跟踪性能下降，这限制了 CFNet 的潜力。
 而本章提出的网络 InstMask 基于 ResNet 设计，具有更多卷积层，可有效提取图像的高层语义信息，因此取得了更好的跟踪性能。
 
 \subsection{基于数据集 DAVIS2016 的评测结果分析}
-配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，包含常见的视频目标分割挑战，例如遮挡、运动模糊和表观变化等。我们在 DAVIS2016 的验证集上进行了定性实验，可视化结果如图 \ref{fig:davis} 所示。结果表明，提出的 IGCF 可以准确地生成目标的轮廓，这在一定程度上解释了 IGCF 可以提高跟踪性能的原因。
+配备有 InstMask 模块的跟踪器不仅可以很好地执行目标跟踪，还可以用于视频分割。DAVIS \cite{Perazzi2016} 是一个视频目标分割数据集，它由 50 个高质量视频序列组成，包含常见的视频目标分割挑战，例如遮挡、运动模糊和表观变化等。本组实验在 DAVIS2016 的验证集上进行了定性分析，可视化结果如图 \ref{fig:davis} 所示。结果表明，提出的 IGCF 可以准确地生成目标的轮廓，这在一定程度上解释了 IGCF 可以提高跟踪性能的原因。
 
 \section{本章小结}
-在本章中，我们主要关注于视觉目标跟踪的表观建模研究，提出了实例引导的相关滤波跟踪器 IGCF，该跟踪器结合了深度神经网络和相关滤波器的优点来提高目标跟踪的性能。
+本章主要关注于视觉目标跟踪的表观建模研究，提出了实例引导的相关滤波跟踪器 IGCF，该跟踪器结合了深度神经网络和相关滤波器的优点来提高目标跟踪的性能。
 通过引入精心设计的卷积神经网络 InstMask，可以高效地对位于图像块中央的目标执行实例级别的语义分割，用于约束跟踪器的训练过程，从而提高跟踪的效果。
-针对离线训练的语义分割结果和在线学习的相关滤波结果具有互补性这一特点，我们进一步提出了跟踪结果的自校正机制，利用分割结果校正相关滤波结果，以减轻相关滤波器的漂移现象。
-我们在多个视频目标跟踪数据库上进行了性能评测，实验结果表明，该跟踪算法大幅度提升了传统的基于相关滤波的跟踪算法的准确性和鲁棒性。
+针对离线训练的语义分割结果和在线学习的相关滤波结果具有互补性这一特点，进一步提出了跟踪结果的自校正机制，利用分割结果校正相关滤波结果，以减轻相关滤波器的漂移现象。
+本章在多个视频目标跟踪数据库上进行了性能评测，实验结果表明，该跟踪算法大幅度提升了传统的基于相关滤波的跟踪算法的准确性和鲁棒性。
