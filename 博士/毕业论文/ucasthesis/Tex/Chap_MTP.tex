@@ -1,9 +1,6 @@
 \chapter{自适应信息增强的视觉目标跟踪算法研究}\label{chap:MTP}
-在本章中，我们表明可以通过简单地在孪生网络中操纵模板图像的像素来处理视觉目标跟踪中具有挑战性的模型自适应任务。对于不包含在离线训练集中的目标，对模板图像像素的稍加修改即可改善离线训练的孪生网络的预测结果。流行的对抗样本生成方法可用于执行模板像素操纵以进行模型自适应。与当前的模板更新方法（旨在合并先前帧的目标特征）不同，我们专注于在第一帧中使用目标真实注释框进行初始自适应。本章提出的模型自适应方法是即插即用的，不会改变基线跟踪器的总体架构。
+本章旨在通过简单地在孪生网络中操纵模板图像的像素来处理视觉目标跟踪中具有挑战性的模型自适应任务。对于不包含在离线训练集中的目标，对模板图像像素的稍加修改即可改善离线训练的孪生网络的预测结果。流行的对抗样本生成方法可用于执行模板像素操纵以进行模型自适应。与当前的模板更新方法（旨在合并先前帧的目标特征）不同，本章专注于在第一帧中使用目标真实注释框进行初始自适应。本章提出的模型自适应方法是即插即用的，不会改变基线跟踪器的总体架构。
 全面的实验证明了本章提出的自适应信息增强的视觉目标跟踪算法的有效性。
-%据我们所知，这项工作是直接操纵模板像素以在基于孪生的跟踪器中进行模型调整的首次尝试。
-%在最近的基准测试中进行的大量实验表明，我们的方法比其他一些最新的跟踪器具有更好的性能。
-%我们的代码可从 https://github.com/lizhenbang56/MTP 获得。
 
 \section{引言}
 视觉目标跟踪是指仅在指定目标初始状态的情况下，在视频序列中定位该目标运动轨迹的任务。最近，孪生网络 \cite{danelljan2019atom, SiamFC} 已经为视觉目标跟踪的性能带来了显著提高。孪生跟踪器将视觉目标跟踪问题形式化为学习目标模板和搜索区域之间的相似性。搜索图像中与目标模板视觉相似度最高的位置被确定为目标在当前帧的位置，从而进行跟踪。尽管孪生网络跟踪器已经成为了主流的视觉目标跟踪算法，但对于不包含在离线训练集中的目标，所学习的孪生网络相似度不一定可靠，从而导致泛化效果较差 \cite{Bhat_2019_ICCV}。最近的一些工作旨在使模型适应当前目标的表观信息。例如，TADT \cite{Li_2019_CVPR} 根据反向传播的梯度识别每个卷积滤波器的重要性，并使用目标的激活来选择重要的目标特征。然而，TADT 的特征提取器是在 ImageNet \cite{VID} 上而不是在大规模视觉目标跟踪数据集上进行预训练的。这限制了其特征在目标跟踪任务上的表示能力。GradNet \cite{Li_2019_ICCV} 利用梯度中的判别性信息，通过前向传播和反向传播操作更新孪生网络中的模板。然而，该算法采用的额外子网会增加计算成本，并且容易过拟合。UpdateNet \cite{Zhang_2019_ICCV} 学习合并先前帧中的目标特征。然而，该方法不使用真实标注信息来自适应地调整第一帧的模板特征。
@@ -17,7 +14,7 @@
 \end{figure}
 \fi
 
-在本章中，我们表明视觉目标跟踪中具有挑战性的模型自适应任务可以通过简单地在孪生网络中操纵模板图像的像素来实现。给定一个视觉目标跟踪器，本章提出的算法使用第一帧中的目标真实标注框，仅在几次梯度下降迭代中修改模板像素。对于不包含在离线训练集中的目标，我们认为对模板图像像素进行微小修改可以改善离线训练的孪生网络的预测结果。我们使用对抗样本生成方法来实现此目的，因为对抗样本生成方法通常用于略微修改输入图像，从而对网络的预测结果产生影响。我们与对抗性样本生成的目的不同，因为后者旨在使网络预测变得更差，而我们希望孪生网络的预测更好。本章提出的模型自适应方法可以与各种孪生跟踪器（如 SiamFC++ \cite{SiamFC++}）集成。在利用自适应信息提高跟踪性能的同时，孪生网络的参数保持不变，以保留离线训练的嵌入空间的表示能力。我们在 4 个视觉目标跟踪基准数据集上进行了全面的实验：VOT2018 \cite{kristan2018sixth}、TrackingNet \cite{muller2018trackingnet}、GOT-10k \cite{GOT-10k} 和 OTB2015 \cite{OTB2015}。本章提出的目标跟踪算法取得了较好的跟踪性能，同时以超过 80 FPS 的速度运行（见图 \ref{fig:MTP_vis}）。
+本章提出，视觉目标跟踪中具有挑战性的模型自适应任务可以通过简单地在孪生网络中操纵模板图像的像素来实现。给定一个视觉目标跟踪器，本章提出的算法使用第一帧中的目标真实标注框，仅在几次梯度下降迭代中修改模板像素。对于不包含在离线训练集中的目标，通过对模板图像像素进行微小修改，即可改善离线训练的孪生网络的预测结果。本章使用对抗样本生成方法来实现此目的，因为对抗样本生成方法通常用于略微修改输入图像，从而对网络的预测结果产生影响。本章算法与对抗性样本生成算法的目的不同，因为后者旨在使网络预测变得更差，而本章的目的是使孪生网络的预测更好。本章提出的模型自适应方法可以与各种孪生跟踪器（如 SiamFC++ \cite{SiamFC++}）集成。在利用自适应信息提高跟踪性能的同时，孪生网络的参数保持不变，以保留离线训练的嵌入空间的表示能力。本章在 4 个视觉目标跟踪基准数据集上进行了全面的实验：VOT2018 \cite{kristan2018sixth}、TrackingNet \cite{muller2018trackingnet}、GOT-10k \cite{GOT-10k} 和 OTB2015 \cite{OTB2015}。本章提出的目标跟踪算法取得了较好的跟踪性能，同时以超过 80 FPS 的速度运行（见图 \ref{fig:MTP_vis}）。
 \section{相关工作}
 模型更新是传统目标跟踪算法中的重要一环。然而，主流的孪生跟踪器通常采用离线训练的网络而不进行模型更新。由于没有在线学习，这些方法往往难以应对目标的表观变化和近似物体的干扰。
 % UpdateNet
@@ -41,7 +38,7 @@
 在文献 \cite{TGGAN} 中，为了避免漂移问题并执行在线自适应，Guo 等人使用条件 GAN 架构 \cite{cGAN} 来学习目标的通用表观分布。在跟踪阶段，使用学习到的 GAN 生成器生成目标模板。生成器将第一帧中的真实目标模板和随机矢量作为输入，并输出生成的目标模板。生成的模板被真实目标模板约束，因此不会漂移。同时，生成的模板可以模拟目标可能产生的表观变化。跟踪时，选择最适合当前目标表观的生成模板。通过这些策略，可以在线更新目标模板，同时避免漂移。%Generating Reliable Online Adaptive Templates for Visual Tracking
 
 \section{自适应信息增强的视觉目标跟踪算法}
-在本节中，我们通过直接操纵模板像素为孪生跟踪器提供一种新的模型自适应方法。我们首先回顾基于模板匹配的主流跟踪器的跟踪过程。遵循文献 \cite{Danelljan_2020_CVPR}，我们将目标跟踪形式化为基于置信度的回归问题，给定一个输出-输入对 $(\textbf y,\textbf x)$，该问题学习函数 $s_\theta:\mathcal{Y\times X\rightarrow \mathbb R}$，并预测标量置信度得分 $s_\theta(\textbf y,\textbf x)\in\mathbb R$。算法的最终预测 $f(\textbf x)=\textbf y^*$ 如下：
+本节提出，通过直接操纵模板像素为孪生跟踪器提供一种新的模型自适应方法。本节首先回顾基于模板匹配的主流跟踪器的跟踪过程。遵循文献 \cite{Danelljan_2020_CVPR}，将目标跟踪形式化为基于置信度的回归问题，给定一个输出-输入对 $(\textbf y,\textbf x)$，该问题学习函数 $s_\theta:\mathcal{Y\times X\rightarrow \mathbb R}$，并预测标量置信度得分 $s_\theta(\textbf y,\textbf x)\in\mathbb R$。算法的最终预测 $f(\textbf x)=\textbf y^*$ 如下：
 \begin{equation}
     f(\textbf x) = \arg\max_{\textbf y\in \mathcal Y}s_\theta (\textbf y,\textbf x),
 \end{equation}
@@ -65,22 +62,22 @@
 与孪生跟踪器不同，DCF 利用目标模板图像学习滤波器 $w_\theta$，以将其与背景区分开。
 尽管使用了循环相关运算提高了跟踪效率，但由于边界效应和复杂的优化使 DCF 无法在计算速度和跟踪性能之间做出良好的平衡。孪生跟踪器在这方面做得更好，然而在互相关中学习到的相似性度量对于未包含在离线训练集中的目标不一定是可靠的，从而导致泛化性较差。
 
-在本章中，我们旨在设计一种新的孪生跟踪方法，该方法可以像基于 DCF 的跟踪器一样充分利用当前视频的特定信息进行模型自适应，尽管其中的目标可能并不包含在离线训练时使用的训练集中。我们通过利用第一帧中的注释信息执行模型自适应调整来实现这一目的。
+本章旨在设计一种新的孪生跟踪方法，该方法可以像基于 DCF 的跟踪器一样充分利用当前视频的特定信息进行模型自适应，尽管其中的目标可能并不包含在离线训练时使用的训练集中。本章通过利用第一帧中的注释信息执行模型自适应调整来实现这一目的。
 
-注意公式 \ref{equ:dcf} 和公式 \ref{equ:siamese} 之间存在相似之处，主要区别在于进行相关计算的核：DCF 的核是在线学习的 $w_{\theta}$ ，而孪生网络的核是 $\phi_\theta(\textbf z)$。为了使孪生网络具有模型自适应能力，我们需要使用当前视频的第一帧标注信息来自适应调整 $\phi_\theta(\textbf z)$。调整 $\phi_\theta(\textbf z)$ 有两种设计选择：更改 $\phi_\theta(\cdot)$ 或更改 $\textbf z$。但是，更改 $\phi_\theta(\cdot)$ 可能会导致繁琐的元学习设置，难以确保离线训练的嵌入空间 \cite{ROAM, MetaRTT} 的特征表示能力。相反，我们的解决方案是以简单的方式通过更改 $\textbf z$ 来执行孪生跟踪器的模型自适应，即在第一帧使用目标真实标注信息仅在几次梯度下降迭代中修改模板像素。与当前的孪生跟踪模型自适应方法相比，该方法具有以下优点：
+注意公式 \ref{equ:dcf} 和公式 \ref{equ:siamese} 之间存在相似之处，主要区别在于进行相关计算的核：DCF 的核是在线学习的 $w_{\theta}$ ，而孪生网络的核是 $\phi_\theta(\textbf z)$。为了使孪生网络具有模型自适应能力，需要使用当前视频的第一帧标注信息来自适应调整 $\phi_\theta(\textbf z)$。调整 $\phi_\theta(\textbf z)$ 有两种设计选择：更改 $\phi_\theta(\cdot)$ 或更改 $\textbf z$。但是，更改 $\phi_\theta(\cdot)$ 可能会导致繁琐的元学习设置，难以确保离线训练的嵌入空间 \cite{ROAM, MetaRTT} 的特征表示能力。相反，本章的解决方案是以简单的方式通过更改 $\textbf z$ 来执行孪生跟踪器的模型自适应，即在第一帧使用目标真实标注信息仅在几次梯度下降迭代中修改模板像素。与当前的孪生跟踪模型自适应方法相比，该方法具有以下优点：
 
 \begin{itemize}
-\item 首先，我们不修改孪生网络的参数，从而保留离线训练的嵌入空间的表示能力。
-\item 其次，与旨在合并先前帧目标特征的模板更新方法 \cite{zhu2018distractor, Zhang_2019_ICCV} 不同，我们专注于在第一帧使用目标真实标注信息进行初始自适应。
-\item 最后，在不改变基线跟踪器整体架构的情况下，我们的模型自适应方法即插即用，易于实现。
+\item 首先，该方法不修改孪生网络的参数，从而保留离线训练的嵌入空间的表示能力。
+\item 其次，与旨在合并先前帧目标特征的模板更新方法 \cite{zhu2018distractor, Zhang_2019_ICCV} 不同，本章专注于在第一帧使用目标真实标注信息进行初始自适应。
+\item 最后，在不改变基线跟踪器整体架构的情况下，本章的模型自适应方法即插即用，易于实现。
 \end{itemize}
 
-在下一节中，我们将展示如何使用对抗样本生成方法来执行用于模型自适应的模板像素操纵。
+在下一节中，将展示如何使用对抗样本生成方法来执行用于模型自适应的模板像素操纵。
 
 \subsection{操纵模板像素以进行模型自适应}
-乍看之下，模型自适应任务与对抗样本生成任务之间可能存在矛盾，因为这两个任务具有不同的目的。对抗样本 \cite{kurakin2017adversarial} 是对输入数据进行微小修改后的样本，目的是对机器学习系统进行攻击，导致机器学习模型做出错误的预测。然而，模型自适应的目的是在第一帧中充分利用注释信息，以提高当前视频的跟踪性能。接下来，我们将指出这两个任务之间存在一些相似之处，并且我们可以利用对抗样本生成方法来执行模型自适应任务。
+乍看之下，模型自适应任务与对抗样本生成任务之间可能存在矛盾，因为这两个任务具有不同的目的。对抗样本 \cite{kurakin2017adversarial} 是对输入数据进行微小修改后的样本，目的是对机器学习系统进行攻击，导致机器学习模型做出错误的预测。然而，模型自适应的目的是在第一帧中充分利用注释信息，以提高当前视频的跟踪性能。接下来，本节将指出这两个任务之间存在一些相似之处，并且可以利用对抗样本生成方法来执行模型自适应任务。
 
-在介绍提出的方法之前，我们首先回顾流行的对抗样本生成方法。生成对抗图像 $I^{adv}$ 的最简单方法之一是通过线性化干净图像的 $L_{\infty}$ 邻域中的损失函数，并使用以下闭式方程进行求解 \cite{FGSM}：
+在介绍提出的方法之前，首先回顾流行的对抗样本生成方法。生成对抗图像 $I^{adv}$ 的最简单方法之一是通过线性化干净图像的 $L_{\infty}$ 邻域中的损失函数，并使用以下闭式方程进行求解 \cite{FGSM}：
 \begin{equation}
     I^{adv} = I + \epsilon \text{ sign} \bigl( \nabla_I L(I, y_{true})  \bigr),
 \end{equation}
@@ -100,7 +97,7 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
     \end{gathered}
     \label{equ:itcm}
 \end{equation}
-公式 \ref{equ:itcm} 表明，仅需进行几次梯度下降迭代操作对输入图像的像素进行修改，就可以将网络的预测更改为特定类别 $y_{target}$。请注意，我们的目的是在第一帧中修改模板图像的像素，以使预测更接近于真实边界框。因此，我们可以对公式 \ref{equ:itcm} 进行一些修改，用于对孪生网络进行模型自适应：
+公式 \ref{equ:itcm} 表明，仅需进行几次梯度下降迭代操作对输入图像的像素进行修改，就可以将网络的预测更改为特定类别 $y_{target}$。请注意，本章算法的目的是在第一帧中修改模板图像的像素，以使预测更接近于真实边界框。因此，可以对公式 \ref{equ:itcm} 进行一些修改，用于对孪生网络进行模型自适应：
 \begin{equation}
     \begin{gathered}
         \textbf z_0 = \textbf z,\\
@@ -108,7 +105,7 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
     \end{gathered}
     \label{equ:adaptaion}
 \end{equation}
-其中 $\textbf z$ 是第一帧中的模板图像，而 $y_{bb}$ 是根据真相边界框生成的孪生跟踪器的标签。在下一节中，我们将介绍配备了所提出的模型自适应模块的跟踪器的整体跟踪过程。
+其中 $\textbf z$ 是第一帧中的模板图像，而 $y_{bb}$ 是根据真相边界框生成的孪生跟踪器的标签。在下一节中，将介绍配备了所提出的模型自适应模块的跟踪器的整体跟踪过程。
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t]
@@ -137,7 +134,7 @@ BIM 可以进行扩展以攻击特定的期望目标类别 \cite{kurakin2017adve
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{跟踪框架}
-所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据文献 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，我们希望执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，我们首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times303\times 303}$。
+所提出的模型自适应方法以即插即用的方式与 SiamFC++ 跟踪器 \cite{SiamFC++} 集成在一起。 SiamFC++ 基于 SiamFC \cite{SiamFC}，并根据文献 \cite{SiamFC++} 中提出的一些准则逐步完善。原始 SiamFC++ 网络的输入由从第一帧裁剪的模板图像 $\textbf z_0$ 和从第 $i$ 帧裁剪的搜索图像 $\textbf x_i$ 组成。但是，本章算法执行模板像素操纵，以便在对输入对 $(\textbf z_0, \textbf x_0)$ 进行 $N$ 步像素更新获得 $\textbf z'$ 后，跟踪器在 $(\textbf z', \textbf x_i)$ 上表现良好。为此，首先在第一帧根据目标的真实标注框裁剪初始模板图像 $\textbf z_0\in\mathbb R^{3\times128\times 128}$ 和初始搜索图像 $\textbf x_0\in\mathbb R^{3\times303\times 303}$。
 然后，将 $\textbf z_0$ 和 $\textbf x_0$ 发送到 SiamFC++ 网络以获得第一帧的跟踪预测。SiamFC++ \cite{SiamFC++} 中的跟踪损失计算如下：
 \begin{equation}
     L = L_{\text{cls}} + L_{\text{quality}} + L_{\text{reg}},
@@ -238,7 +235,7 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{与主流跟踪器的比较}
 
-在本节中，我们将本章提出的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB2015}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB2015} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 个序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视觉目标跟踪数据集。它们在训练和测试集中涵盖了各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪器对目标类别的泛化能力。
+在本节中，将本章提出的方法与主流跟踪器在四个跟踪数据集上进行比较：OTB2015 \cite{OTB2015}，VOT2018 \cite{kristan2018sixth}，GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet}。具体来说，OTB2015 \cite{OTB2015} 包含 100 个序列，这些序列标记有不同的属性，用于深入分析跟踪性能。VOT2018 \cite{kristan2018sixth} 独特地应用了基于重置的方法，并挑选了 60 个序列对各种跟踪方案进行评估。GOT-10k \cite{GOT-10k} 和 TrackingNet \cite{muller2018trackingnet} 是最近提出的两个视觉目标跟踪数据集。它们在训练和测试集中涵盖了各种目标类和场景。对于 GOT-10k，训练和测试集之间的目标类别没有重叠，从而可以有效评估跟踪器对目标类别的泛化能力。
 
 \iffalse
 \begin{figure*}[p]
@@ -350,12 +347,12 @@ GOT-10k \cite{GOT-10k} 包括超过一万个视频片段，分为 563 类运动�
 \end{figure*}
 \fi
 
-\textbf{OTB2015} 我们使用成功率来评估跟踪器在 OTB2015 上的性能。成功率取决于预测边界框和真实边界框的交并比。我们将本章提出的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为 16。结果显示在表 \ref{table:otb} 中。在成功率方面，我们的跟踪器比在线跟踪器 ATOM 高出 2.8％，这证明了我们方法的强大模型自适应能力。
+\textbf{OTB2015} 跟踪器在 OTB2015 上的性能使用成功率进行评估。成功率取决于预测边界框和真实边界框的交并比。本组实验将本章提出的方法与各种跟踪算法进行了比较，包括 ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom} 和 SiamFC++\_GoogLeNet \cite{SiamFC++}。模板更新的迭代次数设置为 16。结果显示在表 \ref{table:otb} 中。在成功率方面，本章的跟踪器比在线跟踪器 ATOM 高出 2.8％，这证明了本章方法的强大模型自适应能力。
 
-\textbf{VOT2018} 我们将我们的方法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标——期望平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
+\textbf{VOT2018} 本组实验将本章算法与 RCO \cite{kristan2018sixth}，UPDT \cite{bhat2018unveiling}，SiamRPN \cite{SiamRPN}，MFT \cite{kristan2018sixth}，LADCF \cite{kristan2018sixth}，ATOM \cite{danelljan2019atom}，SiamRPN++ \cite{SiamRPN++}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogLeNet \cite{SiamFC++} 在 VOT2018 上进行了比较。使用鲁棒性和精确度来比较跟踪器。鲁棒性表示跟踪失败的次数，而精确度表示跟踪器预测边界框与真实边界框之间的平均重叠。两种度量方式被合并为单个评价指标——期望平均重叠（EAO）分数。模板更新的迭代次数设置为 2。如图 \ref{fig:eao} 所示，本章提出的跟踪器性能超越了所列出的其他跟踪器。
 
-\textbf{GOT-10k} 我们将平均重叠（AO）分数用作 GOT-10k \cite{GOT-10k} 的性能指标。我们将本章提出的方法与 CF2 \cite{CF2}，ECO \cite{danelljan2017eco}，CCOT \cite{danelljan2016beyond}，GOTURN \cite{GOTURN}，SiamFC \cite{SiamFC}，SiamFCv2 \cite{valmadre2017end}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_Go-
-ogLeNet \cite{SiamFC++} 在该数据库上进行比较。模板更新的迭代次数设置为 2。在图 \ref{fig:got10k} 中可以发现，与列出的跟踪器相比，本章提出的算法具有更好的跟踪性能。
+\textbf{GOT-10k} 本组实验使用平均重叠（AO）分数作为 GOT-10k \cite{GOT-10k} 的性能指标，将本章提出的方法与 CF2 \cite{CF2}，ECO \cite{danelljan2017eco}，CCOT \cite{danelljan2016beyond}，GOTURN \cite{GOTURN}，SiamFC \cite{SiamFC}，SiamFCv2 \cite{valmadre2017end}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_GoogL-
+eNet \cite{SiamFC++} 在该数据库上进行比较。模板更新的迭代次数设置为 2。在图 \ref{fig:got10k} 中可以发现，与列出的跟踪器相比，本章提出的算法具有更好的跟踪性能。
 
 \nopagebreak[3]
 \begin{table}[t!]
@@ -380,8 +377,8 @@ SiamFC \cite{SiamFC} &  51.8&  65.2 &55.9 \\
 \nopagebreak[3]
 
 
-\textbf{TrackingNet} 我们将本章提出的方法与 SiamFC \cite{SiamFC}，ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_
-GoogLeNet \cite{SiamFC++} 进行比较。模板更新的迭代次数设置为 32。表 \ref{tabel:trackingnet} 显示，我们的跟踪器在精确度和标准化精确度方面表现最佳，同时保持了较高的成功率。
+\textbf{TrackingNet} 本组实验将本章提出的方法与 SiamFC \cite{SiamFC}，ECO \cite{danelljan2017eco}，MDNet \cite{MDNet}，SiamRPN++ \cite{SiamRPN++}，ATOM \cite{danelljan2019atom}，SiamFC++\_AlexNet \cite{SiamFC++} 和 SiamFC++\_
+GoogLeNet \cite{SiamFC++} 进行比较。模板更新的迭代次数设置为 32。表 \ref{tabel:trackingnet} 显示，本章提出的跟踪器在精确度和标准化精确度方面表现最佳，同时保持了较高的成功率。
 
 \subsection{对初始帧噪声的鲁棒性分析}
 
@@ -417,10 +414,10 @@ $\gamma_1$ & $\gamma_2$ & $\gamma_3$  & SiamFC++\_GoogLeNet \cite{SiamFC++} & �
 To verify the contribution of the proposed model adaptation method, we compare our tracker with the baseline SiamFC++\_GoogLeNet \cite{SiamFC++} on 4 challenging tracking datasets. In comparison with the baseline tracker on OTB2015, our tracker improves the success score by 1.4\%. On VOT2018, our tracker outperforms the baseline tracker by 1.2\% in terms of EAO. On GOT-10k, our tracker improves the AO score by 1.0\%. On TrackingNet, our tracker outperforms the baseline tracker by 1.7\% in terms of the normalized precision score. All these consistent improvements highlight the effectiveness of the proposed model adaptation method.
 \fi
 
-为了研究本章提出的模型自适应方法在初始帧与后续帧相比有噪声的情况下的鲁棒性，我们通过以下方式在第一帧中添加三种噪声：更改图像亮度，应用高斯模糊以及使用不准确的真实边界框注释。我们用 $\gamma_1 \in [0.5, 1.5]$ 表示亮度变化系数，用 $\gamma_2 \in [0, 2]$ 表示模糊半径系数，用 $\gamma_3 \in [0.75, 1]$ 表示不准确的第一帧边界框注释和真实边界框注释之间的边框重叠交并比（IoU）。我们随机采样 $\gamma_1, \gamma_2$ 和 $\gamma_3$，并在 OTB2015 上对基线跟踪器和我们的跟踪器都运行了 10 次（见表 \ref{table:noise}）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，我们的跟踪器在不同的噪声水平下始终表现更好，这表明我们的跟踪器对嘈杂的初始帧具有鲁棒性。%the first frame noise.
+为了研究本章提出的模型自适应方法在初始帧与后续帧相比有噪声的情况下的鲁棒性，本组实验通过以下方式在第一帧中添加三种噪声：更改图像亮度，应用高斯模糊以及使用不准确的真实边界框注释。$\gamma_1 \in [0.5, 1.5]$ 表示亮度变化系数，$\gamma_2 \in [0, 2]$ 表示模糊半径系数，$\gamma_3 \in [0.75, 1]$ 表示不准确的第一帧边界框注释和真实边界框注释之间的边框重叠交并比（IoU）。本组实验随机采样 $\gamma_1, \gamma_2$ 和 $\gamma_3$，并在 OTB2015 上对基线跟踪器和本章提出的跟踪器都运行了 10 次（见表 \ref{table:noise}）。与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，本章提出的跟踪器在不同的噪声水平下始终表现更好，这表明本章提出的跟踪器对嘈杂的初始帧具有鲁棒性。
 
 \subsection{基于 OTB 数据集不同属性的评测结果分析}
-为了对跟踪性能进行进一步分析，我们还通过对 OTB2015 数据集的序列进行基于属性的比较来证明我们算法的优势（请参见表 \ref{table:attr}）。在 OTB2015 中，每个序列都具有 11 种不同的属性，即：背景混杂（BC），形变（DEF），快速运动（FM），照明变化（IV），平面内旋转（IPR），低分辨率（LR），运动模糊（MB），遮挡（OCC），平面外旋转（OPR），目标出画面（OV）和缩放尺度变化（SV）。在 11 个属性中，与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，本章提出的跟踪器在 10 个属性上具有更好的性能，这证明了其在挑战性跟踪场景（例如照明变化和运动模糊）中的鲁棒性。
+为了对跟踪性能进行进一步分析，本组实验通过对 OTB2015 数据集的序列进行基于属性的比较来证明本章算法的优势（请参见表 \ref{table:attr}）。在 OTB2015 中，每个序列都具有 11 种不同的属性，即：背景混杂（BC），形变（DEF），快速运动（FM），照明变化（IV），平面内旋转（IPR），低分辨率（LR），运动模糊（MB），遮挡（OCC），平面外旋转（OPR），目标出画面（OV）和缩放尺度变化（SV）。在 11 个属性中，与 SiamFC++\_GoogLeNet \cite{SiamFC++} 相比，本章提出的跟踪器在 10 个属性上具有更好的性能，这证明了其在挑战性跟踪场景（例如照明变化和运动模糊）中的鲁棒性。
 
 %%%%%%%%%%%%%%%%
 \begin{table}[t!]
@@ -443,6 +440,6 @@ To verify the contribution of the proposed model adaptation method, we compare o
 
 %%%%%%%%%%%%%%%%%%%%
 \section{本章小结}
-在本章中，我们提出通过操纵模板图像像素以进行自适应信息增强的孪生网络视觉目标跟踪算法，对基于孪生网络的视觉目标跟踪算法在模型初始自适应方面进行改进优化。根据物体第一帧中的损失，对模板图像进行反向传播和微小更新，从而提高对特定物体的自适应能力。我们不仅有效利用了特定物体的表观信息来增强模型的判别能力，而且不修改跟踪算法的模型参数，因此没有模型过拟合的风险。
-我们的模型自适应方法是可插拔的，因为它不会改变基线跟踪器的总体架构。
-我们在目前比较流行的视频跟踪标准评测库上对通过操纵模板图像像素以进行模型自适应的算法的有效性进行了评估，实验表明该模型自适应方法能够大幅度提升孪生网络跟踪器的性能。
+本章提出，通过操纵模板图像像素以进行自适应信息增强的孪生网络视觉目标跟踪算法，对基于孪生网络的视觉目标跟踪算法在模型初始自适应方面进行改进优化。根据物体第一帧中的损失，对模板图像进行反向传播和微小更新，从而提高对特定物体的自适应能力。本章算法不仅有效利用了特定物体的表观信息来增强模型的判别能力，而且不修改跟踪算法的模型参数，因此没有模型过拟合的风险。
+本章提出的模型自适应方法是可插拔的，因为它不会改变基线跟踪器的总体架构。
+本章在目前比较流行的视频跟踪标准评测库上对通过操纵模板图像像素以进行模型自适应的算法的有效性进行了评估，实验表明该模型自适应方法能够大幅度提升孪生网络跟踪器的性能。
